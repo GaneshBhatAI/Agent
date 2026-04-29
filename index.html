@@ -551,44 +551,26 @@
                         </div>
                         <div>
                             <h4>AI Assistant</h4>
-                            <p class="status">Online</p>
+                            <p class="status"><span class="online-dot"></span>Online</p>
                         </div>
                     </div>
                     <button class="close-chat" id="closeChat"><i class="fas fa-times"></i></button>
                 </div>
                 <div class="chat-body" id="chatBody" style="padding: 0;">
 
-                    <!-- Initial Options (Dual Path) -->
-                    <div class="chat-options-container" id="initialOptions"
-                        style="padding: 2rem 1.5rem; text-align: center;">
-                        <p style="margin-bottom: 1.5rem; color: #64748b; font-size: 1rem;">How would you like to
-                            connect?
-                        </p>
-
-                        <a href="https://wa.me/message/5B3COVB4TXWHO1" target="_blank" class="chat-option-btn whatsapp">
-                            <i class="fab fa-whatsapp"></i> Chat on WhatsApp
-                        </a>
-
-                        <button class="chat-option-btn ai-agent" onclick="startAIAgent()">
-                            <i class="fas fa-robot"></i> Chat with AI Agent
-                        </button>
-                    </div>
-
-                    <!-- AI Agent View (Hidden Initially) -->
-                    <div class="ai-agent-view" id="aiAgentView" style="display: none; padding: 1rem;">
+                    <!-- AI Agent View (Always Active) -->
+                    <div class="ai-agent-view" id="aiAgentView" style="padding: 1rem;">
                         <div id="aiChatLog"
-                            style="height: 250px; overflow-y: auto; margin-bottom: 1rem; padding-right: 5px;">
-                            <div class="message bot">Hello! I can answer specific questions about Ganesh. What would you
-                                like to know?</div>
+                            style="height: 250px; overflow-y: auto; margin-bottom: 1rem; padding-right: 5px; display: flex; flex-direction: column; gap: 12px;">
+                            <div class="message bot">Hello! I'm Ganesh's AI Assistant. How can I help you with inquiries about his work or the APA Bootcamp?</div>
                         </div>
-                        <div class="ai-options-grid">
+                        <div class="ai-options-grid" style="margin-bottom: 1rem;">
                             <button class="ai-chip" onclick="askAI('contact')">📞 Contact Info</button>
                             <button class="ai-chip" onclick="askAI('strengths')">💪 Core Strengths</button>
-                            <button class="ai-chip secondary" onclick="resetChat()">🔄 Main Menu</button>
                         </div>
-                        <div class="chat-input-container" style="display: flex; gap: 8px; margin-top: 1rem;">
-                            <input type="text" id="aiChatInput" placeholder="Type your question..." style="flex: 1; padding: 8px 12px; border-radius: 20px; border: 1px solid var(--glass-border); background: #222; color: white; font-size: 0.9rem;">
-                            <button onclick="sendChatMessage()" style="background: var(--accent-color); border: none; width: 35px; height: 35px; border-radius: 50%; color: black; cursor: pointer;"><i class="fas fa-paper-plane"></i></button>
+                        <div class="chat-input-container" style="display: flex; gap: 8px;">
+                            <input type="text" id="aiChatInput" placeholder="Type your question..." style="flex: 1; padding: 10px 15px; border-radius: 25px; border: 1px solid var(--glass-border); background: #1a1a1a; color: white; font-size: 0.9rem;">
+                            <button onclick="sendChatMessage()" style="background: var(--accent-color); border: none; width: 40px; height: 40px; border-radius: 50%; color: black; cursor: pointer; display: flex; align-items: center; justify-content: center;"><i class="fas fa-paper-plane"></i></button>
                         </div>
                     </div>
 
