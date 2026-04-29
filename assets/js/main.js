@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
             - APA Bootcamp: A 2-month program covering Agentic Automation.
             - Contact: ai.brahmabusiness@gmail.com.
             - LinkedIn: https://www.linkedin.com/in/ganeshdhogale/
-            - WhatsApp Business: https://api.whatsapp.com/message/5B3COVB4TXWHO1?autoload=1&app_absent=0
+            - WhatsApp Business: https://wa.me/919113548342
             `
         }
     ];
@@ -194,7 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error("Mistral API Error:", error);
             const loadingEl = document.getElementById(loadingId);
             if (loadingEl) {
-                loadingEl.innerHTML = "I apologize, I'm having trouble connecting to my neural core. You can directly connect with Ganesh at <a href='mailto:ai.brahmabusiness@gmail.com' style='color:var(--accent-color);'>ai.brahmabusiness@gmail.com</a> or via <a href='https://api.whatsapp.com/message/5B3COVB4TXWHO1?autoload=1&app_absent=0' target='_blank' style='color:var(--accent-color);'>WhatsApp</a>.";
+                loadingEl.innerHTML = "I apologize, I'm having trouble connecting to my neural core. You can directly connect with Ganesh at <a href='mailto:ai.brahmabusiness@gmail.com' style='color:var(--accent-color);'>ai.brahmabusiness@gmail.com</a> or via <a href='https://wa.me/919113548342' target='_blank' style='color:var(--accent-color);'>WhatsApp</a>.";
             }
         }
     }
