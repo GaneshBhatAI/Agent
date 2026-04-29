@@ -1041,7 +1041,7 @@ footer i {
     position: absolute;
     bottom: 80px;
     right: 0;
-    width: 350px;
+    width: 400px;
     background: var(--bg-secondary);
     border: 1px solid var(--glass-border);
     border-radius: 16px;
@@ -1108,12 +1108,29 @@ footer i {
 
 .chat-body {
     padding: 1rem;
-    height: 300px;
+    height: 450px;
     overflow-y: auto;
     background: #151515;
     display: flex;
     flex-direction: column;
     gap: 10px;
+}
+
+/* Custom Scrollbar for Chat */
+.chat-body::-webkit-scrollbar,
+#aiChatLog::-webkit-scrollbar {
+    width: 5px;
+}
+
+.chat-body::-webkit-scrollbar-track,
+#aiChatLog::-webkit-scrollbar-track {
+    background: #1a1a1a;
+}
+
+.chat-body::-webkit-scrollbar-thumb,
+#aiChatLog::-webkit-scrollbar-thumb {
+    background: var(--accent-color);
+    border-radius: 10px;
 }
 
 .chat-timestamp {
@@ -1124,12 +1141,14 @@ footer i {
 }
 
 .message {
-    max-width: 80%;
+    max-width: 90%;
     padding: 0.8rem;
     border-radius: 12px;
     font-size: 0.9rem;
     line-height: 1.4;
     animation: fadeIn 0.3s ease;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 .message.bot {
