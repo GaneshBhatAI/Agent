@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('visible');
-                observer.unobserve(entry.target); // Only animate once
+                observer.unobserve(entry.target);
             }
         });
     }, observerOptions);
@@ -48,7 +48,6 @@ document.addEventListener('DOMContentLoaded', () => {
         closeBtn.addEventListener('click', toggleMenu);
     }
 
-    // Close menu when clicking a link
     mobileLinks.forEach(link => {
         link.addEventListener('click', () => {
             if (mobileOverlay.classList.contains('active')) {
@@ -57,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Smooth Scrolling for Anchor Links (Optional specific control)
+    // Smooth Scrolling
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
@@ -73,21 +72,47 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Chatbot Functional Logic
+    // --- AI Chatbot Logic (Mistral Integration) ---
+    const MISTRAL_API_KEY = "Nbsc8Cgarlu7EzFBvhI508U13vN7rncn";
     const chatToggle = document.getElementById('chatToggle');
     const closeChat = document.getElementById('closeChat');
     const chatPopup = document.getElementById('chatPopup');
-
-    // Elements for Dual Logic
     const initialOptions = document.getElementById('initialOptions');
     const aiAgentView = document.getElementById('aiAgentView');
     const aiChatLog = document.getElementById('aiChatLog');
+    const aiChatInput = document.getElementById('aiChatInput');
+
+    let chatHistory = [
+        {
+            role: "system",
+            content: `You are a professional AI Assistant for Ganesh Bhat, a Senior AI & Automation Solution Architect and founder of AI Brahma.
+            
+            IDENTITY & TONE:
+            - Professional, efficient, and expert in Agentic AI.
+            - You only answer questions about Ganesh Bhat, his expertise, his professional background, and the Agentic Process Automation (APA) Bootcamp.
+            
+            STRICT CONSTRAINTS:
+            - ONLY answer based on the provided context.
+            - DO NOT provide general coding help (e.g., Python code).
+            - DO NOT tell jokes or discuss topics unrelated to Ganesh Bhat.
+            - If a user asks something outside this scope, say: "I apologize, but I am specifically programmed to assist with inquiries regarding Ganesh Bhat's work and the APA Bootcamp. I cannot provide general information or code."
+            
+            CONTEXT DATA:
+            - Ganesh Bhat: Senior AI & Automation Solution Architect with 9+ years of experience.
+            - Expertise: Agentic AI (APA), Enterprise RPA (Automation Anywhere, UiPath), n8n, Workflow Orchestration.
+            - Roles: Automation Anywhere MVP, Google AI Product Expert.
+            - APA Bootcamp: A 2-month comprehensive program (6 hrs/week) covering the frontier of Agentic Automation.
+            - Bootcamp Modules: 01-Evolution of Intelligence, 02-Automation Anywhere, 03-Building Enterprise Agents, 04-Developer Stack, 05-UiPath APA, 06-n8n Orchestration, 07-Google AI Studio, 08-Google Antigravity.
+            - Contact: ai.brahmabusiness@gmail.com.
+            - LinkedIn: https://www.linkedin.com/in/ganeshdhogale/
+            - WhatsApp Business: https://api.whatsapp.com/message/5B3COVB4TXWHO1?autoload=1&app_absent=0
+            `
+        }
+    ];
 
     if (chatToggle && chatPopup) {
-
         chatToggle.addEventListener('click', () => {
             chatPopup.classList.toggle('active');
-            // Reset to main menu on open if not active
             if (chatPopup.classList.contains('active')) {
                 resetChat();
             }
@@ -98,16 +123,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 chatPopup.classList.remove('active');
             });
         }
-
-        // Close when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!chatPopup.contains(e.target) && !chatToggle.contains(e.target)) {
-                chatPopup.classList.remove('active');
-            }
-        });
     }
 
-    // Agent Logic
     window.startAIAgent = function () {
         if (initialOptions && aiAgentView) {
             initialOptions.style.display = 'none';
@@ -117,50 +134,88 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.resetChat = function () {
         if (initialOptions && aiAgentView) {
-            initialOptions.style.display = 'flex'; // Restore flex for centering
+            initialOptions.style.display = 'flex';
             aiAgentView.style.display = 'none';
-            // Clear chat log except greeting
             aiChatLog.innerHTML = '<div class="message bot">Hello! I can answer specific questions about Ganesh. What would you like to know?</div>';
+            chatHistory = [chatHistory[0]]; // Reset to system prompt only
         }
     }
 
     window.askAI = function (topic) {
         let question = "";
-        let answer = "";
-
         switch (topic) {
-            case 'contact':
-                question = "📞 Contact Info";
-                answer = "You can reach Ganesh via email at <b>ai.brahmabusiness@gmail.com</b> or connect on LinkedIn/WhatsApp using the links in the footer.";
-                break;
-            case 'strengths':
-                question = "💪 Core Strengths";
-                answer = "Ganesh excels in <b>Agentic AI, n8n Automation, and Enterprise RPA</b>. He builds systems that autonomously execute complex workflows.";
-                break;
-            case 'linkedin':
-                question = "🔗 LinkedIn Profile";
-                answer = "Connect with Ganesh here: <a href='https://www.linkedin.com/company/ai-brahmaai/' target='_blank' style='color:#0ea5e9; text-decoration:underline;'>AI Brahma LinkedIn</a>";
-                break;
+            case 'contact': question = "What is Ganesh's contact information?"; break;
+            case 'strengths': question = "What are Ganesh's core professional strengths?"; break;
         }
+        if (question) {
+            aiChatInput.value = question;
+            sendChatMessage();
+        }
+    }
 
-        addMessage("user", question);
+    window.sendChatMessage = async function () {
+        const text = aiChatInput.value.trim();
+        if (!text) return;
 
-        // Typing effect
-        setTimeout(() => {
-            addMessage("bot", answer);
-        }, 400);
+        aiChatInput.value = "";
+        addMessage("user", text);
+        chatHistory.push({ role: "user", content: text });
+
+        // Show typing indicator
+        const loadingId = "bot-loading-" + Date.now();
+        const loadingDiv = document.createElement('div');
+        loadingDiv.id = loadingId;
+        loadingDiv.classList.add('message', 'bot');
+        loadingDiv.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> thinking...';
+        aiChatLog.appendChild(loadingDiv);
+        aiChatLog.scrollTop = aiChatLog.scrollHeight;
+
+        try {
+            const response = await fetch("https://api.mistral.ai/v1/chat/completions", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${MISTRAL_API_KEY}`
+                },
+                body: JSON.stringify({
+                    model: "mistral-tiny", // Or mistral-medium/large depending on key capabilities
+                    messages: chatHistory,
+                    temperature: 0.1
+                })
+            });
+
+            const data = await response.json();
+            const botMessage = data.choices[0].message.content;
+
+            // Remove loading
+            document.getElementById(loadingId).remove();
+
+            addMessage("bot", botMessage);
+            chatHistory.push({ role: "assistant", content: botMessage });
+        } catch (error) {
+            console.error("Mistral API Error:", error);
+            document.getElementById(loadingId).innerHTML = "Sorry, I encountered an error connecting to my neural core. Please try again later.";
+        }
     }
 
     function addMessage(sender, text) {
         const messageDiv = document.createElement('div');
         messageDiv.classList.add('message', sender);
-        messageDiv.innerHTML = text; // Changed to innerHTML for links
+        messageDiv.innerHTML = text;
         aiChatLog.appendChild(messageDiv);
         aiChatLog.scrollTop = aiChatLog.scrollHeight;
     }
 
-    // Blog Engagement Logic
-    // Blog Engagement Logic (Share Buttons Only)
+    // Allow Enter key to send
+    if (aiChatInput) {
+        aiChatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendChatMessage();
+            }
+        });
+    }
+
+    // Share Logic
     const linkedinBtn = document.getElementById('shareLinkedin');
     const whatsappBtn = document.getElementById('shareWhatsapp');
 
@@ -182,5 +237,4 @@ document.addEventListener('DOMContentLoaded', () => {
             window.open(shareUrl, '_blank');
         });
     }
-
 });

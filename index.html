@@ -584,8 +584,11 @@
                         <div class="ai-options-grid">
                             <button class="ai-chip" onclick="askAI('contact')">📞 Contact Info</button>
                             <button class="ai-chip" onclick="askAI('strengths')">💪 Core Strengths</button>
-                            <button class="ai-chip" onclick="askAI('linkedin')">🔗 LinkedIn Profile</button>
                             <button class="ai-chip secondary" onclick="resetChat()">🔄 Main Menu</button>
+                        </div>
+                        <div class="chat-input-container" style="display: flex; gap: 8px; margin-top: 1rem;">
+                            <input type="text" id="aiChatInput" placeholder="Type your question..." style="flex: 1; padding: 8px 12px; border-radius: 20px; border: 1px solid var(--glass-border); background: #222; color: white; font-size: 0.9rem;">
+                            <button onclick="sendChatMessage()" style="background: var(--accent-color); border: none; width: 35px; height: 35px; border-radius: 50%; color: black; cursor: pointer;"><i class="fas fa-paper-plane"></i></button>
                         </div>
                     </div>
 
