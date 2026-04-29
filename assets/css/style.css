@@ -1203,10 +1203,11 @@ footer i {
     align-self: flex-end;
 }
 
-.chat-footer {
-    padding: 1rem;
-    border-top: 1px solid var(--glass-border);
-    text-align: center;
+.ai-agent-view {
+    padding: 1.2rem 1.2rem 1.8rem 1.2rem !important; /* Increased bottom padding */
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 .btn-block {
