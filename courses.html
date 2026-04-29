@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APA Bootcamp | Master Agentic Process Automation | Ai Bhat</title>
+    <meta name="description"
+        content="Join the ultimate APA Bootcamp to master Agentic Process Automation. Learn from Ganesh Bhat, an industry leader in AI and Automation.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Styles -->
+    <link rel="stylesheet" href="assets/css/style.css?v=4">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .course-hero {
+            padding: 180px 0 100px;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .course-hero h1 {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            color: white !important;
+        }
+
+        .course-hero .highlight {
+            color: #ef4444;
+        }
+
+        .curriculum-section {
+            padding: 100px 0;
+        }
+
+        .module-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .module-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .module-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+            border-color: #ef4444;
+        }
+
+        .module-number {
+            font-weight: 800;
+            color: #ef4444;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .module-card h3 {
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .module-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .module-card li {
+            margin-bottom: 0.5rem;
+            color: #64748b;
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .module-card li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #ef4444;
+        }
+
+        .course-stats {
+            display: flex;
+            justify-content: center;
+            gap: 4rem;
+            margin-top: 4rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-item h4 {
+            font-size: 2rem;
+            color: #ef4444;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-item p {
+            color: #e2e8f0;
+            font-size: 1rem;
+        }
+
+        .cta-section {
+            background: #f8fafc;
+            padding: 100px 0;
+            text-align: center;
+        }
+
+        .instructor-card {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: left;
+            border: 1px solid #e2e8f0;
+        }
+
+        .instructor-img {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #ef4444;
+        }
+
+        @media (max-width: 768px) {
+            .course-hero h1 { font-size: 2.5rem; }
+            .instructor-card { flex-direction: column; text-align: center; }
+            .course-stats { gap: 2rem; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <header class="navbar">
+        <div class="container nav-content">
+            <a href="index.html" class="logo">Ai<span class="highlight">Bhat</span></a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="index.html#about">About</a></li>
+                    <li><a href="index.html#expertise">Expertise</a></li>
+                    <li><a href="#" class="active">Course</a></li>
+                    <li><a href="index.html#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="course-hero">
+        <div class="container">
+            <span class="module-number">The Ultimate Bootcamp</span>
+            <h1>Master <span class="highlight">Agentic Process Automation</span> (APA)</h1>
+            <p class="subtitle" style="max-width: 800px; margin: 0 auto 3rem;">
+                Don't just build bots. Architect the future. Transform your career by mastering the next generation of AI-driven automation that autonomously reasons, plans, and executes.
+            </p>
+            <div class="cta-group" style="justify-content: center;">
+                <a href="#enroll" class="btn btn-primary">Secure Your Spot</a>
+                <a href="#curriculum" class="btn btn-secondary" style="border-color: white; color: white;">View Curriculum</a>
+            </div>
+
+            <div class="course-stats">
+                <div class="stat-item">
+                    <h4>2 Months</h4>
+                    <p>Duration</p>
+                </div>
+                <div class="stat-item">
+                    <h4>6 Hrs/Week</h4>
+                    <p>Time Commitment</p>
+                </div>
+                <div class="stat-item">
+                    <h4>Intermediate</h4>
+                    <p>Skill Level</p>
+                </div>
+                <div class="stat-item">
+                    <h4>10+ Tools</h4>
+                    <p>Mastered</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Curriculum -->
+    <section id="curriculum" class="curriculum-section">
+        <div class="container">
+            <div style="text-align: center; margin-bottom: 4rem;">
+                <h2>A Comprehensive <span class="highlight">Frontier</span> Curriculum</h2>
+                <p>From theoretical foundations to deploying mission-critical AI agents.</p>
+            </div>
+
+            <div class="module-grid">
+                <!-- Module 1 -->
+                <div class="module-card">
+                    <span class="module-number">Module 01</span>
+                    <h3>The Evolution of Intelligence</h3>
+                    <ul>
+                        <li>RPA to APA: The Paradigm Shift</li>
+                        <li>Generative AI Fundamentals (LLMs, Tokens, Embeddings)</li>
+                        <li>Prompt Engineering Strategies for Automation</li>
+                        <li>Vector Databases & RAG Architectures</li>
+                    </ul>
+                </div>
+
+                <!-- Module 2 -->
+                <div class="module-card">
+                    <span class="module-number">Module 02</span>
+                    <h3>Automation Anywhere APA Stack</h3>
+                    <ul>
+                        <li>AI Agent Studio & Process Reasoning Engine (PRE)</li>
+                        <li>Building with AA Copilot & AI Skills</li>
+                        <li>Conversational Automation Workflows</li>
+                        <li>Human-in-the-Loop (HITL) Governance</li>
+                    </ul>
+                </div>
+
+                <!-- Module 3 -->
+                <div class="module-card">
+                    <span class="module-number">Module 03</span>
+                    <h3>Building Enterprise AI Agents</h3>
+                    <ul>
+                        <li>AA Agent Builder: Knowledge Base & Toolkits</li>
+                        <li>Custom Agent Templates & MCP</li>
+                        <li>Telegram & Slack Assistant Integration</li>
+                        <li>Web App & API Response Orchestration</li>
+                    </ul>
+                </div>
+
+                <!-- Module 4 -->
+                <div class="module-card">
+                    <span class="module-number">Module 04</span>
+                    <h3>The Developer Stack & Best Practices</h3>
+                    <ul>
+                        <li>Advanced Variable Handling & Global Values</li>
+                        <li>Self-Healing Conditional Flows</li>
+                        <li>Optimized Looping & Iteration Logic</li>
+                        <li>Error Handling & Debugging for AI Agents</li>
+                    </ul>
+                </div>
+
+                <!-- Module 5 -->
+                <div class="module-card">
+                    <span class="module-number">Module 05</span>
+                    <h3>Project I: Customer Issue Resolver</h3>
+                    <ul>
+                        <li>PDD/BRD Design for Agentic Workflows</li>
+                        <li>Building with Agent Builder, Email & ServiceNow</li>
+                        <li>Agent Testing: Confusion Matrix & F1 Scoring</li>
+                        <li>Production Readiness Verification</li>
+                    </ul>
+                </div>
+
+                <!-- Module 6 -->
+                <div class="module-card">
+                    <span class="module-number">Module 06</span>
+                    <h3>Project II: CRM Lead Orchestrator</h3>
+                    <ul>
+                        <li>Lead Creation with AA Copilot & Salesforce</li>
+                        <li>Multi-platform Data Synchronization</li>
+                        <li>Event-Driven Agent Triggering</li>
+                        <li>End-to-End Build and Publish</li>
+                    </ul>
+                </div>
+
+                <!-- Module 7 -->
+                <div class="module-card">
+                    <span class="module-number">Module 07</span>
+                    <h3>UiPath APA Developer Stack</h3>
+                    <ul>
+                        <li>UiPath Agent Builder & Autopilot Walkthrough</li>
+                        <li>Maestro Platform: Process Modeling & Monitoring</li>
+                        <li>Human-in-the-Loop with UiPath Apps</li>
+                        <li>Contextual Escalation Strategies</li>
+                    </ul>
+                </div>
+
+                <!-- Module 8 -->
+                <div class="module-card">
+                    <span class="module-number">Module 08</span>
+                    <h3>Microsoft Copilot Studio</h3>
+                    <ul>
+                        <li>Enterprise Conversational Flow Design</li>
+                        <li>Deep Dive: Trigger Phrases, Entities & Actions</li>
+                        <li>Power Platform Connectors (Teams, Outlook, SharePoint)</li>
+                        <li>FAQ Copilot Build & Multi-Channel Deployment</li>
+                    </ul>
+                </div>
+
+                <!-- Module 9 -->
+                <div class="module-card">
+                    <span class="module-number">Module 09</span>
+                    <h3>n8n & Open Source Orchestration</h3>
+                    <ul>
+                        <li>Introduction to n8n AI Agent Nodes</li>
+                        <li>Advanced APIs & Webhook Orchestration</li>
+                        <li>Debugging & Tracing Complex Workflows</li>
+                        <li>AI-Driven Workflow Automation Concepts</li>
+                    </ul>
+                </div>
+
+                <!-- Module 10 -->
+                <div class="module-card">
+                    <span class="module-number">Module 10</span>
+                    <h3>Google AI Studio & Future Roadmap</h3>
+                    <ul>
+                        <li>Gemini Model Comparison & API Management</li>
+                        <li>Media Generation: Imagen & Veo Integration</li>
+                        <li>Building Custom Apps with Gemini</li>
+                        <li>Future Roadmap & Emerging AI Technologies</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tools -->
+    <section class="section" style="background: white;">
+        <div class="container" style="text-align: center;">
+            <h2>Master the <span class="highlight">Tech Stack</span> of the Future</h2>
+            <p style="margin-bottom: 3rem;">We cover the tools that power today's and tomorrow's digital workforces.</p>
+            <div style="display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap;">
+                <img src="assets/img/logos/aa.jpg" alt="AA" style="height: 60px;">
+                <img src="assets/img/logos/uipath.jpg" alt="UiPath" style="height: 60px;">
+                <img src="assets/img/logos/gemini.png" alt="Gemini" style="height: 60px;">
+                <img src="assets/img/logos/azure.jpg" alt="Azure" style="height: 60px;">
+                <img src="assets/img/logos/n8n.png" alt="n8n" style="height: 60px;">
+                <img src="assets/img/logos/copilot.jpg" alt="Copilot" style="height: 60px;">
+                <img src="assets/img/logos/python.webp" alt="Python" style="height: 60px;">
+                <img src="assets/img/logos/langchain.jpg" alt="LangChain" style="height: 60px;">
+            </div>
+        </div>
+    </section>
+
+    <!-- Instructor -->
+    <section class="section">
+        <div class="container">
+            <div class="instructor-card">
+                <img src="assets/img/profile.jpg" alt="Ganesh Bhat" class="instructor-img">
+                <div>
+                    <span class="module-number">Your Mentor</span>
+                    <h3>Ganesh Bhat</h3>
+                    <p style="color: #1e1b4b; font-weight: 600; margin-bottom: 1rem;">Senior AI & Automation Solution Architect</p>
+                    <p>With over 9 years of experience architecting enterprise-scale platforms, Ganesh has pioneered AI-first automation solutions for global leaders. As an Automation Anywhere MVP and Google AI Product Expert, he brings real-world deployment knowledge to the classroom, ensuring you learn not just the "how," but the "why" of intelligent automation.</p>
+                    <a href="https://www.linkedin.com/company/ai-brahmaai/" target="_blank" class="btn btn-secondary" style="margin-top: 1rem;">Connect on LinkedIn</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section id="enroll" class="cta-section">
+        <div class="container">
+            <h2>Ready to Become an <span class="highlight">APA Architect</span>?</h2>
+            <p style="max-width: 600px; margin: 0 auto 2rem;">Join a community of forward-thinking automation professionals and start building the future today.</p>
+            <a href="https://chat.whatsapp.com/CSzwkzRC6933yUjysZodaL" class="btn btn-primary" style="padding: 1.2rem 3rem; font-size: 1.2rem;">Enroll in the Bootcamp</a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 2rem;">
+                <div class="logo">Ai<span class="highlight">Bhat</span></div>
+                <p>&copy; 2026 Ai Bhat. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+</body>
+
+</html>
