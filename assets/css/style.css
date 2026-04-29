@@ -2125,8 +2125,51 @@ footer {
 
 .ai-options-grid {
     display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
+    gap: 10px;
+    margin-bottom: 1.5rem;
+}
+
+.chat-input-container {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.chat-input-container input {
+    flex: 1;
+    padding: 12px 20px;
+    border-radius: 30px;
+    border: 1px solid var(--glass-border);
+    background: #111;
+    color: white;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+}
+
+.chat-input-container input:focus {
+    border-color: var(--accent-color);
+    background: #1a1a1a;
+    outline: none;
+}
+
+.chat-input-container button {
+    background: var(--accent-color);
+    border: none;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    color: #121212;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+}
+
+.chat-input-container button:hover {
+    transform: scale(1.1) rotate(-10deg);
+    background: white;
 }
 
 .ai-chip {
