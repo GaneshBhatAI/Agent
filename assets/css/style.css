@@ -1135,23 +1135,26 @@ footer i {
 
 .suggestion-chips {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
     gap: 8px;
-    margin-bottom: 15px;
+    margin: 10px 0;
     animation: fadeIn 0.5s ease;
+    align-self: flex-start;
+    width: 100%;
 }
 
 .suggestion-chip {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid var(--glass-border);
-    padding: 8px 14px;
-    border-radius: 18px;
-    font-size: 0.8rem;
+    padding: 10px 16px;
+    border-radius: 12px;
+    font-size: 0.85rem;
     color: var(--text-muted);
     cursor: pointer;
     transition: all 0.3s ease;
     border-color: rgba(255, 59, 48, 0.3);
-    animation: pulseGlow 3s infinite;
+    text-align: left;
+    width: fit-content;
 }
 
 .suggestion-chip:hover {
