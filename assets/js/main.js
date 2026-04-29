@@ -132,6 +132,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    window.askSuggestion = function (question) {
+        aiChatInput.value = question;
+        sendChatMessage();
+    }
+
     // Helper to format bot responses
     function formatResponse(text) {
         // Replace **bold** with <b>bold</b>
@@ -147,6 +152,10 @@ document.addEventListener('DOMContentLoaded', () => {
     window.sendChatMessage = async function () {
         const text = aiChatInput.value.trim();
         if (!text) return;
+
+        // Hide suggestions on first message
+        const suggestions = document.getElementById('suggestionChips');
+        if (suggestions) suggestions.style.display = 'none';
 
         aiChatInput.value = "";
         addMessage("user", text);

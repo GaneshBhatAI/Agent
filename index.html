@@ -569,6 +569,11 @@
                             <div class="message bot">Hello! I'm Ganesh's AI Assistant. How can I help you with inquiries about his work or the APA Bootcamp?</div>
                         </div>
 
+                        <div class="suggestion-chips" id="suggestionChips">
+                            <button class="suggestion-chip flashy" onclick="askSuggestion('What is the curriculum of APA Bootcamp?')">📜 APA Curriculum</button>
+                            <button class="suggestion-chip flashy" onclick="askSuggestion('How to contact Ganesh?')">📞 Contact Ganesh</button>
+                            <button class="suggestion-chip flashy" onclick="askSuggestion('What are your core strengths?')">🚀 Core Strengths</button>
+                        </div>
                         <div class="chat-input-container" style="display: flex; gap: 8px;">
                             <input type="text" id="aiChatInput" placeholder="Type your question..." style="flex: 1; padding: 10px 15px; border-radius: 25px; border: 1px solid var(--glass-border); background: #1a1a1a; color: white; font-size: 0.9rem;">
                             <button onclick="sendChatMessage()" style="background: var(--accent-color); border: none; width: 40px; height: 40px; border-radius: 50%; color: black; cursor: pointer; display: flex; align-items: center; justify-content: center;"><i class="fas fa-paper-plane"></i></button>

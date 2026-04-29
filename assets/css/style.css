@@ -1133,6 +1133,41 @@ footer i {
     border-radius: 10px;
 }
 
+.suggestion-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 15px;
+    animation: fadeIn 0.5s ease;
+}
+
+.suggestion-chip {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    padding: 8px 14px;
+    border-radius: 18px;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-color: rgba(255, 59, 48, 0.3);
+    animation: pulseGlow 3s infinite;
+}
+
+.suggestion-chip:hover {
+    background: var(--accent-color);
+    color: #121212;
+    border-color: var(--accent-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 59, 48, 0.3);
+}
+
+@keyframes pulseGlow {
+    0% { border-color: rgba(255, 59, 48, 0.2); box-shadow: 0 0 5px rgba(255, 59, 48, 0.1); }
+    50% { border-color: rgba(255, 59, 48, 0.6); box-shadow: 0 0 15px rgba(255, 59, 48, 0.2); }
+    100% { border-color: rgba(255, 59, 48, 0.2); box-shadow: 0 0 5px rgba(255, 59, 48, 0.1); }
+}
+
 .chat-timestamp {
     text-align: center;
     color: var(--text-muted);
