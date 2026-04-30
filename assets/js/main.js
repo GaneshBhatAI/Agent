@@ -225,17 +225,25 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Chatbot Toggle Logic ---
-    if (chatToggle) {
+    if (chatToggle && chatPopup) {
         chatToggle.addEventListener('click', () => {
             chatPopup.classList.toggle('active');
         });
     }
 
-    if (closeChat) {
+    if (closeChat && chatPopup) {
         closeChat.addEventListener('click', () => {
             chatPopup.classList.remove('active');
         });
     }
+
+    // Global function for suggestion chips
+    window.askSuggestion = function(text) {
+        if (aiChatInput) {
+            aiChatInput.value = text;
+            window.sendChatMessage();
+        }
+    };
 
     // Share Logic
     const linkedinBtn = document.getElementById('shareLinkedin');
