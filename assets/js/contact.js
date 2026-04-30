@@ -12,7 +12,7 @@ async function sendEmailNotification(data, source = "Contact Form") {
         subject: data.subject || "General Inquiry",
         message: data.message,
         _source: source, // Custom field for tracking
-        _subject: `New Lead [${source}] - ${data.name}` // Formspree email subject
+        _subject: `[New Lead] - ${data.name} via ${source}` // Formspree email subject
     };
 
     const response = await fetch(FORMSPREE_URL, {
