@@ -264,8 +264,39 @@
             <h2 style="font-family: 'Poppins', sans-serif; font-weight: 800;">Let’s Work Together</h2>
             <p style="font-size: 1.2rem; margin-bottom: 3rem; opacity: 0.9; max-width: 600px; margin-left: auto; margin-right: auto;">Ready to automate the future? Reach out for consulting, implementations, or partnerships by filling out the form below.</p>
             
-            <div style="background: white; max-width: 800px; margin: 0 auto; border-radius: 12px; overflow: hidden; height: 950px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); position: relative; padding-top: 30px;">
-                <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdsq4MK5Eai6zHKEZpMFkFT9BPeVXXRp6_ZOHBw5NKd7TH6Qg/viewform?embedded=true" style="width: 100%; height: 1300px; border: none; margin-top: -285px;" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
+            <!-- Custom Contact Form -->
+            <div class="card contact-form-container" style="max-width: 800px; margin: 0 auto; text-align: left;">
+                <form id="contactForm" class="contact-form">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="name">Full Name</label>
+                            <input type="text" id="name" name="name" placeholder="Enter your name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" name="email" placeholder="email@example.com" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="subject">Subject</label>
+                        <select id="subject" name="subject" required>
+                            <option value="" disabled selected>Select an option</option>
+                            <option value="Consulting">AI Consulting</option>
+                            <option value="Implementation">Automation Implementation</option>
+                            <option value="Training">Training & Bootcamps</option>
+                            <option value="Partnership">Partnership Inquiry</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Your Message</label>
+                        <textarea id="message" name="message" rows="5" placeholder="How can we help you?" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block" style="padding: 1rem; font-size: 1.1rem; margin-top: 1rem;">
+                        <i class="fas fa-paper-plane" style="margin-right: 10px;"></i> Send Inquiry
+                    </button>
+                    <div id="formStatus" class="form-status"></div>
+                </form>
             </div>
         </div>
     </section>
@@ -315,8 +346,9 @@
                         style="height: 380px; overflow-y: auto; margin-bottom: 1rem; padding-right: 5px; display: flex; flex-direction: column; gap: 12px; background: white; padding: 15px;">
                         <div class="message bot" style="background: var(--bg-dark); color: var(--primary-color); border: 1px solid var(--glass-border); padding: 10px; border-radius: 10px;">Hello! I'm Anagha AI's Assistant. How can I help you today?</div>
                         <div class="suggestion-chips" id="suggestionChips">
-                            <button class="suggestion-chip" style="background: white; border: 1px solid var(--accent-color); color: var(--accent-color); padding: 8px 12px; border-radius: 20px; cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.background='var(--accent-color)'; this.style.color='white';" onmouseout="this.style.background='white'; this.style.color='var(--accent-color)';" onclick="askSuggestion('What services do you offer?')">What services do you offer?</button>
-                            <button class="suggestion-chip" style="background: white; border: 1px solid var(--accent-color); color: var(--accent-color); padding: 8px 12px; border-radius: 20px; cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.background='var(--accent-color)'; this.style.color='white';" onmouseout="this.style.background='white'; this.style.color='var(--accent-color)';" onclick="askSuggestion('How can I contact sales?')">How can I contact sales?</button>
+                            <button class="suggestion-chip" onclick="askSuggestion('What services do you offer?')">What services do you offer?</button>
+                            <button class="suggestion-chip" onclick="askSuggestion('How can I contact sales?')">How can I contact sales?</button>
+                            <button class="suggestion-chip" onclick="startLeadFlow()" style="border-color: var(--accent-color); color: var(--accent-color); font-weight: 700;">🤝 Connect with Ganesh Bhat</button>
                         </div>
                     </div>
                     <div class="chat-input-container" style="display: flex; gap: 8px; padding: 10px; border-top: 1px solid var(--glass-border);">
@@ -331,9 +363,12 @@
         </button>
     </div>
 
+    <!-- SMTP Library -->
+    <script src="https://smtpjs.com/v3/smtp.js"></script>
     <!-- Scripts -->
     <script src="assets/js/main.js"></script>
     <script src="assets/js/script.js"></script>
+    <script src="assets/js/contact.js"></script>
 </body>
 
 </html>

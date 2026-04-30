@@ -12,7 +12,74 @@ document.addEventListener('DOMContentLoaded', () => {
                 entry.target.classList.add('visible');
                 observer.unobserve(entry.target);
             }
-        });
+        
+    // --- Lead Generation Flow ---
+    let isCollectingLead = false;
+    let leadStep = 0;
+    let leadData = { name: '', email: '', message: '' };
+
+    window.startLeadFlow = function() {
+        isCollectingLead = true;
+        leadStep = 1;
+        const suggestions = document.getElementById('suggestionChips');
+        if (suggestions) suggestions.style.display = 'none';
+        
+        addMessage('bot', 'I would be happy to help you connect with <b>Ganesh Bhat</b>. First, could you please tell me your <b>Full Name</b>?');
+    };
+
+    const originalSendChatMessage = window.sendChatMessage;
+    window.sendChatMessage = async function() {
+        if (!isCollectingLead) {
+            return originalSendChatMessage();
+        }
+
+        const text = aiChatInput.value.trim();
+        if (!text) return;
+
+        aiChatInput.value = '';
+        addMessage('user', text);
+
+        if (leadStep === 1) {
+            leadData.name = text;
+            leadStep = 2;
+            addMessage('bot', `Great to meet you, ${text}! What is your <b>Email Address</b>?`);
+        } else if (leadStep === 2) {
+            if (!text.includes('@')) {
+                addMessage('bot', 'That doesn\'t look like a valid email. Please provide a valid email address so Ganesh can reach you.');
+                return;
+            }
+            leadData.email = text;
+            leadStep = 3;
+            addMessage('bot', 'Got it. Finally, what would you like to discuss with Ganesh? (Your message)');
+        } else if (leadStep === 3) {
+            leadData.message = text;
+            leadStep = 4;
+            isCollectingLead = false;
+            
+            addMessage('bot', 'Processing your request... <span class="fas fa-spinner fa-spin"></span>');
+            
+            // Call the email sender
+            if (typeof sendEmailNotification === 'function') {
+                sendEmailNotification(leadData, 'Chatbot Lead')
+                    .then(message => {
+                        if (message === 'OK') {
+                            const lastMsg = aiChatLog.lastElementChild;
+                            if (lastMsg) lastMsg.remove();
+                            addMessage('bot', '✅ <b>Success!</b> Your details have been sent to Ganesh. He will reach out to you shortly.');
+                            if (typeof showSuccessGraphic === 'function') showSuccessGraphic('chatPopup');
+                        } else {
+                            throw new Error(message);
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Lead Flow Error:', err);
+                        addMessage('bot', 'I apologize, but I encountered an error sending your message. Please try the contact form or email directly.');
+                    });
+            }
+        }
+    };
+
+});
     }, observerOptions);
 
     const fadeElements = document.querySelectorAll('.fade-in');
@@ -27,7 +94,74 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (navbar) {
             navbar.classList.remove('scrolled');
         }
-    });
+    
+    // --- Lead Generation Flow ---
+    let isCollectingLead = false;
+    let leadStep = 0;
+    let leadData = { name: '', email: '', message: '' };
+
+    window.startLeadFlow = function() {
+        isCollectingLead = true;
+        leadStep = 1;
+        const suggestions = document.getElementById('suggestionChips');
+        if (suggestions) suggestions.style.display = 'none';
+        
+        addMessage('bot', 'I would be happy to help you connect with <b>Ganesh Bhat</b>. First, could you please tell me your <b>Full Name</b>?');
+    };
+
+    const originalSendChatMessage = window.sendChatMessage;
+    window.sendChatMessage = async function() {
+        if (!isCollectingLead) {
+            return originalSendChatMessage();
+        }
+
+        const text = aiChatInput.value.trim();
+        if (!text) return;
+
+        aiChatInput.value = '';
+        addMessage('user', text);
+
+        if (leadStep === 1) {
+            leadData.name = text;
+            leadStep = 2;
+            addMessage('bot', `Great to meet you, ${text}! What is your <b>Email Address</b>?`);
+        } else if (leadStep === 2) {
+            if (!text.includes('@')) {
+                addMessage('bot', 'That doesn\'t look like a valid email. Please provide a valid email address so Ganesh can reach you.');
+                return;
+            }
+            leadData.email = text;
+            leadStep = 3;
+            addMessage('bot', 'Got it. Finally, what would you like to discuss with Ganesh? (Your message)');
+        } else if (leadStep === 3) {
+            leadData.message = text;
+            leadStep = 4;
+            isCollectingLead = false;
+            
+            addMessage('bot', 'Processing your request... <span class="fas fa-spinner fa-spin"></span>');
+            
+            // Call the email sender
+            if (typeof sendEmailNotification === 'function') {
+                sendEmailNotification(leadData, 'Chatbot Lead')
+                    .then(message => {
+                        if (message === 'OK') {
+                            const lastMsg = aiChatLog.lastElementChild;
+                            if (lastMsg) lastMsg.remove();
+                            addMessage('bot', '✅ <b>Success!</b> Your details have been sent to Ganesh. He will reach out to you shortly.');
+                            if (typeof showSuccessGraphic === 'function') showSuccessGraphic('chatPopup');
+                        } else {
+                            throw new Error(message);
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Lead Flow Error:', err);
+                        addMessage('bot', 'I apologize, but I encountered an error sending your message. Please try the contact form or email directly.');
+                    });
+            }
+        }
+    };
+
+});
 
     // Mobile Menu Toggle
     const mobileBtn = document.querySelector('.mobile-menu-btn');
@@ -50,8 +184,142 @@ document.addEventListener('DOMContentLoaded', () => {
             if (mobileOverlay && mobileOverlay.classList.contains('active')) {
                 toggleMenu();
             }
-        });
-    });
+        
+    // --- Lead Generation Flow ---
+    let isCollectingLead = false;
+    let leadStep = 0;
+    let leadData = { name: '', email: '', message: '' };
+
+    window.startLeadFlow = function() {
+        isCollectingLead = true;
+        leadStep = 1;
+        const suggestions = document.getElementById('suggestionChips');
+        if (suggestions) suggestions.style.display = 'none';
+        
+        addMessage('bot', 'I would be happy to help you connect with <b>Ganesh Bhat</b>. First, could you please tell me your <b>Full Name</b>?');
+    };
+
+    const originalSendChatMessage = window.sendChatMessage;
+    window.sendChatMessage = async function() {
+        if (!isCollectingLead) {
+            return originalSendChatMessage();
+        }
+
+        const text = aiChatInput.value.trim();
+        if (!text) return;
+
+        aiChatInput.value = '';
+        addMessage('user', text);
+
+        if (leadStep === 1) {
+            leadData.name = text;
+            leadStep = 2;
+            addMessage('bot', `Great to meet you, ${text}! What is your <b>Email Address</b>?`);
+        } else if (leadStep === 2) {
+            if (!text.includes('@')) {
+                addMessage('bot', 'That doesn\'t look like a valid email. Please provide a valid email address so Ganesh can reach you.');
+                return;
+            }
+            leadData.email = text;
+            leadStep = 3;
+            addMessage('bot', 'Got it. Finally, what would you like to discuss with Ganesh? (Your message)');
+        } else if (leadStep === 3) {
+            leadData.message = text;
+            leadStep = 4;
+            isCollectingLead = false;
+            
+            addMessage('bot', 'Processing your request... <span class="fas fa-spinner fa-spin"></span>');
+            
+            // Call the email sender
+            if (typeof sendEmailNotification === 'function') {
+                sendEmailNotification(leadData, 'Chatbot Lead')
+                    .then(message => {
+                        if (message === 'OK') {
+                            const lastMsg = aiChatLog.lastElementChild;
+                            if (lastMsg) lastMsg.remove();
+                            addMessage('bot', '✅ <b>Success!</b> Your details have been sent to Ganesh. He will reach out to you shortly.');
+                            if (typeof showSuccessGraphic === 'function') showSuccessGraphic('chatPopup');
+                        } else {
+                            throw new Error(message);
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Lead Flow Error:', err);
+                        addMessage('bot', 'I apologize, but I encountered an error sending your message. Please try the contact form or email directly.');
+                    });
+            }
+        }
+    };
+
+});
+    
+    // --- Lead Generation Flow ---
+    let isCollectingLead = false;
+    let leadStep = 0;
+    let leadData = { name: '', email: '', message: '' };
+
+    window.startLeadFlow = function() {
+        isCollectingLead = true;
+        leadStep = 1;
+        const suggestions = document.getElementById('suggestionChips');
+        if (suggestions) suggestions.style.display = 'none';
+        
+        addMessage('bot', 'I would be happy to help you connect with <b>Ganesh Bhat</b>. First, could you please tell me your <b>Full Name</b>?');
+    };
+
+    const originalSendChatMessage = window.sendChatMessage;
+    window.sendChatMessage = async function() {
+        if (!isCollectingLead) {
+            return originalSendChatMessage();
+        }
+
+        const text = aiChatInput.value.trim();
+        if (!text) return;
+
+        aiChatInput.value = '';
+        addMessage('user', text);
+
+        if (leadStep === 1) {
+            leadData.name = text;
+            leadStep = 2;
+            addMessage('bot', `Great to meet you, ${text}! What is your <b>Email Address</b>?`);
+        } else if (leadStep === 2) {
+            if (!text.includes('@')) {
+                addMessage('bot', 'That doesn\'t look like a valid email. Please provide a valid email address so Ganesh can reach you.');
+                return;
+            }
+            leadData.email = text;
+            leadStep = 3;
+            addMessage('bot', 'Got it. Finally, what would you like to discuss with Ganesh? (Your message)');
+        } else if (leadStep === 3) {
+            leadData.message = text;
+            leadStep = 4;
+            isCollectingLead = false;
+            
+            addMessage('bot', 'Processing your request... <span class="fas fa-spinner fa-spin"></span>');
+            
+            // Call the email sender
+            if (typeof sendEmailNotification === 'function') {
+                sendEmailNotification(leadData, 'Chatbot Lead')
+                    .then(message => {
+                        if (message === 'OK') {
+                            const lastMsg = aiChatLog.lastElementChild;
+                            if (lastMsg) lastMsg.remove();
+                            addMessage('bot', '✅ <b>Success!</b> Your details have been sent to Ganesh. He will reach out to you shortly.');
+                            if (typeof showSuccessGraphic === 'function') showSuccessGraphic('chatPopup');
+                        } else {
+                            throw new Error(message);
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Lead Flow Error:', err);
+                        addMessage('bot', 'I apologize, but I encountered an error sending your message. Please try the contact form or email directly.');
+                    });
+            }
+        }
+    };
+
+});
 
     // Smooth Scrolling
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -64,10 +332,211 @@ document.addEventListener('DOMContentLoaded', () => {
             if (targetElement) {
                 targetElement.scrollIntoView({
                     behavior: 'smooth'
-                });
+                
+    // --- Lead Generation Flow ---
+    let isCollectingLead = false;
+    let leadStep = 0;
+    let leadData = { name: '', email: '', message: '' };
+
+    window.startLeadFlow = function() {
+        isCollectingLead = true;
+        leadStep = 1;
+        const suggestions = document.getElementById('suggestionChips');
+        if (suggestions) suggestions.style.display = 'none';
+        
+        addMessage('bot', 'I would be happy to help you connect with <b>Ganesh Bhat</b>. First, could you please tell me your <b>Full Name</b>?');
+    };
+
+    const originalSendChatMessage = window.sendChatMessage;
+    window.sendChatMessage = async function() {
+        if (!isCollectingLead) {
+            return originalSendChatMessage();
+        }
+
+        const text = aiChatInput.value.trim();
+        if (!text) return;
+
+        aiChatInput.value = '';
+        addMessage('user', text);
+
+        if (leadStep === 1) {
+            leadData.name = text;
+            leadStep = 2;
+            addMessage('bot', `Great to meet you, ${text}! What is your <b>Email Address</b>?`);
+        } else if (leadStep === 2) {
+            if (!text.includes('@')) {
+                addMessage('bot', 'That doesn\'t look like a valid email. Please provide a valid email address so Ganesh can reach you.');
+                return;
             }
-        });
-    });
+            leadData.email = text;
+            leadStep = 3;
+            addMessage('bot', 'Got it. Finally, what would you like to discuss with Ganesh? (Your message)');
+        } else if (leadStep === 3) {
+            leadData.message = text;
+            leadStep = 4;
+            isCollectingLead = false;
+            
+            addMessage('bot', 'Processing your request... <span class="fas fa-spinner fa-spin"></span>');
+            
+            // Call the email sender
+            if (typeof sendEmailNotification === 'function') {
+                sendEmailNotification(leadData, 'Chatbot Lead')
+                    .then(message => {
+                        if (message === 'OK') {
+                            const lastMsg = aiChatLog.lastElementChild;
+                            if (lastMsg) lastMsg.remove();
+                            addMessage('bot', '✅ <b>Success!</b> Your details have been sent to Ganesh. He will reach out to you shortly.');
+                            if (typeof showSuccessGraphic === 'function') showSuccessGraphic('chatPopup');
+                        } else {
+                            throw new Error(message);
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Lead Flow Error:', err);
+                        addMessage('bot', 'I apologize, but I encountered an error sending your message. Please try the contact form or email directly.');
+                    });
+            }
+        }
+    };
+
+});
+            }
+        
+    // --- Lead Generation Flow ---
+    let isCollectingLead = false;
+    let leadStep = 0;
+    let leadData = { name: '', email: '', message: '' };
+
+    window.startLeadFlow = function() {
+        isCollectingLead = true;
+        leadStep = 1;
+        const suggestions = document.getElementById('suggestionChips');
+        if (suggestions) suggestions.style.display = 'none';
+        
+        addMessage('bot', 'I would be happy to help you connect with <b>Ganesh Bhat</b>. First, could you please tell me your <b>Full Name</b>?');
+    };
+
+    const originalSendChatMessage = window.sendChatMessage;
+    window.sendChatMessage = async function() {
+        if (!isCollectingLead) {
+            return originalSendChatMessage();
+        }
+
+        const text = aiChatInput.value.trim();
+        if (!text) return;
+
+        aiChatInput.value = '';
+        addMessage('user', text);
+
+        if (leadStep === 1) {
+            leadData.name = text;
+            leadStep = 2;
+            addMessage('bot', `Great to meet you, ${text}! What is your <b>Email Address</b>?`);
+        } else if (leadStep === 2) {
+            if (!text.includes('@')) {
+                addMessage('bot', 'That doesn\'t look like a valid email. Please provide a valid email address so Ganesh can reach you.');
+                return;
+            }
+            leadData.email = text;
+            leadStep = 3;
+            addMessage('bot', 'Got it. Finally, what would you like to discuss with Ganesh? (Your message)');
+        } else if (leadStep === 3) {
+            leadData.message = text;
+            leadStep = 4;
+            isCollectingLead = false;
+            
+            addMessage('bot', 'Processing your request... <span class="fas fa-spinner fa-spin"></span>');
+            
+            // Call the email sender
+            if (typeof sendEmailNotification === 'function') {
+                sendEmailNotification(leadData, 'Chatbot Lead')
+                    .then(message => {
+                        if (message === 'OK') {
+                            const lastMsg = aiChatLog.lastElementChild;
+                            if (lastMsg) lastMsg.remove();
+                            addMessage('bot', '✅ <b>Success!</b> Your details have been sent to Ganesh. He will reach out to you shortly.');
+                            if (typeof showSuccessGraphic === 'function') showSuccessGraphic('chatPopup');
+                        } else {
+                            throw new Error(message);
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Lead Flow Error:', err);
+                        addMessage('bot', 'I apologize, but I encountered an error sending your message. Please try the contact form or email directly.');
+                    });
+            }
+        }
+    };
+
+});
+    
+    // --- Lead Generation Flow ---
+    let isCollectingLead = false;
+    let leadStep = 0;
+    let leadData = { name: '', email: '', message: '' };
+
+    window.startLeadFlow = function() {
+        isCollectingLead = true;
+        leadStep = 1;
+        const suggestions = document.getElementById('suggestionChips');
+        if (suggestions) suggestions.style.display = 'none';
+        
+        addMessage('bot', 'I would be happy to help you connect with <b>Ganesh Bhat</b>. First, could you please tell me your <b>Full Name</b>?');
+    };
+
+    const originalSendChatMessage = window.sendChatMessage;
+    window.sendChatMessage = async function() {
+        if (!isCollectingLead) {
+            return originalSendChatMessage();
+        }
+
+        const text = aiChatInput.value.trim();
+        if (!text) return;
+
+        aiChatInput.value = '';
+        addMessage('user', text);
+
+        if (leadStep === 1) {
+            leadData.name = text;
+            leadStep = 2;
+            addMessage('bot', `Great to meet you, ${text}! What is your <b>Email Address</b>?`);
+        } else if (leadStep === 2) {
+            if (!text.includes('@')) {
+                addMessage('bot', 'That doesn\'t look like a valid email. Please provide a valid email address so Ganesh can reach you.');
+                return;
+            }
+            leadData.email = text;
+            leadStep = 3;
+            addMessage('bot', 'Got it. Finally, what would you like to discuss with Ganesh? (Your message)');
+        } else if (leadStep === 3) {
+            leadData.message = text;
+            leadStep = 4;
+            isCollectingLead = false;
+            
+            addMessage('bot', 'Processing your request... <span class="fas fa-spinner fa-spin"></span>');
+            
+            // Call the email sender
+            if (typeof sendEmailNotification === 'function') {
+                sendEmailNotification(leadData, 'Chatbot Lead')
+                    .then(message => {
+                        if (message === 'OK') {
+                            const lastMsg = aiChatLog.lastElementChild;
+                            if (lastMsg) lastMsg.remove();
+                            addMessage('bot', '✅ <b>Success!</b> Your details have been sent to Ganesh. He will reach out to you shortly.');
+                            if (typeof showSuccessGraphic === 'function') showSuccessGraphic('chatPopup');
+                        } else {
+                            throw new Error(message);
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Lead Flow Error:', err);
+                        addMessage('bot', 'I apologize, but I encountered an error sending your message. Please try the contact form or email directly.');
+                    });
+            }
+        }
+    };
+
+});
 
     // --- AI Chatbot Logic (Mistral Integration) ---
     const MISTRAL_API_KEY = "Nbsc8Cgarlu7EzFBvhI508U13vN7rncn";
@@ -126,7 +595,74 @@ document.addEventListener('DOMContentLoaded', () => {
 
         aiChatInput.value = "";
         addMessage("user", text);
-        chatHistory.push({ role: "user", content: text });
+        chatHistory.push({ role: "user", content: text 
+    // --- Lead Generation Flow ---
+    let isCollectingLead = false;
+    let leadStep = 0;
+    let leadData = { name: '', email: '', message: '' };
+
+    window.startLeadFlow = function() {
+        isCollectingLead = true;
+        leadStep = 1;
+        const suggestions = document.getElementById('suggestionChips');
+        if (suggestions) suggestions.style.display = 'none';
+        
+        addMessage('bot', 'I would be happy to help you connect with <b>Ganesh Bhat</b>. First, could you please tell me your <b>Full Name</b>?');
+    };
+
+    const originalSendChatMessage = window.sendChatMessage;
+    window.sendChatMessage = async function() {
+        if (!isCollectingLead) {
+            return originalSendChatMessage();
+        }
+
+        const text = aiChatInput.value.trim();
+        if (!text) return;
+
+        aiChatInput.value = '';
+        addMessage('user', text);
+
+        if (leadStep === 1) {
+            leadData.name = text;
+            leadStep = 2;
+            addMessage('bot', `Great to meet you, ${text}! What is your <b>Email Address</b>?`);
+        } else if (leadStep === 2) {
+            if (!text.includes('@')) {
+                addMessage('bot', 'That doesn\'t look like a valid email. Please provide a valid email address so Ganesh can reach you.');
+                return;
+            }
+            leadData.email = text;
+            leadStep = 3;
+            addMessage('bot', 'Got it. Finally, what would you like to discuss with Ganesh? (Your message)');
+        } else if (leadStep === 3) {
+            leadData.message = text;
+            leadStep = 4;
+            isCollectingLead = false;
+            
+            addMessage('bot', 'Processing your request... <span class="fas fa-spinner fa-spin"></span>');
+            
+            // Call the email sender
+            if (typeof sendEmailNotification === 'function') {
+                sendEmailNotification(leadData, 'Chatbot Lead')
+                    .then(message => {
+                        if (message === 'OK') {
+                            const lastMsg = aiChatLog.lastElementChild;
+                            if (lastMsg) lastMsg.remove();
+                            addMessage('bot', '✅ <b>Success!</b> Your details have been sent to Ganesh. He will reach out to you shortly.');
+                            if (typeof showSuccessGraphic === 'function') showSuccessGraphic('chatPopup');
+                        } else {
+                            throw new Error(message);
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Lead Flow Error:', err);
+                        addMessage('bot', 'I apologize, but I encountered an error sending your message. Please try the contact form or email directly.');
+                    });
+            }
+        }
+    };
+
+});
 
         const loadingId = "bot-loading-" + Date.now();
         const loadingDiv = document.createElement('div');
@@ -134,7 +670,74 @@ document.addEventListener('DOMContentLoaded', () => {
         loadingDiv.classList.add('message', 'bot');
         loadingDiv.innerHTML = '<span class="online-dot" style="margin-right: 10px;"></span>thinking...';
         aiChatLog.appendChild(loadingDiv);
-        loadingDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        loadingDiv.scrollIntoView({ behavior: 'smooth', block: 'start' 
+    // --- Lead Generation Flow ---
+    let isCollectingLead = false;
+    let leadStep = 0;
+    let leadData = { name: '', email: '', message: '' };
+
+    window.startLeadFlow = function() {
+        isCollectingLead = true;
+        leadStep = 1;
+        const suggestions = document.getElementById('suggestionChips');
+        if (suggestions) suggestions.style.display = 'none';
+        
+        addMessage('bot', 'I would be happy to help you connect with <b>Ganesh Bhat</b>. First, could you please tell me your <b>Full Name</b>?');
+    };
+
+    const originalSendChatMessage = window.sendChatMessage;
+    window.sendChatMessage = async function() {
+        if (!isCollectingLead) {
+            return originalSendChatMessage();
+        }
+
+        const text = aiChatInput.value.trim();
+        if (!text) return;
+
+        aiChatInput.value = '';
+        addMessage('user', text);
+
+        if (leadStep === 1) {
+            leadData.name = text;
+            leadStep = 2;
+            addMessage('bot', `Great to meet you, ${text}! What is your <b>Email Address</b>?`);
+        } else if (leadStep === 2) {
+            if (!text.includes('@')) {
+                addMessage('bot', 'That doesn\'t look like a valid email. Please provide a valid email address so Ganesh can reach you.');
+                return;
+            }
+            leadData.email = text;
+            leadStep = 3;
+            addMessage('bot', 'Got it. Finally, what would you like to discuss with Ganesh? (Your message)');
+        } else if (leadStep === 3) {
+            leadData.message = text;
+            leadStep = 4;
+            isCollectingLead = false;
+            
+            addMessage('bot', 'Processing your request... <span class="fas fa-spinner fa-spin"></span>');
+            
+            // Call the email sender
+            if (typeof sendEmailNotification === 'function') {
+                sendEmailNotification(leadData, 'Chatbot Lead')
+                    .then(message => {
+                        if (message === 'OK') {
+                            const lastMsg = aiChatLog.lastElementChild;
+                            if (lastMsg) lastMsg.remove();
+                            addMessage('bot', '✅ <b>Success!</b> Your details have been sent to Ganesh. He will reach out to you shortly.');
+                            if (typeof showSuccessGraphic === 'function') showSuccessGraphic('chatPopup');
+                        } else {
+                            throw new Error(message);
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Lead Flow Error:', err);
+                        addMessage('bot', 'I apologize, but I encountered an error sending your message. Please try the contact form or email directly.');
+                    });
+            }
+        }
+    };
+
+});
 
         try {
             const response = await fetch("https://api.mistral.ai/v1/chat/completions", {
@@ -148,7 +751,74 @@ document.addEventListener('DOMContentLoaded', () => {
                     messages: chatHistory,
                     temperature: 0.7
                 })
-            });
+            
+    // --- Lead Generation Flow ---
+    let isCollectingLead = false;
+    let leadStep = 0;
+    let leadData = { name: '', email: '', message: '' };
+
+    window.startLeadFlow = function() {
+        isCollectingLead = true;
+        leadStep = 1;
+        const suggestions = document.getElementById('suggestionChips');
+        if (suggestions) suggestions.style.display = 'none';
+        
+        addMessage('bot', 'I would be happy to help you connect with <b>Ganesh Bhat</b>. First, could you please tell me your <b>Full Name</b>?');
+    };
+
+    const originalSendChatMessage = window.sendChatMessage;
+    window.sendChatMessage = async function() {
+        if (!isCollectingLead) {
+            return originalSendChatMessage();
+        }
+
+        const text = aiChatInput.value.trim();
+        if (!text) return;
+
+        aiChatInput.value = '';
+        addMessage('user', text);
+
+        if (leadStep === 1) {
+            leadData.name = text;
+            leadStep = 2;
+            addMessage('bot', `Great to meet you, ${text}! What is your <b>Email Address</b>?`);
+        } else if (leadStep === 2) {
+            if (!text.includes('@')) {
+                addMessage('bot', 'That doesn\'t look like a valid email. Please provide a valid email address so Ganesh can reach you.');
+                return;
+            }
+            leadData.email = text;
+            leadStep = 3;
+            addMessage('bot', 'Got it. Finally, what would you like to discuss with Ganesh? (Your message)');
+        } else if (leadStep === 3) {
+            leadData.message = text;
+            leadStep = 4;
+            isCollectingLead = false;
+            
+            addMessage('bot', 'Processing your request... <span class="fas fa-spinner fa-spin"></span>');
+            
+            // Call the email sender
+            if (typeof sendEmailNotification === 'function') {
+                sendEmailNotification(leadData, 'Chatbot Lead')
+                    .then(message => {
+                        if (message === 'OK') {
+                            const lastMsg = aiChatLog.lastElementChild;
+                            if (lastMsg) lastMsg.remove();
+                            addMessage('bot', '✅ <b>Success!</b> Your details have been sent to Ganesh. He will reach out to you shortly.');
+                            if (typeof showSuccessGraphic === 'function') showSuccessGraphic('chatPopup');
+                        } else {
+                            throw new Error(message);
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Lead Flow Error:', err);
+                        addMessage('bot', 'I apologize, but I encountered an error sending your message. Please try the contact form or email directly.');
+                    });
+            }
+        }
+    };
+
+});
 
             const data = await response.json();
             const botMessageRaw = data.choices[0].message.content;
@@ -158,7 +828,74 @@ document.addEventListener('DOMContentLoaded', () => {
             if (loadingEl) loadingEl.remove();
 
             addMessage("bot", botMessage);
-            chatHistory.push({ role: "assistant", content: botMessageRaw });
+            chatHistory.push({ role: "assistant", content: botMessageRaw 
+    // --- Lead Generation Flow ---
+    let isCollectingLead = false;
+    let leadStep = 0;
+    let leadData = { name: '', email: '', message: '' };
+
+    window.startLeadFlow = function() {
+        isCollectingLead = true;
+        leadStep = 1;
+        const suggestions = document.getElementById('suggestionChips');
+        if (suggestions) suggestions.style.display = 'none';
+        
+        addMessage('bot', 'I would be happy to help you connect with <b>Ganesh Bhat</b>. First, could you please tell me your <b>Full Name</b>?');
+    };
+
+    const originalSendChatMessage = window.sendChatMessage;
+    window.sendChatMessage = async function() {
+        if (!isCollectingLead) {
+            return originalSendChatMessage();
+        }
+
+        const text = aiChatInput.value.trim();
+        if (!text) return;
+
+        aiChatInput.value = '';
+        addMessage('user', text);
+
+        if (leadStep === 1) {
+            leadData.name = text;
+            leadStep = 2;
+            addMessage('bot', `Great to meet you, ${text}! What is your <b>Email Address</b>?`);
+        } else if (leadStep === 2) {
+            if (!text.includes('@')) {
+                addMessage('bot', 'That doesn\'t look like a valid email. Please provide a valid email address so Ganesh can reach you.');
+                return;
+            }
+            leadData.email = text;
+            leadStep = 3;
+            addMessage('bot', 'Got it. Finally, what would you like to discuss with Ganesh? (Your message)');
+        } else if (leadStep === 3) {
+            leadData.message = text;
+            leadStep = 4;
+            isCollectingLead = false;
+            
+            addMessage('bot', 'Processing your request... <span class="fas fa-spinner fa-spin"></span>');
+            
+            // Call the email sender
+            if (typeof sendEmailNotification === 'function') {
+                sendEmailNotification(leadData, 'Chatbot Lead')
+                    .then(message => {
+                        if (message === 'OK') {
+                            const lastMsg = aiChatLog.lastElementChild;
+                            if (lastMsg) lastMsg.remove();
+                            addMessage('bot', '✅ <b>Success!</b> Your details have been sent to Ganesh. He will reach out to you shortly.');
+                            if (typeof showSuccessGraphic === 'function') showSuccessGraphic('chatPopup');
+                        } else {
+                            throw new Error(message);
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Lead Flow Error:', err);
+                        addMessage('bot', 'I apologize, but I encountered an error sending your message. Please try the contact form or email directly.');
+                    });
+            }
+        }
+    };
+
+});
         } catch (error) {
             console.error("Mistral API Error:", error);
             const loadingEl = document.getElementById(loadingId);
@@ -177,7 +914,74 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (sender === 'bot') {
             // Scroll to the top of the new bot message so user sees the first sentence
-            messageDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            messageDiv.scrollIntoView({ behavior: 'smooth', block: 'start' 
+    // --- Lead Generation Flow ---
+    let isCollectingLead = false;
+    let leadStep = 0;
+    let leadData = { name: '', email: '', message: '' };
+
+    window.startLeadFlow = function() {
+        isCollectingLead = true;
+        leadStep = 1;
+        const suggestions = document.getElementById('suggestionChips');
+        if (suggestions) suggestions.style.display = 'none';
+        
+        addMessage('bot', 'I would be happy to help you connect with <b>Ganesh Bhat</b>. First, could you please tell me your <b>Full Name</b>?');
+    };
+
+    const originalSendChatMessage = window.sendChatMessage;
+    window.sendChatMessage = async function() {
+        if (!isCollectingLead) {
+            return originalSendChatMessage();
+        }
+
+        const text = aiChatInput.value.trim();
+        if (!text) return;
+
+        aiChatInput.value = '';
+        addMessage('user', text);
+
+        if (leadStep === 1) {
+            leadData.name = text;
+            leadStep = 2;
+            addMessage('bot', `Great to meet you, ${text}! What is your <b>Email Address</b>?`);
+        } else if (leadStep === 2) {
+            if (!text.includes('@')) {
+                addMessage('bot', 'That doesn\'t look like a valid email. Please provide a valid email address so Ganesh can reach you.');
+                return;
+            }
+            leadData.email = text;
+            leadStep = 3;
+            addMessage('bot', 'Got it. Finally, what would you like to discuss with Ganesh? (Your message)');
+        } else if (leadStep === 3) {
+            leadData.message = text;
+            leadStep = 4;
+            isCollectingLead = false;
+            
+            addMessage('bot', 'Processing your request... <span class="fas fa-spinner fa-spin"></span>');
+            
+            // Call the email sender
+            if (typeof sendEmailNotification === 'function') {
+                sendEmailNotification(leadData, 'Chatbot Lead')
+                    .then(message => {
+                        if (message === 'OK') {
+                            const lastMsg = aiChatLog.lastElementChild;
+                            if (lastMsg) lastMsg.remove();
+                            addMessage('bot', '✅ <b>Success!</b> Your details have been sent to Ganesh. He will reach out to you shortly.');
+                            if (typeof showSuccessGraphic === 'function') showSuccessGraphic('chatPopup');
+                        } else {
+                            throw new Error(message);
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Lead Flow Error:', err);
+                        addMessage('bot', 'I apologize, but I encountered an error sending your message. Please try the contact form or email directly.');
+                    });
+            }
+        }
+    };
+
+});
         } else {
             // Standard scroll to bottom for user messages
             aiChatLog.scrollTop = aiChatLog.scrollHeight;
@@ -189,7 +993,74 @@ document.addEventListener('DOMContentLoaded', () => {
             if (e.key === 'Enter') {
                 sendChatMessage();
             }
-        });
+        
+    // --- Lead Generation Flow ---
+    let isCollectingLead = false;
+    let leadStep = 0;
+    let leadData = { name: '', email: '', message: '' };
+
+    window.startLeadFlow = function() {
+        isCollectingLead = true;
+        leadStep = 1;
+        const suggestions = document.getElementById('suggestionChips');
+        if (suggestions) suggestions.style.display = 'none';
+        
+        addMessage('bot', 'I would be happy to help you connect with <b>Ganesh Bhat</b>. First, could you please tell me your <b>Full Name</b>?');
+    };
+
+    const originalSendChatMessage = window.sendChatMessage;
+    window.sendChatMessage = async function() {
+        if (!isCollectingLead) {
+            return originalSendChatMessage();
+        }
+
+        const text = aiChatInput.value.trim();
+        if (!text) return;
+
+        aiChatInput.value = '';
+        addMessage('user', text);
+
+        if (leadStep === 1) {
+            leadData.name = text;
+            leadStep = 2;
+            addMessage('bot', `Great to meet you, ${text}! What is your <b>Email Address</b>?`);
+        } else if (leadStep === 2) {
+            if (!text.includes('@')) {
+                addMessage('bot', 'That doesn\'t look like a valid email. Please provide a valid email address so Ganesh can reach you.');
+                return;
+            }
+            leadData.email = text;
+            leadStep = 3;
+            addMessage('bot', 'Got it. Finally, what would you like to discuss with Ganesh? (Your message)');
+        } else if (leadStep === 3) {
+            leadData.message = text;
+            leadStep = 4;
+            isCollectingLead = false;
+            
+            addMessage('bot', 'Processing your request... <span class="fas fa-spinner fa-spin"></span>');
+            
+            // Call the email sender
+            if (typeof sendEmailNotification === 'function') {
+                sendEmailNotification(leadData, 'Chatbot Lead')
+                    .then(message => {
+                        if (message === 'OK') {
+                            const lastMsg = aiChatLog.lastElementChild;
+                            if (lastMsg) lastMsg.remove();
+                            addMessage('bot', '✅ <b>Success!</b> Your details have been sent to Ganesh. He will reach out to you shortly.');
+                            if (typeof showSuccessGraphic === 'function') showSuccessGraphic('chatPopup');
+                        } else {
+                            throw new Error(message);
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Lead Flow Error:', err);
+                        addMessage('bot', 'I apologize, but I encountered an error sending your message. Please try the contact form or email directly.');
+                    });
+            }
+        }
+    };
+
+});
     }
 
     // --- Chatbot Toggle Logic ---
@@ -197,14 +1068,148 @@ document.addEventListener('DOMContentLoaded', () => {
         chatToggle.addEventListener('click', (e) => {
             e.preventDefault();
             chatPopup.classList.toggle('active');
-        });
+        
+    // --- Lead Generation Flow ---
+    let isCollectingLead = false;
+    let leadStep = 0;
+    let leadData = { name: '', email: '', message: '' };
+
+    window.startLeadFlow = function() {
+        isCollectingLead = true;
+        leadStep = 1;
+        const suggestions = document.getElementById('suggestionChips');
+        if (suggestions) suggestions.style.display = 'none';
+        
+        addMessage('bot', 'I would be happy to help you connect with <b>Ganesh Bhat</b>. First, could you please tell me your <b>Full Name</b>?');
+    };
+
+    const originalSendChatMessage = window.sendChatMessage;
+    window.sendChatMessage = async function() {
+        if (!isCollectingLead) {
+            return originalSendChatMessage();
+        }
+
+        const text = aiChatInput.value.trim();
+        if (!text) return;
+
+        aiChatInput.value = '';
+        addMessage('user', text);
+
+        if (leadStep === 1) {
+            leadData.name = text;
+            leadStep = 2;
+            addMessage('bot', `Great to meet you, ${text}! What is your <b>Email Address</b>?`);
+        } else if (leadStep === 2) {
+            if (!text.includes('@')) {
+                addMessage('bot', 'That doesn\'t look like a valid email. Please provide a valid email address so Ganesh can reach you.');
+                return;
+            }
+            leadData.email = text;
+            leadStep = 3;
+            addMessage('bot', 'Got it. Finally, what would you like to discuss with Ganesh? (Your message)');
+        } else if (leadStep === 3) {
+            leadData.message = text;
+            leadStep = 4;
+            isCollectingLead = false;
+            
+            addMessage('bot', 'Processing your request... <span class="fas fa-spinner fa-spin"></span>');
+            
+            // Call the email sender
+            if (typeof sendEmailNotification === 'function') {
+                sendEmailNotification(leadData, 'Chatbot Lead')
+                    .then(message => {
+                        if (message === 'OK') {
+                            const lastMsg = aiChatLog.lastElementChild;
+                            if (lastMsg) lastMsg.remove();
+                            addMessage('bot', '✅ <b>Success!</b> Your details have been sent to Ganesh. He will reach out to you shortly.');
+                            if (typeof showSuccessGraphic === 'function') showSuccessGraphic('chatPopup');
+                        } else {
+                            throw new Error(message);
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Lead Flow Error:', err);
+                        addMessage('bot', 'I apologize, but I encountered an error sending your message. Please try the contact form or email directly.');
+                    });
+            }
+        }
+    };
+
+});
     }
 
     if (closeChat && chatPopup) {
         closeChat.addEventListener('click', (e) => {
             e.preventDefault();
             chatPopup.classList.remove('active');
-        });
+        
+    // --- Lead Generation Flow ---
+    let isCollectingLead = false;
+    let leadStep = 0;
+    let leadData = { name: '', email: '', message: '' };
+
+    window.startLeadFlow = function() {
+        isCollectingLead = true;
+        leadStep = 1;
+        const suggestions = document.getElementById('suggestionChips');
+        if (suggestions) suggestions.style.display = 'none';
+        
+        addMessage('bot', 'I would be happy to help you connect with <b>Ganesh Bhat</b>. First, could you please tell me your <b>Full Name</b>?');
+    };
+
+    const originalSendChatMessage = window.sendChatMessage;
+    window.sendChatMessage = async function() {
+        if (!isCollectingLead) {
+            return originalSendChatMessage();
+        }
+
+        const text = aiChatInput.value.trim();
+        if (!text) return;
+
+        aiChatInput.value = '';
+        addMessage('user', text);
+
+        if (leadStep === 1) {
+            leadData.name = text;
+            leadStep = 2;
+            addMessage('bot', `Great to meet you, ${text}! What is your <b>Email Address</b>?`);
+        } else if (leadStep === 2) {
+            if (!text.includes('@')) {
+                addMessage('bot', 'That doesn\'t look like a valid email. Please provide a valid email address so Ganesh can reach you.');
+                return;
+            }
+            leadData.email = text;
+            leadStep = 3;
+            addMessage('bot', 'Got it. Finally, what would you like to discuss with Ganesh? (Your message)');
+        } else if (leadStep === 3) {
+            leadData.message = text;
+            leadStep = 4;
+            isCollectingLead = false;
+            
+            addMessage('bot', 'Processing your request... <span class="fas fa-spinner fa-spin"></span>');
+            
+            // Call the email sender
+            if (typeof sendEmailNotification === 'function') {
+                sendEmailNotification(leadData, 'Chatbot Lead')
+                    .then(message => {
+                        if (message === 'OK') {
+                            const lastMsg = aiChatLog.lastElementChild;
+                            if (lastMsg) lastMsg.remove();
+                            addMessage('bot', '✅ <b>Success!</b> Your details have been sent to Ganesh. He will reach out to you shortly.');
+                            if (typeof showSuccessGraphic === 'function') showSuccessGraphic('chatPopup');
+                        } else {
+                            throw new Error(message);
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Lead Flow Error:', err);
+                        addMessage('bot', 'I apologize, but I encountered an error sending your message. Please try the contact form or email directly.');
+                    });
+            }
+        }
+    };
+
+});
     }
 
     // Global function for suggestion chips
@@ -225,7 +1230,74 @@ document.addEventListener('DOMContentLoaded', () => {
             const currentUrl = encodeURIComponent(window.location.href);
             const shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${currentUrl}`;
             window.open(shareUrl, '_blank', 'width=600,height=600');
-        });
+        
+    // --- Lead Generation Flow ---
+    let isCollectingLead = false;
+    let leadStep = 0;
+    let leadData = { name: '', email: '', message: '' };
+
+    window.startLeadFlow = function() {
+        isCollectingLead = true;
+        leadStep = 1;
+        const suggestions = document.getElementById('suggestionChips');
+        if (suggestions) suggestions.style.display = 'none';
+        
+        addMessage('bot', 'I would be happy to help you connect with <b>Ganesh Bhat</b>. First, could you please tell me your <b>Full Name</b>?');
+    };
+
+    const originalSendChatMessage = window.sendChatMessage;
+    window.sendChatMessage = async function() {
+        if (!isCollectingLead) {
+            return originalSendChatMessage();
+        }
+
+        const text = aiChatInput.value.trim();
+        if (!text) return;
+
+        aiChatInput.value = '';
+        addMessage('user', text);
+
+        if (leadStep === 1) {
+            leadData.name = text;
+            leadStep = 2;
+            addMessage('bot', `Great to meet you, ${text}! What is your <b>Email Address</b>?`);
+        } else if (leadStep === 2) {
+            if (!text.includes('@')) {
+                addMessage('bot', 'That doesn\'t look like a valid email. Please provide a valid email address so Ganesh can reach you.');
+                return;
+            }
+            leadData.email = text;
+            leadStep = 3;
+            addMessage('bot', 'Got it. Finally, what would you like to discuss with Ganesh? (Your message)');
+        } else if (leadStep === 3) {
+            leadData.message = text;
+            leadStep = 4;
+            isCollectingLead = false;
+            
+            addMessage('bot', 'Processing your request... <span class="fas fa-spinner fa-spin"></span>');
+            
+            // Call the email sender
+            if (typeof sendEmailNotification === 'function') {
+                sendEmailNotification(leadData, 'Chatbot Lead')
+                    .then(message => {
+                        if (message === 'OK') {
+                            const lastMsg = aiChatLog.lastElementChild;
+                            if (lastMsg) lastMsg.remove();
+                            addMessage('bot', '✅ <b>Success!</b> Your details have been sent to Ganesh. He will reach out to you shortly.');
+                            if (typeof showSuccessGraphic === 'function') showSuccessGraphic('chatPopup');
+                        } else {
+                            throw new Error(message);
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Lead Flow Error:', err);
+                        addMessage('bot', 'I apologize, but I encountered an error sending your message. Please try the contact form or email directly.');
+                    });
+            }
+        }
+    };
+
+});
     }
 
     if (whatsappBtn) {
@@ -235,6 +1307,140 @@ document.addEventListener('DOMContentLoaded', () => {
             const currentTitle = encodeURIComponent(document.title);
             const shareUrl = `https://api.whatsapp.com/send?text=${currentTitle}%20${currentUrl}`;
             window.open(shareUrl, '_blank');
-        });
+        
+    // --- Lead Generation Flow ---
+    let isCollectingLead = false;
+    let leadStep = 0;
+    let leadData = { name: '', email: '', message: '' };
+
+    window.startLeadFlow = function() {
+        isCollectingLead = true;
+        leadStep = 1;
+        const suggestions = document.getElementById('suggestionChips');
+        if (suggestions) suggestions.style.display = 'none';
+        
+        addMessage('bot', 'I would be happy to help you connect with <b>Ganesh Bhat</b>. First, could you please tell me your <b>Full Name</b>?');
+    };
+
+    const originalSendChatMessage = window.sendChatMessage;
+    window.sendChatMessage = async function() {
+        if (!isCollectingLead) {
+            return originalSendChatMessage();
+        }
+
+        const text = aiChatInput.value.trim();
+        if (!text) return;
+
+        aiChatInput.value = '';
+        addMessage('user', text);
+
+        if (leadStep === 1) {
+            leadData.name = text;
+            leadStep = 2;
+            addMessage('bot', `Great to meet you, ${text}! What is your <b>Email Address</b>?`);
+        } else if (leadStep === 2) {
+            if (!text.includes('@')) {
+                addMessage('bot', 'That doesn\'t look like a valid email. Please provide a valid email address so Ganesh can reach you.');
+                return;
+            }
+            leadData.email = text;
+            leadStep = 3;
+            addMessage('bot', 'Got it. Finally, what would you like to discuss with Ganesh? (Your message)');
+        } else if (leadStep === 3) {
+            leadData.message = text;
+            leadStep = 4;
+            isCollectingLead = false;
+            
+            addMessage('bot', 'Processing your request... <span class="fas fa-spinner fa-spin"></span>');
+            
+            // Call the email sender
+            if (typeof sendEmailNotification === 'function') {
+                sendEmailNotification(leadData, 'Chatbot Lead')
+                    .then(message => {
+                        if (message === 'OK') {
+                            const lastMsg = aiChatLog.lastElementChild;
+                            if (lastMsg) lastMsg.remove();
+                            addMessage('bot', '✅ <b>Success!</b> Your details have been sent to Ganesh. He will reach out to you shortly.');
+                            if (typeof showSuccessGraphic === 'function') showSuccessGraphic('chatPopup');
+                        } else {
+                            throw new Error(message);
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Lead Flow Error:', err);
+                        addMessage('bot', 'I apologize, but I encountered an error sending your message. Please try the contact form or email directly.');
+                    });
+            }
+        }
+    };
+
+});
     }
+
+    // --- Lead Generation Flow ---
+    let isCollectingLead = false;
+    let leadStep = 0;
+    let leadData = { name: '', email: '', message: '' };
+
+    window.startLeadFlow = function() {
+        isCollectingLead = true;
+        leadStep = 1;
+        const suggestions = document.getElementById('suggestionChips');
+        if (suggestions) suggestions.style.display = 'none';
+        
+        addMessage('bot', 'I would be happy to help you connect with <b>Ganesh Bhat</b>. First, could you please tell me your <b>Full Name</b>?');
+    };
+
+    const originalSendChatMessage = window.sendChatMessage;
+    window.sendChatMessage = async function() {
+        if (!isCollectingLead) {
+            return originalSendChatMessage();
+        }
+
+        const text = aiChatInput.value.trim();
+        if (!text) return;
+
+        aiChatInput.value = '';
+        addMessage('user', text);
+
+        if (leadStep === 1) {
+            leadData.name = text;
+            leadStep = 2;
+            addMessage('bot', `Great to meet you, ${text}! What is your <b>Email Address</b>?`);
+        } else if (leadStep === 2) {
+            if (!text.includes('@')) {
+                addMessage('bot', 'That doesn\'t look like a valid email. Please provide a valid email address so Ganesh can reach you.');
+                return;
+            }
+            leadData.email = text;
+            leadStep = 3;
+            addMessage('bot', 'Got it. Finally, what would you like to discuss with Ganesh? (Your message)');
+        } else if (leadStep === 3) {
+            leadData.message = text;
+            leadStep = 4;
+            isCollectingLead = false;
+            
+            addMessage('bot', 'Processing your request... <span class="fas fa-spinner fa-spin"></span>');
+            
+            // Call the email sender
+            if (typeof sendEmailNotification === 'function') {
+                sendEmailNotification(leadData, 'Chatbot Lead')
+                    .then(message => {
+                        if (message === 'OK') {
+                            const lastMsg = aiChatLog.lastElementChild;
+                            if (lastMsg) lastMsg.remove();
+                            addMessage('bot', '✅ <b>Success!</b> Your details have been sent to Ganesh. He will reach out to you shortly.');
+                            if (typeof showSuccessGraphic === 'function') showSuccessGraphic('chatPopup');
+                        } else {
+                            throw new Error(message);
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Lead Flow Error:', err);
+                        addMessage('bot', 'I apologize, but I encountered an error sending your message. Please try the contact form or email directly.');
+                    });
+            }
+        }
+    };
+
 });
