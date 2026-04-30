@@ -71,11 +71,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- AI Chatbot Logic (Mistral Integration) ---
     const MISTRAL_API_KEY = "Nbsc8Cgarlu7EzFBvhI508U13vN7rncn";
-    const chatToggle = document.getElementById('chatToggle');
-    const closeChat = document.getElementById('closeChat');
-    const chatPopup = document.getElementById('chatPopup');
-    const aiChatLog = document.getElementById('aiChatLog');
-    const aiChatInput = document.getElementById('aiChatInput');
+    
+    // Safely get elements
+    const getEl = (id) => document.getElementById(id);
+    const chatToggle = getEl('chatToggle');
+    const closeChat = getEl('closeChat');
+    const chatPopup = getEl('chatPopup');
+    const aiChatLog = getEl('aiChatLog');
+    const aiChatInput = getEl('aiChatInput');
 
     let chatHistory = [
         {
@@ -98,62 +101,25 @@ document.addEventListener('DOMContentLoaded', () => {
             
             CONTEXT DATA:
             - Ganesh Bhat: Senior AI & Automation Solution Architect with 9+ years of experience.
-            - Expertise: Agentic AI (APA), Enterprise RPA (Automation Anywhere, UiPath), n8n, Workflow Orchestration.
-            - Roles: Automation Anywhere MVP, Google AI Product Expert.
-            - APA Bootcamp: A 2-month program covering Agentic Automation.
-            - Contact: ai.brahmabusiness@gmail.com.
-            - LinkedIn: https://www.linkedin.com/in/ganeshdhogale/
-            - WhatsApp Business: https://wa.me/919113548342
-            `
+            - Expertise: RPA (UiPath, Automation Anywhere), Agentic AI (Mistral, Gemini, OpenAI), Low-code (n8n, Zapier).
+            - APA Bootcamp: A 2-month program mastering Agentic Process Automation with 5+ industry-leading tools. Includes curriculum on Intelligent Document Processing, AI Agents, and Enterprise Workflows.
+            - Contact: ai.brahmabusiness@gmail.com | +91 9113548342 | https://wa.me/919113548342`
         }
     ];
 
-    if (chatToggle && chatPopup) {
-        chatToggle.addEventListener('click', () => {
-            chatPopup.classList.toggle('active');
-        });
-
-        if (closeChat) {
-            closeChat.addEventListener('click', () => {
-                chatPopup.classList.remove('active');
-            });
-        }
-    }
-
-    window.askAI = function (topic) {
-        let question = "";
-        switch (topic) {
-            case 'contact': question = "What is Ganesh's contact information?"; break;
-            case 'strengths': question = "What are Ganesh's core professional strengths?"; break;
-        }
-        if (question) {
-            aiChatInput.value = question;
-            sendChatMessage();
-        }
-    }
-
-    window.askSuggestion = function (question) {
-        aiChatInput.value = question;
-        sendChatMessage();
-    }
-
     // Helper to format bot responses
     function formatResponse(text) {
-        // Replace **bold** with <b>bold</b>
         let formatted = text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
-        // Replace single * with bullet point or italics? User said they want correct line breaks and bold.
-        // Replace newlines with <br>
         formatted = formatted.replace(/\n/g, '<br>');
-        // Handle links [text](url) -> <a href="url">text</a>
         formatted = formatted.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank" style="color: var(--accent-color); text-decoration: underline;">$1</a>');
         return formatted;
     }
 
     window.sendChatMessage = async function () {
+        if (!aiChatInput || !aiChatLog) return;
         const text = aiChatInput.value.trim();
         if (!text) return;
 
-        // Hide suggestions on first message
         const suggestions = document.getElementById('suggestionChips');
         if (suggestions) suggestions.style.display = 'none';
 
@@ -161,7 +127,6 @@ document.addEventListener('DOMContentLoaded', () => {
         addMessage("user", text);
         chatHistory.push({ role: "user", content: text });
 
-        // Show typing indicator
         const loadingId = "bot-loading-" + Date.now();
         const loadingDiv = document.createElement('div');
         loadingDiv.id = loadingId;
@@ -180,22 +145,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: JSON.stringify({
                     model: "mistral-tiny",
                     messages: chatHistory,
-                    temperature: 0.1
+                    temperature: 0.7
                 })
             });
 
             const data = await response.json();
-            
-            // Check for API errors
-            if (data.error || !data.choices) {
-                throw new Error("Mistral API Error");
-            }
-
             const botMessageRaw = data.choices[0].message.content;
             const botMessage = formatResponse(botMessageRaw);
 
-            // Remove loading
-            document.getElementById(loadingId).remove();
+            const loadingEl = document.getElementById(loadingId);
+            if (loadingEl) loadingEl.remove();
 
             addMessage("bot", botMessage);
             chatHistory.push({ role: "assistant", content: botMessageRaw });
@@ -209,6 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function addMessage(sender, text) {
+        if (!aiChatLog) return;
         const messageDiv = document.createElement('div');
         messageDiv.classList.add('message', sender);
         messageDiv.innerHTML = text;
@@ -226,13 +186,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Chatbot Toggle Logic ---
     if (chatToggle && chatPopup) {
-        chatToggle.addEventListener('click', () => {
+        chatToggle.addEventListener('click', (e) => {
+            e.preventDefault();
             chatPopup.classList.toggle('active');
         });
     }
 
     if (closeChat && chatPopup) {
-        closeChat.addEventListener('click', () => {
+        closeChat.addEventListener('click', (e) => {
+            e.preventDefault();
             chatPopup.classList.remove('active');
         });
     }
