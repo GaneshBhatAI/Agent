@@ -2366,3 +2366,98 @@ footer {
     gap: 10px;
 }
 
+/* --- Impact Hero Section --- */
+.hero-impact {
+    padding: 160px 2rem 120px;
+    background: linear-gradient(135deg, #1e053b 0%, #0f172a 100%);
+    color: white;
+    text-align: center;
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-impact::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 50% 50%, rgba(136, 235, 26, 0.1) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.hero-impact-content {
+    max-width: 1000px;
+    position: relative;
+    z-index: 10;
+}
+
+.impact-title {
+    font-size: clamp(3.5rem, 8vw, 6rem);
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 1.5rem;
+    letter-spacing: -2px;
+    color: white;
+}
+
+.impact-highlight {
+    color: #facc15; /* High-impact yellow */
+}
+
+.impact-subtitle {
+    font-size: clamp(1.2rem, 3vw, 1.8rem);
+    opacity: 0.9;
+    margin-bottom: 3.5rem;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    color: #e2e8f0;
+}
+
+.cta-group-impact {
+    display: flex;
+    justify-content: center;
+}
+
+.btn-impact {
+    background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
+    color: white !important;
+    padding: 1.2rem 3rem;
+    border-radius: 12px;
+    font-size: 1.4rem;
+    font-weight: 700;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 10px 25px rgba(255, 75, 43, 0.4);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.btn-impact:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 20px 40px rgba(255, 75, 43, 0.6);
+}
+
+.btn-impact .emoji {
+    font-size: 1.6rem;
+}
+
+@media (max-width: 768px) {
+    .hero-impact {
+        padding: 120px 1.5rem 80px;
+    }
+    .impact-title {
+        font-size: 3rem;
+    }
+    .btn-impact {
+        padding: 1rem 2rem;
+        font-size: 1.1rem;
+    }
+}
