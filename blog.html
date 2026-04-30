@@ -4,46 +4,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blog - Ganesh Bhat | AI & Automation Architect</title>
-    <!-- Fonts -->
+    <title>Blog - Anagha AI | AI & Automation Architect</title>
+    <meta name="description" content="Latest insights on AI, Automation, and Agentic Process Automation (APA) from Anagha AI.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;600&family=Open+Sans:wght@400;600&family=Poppins:wght@400;600;700&display=swap"
         rel="stylesheet">
     <!-- Styles -->
-    <link rel="stylesheet" href="assets/css/style.css?v=3">
+    <link rel="stylesheet" href="assets/css/style.css?v=5">
     <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
 </head>
 
 <body>
     <!-- Navigation -->
-    <nav class="navbar" id="navbar">
-        <div class="container nav-container">
-            <a href="index.html" class="logo">Ganesh<span>Bhat</span></a>
-            <div class="mobile-menu-btn" onclick="toggleMobileMenu()">
-                <i class="fas fa-bars"></i>
-            </div>
-            <ul class="nav-links">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="index.html#expertise">Expertise</a></li>
-                <li><a href="index.html#process-deck">Videos</a></li>
-                <li><a href="blog.html" class="active">Blog</a></li>
-                <li><a href="index.html#community">Community</a></li>
-                <li><a href="index.html#contact">Contact</a></li>
-            </ul>
+    <header class="navbar fade-in">
+        <div class="container nav-content">
+            <a href="index.html" class="logo"><svg viewBox="0 0 100 100" class="logo-img" style="height: 35px; width: 35px;"><rect x="0" y="35" width="100" height="30" rx="15" fill="#88eb1a" transform="rotate(45 50 50)" /><circle cx="22" cy="78" r="20" fill="#0ec261" /><circle cx="78" cy="22" r="20" fill="#0ec261" /></svg> <span class="logo-text">anagh<span class="highlight">ai</span>.com</span></a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="index.html#home">Home</a></li>
+                    <li><a href="index.html#mission">Mission</a></li>
+                    <li><a href="index.html#expertise">Expertise</a></li>
+                    <li><a href="index.html#process-deck">Videos</a></li>
+                    <li><a href="about-mentor.html">About Mentor</a></li>
+                    <li><a href="index.html#contact">Contact</a></li>
+                </ul>
+                <div class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </nav>
         </div>
-    </nav>
+    </header>
 
-    <!-- Mobile Navigation Overlay -->
-    <div class="mobile-nav-overlay" id="mobileNav">
-        <div class="close-btn" onclick="toggleMobileMenu()">&times;</div>
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-nav-overlay">
+        <div class="close-btn"><i class="fas fa-times"></i></div>
         <ul class="mobile-links">
-            <li><a href="index.html" onclick="toggleMobileMenu()">Home</a></li>
-            <li><a href="index.html#expertise" onclick="toggleMobileMenu()">Expertise</a></li>
-            <li><a href="index.html#process-deck" onclick="toggleMobileMenu()">Videos</a></li>
-            <li><a href="blog.html" onclick="toggleMobileMenu()">Blog</a></li>
-            <li><a href="index.html#community" onclick="toggleMobileMenu()">Community</a></li>
-            <li><a href="index.html#contact" onclick="toggleMobileMenu()">Contact</a></li>
+            <li><a href="index.html#home">Home</a></li>
+            <li><a href="index.html#mission">Mission</a></li>
+            <li><a href="index.html#expertise">Expertise</a></li>
+            <li><a href="index.html#process-deck">Videos</a></li>
+            <li><a href="about-mentor.html">About Mentor</a></li>
+            <li><a href="index.html#contact">Contact</a></li>
         </ul>
     </div>
 
@@ -82,22 +89,25 @@
     </section>
 
     <!-- Footer -->
-    <footer>
+    <footer style="padding: 40px 0 20px;">
         <div class="container">
-            <div class="footer-content">
+            <div class="footer-content" style="border-top: 1px solid var(--glass-border); padding-top: 40px;">
                 <div class="footer-logo">
-                    <h2>Ganesh<span>Bhat</span></h2>
-                    <p>Building the next generation of intelligent automation.</p>
+                    <h2><svg viewBox="0 0 100 100" class="logo-img" style="height: 45px; width: 45px; vertical-align: middle;"><rect x="0" y="35" width="100" height="30" rx="15" fill="#88eb1a" transform="rotate(45 50 50)" /><circle cx="22" cy="78" r="20" fill="#0ec261" /><circle cx="78" cy="22" r="20" fill="#0ec261" /></svg> <span class="logo-text">anagh<span>ai</span>.com</span></h2>
+                    <p>Partnered with growing companies around the world to deliver smart tech solutions.</p>
+                </div>
+                <div class="footer-address" style="flex: 1; max-width: 300px; margin: 0 2rem; font-size: 0.9rem; color: #ffffff; line-height: 1.6;">
+                    <h4 style="color: #88eb1a; margin-bottom: 0.5rem;"><i class="fas fa-map-marker-alt" style="color: #88eb1a; margin-right: 8px;"></i>Our Office</h4>
+                    164, 1st Main Rd, Vidyaranyapura Post, Chikkabettahalli, Havyakanagara Phase-2, Vidyaranyapura, Bengaluru, Karnataka 560097
                 </div>
                 <div class="social-links">
                     <a href="#"><i class="fab fa-linkedin"></i></a>
                     <a href="#"><i class="fab fa-twitter"></i></a>
                     <a href="#"><i class="fab fa-youtube"></i></a>
-                    <a href="#"><i class="fab fa-github"></i></a>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2026 Ganesh Bhat. All Rights Reserved.</p>
+                <p>&copy; 2026 Anagha AI. All Rights Reserved.</p>
             </div>
         </div>
     </footer>
