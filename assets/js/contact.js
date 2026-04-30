@@ -1,30 +1,35 @@
 
-// Anagh AI - Contact & Lead Handling Logic
-const GMAIL_USER = "ai.brahmabusiness@gmail.com";
-const GMAIL_PASS = "mitr sixy uoto aovd"; // App Password provided by user
+// Anagh AI - Contact & Lead Handling Logic (Formspree Integration)
+const FORMSPREE_URL = "https://formspree.io/f/xzdobgev";
 
-function sendEmailNotification(data, source = "Contact Form") {
-    const subjectLine = `New Lead [${source}] - ${data.name}`;
-    const bodyContent = `
-        <h3>New Lead from Anagh AI</h3>
-        <p><b>Source:</b> ${source}</p>
-        <p><b>Name:</b> ${data.name}</p>
-        <p><b>Email:</b> ${data.email}</p>
-        <p><b>Subject/Interest:</b> ${data.subject || 'General Inquiry'}</p>
-        <p><b>Message:</b><br>${data.message}</p>
-        <hr>
-        <p>This email was sent automatically from the Anagh AI website.</p>
-    `;
+async function sendEmailNotification(data, source = "Contact Form") {
+    console.log("Sending lead to Formspree...", source);
+    
+    // Format the data for Formspree
+    const payload = {
+        name: data.name,
+        email: data.email,
+        subject: data.subject || "General Inquiry",
+        message: data.message,
+        _source: source, // Custom field for tracking
+        _subject: `New Lead [${source}] - ${data.name}` // Formspree email subject
+    };
 
-    return Email.send({
-        Host: "smtp.gmail.com",
-        Username: GMAIL_USER,
-        Password: GMAIL_PASS,
-        To: GMAIL_USER,
-        From: GMAIL_USER,
-        Subject: subjectLine,
-        Body: bodyContent
+    const response = await fetch(FORMSPREE_URL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify(payload)
     });
+
+    if (response.ok) {
+        return "OK";
+    } else {
+        const result = await response.json();
+        throw new Error(result.error || "Formspree Error");
+    }
 }
 
 // Success Graphic / Animation
@@ -37,7 +42,7 @@ function showSuccessGraphic(containerId) {
                 <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/>
                 <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
             </svg>
-            <p style="color: #065f46; font-weight: 700; margin-top: 1rem;">Lead Sent Successfully!</p>
+            <p style="color: #065f46; font-weight: 700; margin-top: 1rem;">Inquiry Sent Successfully!</p>
         </div>
     `;
     container.appendChild(graphic);
@@ -45,7 +50,7 @@ function showSuccessGraphic(containerId) {
     setTimeout(() => {
         graphic.style.opacity = '0';
         setTimeout(() => graphic.remove(), 500);
-    }, 3000);
+    }, 4000);
 }
 
 // Contact Form Handler
@@ -59,7 +64,8 @@ if (contactForm) {
         const originalBtnText = btn.innerHTML;
         
         btn.disabled = true;
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+        status.style.display = 'none';
         
         const formData = new FormData(this);
         const data = Object.fromEntries(formData.entries());
@@ -68,7 +74,7 @@ if (contactForm) {
             .then(message => {
                 if (message === "OK") {
                     status.className = 'form-status success';
-                    status.innerHTML = 'Thank you! Your message has been sent to Ganesh.';
+                    status.innerHTML = 'Thank you! Your message has been sent successfully.';
                     status.style.display = 'block';
                     showSuccessGraphic('contact');
                     contactForm.reset();
@@ -77,9 +83,9 @@ if (contactForm) {
                 }
             })
             .catch(error => {
-                console.error("Email Error:", error);
+                console.error("Submission Error:", error);
                 status.className = 'form-status error';
-                status.innerHTML = 'Submission failed. Please try again or email us directly.';
+                status.innerHTML = 'Oops! There was a problem. Please try again or email ganesh directly.';
                 status.style.display = 'block';
             })
             .finally(() => {
