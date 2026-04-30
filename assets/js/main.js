@@ -134,7 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
         loadingDiv.classList.add('message', 'bot');
         loadingDiv.innerHTML = '<span class="online-dot" style="margin-right: 10px;"></span>thinking...';
         aiChatLog.appendChild(loadingDiv);
-        aiChatLog.scrollTop = aiChatLog.scrollHeight;
+        loadingDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
         try {
             const response = await fetch("https://api.mistral.ai/v1/chat/completions", {
@@ -174,7 +174,14 @@ document.addEventListener('DOMContentLoaded', () => {
         messageDiv.classList.add('message', sender);
         messageDiv.innerHTML = text;
         aiChatLog.appendChild(messageDiv);
-        aiChatLog.scrollTop = aiChatLog.scrollHeight;
+        
+        if (sender === 'bot') {
+            // Scroll to the top of the new bot message so user sees the first sentence
+            messageDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else {
+            // Standard scroll to bottom for user messages
+            aiChatLog.scrollTop = aiChatLog.scrollHeight;
+        }
     }
 
     if (aiChatInput) {

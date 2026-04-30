@@ -467,7 +467,6 @@ a {
     text-decoration: none;
     font-family: 'Poppins', sans-serif;
     letter-spacing: -0.5px;
-    text-transform: lowercase;
 }
 
 .highlight {
@@ -1095,7 +1094,8 @@ footer i {
 .chat-header .status {
     font-size: 0.75rem;
     margin: 0;
-    opacity: 0.8;
+    opacity: 1;
+    color: #ffffff;
 }
 
 .close-chat {
