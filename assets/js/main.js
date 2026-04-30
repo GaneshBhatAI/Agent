@@ -224,6 +224,19 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- Chatbot Toggle Logic ---
+    if (chatToggle) {
+        chatToggle.addEventListener('click', () => {
+            chatPopup.classList.toggle('active');
+        });
+    }
+
+    if (closeChat) {
+        closeChat.addEventListener('click', () => {
+            chatPopup.classList.remove('active');
+        });
+    }
+
     // Share Logic
     const linkedinBtn = document.getElementById('shareLinkedin');
     const whatsappBtn = document.getElementById('shareWhatsapp');
