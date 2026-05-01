@@ -303,4 +303,28 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     };
+
+    // --- Theme Toggle Logic ---
+    const themeToggle = document.getElementById('themeToggle');
+    const body = document.body;
+
+    // Check for saved theme
+    const savedTheme = localStorage.getItem('site-theme');
+    if (savedTheme === 'red') {
+        body.classList.add('theme-red');
+    }
+
+    if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('theme-red');
+            const currentTheme = body.classList.contains('theme-red') ? 'red' : 'green';
+            localStorage.setItem('site-theme', currentTheme);
+            
+            // Visual feedback on the button
+            themeToggle.style.transform = 'scale(0.8) rotate(180deg)';
+            setTimeout(() => {
+                themeToggle.style.transform = '';
+            }, 300);
+        });
+    }
 });

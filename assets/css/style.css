@@ -4,34 +4,90 @@
  */
 
 :root {
-    /* Anagha AI Light Green Palette */
+    /* Theme Variables */
     --primary-color: #1a5032;
-    /* Dark Green (Headings/Hero) */
     --secondary-color: #2e3d34;
-    /* Slate/Dark Green (Text) */
     --accent-color: #2b8a44;
-    /* Main Green (Accents/Buttons) */
     --accent-secondary: #216e35;
-    /* Darker Green (Hover) */
-
     --bg-dark: #f5f8f6;
-    /* Very Light Green/Grey (Body Background) */
     --bg-secondary: #ffffff;
-    /* Pure White (Cards) */
-
     --text-light: #ffffff;
-    /* White Text (for dark backgrounds) */
     --text-muted: #5e6b62;
-    /* Muted Slate/Green (Secondary Text) */
-
     --glass-bg: rgba(255, 255, 255, 0.95);
     --glass-border: rgba(0, 0, 0, 0.1);
+    --body-gradient: linear-gradient(-45deg, #f0fdf4, #dcfce7, #ffffff, #f0fdf4);
 
     --nav-height: 80px;
     --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-
     --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     --card-radius: 12px;
+}
+
+body.theme-red {
+    --primary-color: #8b0000;
+    --secondary-color: #1a1a1a;
+    --accent-color: #cc0000;
+    --accent-secondary: #a00000;
+    --bg-dark: #1a1a1a;
+    --bg-secondary: #2a2a2a;
+    --text-muted: #888888;
+    --glass-bg: rgba(26, 26, 26, 0.95);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --body-gradient: linear-gradient(-45deg, #1a1a1a, #000000, #2a2a2a, #1a1a1a);
+    color: #ffffff;
+}
+
+body.theme-red .card, 
+body.theme-red .contact-form-container {
+    background: rgba(40, 40, 40, 0.8) !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+body.theme-red h1, 
+body.theme-red h2, 
+body.theme-red h3, 
+body.theme-red h4, 
+body.theme-red h5, 
+body.theme-red h6 {
+    color: #ffffff;
+}
+
+body.theme-red .btn-primary {
+    background: var(--accent-color);
+    color: white;
+}
+
+body.theme-red .navbar {
+    background: rgba(0, 0, 0, 0.9) !important;
+}
+
+/* Theme Toggle Button */
+.theme-toggle {
+    position: fixed;
+    bottom: 30px;
+    left: 30px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--accent-color);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    z-index: 1000;
+    transition: var(--transition);
+    border: 2px solid white;
+}
+
+.theme-toggle:hover {
+    transform: scale(1.1) rotate(15deg);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+}
+
+.theme-toggle i {
+    font-size: 1.5rem;
 }
 
 * {
@@ -48,7 +104,7 @@ html {
 }
 
 body {
-    background: linear-gradient(-45deg, #f0fdf4, #dcfce7, #ffffff, #f0fdf4);
+    background: var(--body-gradient);
     background-size: 400% 400%;
     animation: globalGradient 15s ease infinite;
     color: var(--secondary-color);
