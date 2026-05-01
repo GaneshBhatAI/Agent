@@ -487,6 +487,31 @@ a {
     background: transparent;
 }
 
+/* Mission Section Specifics */
+.modern-mission {
+    padding: 120px 0;
+    text-align: center;
+}
+
+.modern-mission h2 {
+    font-size: clamp(3rem, 6vw, 4.5rem);
+    font-weight: 800;
+    margin-bottom: 3rem;
+    letter-spacing: -2px;
+}
+
+.mission-statement {
+    max-width: 950px;
+    margin: 0 auto;
+    font-size: 1.1rem;
+    line-height: 2;
+    color: var(--secondary-color);
+    font-weight: 500;
+    opacity: 0.85;
+    position: relative;
+    padding: 0 2rem;
+}
+
 /* Animations */
 .fade-in {
     opacity: 0;
