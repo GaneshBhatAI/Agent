@@ -4,7 +4,7 @@
  */
 
 :root {
-    /* Sarvam-Style Monochromatic Theme */
+    /* Sarvam-Style Vibrant Mesh Theme */
     --primary-color: #000000;
     --secondary-color: #333333;
     --accent-color: #10b981;
@@ -13,9 +13,9 @@
     --bg-secondary: #ffffff;
     --text-light: #ffffff;
     --text-muted: #666666;
-    --glass-bg: rgba(255, 255, 255, 0.95);
+    --glass-bg: rgba(255, 255, 255, 0.85);
     --glass-border: rgba(0, 0, 0, 0.05);
-    --body-gradient: linear-gradient(-45deg, #ffffff, #f9fafb, #ffffff, #f9fafb);
+    --body-gradient: linear-gradient(-45deg, #ffffff, #fff7ed, #eff6ff, #fdf4ff);
     --cta-bg: rgba(0, 0, 0, 0.9);
 
     --nav-height: 80px;
@@ -537,15 +537,12 @@ a {
     left: 0;
     width: 100%;
     height: var(--nav-height);
-    background: rgba(255, 255, 255, 0.95);
-    /* White glass */
-    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.7) !important;
+    backdrop-filter: blur(20px);
     z-index: 1000;
     transition: var(--transition);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-    /* Subtle border */
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-    /* Soft shadow */
+    border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
 }
 
 /* Navbar Scrolled State - kept similar but ensures shadow */
