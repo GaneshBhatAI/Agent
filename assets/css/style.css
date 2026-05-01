@@ -25,22 +25,23 @@
 
 body.theme-red {
     --primary-color: #8b0000;
-    --secondary-color: #1a1a1a;
+    --secondary-color: #4a0000;
     --accent-color: #cc0000;
     --accent-secondary: #a00000;
-    --bg-dark: #1a1a1a;
-    --bg-secondary: #2a2a2a;
-    --text-muted: #888888;
-    --glass-bg: rgba(26, 26, 26, 0.95);
-    --glass-border: rgba(255, 255, 255, 0.1);
-    --body-gradient: linear-gradient(-45deg, #1a1a1a, #000000, #2a2a2a, #1a1a1a);
-    color: #ffffff;
+    --bg-dark: #fff5f5;
+    --bg-secondary: #ffffff;
+    --text-light: #ffffff;
+    --text-muted: #8b5a5a;
+    --glass-bg: rgba(255, 255, 255, 0.95);
+    --glass-border: rgba(139, 0, 0, 0.1);
+    --body-gradient: linear-gradient(-45deg, #fff5f5, #ffe4e4, #ffffff, #fff5f5);
+    color: var(--secondary-color);
 }
 
 body.theme-red .card, 
 body.theme-red .contact-form-container {
-    background: rgba(40, 40, 40, 0.8) !important;
-    border-color: rgba(255, 255, 255, 0.1) !important;
+    background: rgba(255, 255, 255, 0.8) !important;
+    border-color: rgba(139, 0, 0, 0.1) !important;
 }
 
 body.theme-red h1, 
@@ -49,7 +50,7 @@ body.theme-red h3,
 body.theme-red h4, 
 body.theme-red h5, 
 body.theme-red h6 {
-    color: #ffffff;
+    color: var(--primary-color);
 }
 
 body.theme-red .btn-primary {
@@ -58,7 +59,11 @@ body.theme-red .btn-primary {
 }
 
 body.theme-red .navbar {
-    background: rgba(0, 0, 0, 0.9) !important;
+    background: rgba(255, 255, 255, 0.9) !important;
+}
+
+body.theme-red .navbar-links a {
+    color: var(--secondary-color);
 }
 
 /* Theme Toggle Button */
