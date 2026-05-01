@@ -14,7 +14,7 @@
     --text-muted: #5e6b62;
     --glass-bg: rgba(255, 255, 255, 0.9);
     --glass-border: rgba(26, 80, 50, 0.05);
-    --body-gradient: linear-gradient(-45deg, #ffffff, #f0fdf4, #ffffff, #f0fdf4);
+    --body-gradient: linear-gradient(-45deg, #ffffff, #dcfce7, #ffffff, #f0fdf4);
     --cta-bg: rgba(26, 80, 50, 0.9);
 
     --nav-height: 80px;
@@ -34,7 +34,7 @@ body.theme-red {
     --text-muted: #8b5a5a;
     --glass-bg: rgba(255, 255, 255, 0.95);
     --glass-border: rgba(139, 0, 0, 0.1);
-    --body-gradient: linear-gradient(-45deg, #ffffff, #fff5f5, #ffffff, #fff5f5);
+    --body-gradient: linear-gradient(-45deg, #ffffff, #fee2e2, #ffffff, #fff5f5);
     --cta-bg: rgba(139, 0, 0, 0.8);
     color: var(--primary-color);
 }
