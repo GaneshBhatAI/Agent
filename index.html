@@ -58,6 +58,28 @@
 
     <!-- High Impact Header Section -->
     <section class="hero-impact fade-in" style="padding: 160px 2rem 100px; text-align: center; position: relative; overflow: hidden; border-bottom: 1px solid var(--glass-border);">
+        <!-- Sarvam-Style Live Movement Colors -->
+        <div class="hero-glow-container" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden; pointer-events: none;">
+            <div class="glow-orb orange" style="position: absolute; top: -20%; left: 50%; transform: translateX(-50%); width: 80%; height: 60%; background: radial-gradient(circle, rgba(251, 191, 36, 0.15) 0%, transparent 70%); filter: blur(80px); animation: moveOrb1 20s ease-in-out infinite alternate;"></div>
+            <div class="glow-orb blue-left" style="position: absolute; top: 10%; left: -10%; width: 50%; height: 50%; background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%); filter: blur(80px); animation: moveOrb2 25s ease-in-out infinite alternate;"></div>
+            <div class="glow-orb blue-right" style="position: absolute; top: 10%; right: -10%; width: 50%; height: 50%; background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%); filter: blur(80px); animation: moveOrb3 22s ease-in-out infinite alternate;"></div>
+        </div>
+        
+        <style>
+            @keyframes moveOrb1 {
+                0% { transform: translateX(-50%) translateY(0) scale(1); }
+                100% { transform: translateX(-50%) translateY(10%) scale(1.1); }
+            }
+            @keyframes moveOrb2 {
+                0% { transform: translate(0, 0) scale(1); }
+                100% { transform: translate(10%, 5%) scale(1.2); }
+            }
+            @keyframes moveOrb3 {
+                0% { transform: translate(0, 0) scale(1); }
+                100% { transform: translate(-10%, 5%) scale(1.2); }
+            }
+        </style>
+
         <div class="container">
             <div style="max-width: 900px; margin: 0 auto;">
                 <h1 style="color: var(--primary-color); font-size: clamp(3rem, 7vw, 5rem); font-weight: 800; line-height: 1.1; margin-bottom: 1.5rem; letter-spacing: -1.5px;">AI & <span style="color: var(--accent-color);">Automation</span></h1>
