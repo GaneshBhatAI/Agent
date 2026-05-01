@@ -4,11 +4,11 @@
  */
 
 :root {
-    /* Precise Green Theme Variables */
+    /* Sophisticated Matte Green Theme Variables */
     --primary-color: #1a5032;
     --secondary-color: #2e3d34;
-    --accent-color: #88eb1a;
-    --accent-secondary: #0ec261;
+    --accent-color: #2b8a44;
+    --accent-secondary: #1a5032;
     --bg-dark: #f0fdf4;
     --bg-secondary: #ffffff;
     --text-light: #ffffff;
@@ -64,8 +64,8 @@ body.theme-red .navbar-links a {
 }
 
 /* Logo Theme Colors - Always Green */
-.logo-rect { fill: #88eb1a; transition: fill 0.3s ease; }
-.logo-circle { fill: #0ec261; transition: fill 0.3s ease; }
+.logo-rect { fill: #2b8a44; transition: fill 0.3s ease; }
+.logo-circle { fill: #1a5032; transition: fill 0.3s ease; }
 
 .logo-text { color: var(--accent-color) !important; }
 .logo-text .highlight { color: var(--primary-color) !important; }
