@@ -4,17 +4,17 @@
  */
 
 :root {
-    /* Theme Variables */
-    --primary-color: #1a1a1a;
-    --secondary-color: #444444;
-    --accent-color: #2b8a44;
-    --accent-secondary: #216e35;
-    --bg-dark: #f5f8f6;
+    /* Premium Theme Variables */
+    --primary-color: #0f172a;
+    --secondary-color: #334155;
+    --accent-color: #059669;
+    --accent-secondary: #047857;
+    --bg-dark: #f8fafc;
     --bg-secondary: #ffffff;
     --text-light: #ffffff;
-    --text-muted: #666666;
-    --glass-bg: rgba(255, 255, 255, 0.95);
-    --glass-border: rgba(0, 0, 0, 0.1);
+    --text-muted: #64748b;
+    --glass-bg: rgba(255, 255, 255, 0.9);
+    --glass-border: rgba(15, 23, 42, 0.05);
     --body-gradient: linear-gradient(-45deg, #f0fdf4, #e0f2fe, #ffffff, #dcfce7);
     --cta-bg: rgba(26, 80, 50, 0.9);
 
@@ -64,8 +64,8 @@ body.theme-red .navbar-links a {
 }
 
 /* Logo Theme Colors - Always Green */
-.logo-rect { fill: #88eb1a; transition: fill 0.3s ease; }
-.logo-circle { fill: #0ec261; transition: fill 0.3s ease; }
+.logo-rect { fill: #10b981; transition: fill 0.3s ease; }
+.logo-circle { fill: #059669; transition: fill 0.3s ease; }
 
 .logo-text { color: var(--accent-color) !important; }
 .logo-text .highlight { color: var(--primary-color) !important; }
