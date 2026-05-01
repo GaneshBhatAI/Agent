@@ -25,18 +25,19 @@
 }
 
 body.theme-red {
-    --primary-color: #4a0000;
-    --secondary-color: #6a1b1b;
+    /* Vibrant Sarvam Mesh Theme */
+    --primary-color: #000000;
+    --secondary-color: #333333;
     --accent-color: #cc0000;
     --accent-secondary: #a00000;
-    --bg-dark: #fff5f5;
+    --bg-dark: #ffffff;
     --bg-secondary: #ffffff;
     --text-light: #ffffff;
-    --text-muted: #8b5a5a;
-    --glass-bg: rgba(255, 255, 255, 0.95);
-    --glass-border: rgba(139, 0, 0, 0.1);
-    --body-gradient: linear-gradient(-45deg, #ffffff, #fee2e2, #ffffff, #fff5f5);
-    --cta-bg: rgba(139, 0, 0, 0.8);
+    --text-muted: #666666;
+    --glass-bg: rgba(255, 255, 255, 0.8);
+    --glass-border: rgba(0, 0, 0, 0.05);
+    --body-gradient: linear-gradient(-45deg, #ffffff, #fff7ed, #eff6ff, #fdf4ff);
+    --cta-bg: rgba(0, 0, 0, 0.9);
     color: var(--primary-color);
 }
 
@@ -56,11 +57,11 @@ body.theme-red h6 {
 }
 
 body.theme-red .navbar {
-    background: rgba(255, 255, 255, 0.95) !important;
+    background: rgba(255, 255, 255, 0.8) !important;
 }
 
 body.theme-red .navbar-links a {
-    color: var(--secondary-color);
+    color: var(--primary-color);
 }
 
 /* Logo Theme Colors - Dynamic */
