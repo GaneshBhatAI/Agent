@@ -68,6 +68,13 @@ body.theme-red .navbar-links a {
     color: var(--secondary-color);
 }
 
+/* Logo Theme Colors */
+.logo-rect { fill: #88eb1a; transition: fill 0.3s ease; }
+.logo-circle { fill: #0ec261; transition: fill 0.3s ease; }
+
+body.theme-red .logo-rect { fill: #ff4d4d; }
+body.theme-red .logo-circle { fill: #a80000; }
+
 /* Theme Toggle Button */
 .theme-toggle {
     position: fixed;
