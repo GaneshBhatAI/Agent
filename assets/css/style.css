@@ -16,6 +16,7 @@
     --glass-bg: rgba(255, 255, 255, 0.95);
     --glass-border: rgba(0, 0, 0, 0.1);
     --body-gradient: linear-gradient(-45deg, #f0fdf4, #dcfce7, #ffffff, #f0fdf4);
+    --cta-bg: rgba(26, 80, 50, 0.9);
 
     --nav-height: 80px;
     --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -35,6 +36,7 @@ body.theme-red {
     --glass-bg: rgba(255, 255, 255, 0.95);
     --glass-border: rgba(139, 0, 0, 0.1);
     --body-gradient: linear-gradient(-45deg, #fff5f5, #ffe4e4, #ffffff, #fff5f5);
+    --cta-bg: rgba(139, 0, 0, 0.8);
     color: var(--secondary-color);
 }
 
@@ -2380,7 +2382,7 @@ footer {
 
 .modern-cta-section {
     padding: 120px 2rem;
-    background: rgba(26, 80, 50, 0.9);
+    background: var(--cta-bg);
     backdrop-filter: blur(10px);
     color: white;
     text-align: center;
