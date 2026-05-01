@@ -2384,10 +2384,15 @@ footer {
     padding: 120px 2rem;
     background: var(--cta-bg);
     backdrop-filter: blur(10px);
-    color: white;
+    color: white !important;
     text-align: center;
     border-radius: 40px;
     margin: 0 2rem 4rem 2rem;
+}
+
+.modern-cta-section h2, 
+.modern-cta-section p {
+    color: white !important;
 }
 
 .modern-cta-section h2 {
