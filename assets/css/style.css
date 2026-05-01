@@ -4,19 +4,19 @@
  */
 
 :root {
-    /* Sophisticated Matte Green Theme Variables */
-    --primary-color: #1a5032;
-    --secondary-color: #2e3d34;
-    --accent-color: #2b8a44;
-    --accent-secondary: #1a5032;
-    --bg-dark: #f0fdf4;
+    /* Sarvam-Style Monochromatic Theme */
+    --primary-color: #000000;
+    --secondary-color: #333333;
+    --accent-color: #10b981;
+    --accent-secondary: #059669;
+    --bg-dark: #ffffff;
     --bg-secondary: #ffffff;
     --text-light: #ffffff;
-    --text-muted: #5e6b62;
-    --glass-bg: rgba(255, 255, 255, 0.9);
-    --glass-border: rgba(26, 80, 50, 0.05);
-    --body-gradient: linear-gradient(-45deg, #ffffff, #f0fdf4, #ffffff, #e6f7ed);
-    --cta-bg: rgba(26, 80, 50, 0.9);
+    --text-muted: #666666;
+    --glass-bg: rgba(255, 255, 255, 0.95);
+    --glass-border: rgba(0, 0, 0, 0.05);
+    --body-gradient: linear-gradient(-45deg, #ffffff, #f9fafb, #ffffff, #f9fafb);
+    --cta-bg: rgba(0, 0, 0, 0.9);
 
     --nav-height: 80px;
     --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -704,8 +704,8 @@ a {
 }
 
 .btn-primary {
-    background: var(--accent-color);
-    color: white !important;
+    background: #000000;
+    color: #ffffff !important;
     border: none;
     padding: 0.8rem 2rem;
     border-radius: 50px;
@@ -715,10 +715,10 @@ a {
 }
 
 .btn-primary:hover {
-    background: var(--accent-secondary);
+    background: #333333;
     transform: translateY(-3px);
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-    color: white;
+    color: #ffffff !important;
 }
 
 /* Secondary Button */
