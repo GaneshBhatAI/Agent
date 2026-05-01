@@ -494,22 +494,25 @@ a {
 }
 
 .modern-mission h2 {
-    font-size: clamp(3rem, 6vw, 4.5rem);
-    font-weight: 800;
-    margin-bottom: 3rem;
-    letter-spacing: -2px;
+    font-size: clamp(3.5rem, 8vw, 5.5rem);
+    font-weight: 900;
+    margin-bottom: 2.5rem;
+    letter-spacing: -3px;
+    text-transform: uppercase;
+    color: var(--primary-color);
 }
 
 .mission-statement {
-    max-width: 950px;
+    max-width: 850px;
     margin: 0 auto;
-    font-size: 1.1rem;
-    line-height: 2;
+    font-size: 1rem;
+    line-height: 1.8;
     color: var(--secondary-color);
     font-weight: 500;
-    opacity: 0.85;
+    opacity: 0.8;
     position: relative;
     padding: 0 2rem;
+    letter-spacing: 0.5px;
 }
 
 /* Animations */
