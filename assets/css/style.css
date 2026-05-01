@@ -67,8 +67,8 @@ body.theme-red .navbar-links a {
 .logo-rect { fill: #88eb1a; transition: fill 0.3s ease; }
 .logo-circle { fill: #0ec261; transition: fill 0.3s ease; }
 
-.logo-text { color: var(--primary-color) !important; }
-.logo-text .highlight { color: var(--accent-color) !important; }
+.logo-text { color: var(--accent-color) !important; }
+.logo-text .highlight { color: var(--primary-color) !important; }
 
 /* Theme Toggle Button */
 .theme-toggle {
