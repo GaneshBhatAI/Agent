@@ -63,12 +63,15 @@ body.theme-red .navbar-links a {
     color: var(--secondary-color);
 }
 
-/* Logo Theme Colors - Always Green */
+/* Logo Theme Colors - Dynamic */
 .logo-rect { fill: #2b8a44; transition: fill 0.3s ease; }
 .logo-circle { fill: #1a5032; transition: fill 0.3s ease; }
 
-.logo-text { color: var(--accent-color) !important; }
-.logo-text .highlight { color: var(--primary-color) !important; }
+body.theme-red .logo-rect { fill: #ff4d4d; }
+body.theme-red .logo-circle { fill: #a80000; }
+
+.logo-text { color: var(--primary-color) !important; transition: color 0.3s ease; }
+.logo-text .highlight { color: var(--accent-color) !important; transition: color 0.3s ease; }
 
 /* Theme Toggle Button */
 .theme-toggle {
