@@ -1,5 +1,5 @@
 
-// Anagh AI - Contact & Lead Handling Logic (Formspree Integration)
+// Ai Anveshana - Contact & Lead Handling Logic (Formspree Integration)
 const FORMSPREE_URL = "https://formspree.io/f/xzdobgev";
 
 async function sendEmailNotification(data, source = "Contact Form") {
