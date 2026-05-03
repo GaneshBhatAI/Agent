@@ -7,11 +7,6 @@
     <link rel="stylesheet" href="assets/css/style.css?v=5">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body {
-            background-color: #f8fafc; /* Light grey/white background like home page */
-            color: var(--primary-color);
-        }
-
         .badge-app {
             min-height: 100vh;
             padding-top: 150px;
@@ -33,6 +28,15 @@
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.03);
             text-align: left;
         }
+
+        /* Support Red Theme Overrides on the page */
+        .theme-red .form-container {
+            background: #1a0a0a;
+            color: white;
+            border-color: rgba(220, 38, 38, 0.2);
+        }
+        .theme-red .input-group label { color: #fca5a5; }
+        .theme-red .input-group input { background: #2d0a0a; color: white; }
 
         .input-group {
             margin-bottom: 1.5rem;
@@ -104,26 +108,16 @@
             z-index: 10;
         }
 
-        .action-btns {
-            margin-top: 2.5rem;
-        }
-
         @media (max-width: 991px) {
-            .generator-grid {
-                grid-template-columns: 1fr;
-            }
-            .preview-container {
-                position: static;
-            }
-            .badge-app {
-                padding-top: 120px;
-            }
+            .generator-grid { grid-template-columns: 1fr; }
+            .preview-container { position: static; }
+            .badge-app { padding-top: 120px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Navigation -->
+    <!-- Navigation (Identical to index.html) -->
     <header class="navbar fade-in visible">
         <div class="container nav-content">
             <a href="index.html" class="logo"><svg viewBox="0 0 100 100" class="logo-img" style="height: 35px; width: 35px;"><rect x="0" y="35" width="100" height="30" rx="15" class="logo-rect" transform="rotate(45 50 50)" /><circle cx="22" cy="78" r="20" class="logo-circle" /><circle cx="78" cy="22" r="20" class="logo-circle" /></svg> <span class="logo-text">Ai <span class="highlight">Anveshana</span></span></a>
@@ -158,12 +152,11 @@
         <div class="container">
             <div style="text-align: center; margin-bottom: 4rem;">
                 <h4 style="color: var(--accent-color); text-transform: uppercase; letter-spacing: 2px; font-size: 0.9rem; margin-bottom: 1rem;">Student Exclusive</h4>
-                <h1 style="font-size: clamp(2.5rem, 5vw, 3.5rem); font-weight: 800; margin-bottom: 1rem; color: #0f172a;">Personalized <span class="gradient-text">Bootcamp Badge</span></h1>
+                <h1 style="font-size: clamp(2.5rem, 5vw, 3.5rem); font-weight: 800; margin-bottom: 1rem;">Personalized <span class="gradient-text">Bootcamp Badge</span></h1>
                 <p style="color: #64748b; font-size: 1.1rem;">Celebrate your commitment to Agentic Process Automation (APA).</p>
             </div>
 
             <div class="generator-grid">
-                <!-- Form -->
                 <div class="form-container">
                     <div class="input-group">
                         <label for="userName">Full Name</label>
@@ -180,25 +173,15 @@
                     <div class="input-group">
                         <label for="userPhoto">Professional Photo</label>
                         <input type="file" id="userPhoto" accept="image/*" style="padding: 0.8rem; background: #f8fafc; border: 2px dashed #e2e8f0;">
-                        <p style="font-size: 0.75rem; color: #94a3b8; margin-top: 0.8rem;">
-                            <i class="fas fa-camera" style="margin-right: 5px;"></i> Square portrait photos work best.
-                        </p>
-                    </div>
-                    
-                    <div style="margin-top: 2.5rem; padding: 1.5rem; background: #f8fafc; border-radius: 16px; border-left: 4px solid var(--accent-color);">
-                        <p style="font-size: 0.85rem; line-height: 1.6; color: #475569;">
-                            <strong>Pro Tip:</strong> Use a high-quality photo with a clear background to make your badge look premium on LinkedIn and Twitter.
-                        </p>
                     </div>
                 </div>
 
-                <!-- Preview -->
                 <div class="preview-container">
                     <div class="canvas-wrapper">
                         <div class="preview-label">Live Preview</div>
                         <canvas id="badgeCanvas" width="1080" height="1080"></canvas>
                     </div>
-                    <div class="action-btns">
+                    <div class="action-btns" style="margin-top: 2rem;">
                         <button id="downloadBadge" class="btn btn-primary" style="padding: 1rem 2.5rem; font-size: 1rem; border-radius: 50px; background: #000; color: #fff;">
                             <i class="fas fa-download" style="margin-right: 10px;"></i> Download Badge
                         </button>
@@ -208,16 +191,16 @@
         </div>
     </main>
 
-    <!-- Footer -->
-    <footer style="padding: 60px 0 30px; background: #0f172a; color: white;">
+    <!-- Footer (Identical to index.html) -->
+    <footer style="padding: 40px 0 20px; background: #0f172a; color: white;">
         <div class="container">
             <div class="footer-content" style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 40px;">
                 <div class="footer-logo">
-                    <h2><svg viewBox="0 0 100 100" class="logo-img" style="height: 45px; width: 45px; vertical-align: middle;"><rect x="0" y="35" width="100" height="30" rx="15" class="logo-rect" transform="rotate(45 50 50)" /><circle cx="22" cy="78" r="20" class="logo-circle" /><circle cx="78" cy="22" r="20" class="logo-circle" /></svg> <span class="logo-text">Ai <span style="color: white;">Anveshana</span></span></h2>
+                    <h2><svg viewBox="0 0 100 100" class="logo-img" style="height: 45px; width: 45px; vertical-align: middle;"><rect x="0" y="35" width="100" height="30" rx="15" class="logo-rect" transform="rotate(45 50 50)" /><circle cx="22" cy="78" r="20" class="logo-circle" /><circle cx="78" cy="22" r="20" class="logo-circle" /></svg> <span class="logo-text">Ai <span>Anveshana</span></span></h2>
                     <p style="color: #94a3b8;">Partnered with growing companies around the world to deliver smart tech solutions.</p>
                 </div>
-                <div class="footer-address" style="flex: 1; max-width: 300px; margin: 0 2rem; font-size: 0.9rem; color: #cbd5e1; line-height: 1.6;">
-                    <h4 style="color: var(--accent-color); margin-bottom: 0.5rem;"><i class="fas fa-map-marker-alt" style="margin-right: 8px;"></i>Our Office</h4>
+                <div class="footer-address" style="flex: 1; max-width: 300px; margin: 0 2rem; font-size: 0.9rem; color: #ffffff; line-height: 1.6;">
+                    <h4 style="color: #88eb1a; margin-bottom: 0.5rem;"><i class="fas fa-map-marker-alt" style="color: #88eb1a; margin-right: 8px;"></i>Our Office</h4>
                     164, 1st Main Rd, Vidyaranyapura Post, Chikkabettahalli, Havyakanagara Phase-2, Vidyaranyapura, Bengaluru, Karnataka 560097
                 </div>
                 <div class="social-links">
@@ -225,12 +208,48 @@
                     <a href="https://www.youtube.com/@AiBhat" target="_blank" style="color: white; font-size: 1.5rem; margin: 0 10px;"><i class="fab fa-youtube"></i></a>
                 </div>
             </div>
-            <div class="footer-bottom" style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.05); color: #64748b; font-size: 0.85rem;">
+            <div class="footer-bottom" style="text-align: center; margin-top: 40px; color: #64748b;">
                 <p>&copy; 2026 Ai Anveshana. All Rights Reserved.</p>
             </div>
         </div>
     </footer>
 
+    <!-- Chatbot Widget -->
+    <div class="chat-widget" id="chatWidget">
+        <div class="chat-popup" id="chatPopup">
+            <div class="chat-header">
+                <div class="chat-info">
+                    <div class="chat-avatar" style="background: var(--accent-color); color: white;">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div>
+                        <h4 >Ai Anveshana Assistant</h4>
+                        <p class="status"><span class="online-dot"></span>Online</p>
+                    </div>
+                </div>
+                <button class="close-chat" id="closeChat" ><i class="fas fa-times"></i></button>
+            </div>
+            <div class="chat-body" id="chatBody" style="padding: 0; background: white;">
+                <div class="ai-agent-view" id="aiAgentView">
+                    <div id="aiChatLog" style="height: 380px; overflow-y: auto; margin-bottom: 1rem; padding: 15px; display: flex; flex-direction: column; gap: 12px; background: white;">
+                        <div class="message bot" style="background: var(--bg-dark); color: var(--primary-color); border: 1px solid var(--glass-border); padding: 10px; border-radius: 10px;">Hello! I'm Ai Anveshana's Assistant. How can I help you today?</div>
+                    </div>
+                    <div class="chat-input-container" style="display: flex; gap: 8px; padding: 10px; border-top: 1px solid var(--glass-border);">
+                        <input type="text" id="aiChatInput" placeholder="Type your question..." style="flex: 1; padding: 10px 15px; border-radius: 25px; border: 1px solid var(--glass-border); background: #f0f2f5; color: #333; font-size: 0.9rem;">
+                        <button onclick="sendChatMessage()" style="background: var(--accent-color); border: none; width: 40px; height: 40px; border-radius: 50%; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center;"><i class="fas fa-paper-plane"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button class="chat-toggle" id="chatToggle" style="background: var(--accent-color);">
+            <i class="fas fa-comment-dots"></i>
+        </button>
+    </div>
+
+    <div class="theme-toggle" id="themeToggle" title="Switch Theme"><i class="fas fa-palette"></i></div>
+
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/script.js"></script>
     <script>
         const canvas = document.getElementById('badgeCanvas');
         const ctx = canvas.getContext('2d');
@@ -239,163 +258,79 @@
         const compInput = document.getElementById('userCompany');
         const photoInput = document.getElementById('userPhoto');
         const downloadBtn = document.getElementById('downloadBadge');
-
         let userImage = null;
 
         function updateBadge() {
-            // 1. Background - Dark & Professional (Misty Gradient)
+            const isRed = document.body.classList.contains('theme-red');
+            const accent = isRed ? '#dc2626' : '#88eb1a';
+            const iconSecondary = isRed ? '#450a0a' : '#1a5032';
+
+            // Background
             ctx.fillStyle = '#0f172a';
             ctx.fillRect(0, 0, 1080, 1080);
-            
             const grad = ctx.createRadialGradient(540, 300, 0, 540, 540, 1000);
             grad.addColorStop(0, '#1e293b');
             grad.addColorStop(1, '#020617');
             ctx.fillStyle = grad;
             ctx.fillRect(0, 0, 1080, 1080);
 
-            // Misty Background Effect (Fixed positions for stability)
+            // Glow spots
             ctx.globalAlpha = 0.3;
-            const spots = [
-                {x: 200, y: 200, r: 400, c: '#1e40af'},
-                {x: 800, y: 300, r: 350, c: '#1e293b'},
-                {x: 400, y: 800, r: 450, c: '#1e40af'},
-                {x: 900, y: 900, r: 400, c: '#1e293b'}
-            ];
-            spots.forEach(s => {
-                ctx.fillStyle = s.c;
-                ctx.beginPath();
-                ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
-                ctx.filter = 'blur(120px)';
-                ctx.fill();
-            });
-            ctx.filter = 'none';
-            ctx.globalAlpha = 1.0;
+            const spots = [{x:200,y:200,r:400,c:isRed?'#450a0a':'#1e40af'},{x:800,y:300,r:350,c:'#1e293b'},{x:400,y:800,r:450,c:isRed?'#450a0a':'#1e40af'},{x:900,y:900,r:400,c:'#1e293b'}];
+            spots.forEach(s => { ctx.fillStyle = s.c; ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI*2); ctx.filter = 'blur(120px)'; ctx.fill(); });
+            ctx.filter = 'none'; ctx.globalAlpha = 1.0;
 
-            // 2. Header Branding (Left-Right Layout)
-            const brandY = 160;
-            const logoX = 80;
+            // Branding
+            const brandY = 180;
+            ctx.font = '800 48px Poppins';
+            const textWidth = ctx.measureText('Ai Anveshana').width;
+            const startX = (1080 - (100 + textWidth)) / 2;
             
-            // Draw Icon (Stable & Precise)
             ctx.save();
-            ctx.translate(logoX, brandY - 60);
-            ctx.scale(0.75, 0.75); 
-            
-            // Main Rect
-            ctx.save();
-            ctx.translate(50, 50);
-            ctx.rotate(45 * Math.PI / 180);
-            ctx.fillStyle = '#88eb1a';
-            ctx.beginPath(); ctx.roundRect(-50, -15, 100, 30, 15); ctx.fill();
-            ctx.restore();
-            // Circles
-            ctx.fillStyle = '#1a5032';
-            ctx.beginPath(); ctx.arc(22, 78, 20, 0, Math.PI * 2); ctx.fill();
-            ctx.beginPath(); ctx.arc(78, 22, 20, 0, Math.PI * 2); ctx.fill();
+            ctx.translate(startX, brandY - 65);
+            ctx.scale(0.7, 0.7);
+            ctx.save(); ctx.translate(50, 50); ctx.rotate(45*Math.PI/180); ctx.fillStyle = accent; ctx.beginPath(); ctx.roundRect(-50,-15,100,30,15); ctx.fill(); ctx.restore();
+            ctx.fillStyle = iconSecondary; ctx.beginPath(); ctx.arc(22,78,20,0,Math.PI*2); ctx.fill(); ctx.beginPath(); ctx.arc(78,22,20,0,Math.PI*2); ctx.fill();
             ctx.restore();
             
-            // Draw Branding Text (Shifted right to avoid overlap)
             ctx.fillStyle = '#ffffff';
-            ctx.font = '800 44px Poppins';
-            ctx.textAlign = 'start';
-            ctx.fillText('Ai Anveshana', logoX + 95, brandY);
+            ctx.font = '800 48px Poppins';
+            ctx.fillText('Ai Anveshana', startX + 100, brandY);
             
-            // Top Right Info (Mastering Tools)
-            ctx.textAlign = 'right';
+            ctx.textAlign = 'center';
             ctx.fillStyle = 'rgba(255,255,255,0.6)';
-            ctx.font = '600 22px Poppins';
-            ctx.fillText('MASTERING 5+', 1000, 140);
-            ctx.fillStyle = '#88eb1a';
-            ctx.font = '700 26px Poppins';
-            ctx.fillText('INDUSTRY AI TOOLS', 1000, 180);
-            ctx.textAlign = 'start';
+            ctx.font = '600 24px Poppins';
+            ctx.fillText('MASTERING 5+ INDUSTRY-LEADING AI TOOLS', 540, 240);
 
-            // 3. Central Photo Frame
-            const frameWidth = 520;
-            const frameHeight = 520;
-            const frameX = (1080 - frameWidth) / 2;
-            const frameY = 320;
-
-            // Outer Frame Glow
-            ctx.shadowColor = 'rgba(136, 235, 26, 0.2)';
-            ctx.shadowBlur = 40;
-            ctx.fillStyle = '#000';
-            ctx.beginPath();
-            ctx.roundRect(frameX - 20, frameY - 20, frameWidth + 40, frameHeight + 40, 30);
-            ctx.fill();
-            ctx.shadowBlur = 0;
-
-            // White Inner Box
-            ctx.fillStyle = '#ffffff';
-            ctx.beginPath();
-            ctx.roundRect(frameX, frameY, frameWidth, frameHeight, 15);
-            ctx.fill();
+            // Photo
+            const frameX = (1080 - 520) / 2, frameY = 320;
+            ctx.shadowColor = accent + '33'; ctx.shadowBlur = 40;
+            ctx.fillStyle = '#000'; ctx.beginPath(); ctx.roundRect(frameX-20, frameY-20, 560, 560, 30); ctx.fill();
+            ctx.shadowBlur = 0; ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.roundRect(frameX, frameY, 520, 520, 15); ctx.fill();
 
             if (userImage) {
-                ctx.save();
-                ctx.beginPath();
-                ctx.roundRect(frameX, frameY, frameWidth, frameHeight, 15);
-                ctx.clip();
-                const scale = Math.max(frameWidth / userImage.width, frameHeight / userImage.height);
-                const x = frameX + (frameWidth - userImage.width * scale) / 2;
-                const y = frameY + (frameHeight - userImage.height * scale) / 2;
-                ctx.drawImage(userImage, x, y, userImage.width * scale, userImage.height * scale);
+                ctx.save(); ctx.beginPath(); ctx.roundRect(frameX, frameY, 520, 520, 15); ctx.clip();
+                const scale = Math.max(520/userImage.width, 520/userImage.height);
+                ctx.drawImage(userImage, frameX+(520-userImage.width*scale)/2, frameY+(520-userImage.height*scale)/2, userImage.width*scale, userImage.height*scale);
                 ctx.restore();
-            } else {
-                ctx.fillStyle = '#f8fafc';
-                ctx.fillRect(frameX, frameY, frameWidth, frameHeight);
-                ctx.fillStyle = '#94a3b8';
-                ctx.textAlign = 'center';
-                ctx.font = '400 30px Poppins';
-                ctx.fillText('Photo Preview', 540, 600);
-                ctx.textAlign = 'start';
             }
 
-            // 4. Name & Details
-            ctx.textAlign = 'center';
-            ctx.fillStyle = '#ffffff';
-            ctx.font = '800 64px Poppins';
-            ctx.fillText(nameInput.value || 'YOUR NAME', 540, 930);
-            
-            ctx.fillStyle = 'rgba(255,255,255,0.7)';
-            ctx.font = '500 34px Poppins';
-            ctx.fillText(desInput.value || 'Designation', 540, 985);
-            
-            ctx.fillStyle = '#88eb1a';
-            ctx.font = '700 32px Poppins';
-            ctx.fillText(compInput.value || 'Company Name', 540, 1035);
-
-            // 5. Quote (Bottom Edge)
-            ctx.fillStyle = 'rgba(255,255,255,0.4)';
-            ctx.font = '400 18px Poppins';
-            ctx.fillText('MASTERING AGENTIC PROCESS AUTOMATION (APA)', 540, 1065);
+            ctx.fillStyle = '#ffffff'; ctx.font = '800 64px Poppins'; ctx.fillText(nameInput.value || 'YOUR NAME', 540, 930);
+            ctx.fillStyle = 'rgba(255,255,255,0.7)'; ctx.font = '500 34px Poppins'; ctx.fillText(desInput.value || 'Designation', 540, 985);
+            ctx.fillStyle = accent; ctx.font = '700 32px Poppins'; ctx.fillText(compInput.value || 'Company Name', 540, 1035);
         }
 
         [nameInput, desInput, compInput].forEach(el => el.addEventListener('input', updateBadge));
         photoInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                const img = new Image();
-                img.onload = () => { userImage = img; updateBadge(); };
-                img.src = event.target.result;
-            };
+            const file = e.target.files[0]; if(!file) return;
+            const reader = new FileReader(); reader.onload = (ev) => { const img = new Image(); img.onload = () => { userImage = img; updateBadge(); }; img.src = ev.target.result; };
             reader.readAsDataURL(file);
         });
-
-        downloadBtn.addEventListener('click', () => {
-            const link = document.createElement('a');
-            link.download = `APA-Badge-${nameInput.value || 'Student'}.png`;
-            link.href = canvas.toDataURL('image/png');
-            link.click();
-        });
-
-        // Toggle Navbar class on scroll for effect
-        window.addEventListener('scroll', () => {
-            const nav = document.querySelector('.navbar');
-            if (window.scrollY > 50) nav.classList.add('scrolled');
-            else nav.classList.remove('scrolled');
-        });
+        downloadBtn.addEventListener('click', () => { const link = document.createElement('a'); link.download = 'APA-Badge.png'; link.href = canvas.toDataURL(); link.click(); });
+        
+        // Listen for theme toggle to update canvas
+        const themeBtn = document.getElementById('themeToggle');
+        if(themeBtn) themeBtn.addEventListener('click', () => setTimeout(updateBadge, 100));
 
         updateBadge();
     </script>
