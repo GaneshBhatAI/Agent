@@ -44,11 +44,17 @@
         .input-group input, .input-group select {
             width: 100%;
             padding: 0.8rem 1rem;
-            background: rgba(255, 255, 255, 0.05);
+            background: #020617; /* Darker background */
             border: 1px solid var(--glass-border);
             border-radius: 8px;
             color: white;
             font-family: inherit;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .input-group input:focus {
+            border-color: var(--accent-color);
         }
 
         .preview-container {
