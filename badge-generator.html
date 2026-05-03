@@ -302,32 +302,34 @@
 
         function updateBadge() {
             const isRed = document.body.classList.contains('theme-red');
-            const accent = selectedAccent; // Use custom selected accent
-            const iconSecondary = (accent === '#88eb1a') ? '#1a5032' : (accent === '#ff3e3e' ? '#450a0a' : '#1e293b');
+            const accent = selectedAccent;
+            // Use lighter secondary colors for better contrast on dark BG
+            const iconSecondary = (accent === '#88eb1a') ? '#2d7a4d' : (accent === '#ff3e3e' ? '#8b0000' : '#334155');
 
             // Background - Deeper Contrast
-            ctx.fillStyle = '#020617';
+            ctx.fillStyle = '#010409'; // Even deeper black
             ctx.fillRect(0, 0, 1080, 1080);
             
             // Rich Radial Gradient
-            const grad = ctx.createRadialGradient(540, 540, 0, 540, 540, 900);
-            grad.addColorStop(0, '#0f172a');
-            grad.addColorStop(1, '#000000');
+            const grad = ctx.createRadialGradient(540, 540, 0, 540, 540, 1000);
+            grad.addColorStop(0, '#0f172a'); 
+            grad.addColorStop(0.7, '#020617');
+            grad.addColorStop(1, '#000000'); 
             ctx.fillStyle = grad;
             ctx.fillRect(0, 0, 1080, 1080);
 
             // Subtle Atmospheric Glows (sensing accent)
-            ctx.globalAlpha = 0.4;
+            ctx.globalAlpha = 0.45;
             const spots = [
-                {x: 100, y: 100, r: 500, c: accent + '33'},
-                {x: 900, y: 100, r: 400, c: accent + '22'},
-                {x: 540, y: 900, r: 600, c: accent + '33'}
+                {x: 100, y: 100, r: 600, c: accent + '22'},
+                {x: 980, y: 100, r: 500, c: accent + '11'},
+                {x: 540, y: 900, r: 700, c: accent + '22'}
             ];
             spots.forEach(s => {
                 ctx.fillStyle = s.c;
                 ctx.beginPath();
                 ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
-                ctx.filter = 'blur(150px)';
+                ctx.filter = 'blur(160px)';
                 ctx.fill();
             });
             ctx.filter = 'none';
@@ -337,24 +339,26 @@
             const margin = 80;
             ctx.save();
             ctx.translate(margin, margin);
-            ctx.scale(0.65, 0.65);
+            ctx.scale(0.75, 0.75); // Slightly larger logo
+            // Main Rect
             ctx.save(); ctx.translate(50, 50); ctx.rotate(45*Math.PI/180); ctx.fillStyle = accent; ctx.beginPath(); ctx.roundRect(-50,-15,100,30,15); ctx.fill(); ctx.restore();
+            // Circles (Brighter for contrast)
             ctx.fillStyle = iconSecondary; ctx.beginPath(); ctx.arc(22,78,20,0,Math.PI*2); ctx.fill(); ctx.beginPath(); ctx.arc(78,22,20,0,Math.PI*2); ctx.fill();
             ctx.restore();
             
             ctx.textAlign = 'start';
             ctx.fillStyle = '#ffffff';
-            ctx.font = '700 42px Poppins';
-            ctx.fillText('Ai Anveshana', margin + 90, margin + 40);
+            ctx.font = '800 48px Poppins'; // Larger & Bolder
+            ctx.fillText('Ai Anveshana', margin + 100, margin + 45);
 
             // 2. TOP RIGHT: Mastering Sentence
             ctx.textAlign = 'right';
-            ctx.fillStyle = 'rgba(255,255,255,0.8)';
-            ctx.font = '600 24px "Josefin Sans"';
+            ctx.fillStyle = 'rgba(255,255,255,0.85)';
+            ctx.font = '600 26px "Josefin Sans"';
             ctx.fillText('MASTERING APA WITH', 1000, margin + 20);
             ctx.fillStyle = accent;
-            ctx.font = '800 32px "Josefin Sans"';
-            ctx.fillText('5+ INDUSTRY AI TOOLS', 1000, margin + 65);
+            ctx.font = '800 36px "Josefin Sans"';
+            ctx.fillText('5+ INDUSTRY AI TOOLS', 1000, margin + 70);
 
             // 3. MIDDLE: Photo, Name, Designation
             const frameX = (1080 - 500) / 2, frameY = 240;
