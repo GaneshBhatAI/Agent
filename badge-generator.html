@@ -123,9 +123,21 @@
         }
 
         @media (max-width: 991px) {
-            .generator-grid { grid-template-columns: 1fr; }
-            .preview-container { position: static; }
-            .badge-app { padding-top: 120px; }
+            .generator-grid { grid-template-columns: 1fr; gap: 2rem; }
+            .preview-container { position: static; margin-top: 2rem; }
+            .badge-app { padding-top: 100px; padding-bottom: 40px; }
+            .form-container { padding: 1.5rem; border-radius: 16px; }
+            h1 { font-size: 2rem !important; }
+            .input-group { margin-bottom: 1.2rem; }
+            .canvas-wrapper { padding: 5px; border-radius: 12px; }
+        }
+
+        @media (max-width: 480px) {
+            .badge-app { padding-top: 80px; }
+            .form-container { padding: 1.2rem; }
+            .input-group label { font-size: 0.75rem; }
+            .btn-primary { width: 100%; padding: 1rem !important; }
+            .mobile-links li a { font-size: 1.2rem; }
         }
     </style>
 </head>
