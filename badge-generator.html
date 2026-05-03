@@ -267,30 +267,43 @@
 
             // 2. Header Branding
             ctx.save();
-            ctx.translate(120, 120);
-            // Draw Logo
+            ctx.translate(80, 100); // Moved closer to edge
+            
+            // Draw Logo (Smaller & Precisely)
+            const logoScale = 0.85; // Shrink logo
+            ctx.save();
+            ctx.scale(logoScale, logoScale);
+            
+            // Main Rect
             ctx.save();
             ctx.translate(50, 50);
             ctx.rotate(45 * Math.PI / 180);
             ctx.fillStyle = '#88eb1a';
-            ctx.beginPath(); ctx.roundRect(-50, -15, 100, 30, 15); ctx.fill();
+            ctx.beginPath(); 
+            ctx.roundRect(-50, -15, 100, 30, 15); 
+            ctx.fill();
             ctx.restore();
+
+            // Circles
             ctx.fillStyle = '#1a5032';
             ctx.beginPath(); ctx.arc(22, 78, 20, 0, Math.PI * 2); ctx.fill();
             ctx.beginPath(); ctx.arc(78, 22, 20, 0, Math.PI * 2); ctx.fill();
+            ctx.restore();
             
-            // Branding Text
+            // Branding Text (Positioned correctly to avoid overlap)
             ctx.fillStyle = '#ffffff';
-            ctx.font = '800 52px Poppins';
-            ctx.fillText('Ai Anveshana', 150, 85);
+            ctx.font = '800 44px Poppins';
+            ctx.fillText('Ai Anveshana', 110, 82); // Shifted right
             ctx.restore();
 
+            // Top Right Info (Smaller)
             ctx.textAlign = 'right';
-            ctx.fillStyle = 'rgba(255,255,255,0.7)';
-            ctx.font = '600 32px Poppins';
-            ctx.fillText('2 Months APA', 960, 150);
+            ctx.fillStyle = 'rgba(255,255,255,0.6)';
+            ctx.font = '600 24px Poppins';
+            ctx.fillText('2 Months APA', 1000, 110);
             ctx.fillStyle = '#88eb1a';
-            ctx.fillText('Bootcamp Architect', 960, 200);
+            ctx.font = '700 26px Poppins';
+            ctx.fillText('Bootcamp Architect', 1000, 150);
             ctx.textAlign = 'start';
 
             // 3. Central Photo Frame
