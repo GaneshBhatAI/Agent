@@ -188,6 +188,19 @@
                         <label for="userPhoto">Professional Photo</label>
                         <input type="file" id="userPhoto" accept="image/*" style="padding: 0.8rem; background: #f8fafc; border: 2px dashed #e2e8f0;">
                     </div>
+                    <div class="input-group">
+                        <label for="userCommitment">Your Commitment</label>
+                        <div style="display: flex; gap: 10px;">
+                            <select id="userCommitment" style="flex: 1; padding: 1rem; border-radius: 12px; border: 2px solid transparent; background: #f1f5f9; font-family: 'Josefin Sans', sans-serif; cursor: pointer;">
+                                <option value='"I am committing 40 hours of APA learning to master agentic workflows and architect the future with AI."'>Mastering Agentic Workflows</option>
+                                <option value='"Embarking on a 40-hour journey to unlock the full potential of Agentic Process Automation."'>Unlocking Potential</option>
+                                <option value='"Committing to 40 hours of intensive APA training to become a leader in AI-driven automation."'>AI Automation Leader</option>
+                                <option value='"Architecting the next generation of business efficiency with 40 hours of APA expertise."'>Business Efficiency</option>
+                                <option value='"Dedicating 40 hours to mastering AI tools and building high-impact agentic solutions."'>High-Impact Solutions</option>
+                            </select>
+                            <button id="shuffleCommitment" title="Shuffle Statement" style="background: var(--accent-color); color: white; border: none; width: 50px; border-radius: 12px; cursor: pointer;"><i class="fas fa-random"></i></button>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="preview-container">
@@ -270,6 +283,8 @@
         const nameInput = document.getElementById('userName');
         const desInput = document.getElementById('userDesignation');
         const compInput = document.getElementById('userCompany');
+        const commitInput = document.getElementById('userCommitment');
+        const shuffleBtn = document.getElementById('shuffleCommitment');
         const photoInput = document.getElementById('userPhoto');
         const downloadBtn = document.getElementById('downloadBadge');
         let userImage = null;
@@ -355,14 +370,10 @@
             ctx.font = '600 36px "Josefin Sans"';
             ctx.fillText(desInput.value.toUpperCase() || 'DESIGNATION', 540, 870);
 
-            // 4. BOTTOM LEFT: Inspiring Sentence
-            ctx.textAlign = 'start';
+            // 4. BOTTOM CENTER: Inspiring Sentence
             ctx.fillStyle = '#ffffff';
             ctx.font = 'italic 500 26px "Josefin Sans"';
-            const inspiringText = '"I am committing 40 hours of APA learning to master agentic workflows and architect the future with AI."';
-            wrapText(ctx, inspiringText, margin, 960, 600, 36);
-            
-            // 5. Removed Bottom Right as per request
+            wrapText(ctx, commitInput.value, 540, 960, 800, 36);
             
             ctx.textAlign = 'start';
         }
@@ -370,6 +381,7 @@
         function wrapText(context, text, x, y, maxWidth, lineHeight) {
             const words = text.split(' ');
             let line = '';
+            context.textAlign = 'center'; // Center text relative to x
             for(let n = 0; n < words.length; n++) {
                 let testLine = line + words[n] + ' ';
                 let metrics = context.measureText(testLine);
@@ -384,7 +396,13 @@
             context.fillText(line, x, y);
         }
 
-        [nameInput, desInput, compInput].forEach(el => el.addEventListener('input', updateBadge));
+        [nameInput, desInput, compInput, commitInput].forEach(el => el.addEventListener('input', updateBadge));
+        shuffleBtn.addEventListener('click', () => {
+            const options = commitInput.options;
+            const nextIndex = (commitInput.selectedIndex + 1) % options.length;
+            commitInput.selectedIndex = nextIndex;
+            updateBadge();
+        });
         photoInput.addEventListener('change', (e) => {
             const file = e.target.files[0]; if(!file) return;
             const reader = new FileReader(); reader.onload = (ev) => { const img = new Image(); img.onload = () => { userImage = img; updateBadge(); }; img.src = ev.target.result; };
