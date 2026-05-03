@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APA Bootcamp Badge Generator | Ai Anveshana</title>
+    <link rel="stylesheet" href="assets/css/style.css?v=5">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .badge-app {
+            min-height: 100vh;
+            padding-top: 120px;
+            background: var(--bg-dark);
+            color: white;
+        }
+
+        .generator-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: start;
+        }
+
+        .form-container {
+            background: var(--bg-secondary);
+            padding: 2.5rem;
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--card-shadow);
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--accent-color);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            color: white;
+            font-family: inherit;
+        }
+
+        .preview-container {
+            position: sticky;
+            top: 120px;
+            text-align: center;
+        }
+
+        #badgeCanvas {
+            max-width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            background: #000;
+        }
+
+        .action-btns {
+            margin-top: 2rem;
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        @media (max-width: 991px) {
+            .generator-grid {
+                grid-template-columns: 1fr;
+            }
+            .preview-container {
+                position: static;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <header class="navbar fade-in visible">
+        <div class="container nav-content">
+            <a href="index.html" class="logo"><svg viewBox="0 0 100 100" class="logo-img" style="height: 35px; width: 35px;"><rect x="0" y="35" width="100" height="30" rx="15" class="logo-rect" transform="rotate(45 50 50)" /><circle cx="22" cy="78" r="20" class="logo-circle" /><circle cx="78" cy="22" r="20" class="logo-circle" /></svg> <span class="logo-text">Ai <span class="highlight">Anveshana</span></span></a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="index.html#home">Home</a></li>
+                    <li><a href="index.html#expertise">Expertise</a></li>
+                    <li><a href="apa-bootcamp.html">APA Bootcamp</a></li>
+                    <li><a href="index.html#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="badge-app">
+        <div class="container">
+            <div style="text-align: center; margin-bottom: 4rem;">
+                <h1 class="gradient-text">Personalized Bootcamp Badge</h1>
+                <p>Generate your commitment badge and share it with the world!</p>
+            </div>
+
+            <div class="generator-grid">
+                <!-- Form -->
+                <div class="form-container">
+                    <div class="input-group">
+                        <label for="userName">Full Name</label>
+                        <input type="text" id="userName" placeholder="e.g. Jainam Mehta" maxlength="25">
+                    </div>
+                    <div class="input-group">
+                        <label for="userDesignation">Designation</label>
+                        <input type="text" id="userDesignation" placeholder="e.g. Project Lead" maxlength="30">
+                    </div>
+                    <div class="input-group">
+                        <label for="userCompany">Company</label>
+                        <input type="text" id="userCompany" placeholder="e.g. Cre8r.ai" maxlength="30">
+                    </div>
+                    <div class="input-group">
+                        <label for="userPhoto">Upload Your Photo</label>
+                        <input type="file" id="userPhoto" accept="image/*">
+                        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem;">Square photos work best.</p>
+                    </div>
+                    
+                    <div style="margin-top: 2rem; padding: 1rem; background: rgba(136, 235, 26, 0.05); border-radius: 12px; border: 1px dashed var(--accent-color);">
+                        <p style="font-size: 0.85rem; line-height: 1.5; color: #cbd5e1;">
+                            <i class="fas fa-info-circle" style="color: var(--accent-color); margin-right: 8px;"></i>
+                            Your badge will include the official Ai Anveshana branding and your commitment statement to the APA Bootcamp.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Preview -->
+                <div class="preview-container">
+                    <canvas id="badgeCanvas" width="1080" height="1080"></canvas>
+                    <div class="action-btns">
+                        <button id="downloadBadge" class="btn btn-primary"><i class="fas fa-download"></i> Download Badge</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer style="padding: 40px 0 20px;">
+        <div class="container" style="text-align: center;">
+            <p>&copy; 2026 Ai Anveshana. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const canvas = document.getElementById('badgeCanvas');
+        const ctx = canvas.getContext('2d');
+        const nameInput = document.getElementById('userName');
+        const desInput = document.getElementById('userDesignation');
+        const compInput = document.getElementById('userCompany');
+        const photoInput = document.getElementById('userPhoto');
+        const downloadBtn = document.getElementById('downloadBadge');
+
+        let userImage = null;
+
+        // Initialize Canvas with Placeholder
+        function init() {
+            updateBadge();
+        }
+
+        function updateBadge() {
+            // 1. Background
+            ctx.fillStyle = '#0f172a'; // Deep Navy
+            ctx.fillRect(0, 0, 1080, 1080);
+            
+            // Subtle Gradient
+            const grad = ctx.createRadialGradient(540, 540, 0, 540, 540, 800);
+            grad.addColorStop(0, '#1e293b');
+            grad.addColorStop(1, '#020617');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, 1080, 1080);
+
+            // 2. Header Logo (Ai Anveshana)
+            // Draw Logo SVG manually on canvas
+            ctx.save();
+            ctx.translate(220, 150);
+            ctx.scale(1.2, 1.2);
+            
+            // Rect
+            ctx.save();
+            ctx.translate(50, 50);
+            ctx.rotate(45 * Math.PI / 180);
+            ctx.fillStyle = '#88eb1a'; // Accent Green
+            ctx.beginPath();
+            ctx.roundRect(-50, -15, 100, 30, 15);
+            ctx.fill();
+            ctx.restore();
+
+            // Circles
+            ctx.fillStyle = '#1a5032'; // Forest Green
+            ctx.beginPath(); ctx.arc(22, 78, 20, 0, Math.PI * 2); ctx.fill();
+            ctx.beginPath(); ctx.arc(78, 22, 20, 0, Math.PI * 2); ctx.fill();
+            ctx.restore();
+
+            // Header Text
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '800 48px Poppins';
+            ctx.fillText('Ai Anveshana', 360, 195);
+            
+            ctx.fillStyle = '#94a3b8';
+            ctx.font = '600 28px Poppins';
+            ctx.fillText('2 Months APA', 750, 175);
+            ctx.fillText('Bootcamp', 750, 210);
+
+            // 3. User Photo Area
+            const frameWidth = 480;
+            const frameHeight = 600;
+            const frameX = (1080 - frameWidth) / 2;
+            const frameY = 300;
+
+            // Frame Background (Black)
+            ctx.fillStyle = '#000000';
+            ctx.beginPath();
+            ctx.roundRect(frameX - 20, frameY - 20, frameWidth + 40, frameHeight + 140, 20);
+            ctx.fill();
+            ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // White Inner Box for Photo
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(frameX, frameY, frameWidth, frameHeight);
+
+            if (userImage) {
+                // Draw user image centered in white box
+                const scale = Math.max(frameWidth / userImage.width, frameHeight / userImage.height);
+                const x = frameX + (frameWidth - userImage.width * scale) / 2;
+                const y = frameY + (frameHeight - userImage.height * scale) / 2;
+                ctx.save();
+                ctx.beginPath();
+                ctx.rect(frameX, frameY, frameWidth, frameHeight);
+                ctx.clip();
+                ctx.drawImage(userImage, x, y, userImage.width * scale, userImage.height * scale);
+                ctx.restore();
+            } else {
+                ctx.fillStyle = '#f1f5f9';
+                ctx.fillRect(frameX, frameY, frameWidth, frameHeight);
+                ctx.fillStyle = '#94a3b8';
+                ctx.font = '400 24px Poppins';
+                ctx.textAlign = 'center';
+                ctx.fillText('Your Photo Here', 540, 600);
+                ctx.textAlign = 'start';
+            }
+
+            // 4. User Info
+            ctx.textAlign = 'center';
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '700 42px Poppins';
+            ctx.fillText(nameInput.value || 'Your Name', 540, 960);
+            
+            ctx.fillStyle = '#94a3b8';
+            ctx.font = '500 28px Poppins';
+            ctx.fillText(desInput.value || 'Designation', 540, 1005);
+            
+            ctx.fillStyle = '#88eb1a';
+            ctx.font = '600 24px Poppins';
+            ctx.fillText(compInput.value || 'Company Name', 540, 1045);
+
+            // 5. Commitment Text (Bottom)
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'italic 400 20px Poppins';
+            const commitText = '"I am committing my time to master Agentic Process Automation (APA) & architect the future with AI workflows."';
+            wrapText(ctx, commitText, 540, 1080 - 60, 900, 28);
+            
+            ctx.textAlign = 'start';
+        }
+
+        function wrapText(context, text, x, y, maxWidth, lineHeight) {
+            const words = text.split(' ');
+            let line = '';
+            let lines = [];
+
+            for(let n = 0; n < words.length; n++) {
+                let testLine = line + words[n] + ' ';
+                let metrics = context.measureText(testLine);
+                let testWidth = metrics.width;
+                if (testWidth > maxWidth && n > 0) {
+                    lines.push(line);
+                    line = words[n] + ' ';
+                } else {
+                    line = testLine;
+                }
+            }
+            lines.push(line);
+
+            // Center lines vertically around y
+            const totalHeight = lines.length * lineHeight;
+            let startY = y - (totalHeight / 2);
+
+            for(let k = 0; k < lines.length; k++) {
+                context.fillText(lines[k], x, startY + (k * lineHeight));
+            }
+        }
+
+        // Listeners
+        [nameInput, desInput, compInput].forEach(input => {
+            input.addEventListener('input', updateBadge);
+        });
+
+        photoInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const img = new Image();
+                img.onload = () => {
+                    userImage = img;
+                    updateBadge();
+                };
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        });
+
+        downloadBtn.addEventListener('click', () => {
+            const link = document.createElement('a');
+            link.download = `AiAnveshana-Badge-${nameInput.value || 'User'}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        });
+
+        init();
+    </script>
+</body>
+</html>
