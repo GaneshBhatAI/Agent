@@ -7,11 +7,15 @@
     <link rel="stylesheet" href="assets/css/style.css?v=5">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        body {
+            background-color: #f8fafc; /* Light grey/white background like home page */
+            color: var(--primary-color);
+        }
+
         .badge-app {
             min-height: 100vh;
-            padding-top: 120px;
-            background: var(--bg-dark);
-            color: white;
+            padding-top: 150px;
+            padding-bottom: 80px;
         }
 
         .generator-grid {
@@ -22,11 +26,12 @@
         }
 
         .form-container {
-            background: var(--bg-secondary);
-            padding: 2.5rem;
-            border-radius: 20px;
-            border: 1px solid var(--glass-border);
-            box-shadow: var(--card-shadow);
+            background: white;
+            padding: 3rem;
+            border-radius: 24px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.03);
+            text-align: left;
         }
 
         .input-group {
@@ -35,26 +40,31 @@
 
         .input-group label {
             display: block;
-            margin-bottom: 0.5rem;
-            color: var(--accent-color);
+            margin-bottom: 0.6rem;
+            color: #475569;
             font-weight: 600;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .input-group input, .input-group select {
+        .input-group input {
             width: 100%;
-            padding: 0.8rem 1rem;
-            background: #020617; /* Darker background */
-            border: 1px solid var(--glass-border);
-            border-radius: 8px;
-            color: white;
+            padding: 1rem;
+            background: #f1f5f9;
+            border: 2px solid transparent;
+            border-radius: 12px;
+            color: #1e293b;
             font-family: inherit;
+            font-size: 1rem;
+            transition: all 0.3s;
             outline: none;
-            transition: border-color 0.3s;
         }
 
         .input-group input:focus {
+            background: white;
             border-color: var(--accent-color);
+            box-shadow: 0 0 0 4px rgba(136, 235, 26, 0.1);
         }
 
         .preview-container {
@@ -63,18 +73,39 @@
             text-align: center;
         }
 
+        .canvas-wrapper {
+            position: relative;
+            display: inline-block;
+            background: #000;
+            padding: 10px;
+            border-radius: 20px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
+        }
+
         #badgeCanvas {
             max-width: 100%;
             border-radius: 12px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-            background: #000;
+            display: block;
+        }
+
+        .preview-label {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent-color);
+            color: black;
+            padding: 4px 15px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            z-index: 10;
         }
 
         .action-btns {
-            margin-top: 2rem;
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
+            margin-top: 2.5rem;
         }
 
         @media (max-width: 991px) {
@@ -83,6 +114,9 @@
             }
             .preview-container {
                 position: static;
+            }
+            .badge-app {
+                padding-top: 120px;
             }
         }
     </style>
@@ -97,18 +131,35 @@
                 <ul class="nav-links">
                     <li><a href="index.html#home">Home</a></li>
                     <li><a href="index.html#expertise">Expertise</a></li>
-                    <li><a href="apa-bootcamp.html">APA Bootcamp</a></li>
+                    <li><a href="index.html#process-deck">Videos</a></li>
+                    <li><a href="about-mentor.html">About Mentor</a></li>
                     <li><a href="index.html#contact">Contact</a></li>
                 </ul>
+                <div class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </div>
             </nav>
         </div>
     </header>
 
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-nav-overlay">
+        <div class="close-btn"><i class="fas fa-times"></i></div>
+        <ul class="mobile-links">
+            <li><a href="index.html#home">Home</a></li>
+            <li><a href="index.html#expertise">Expertise</a></li>
+            <li><a href="index.html#process-deck">Videos</a></li>
+            <li><a href="about-mentor.html">About Mentor</a></li>
+            <li><a href="index.html#contact">Contact</a></li>
+        </ul>
+    </div>
+
     <main class="badge-app">
         <div class="container">
             <div style="text-align: center; margin-bottom: 4rem;">
-                <h1 class="gradient-text">Personalized Bootcamp Badge</h1>
-                <p>Generate your commitment badge and share it with the world!</p>
+                <h4 style="color: var(--accent-color); text-transform: uppercase; letter-spacing: 2px; font-size: 0.9rem; margin-bottom: 1rem;">Student Exclusive</h4>
+                <h1 style="font-size: clamp(2.5rem, 5vw, 3.5rem); font-weight: 800; margin-bottom: 1rem; color: #0f172a;">Personalized <span class="gradient-text">Bootcamp Badge</span></h1>
+                <p style="color: #64748b; font-size: 1.1rem;">Celebrate your commitment to Agentic Process Automation (APA).</p>
             </div>
 
             <div class="generator-grid">
@@ -116,44 +167,67 @@
                 <div class="form-container">
                     <div class="input-group">
                         <label for="userName">Full Name</label>
-                        <input type="text" id="userName" placeholder="e.g. Jainam Mehta" maxlength="25">
+                        <input type="text" id="userName" placeholder="Enter your full name" maxlength="25">
                     </div>
                     <div class="input-group">
                         <label for="userDesignation">Designation</label>
-                        <input type="text" id="userDesignation" placeholder="e.g. Project Lead" maxlength="30">
+                        <input type="text" id="userDesignation" placeholder="e.g. Solution Architect" maxlength="30">
                     </div>
                     <div class="input-group">
                         <label for="userCompany">Company</label>
-                        <input type="text" id="userCompany" placeholder="e.g. Cre8r.ai" maxlength="30">
+                        <input type="text" id="userCompany" placeholder="e.g. Global Tech Solutions" maxlength="30">
                     </div>
                     <div class="input-group">
-                        <label for="userPhoto">Upload Your Photo</label>
-                        <input type="file" id="userPhoto" accept="image/*">
-                        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem;">Square photos work best.</p>
+                        <label for="userPhoto">Professional Photo</label>
+                        <input type="file" id="userPhoto" accept="image/*" style="padding: 0.8rem; background: #f8fafc; border: 2px dashed #e2e8f0;">
+                        <p style="font-size: 0.75rem; color: #94a3b8; margin-top: 0.8rem;">
+                            <i class="fas fa-camera" style="margin-right: 5px;"></i> Square portrait photos work best.
+                        </p>
                     </div>
                     
-                    <div style="margin-top: 2rem; padding: 1rem; background: rgba(136, 235, 26, 0.05); border-radius: 12px; border: 1px dashed var(--accent-color);">
-                        <p style="font-size: 0.85rem; line-height: 1.5; color: #cbd5e1;">
-                            <i class="fas fa-info-circle" style="color: var(--accent-color); margin-right: 8px;"></i>
-                            Your badge will include the official Ai Anveshana branding and your commitment statement to the APA Bootcamp.
+                    <div style="margin-top: 2.5rem; padding: 1.5rem; background: #f8fafc; border-radius: 16px; border-left: 4px solid var(--accent-color);">
+                        <p style="font-size: 0.85rem; line-height: 1.6; color: #475569;">
+                            <strong>Pro Tip:</strong> Use a high-quality photo with a clear background to make your badge look premium on LinkedIn and Twitter.
                         </p>
                     </div>
                 </div>
 
                 <!-- Preview -->
                 <div class="preview-container">
-                    <canvas id="badgeCanvas" width="1080" height="1080"></canvas>
+                    <div class="canvas-wrapper">
+                        <div class="preview-label">Live Preview</div>
+                        <canvas id="badgeCanvas" width="1080" height="1080"></canvas>
+                    </div>
                     <div class="action-btns">
-                        <button id="downloadBadge" class="btn btn-primary"><i class="fas fa-download"></i> Download Badge</button>
+                        <button id="downloadBadge" class="btn btn-primary" style="padding: 1rem 2.5rem; font-size: 1rem; border-radius: 50px; background: #000; color: #fff;">
+                            <i class="fas fa-download" style="margin-right: 10px;"></i> Download Badge
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
     </main>
 
-    <footer style="padding: 40px 0 20px;">
-        <div class="container" style="text-align: center;">
-            <p>&copy; 2026 Ai Anveshana. All Rights Reserved.</p>
+    <!-- Footer -->
+    <footer style="padding: 60px 0 30px; background: #0f172a; color: white;">
+        <div class="container">
+            <div class="footer-content" style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 40px;">
+                <div class="footer-logo">
+                    <h2><svg viewBox="0 0 100 100" class="logo-img" style="height: 45px; width: 45px; vertical-align: middle;"><rect x="0" y="35" width="100" height="30" rx="15" class="logo-rect" transform="rotate(45 50 50)" /><circle cx="22" cy="78" r="20" class="logo-circle" /><circle cx="78" cy="22" r="20" class="logo-circle" /></svg> <span class="logo-text">Ai <span style="color: white;">Anveshana</span></span></h2>
+                    <p style="color: #94a3b8;">Partnered with growing companies around the world to deliver smart tech solutions.</p>
+                </div>
+                <div class="footer-address" style="flex: 1; max-width: 300px; margin: 0 2rem; font-size: 0.9rem; color: #cbd5e1; line-height: 1.6;">
+                    <h4 style="color: var(--accent-color); margin-bottom: 0.5rem;"><i class="fas fa-map-marker-alt" style="margin-right: 8px;"></i>Our Office</h4>
+                    164, 1st Main Rd, Vidyaranyapura Post, Chikkabettahalli, Havyakanagara Phase-2, Vidyaranyapura, Bengaluru, Karnataka 560097
+                </div>
+                <div class="social-links">
+                    <a href="https://www.linkedin.com/company/aianveshana" target="_blank" style="color: white; font-size: 1.5rem; margin: 0 10px;"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://www.youtube.com/@AiBhat" target="_blank" style="color: white; font-size: 1.5rem; margin: 0 10px;"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            <div class="footer-bottom" style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.05); color: #64748b; font-size: 0.85rem;">
+                <p>&copy; 2026 Ai Anveshana. All Rights Reserved.</p>
+            </div>
         </div>
     </footer>
 
@@ -168,160 +242,126 @@
 
         let userImage = null;
 
-        // Initialize Canvas with Placeholder
-        function init() {
-            updateBadge();
-        }
-
         function updateBadge() {
-            // 1. Background
-            ctx.fillStyle = '#0f172a'; // Deep Navy
+            // 1. Background - Dark & Professional (Misty Gradient)
+            ctx.fillStyle = '#0f172a';
             ctx.fillRect(0, 0, 1080, 1080);
             
-            // Subtle Gradient
-            const grad = ctx.createRadialGradient(540, 540, 0, 540, 540, 800);
+            const grad = ctx.createRadialGradient(540, 300, 0, 540, 540, 1000);
             grad.addColorStop(0, '#1e293b');
             grad.addColorStop(1, '#020617');
             ctx.fillStyle = grad;
             ctx.fillRect(0, 0, 1080, 1080);
 
-            // 2. Header Logo (Ai Anveshana)
-            // Draw Logo SVG manually on canvas
+            // Misty Background Effect
+            ctx.globalAlpha = 0.3;
+            for(let i=0; i<5; i++) {
+                ctx.fillStyle = i % 2 === 0 ? '#1e40af' : '#1e293b';
+                ctx.beginPath();
+                ctx.arc(Math.random()*1080, Math.random()*1080, 400, 0, Math.PI*2);
+                ctx.filter = 'blur(100px)';
+                ctx.fill();
+            }
+            ctx.filter = 'none';
+            ctx.globalAlpha = 1.0;
+
+            // 2. Header Branding
             ctx.save();
-            ctx.translate(220, 150);
-            ctx.scale(1.2, 1.2);
-            
-            // Rect
+            ctx.translate(120, 120);
+            // Draw Logo
             ctx.save();
             ctx.translate(50, 50);
             ctx.rotate(45 * Math.PI / 180);
-            ctx.fillStyle = '#88eb1a'; // Accent Green
-            ctx.beginPath();
-            ctx.roundRect(-50, -15, 100, 30, 15);
-            ctx.fill();
+            ctx.fillStyle = '#88eb1a';
+            ctx.beginPath(); ctx.roundRect(-50, -15, 100, 30, 15); ctx.fill();
             ctx.restore();
-
-            // Circles
-            ctx.fillStyle = '#1a5032'; // Forest Green
+            ctx.fillStyle = '#1a5032';
             ctx.beginPath(); ctx.arc(22, 78, 20, 0, Math.PI * 2); ctx.fill();
             ctx.beginPath(); ctx.arc(78, 22, 20, 0, Math.PI * 2); ctx.fill();
+            
+            // Branding Text
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '800 52px Poppins';
+            ctx.fillText('Ai Anveshana', 150, 85);
             ctx.restore();
 
-            // Header Text
-            ctx.fillStyle = '#ffffff';
-            ctx.font = '800 48px Poppins';
-            ctx.fillText('Ai Anveshana', 360, 195);
-            
-            ctx.fillStyle = '#94a3b8';
-            ctx.font = '600 28px Poppins';
-            ctx.fillText('2 Months APA', 750, 175);
-            ctx.fillText('Bootcamp', 750, 210);
+            ctx.textAlign = 'right';
+            ctx.fillStyle = 'rgba(255,255,255,0.7)';
+            ctx.font = '600 32px Poppins';
+            ctx.fillText('2 Months APA', 960, 150);
+            ctx.fillStyle = '#88eb1a';
+            ctx.fillText('Bootcamp Architect', 960, 200);
+            ctx.textAlign = 'start';
 
-            // 3. User Photo Area
-            const frameWidth = 480;
-            const frameHeight = 600;
+            // 3. Central Photo Frame
+            const frameWidth = 520;
+            const frameHeight = 520;
             const frameX = (1080 - frameWidth) / 2;
-            const frameY = 300;
+            const frameY = 320;
 
-            // Frame Background (Black)
-            ctx.fillStyle = '#000000';
+            // Outer Frame Glow
+            ctx.shadowColor = 'rgba(136, 235, 26, 0.2)';
+            ctx.shadowBlur = 40;
+            ctx.fillStyle = '#000';
             ctx.beginPath();
-            ctx.roundRect(frameX - 20, frameY - 20, frameWidth + 40, frameHeight + 140, 20);
+            ctx.roundRect(frameX - 20, frameY - 20, frameWidth + 40, frameHeight + 40, 30);
             ctx.fill();
-            ctx.strokeStyle = 'rgba(255,255,255,0.1)';
-            ctx.lineWidth = 2;
-            ctx.stroke();
+            ctx.shadowBlur = 0;
 
-            // White Inner Box for Photo
+            // White Inner Box
             ctx.fillStyle = '#ffffff';
-            ctx.fillRect(frameX, frameY, frameWidth, frameHeight);
+            ctx.beginPath();
+            ctx.roundRect(frameX, frameY, frameWidth, frameHeight, 15);
+            ctx.fill();
 
             if (userImage) {
-                // Draw user image centered in white box
+                ctx.save();
+                ctx.beginPath();
+                ctx.roundRect(frameX, frameY, frameWidth, frameHeight, 15);
+                ctx.clip();
                 const scale = Math.max(frameWidth / userImage.width, frameHeight / userImage.height);
                 const x = frameX + (frameWidth - userImage.width * scale) / 2;
                 const y = frameY + (frameHeight - userImage.height * scale) / 2;
-                ctx.save();
-                ctx.beginPath();
-                ctx.rect(frameX, frameY, frameWidth, frameHeight);
-                ctx.clip();
                 ctx.drawImage(userImage, x, y, userImage.width * scale, userImage.height * scale);
                 ctx.restore();
             } else {
-                ctx.fillStyle = '#f1f5f9';
+                ctx.fillStyle = '#f8fafc';
                 ctx.fillRect(frameX, frameY, frameWidth, frameHeight);
                 ctx.fillStyle = '#94a3b8';
-                ctx.font = '400 24px Poppins';
                 ctx.textAlign = 'center';
-                ctx.fillText('Your Photo Here', 540, 600);
+                ctx.font = '400 30px Poppins';
+                ctx.fillText('Photo Preview', 540, 600);
                 ctx.textAlign = 'start';
             }
 
-            // 4. User Info
+            // 4. Name & Details
             ctx.textAlign = 'center';
             ctx.fillStyle = '#ffffff';
-            ctx.font = '700 42px Poppins';
-            ctx.fillText(nameInput.value || 'Your Name', 540, 960);
+            ctx.font = '800 64px Poppins';
+            ctx.fillText(nameInput.value || 'YOUR NAME', 540, 930);
             
-            ctx.fillStyle = '#94a3b8';
-            ctx.font = '500 28px Poppins';
-            ctx.fillText(desInput.value || 'Designation', 540, 1005);
+            ctx.fillStyle = 'rgba(255,255,255,0.7)';
+            ctx.font = '500 34px Poppins';
+            ctx.fillText(desInput.value || 'Designation', 540, 985);
             
             ctx.fillStyle = '#88eb1a';
-            ctx.font = '600 24px Poppins';
-            ctx.fillText(compInput.value || 'Company Name', 540, 1045);
+            ctx.font = '700 32px Poppins';
+            ctx.fillText(compInput.value || 'Company Name', 540, 1035);
 
-            // 5. Commitment Text (Bottom)
-            ctx.fillStyle = '#ffffff';
-            ctx.font = 'italic 400 20px Poppins';
-            const commitText = '"I am committing my time to master Agentic Process Automation (APA) & architect the future with AI workflows."';
-            wrapText(ctx, commitText, 540, 1080 - 60, 900, 28);
-            
-            ctx.textAlign = 'start';
+            // 5. Quote (Bottom Edge)
+            ctx.fillStyle = 'rgba(255,255,255,0.4)';
+            ctx.font = '400 18px Poppins';
+            ctx.fillText('MASTERING AGENTIC PROCESS AUTOMATION (APA)', 540, 1065);
         }
 
-        function wrapText(context, text, x, y, maxWidth, lineHeight) {
-            const words = text.split(' ');
-            let line = '';
-            let lines = [];
-
-            for(let n = 0; n < words.length; n++) {
-                let testLine = line + words[n] + ' ';
-                let metrics = context.measureText(testLine);
-                let testWidth = metrics.width;
-                if (testWidth > maxWidth && n > 0) {
-                    lines.push(line);
-                    line = words[n] + ' ';
-                } else {
-                    line = testLine;
-                }
-            }
-            lines.push(line);
-
-            // Center lines vertically around y
-            const totalHeight = lines.length * lineHeight;
-            let startY = y - (totalHeight / 2);
-
-            for(let k = 0; k < lines.length; k++) {
-                context.fillText(lines[k], x, startY + (k * lineHeight));
-            }
-        }
-
-        // Listeners
-        [nameInput, desInput, compInput].forEach(input => {
-            input.addEventListener('input', updateBadge);
-        });
-
+        [nameInput, desInput, compInput].forEach(el => el.addEventListener('input', updateBadge));
         photoInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (!file) return;
             const reader = new FileReader();
             reader.onload = (event) => {
                 const img = new Image();
-                img.onload = () => {
-                    userImage = img;
-                    updateBadge();
-                };
+                img.onload = () => { userImage = img; updateBadge(); };
                 img.src = event.target.result;
             };
             reader.readAsDataURL(file);
@@ -329,12 +369,19 @@
 
         downloadBtn.addEventListener('click', () => {
             const link = document.createElement('a');
-            link.download = `AiAnveshana-Badge-${nameInput.value || 'User'}.png`;
+            link.download = `APA-Badge-${nameInput.value || 'Student'}.png`;
             link.href = canvas.toDataURL('image/png');
             link.click();
         });
 
-        init();
+        // Toggle Navbar class on scroll for effect
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('.navbar');
+            if (window.scrollY > 50) nav.classList.add('scrolled');
+            else nav.classList.remove('scrolled');
+        });
+
+        updateBadge();
     </script>
 </body>
 </html>
