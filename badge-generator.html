@@ -289,49 +289,65 @@
             ctx.fillRect(0, 0, 1080, 1080);
 
             // Glow spots
-            ctx.globalAlpha = 0.3;
+            ctx.globalAlpha = 0.25;
             const spots = [{x:200,y:200,r:400,c:isRed?'#450a0a':'#1e40af'},{x:800,y:300,r:350,c:'#1e293b'},{x:400,y:800,r:450,c:isRed?'#450a0a':'#1e40af'},{x:900,y:900,r:400,c:'#1e293b'}];
             spots.forEach(s => { ctx.fillStyle = s.c; ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI*2); ctx.filter = 'blur(120px)'; ctx.fill(); });
             ctx.filter = 'none'; ctx.globalAlpha = 1.0;
 
-            // Branding
+            // Branding (Centered and Balanced)
             const brandY = 180;
-            ctx.font = '800 48px Poppins';
-            const textWidth = ctx.measureText('Ai Anveshana').width;
-            const startX = (1080 - (100 + textWidth)) / 2;
+            const centerX = 540;
+            const iconSize = 80;
+            const gap = 40;
             
+            ctx.font = '800 52px Poppins';
+            const textWidth = ctx.measureText('Ai Anveshana').width;
+            const totalWidth = iconSize + gap + textWidth;
+            const startX = centerX - (totalWidth / 2);
+
+            // Draw Icon
             ctx.save();
             ctx.translate(startX, brandY - 65);
-            ctx.scale(0.7, 0.7);
+            ctx.scale(0.8, 0.8);
+            // Main Rect
             ctx.save(); ctx.translate(50, 50); ctx.rotate(45*Math.PI/180); ctx.fillStyle = accent; ctx.beginPath(); ctx.roundRect(-50,-15,100,30,15); ctx.fill(); ctx.restore();
+            // Circles
             ctx.fillStyle = iconSecondary; ctx.beginPath(); ctx.arc(22,78,20,0,Math.PI*2); ctx.fill(); ctx.beginPath(); ctx.arc(78,22,20,0,Math.PI*2); ctx.fill();
             ctx.restore();
             
+            // Branding Text
             ctx.fillStyle = '#ffffff';
-            ctx.font = '800 48px Poppins';
-            ctx.fillText('Ai Anveshana', startX + 100, brandY);
+            ctx.font = '800 52px Poppins';
+            ctx.textAlign = 'start';
+            ctx.fillText('Ai Anveshana', startX + iconSize + gap, brandY);
             
+            // Sub-branding Info
             ctx.textAlign = 'center';
             ctx.fillStyle = 'rgba(255,255,255,0.6)';
-            ctx.font = '600 24px "Josefin Sans"'; // Changed to Josefin Sans
-            ctx.fillText('MASTERING 5+ INDUSTRY-LEADING AI TOOLS', 540, 240);
+            ctx.font = '600 24px "Josefin Sans"';
+            ctx.fillText('MASTERING 5+ INDUSTRY-LEADING AI TOOLS', 540, 260);
 
-            // Photo
-            const frameX = (1080 - 520) / 2, frameY = 320;
-            ctx.shadowColor = accent + '33'; ctx.shadowBlur = 40;
-            ctx.fillStyle = '#000'; ctx.beginPath(); ctx.roundRect(frameX-20, frameY-20, 560, 560, 30); ctx.fill();
-            ctx.shadowBlur = 0; ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.roundRect(frameX, frameY, 520, 520, 15); ctx.fill();
+            // Photo Area
+            const frameX = (1080 - 540) / 2, frameY = 340;
+            ctx.shadowColor = accent + '33'; ctx.shadowBlur = 50;
+            ctx.fillStyle = '#000'; ctx.beginPath(); ctx.roundRect(frameX-20, frameY-20, 580, 580, 30); ctx.fill();
+            ctx.shadowBlur = 0; ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.roundRect(frameX, frameY, 540, 540, 15); ctx.fill();
 
             if (userImage) {
-                ctx.save(); ctx.beginPath(); ctx.roundRect(frameX, frameY, 520, 520, 15); ctx.clip();
-                const scale = Math.max(520/userImage.width, 520/userImage.height);
-                ctx.drawImage(userImage, frameX+(520-userImage.width*scale)/2, frameY+(520-userImage.height*scale)/2, userImage.width*scale, userImage.height*scale);
+                ctx.save(); ctx.beginPath(); ctx.roundRect(frameX, frameY, 540, 540, 15); ctx.clip();
+                const scale = Math.max(540/userImage.width, 540/userImage.height);
+                ctx.drawImage(userImage, frameX+(540-userImage.width*scale)/2, frameY+(540-userImage.height*scale)/2, userImage.width*scale, userImage.height*scale);
                 ctx.restore();
+            } else {
+                ctx.fillStyle = '#f8fafc'; ctx.fillRect(frameX, frameY, 540, 540);
+                ctx.fillStyle = '#94a3b8'; ctx.font = '400 30px "Josefin Sans"'; ctx.fillText('Photo Preview', 540, 610);
             }
 
-            ctx.fillStyle = '#ffffff'; ctx.font = '800 64px Poppins'; ctx.fillText(nameInput.value || 'YOUR NAME', 540, 930);
-            ctx.fillStyle = 'rgba(255,255,255,0.7)'; ctx.font = '500 34px "Josefin Sans"'; ctx.fillText(desInput.value || 'Designation', 540, 985);
-            ctx.fillStyle = accent; ctx.font = '700 32px "Josefin Sans"'; ctx.fillText(compInput.value || 'Company Name', 540, 1035);
+            // User Info
+            ctx.textAlign = 'center';
+            ctx.fillStyle = '#ffffff'; ctx.font = '800 68px Poppins'; ctx.fillText(nameInput.value || 'YOUR NAME', 540, 960);
+            ctx.fillStyle = 'rgba(255,255,255,0.8)'; ctx.font = '500 38px "Josefin Sans"'; ctx.fillText(desInput.value || 'Designation', 540, 1015);
+            ctx.fillStyle = accent; ctx.font = '700 36px "Josefin Sans"'; ctx.fillText(compInput.value || 'Company Name', 540, 1065);
         }
 
         [nameInput, desInput, compInput].forEach(el => el.addEventListener('input', updateBadge));
