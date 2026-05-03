@@ -189,16 +189,6 @@
                         <input type="file" id="userPhoto" accept="image/*" style="padding: 0.8rem; background: #f8fafc; border: 2px dashed #e2e8f0;">
                     </div>
                     <div class="input-group">
-                        <label>Badge Accent Color</label>
-                        <div id="accentPresets" style="display: flex; gap: 12px; margin-top: 5px;">
-                            <div class="color-preset" data-color="#88eb1a" title="Ai Green" style="width: 30px; height: 30px; border-radius: 50%; background: #88eb1a; cursor: pointer; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.1);"></div>
-                            <div class="color-preset" data-color="#ff3e3e" title="Power Red" style="width: 30px; height: 30px; border-radius: 50%; background: #ff3e3e; cursor: pointer; border: 2px solid transparent;"></div>
-                            <div class="color-preset" data-color="#3b82f6" title="Tech Blue" style="width: 30px; height: 30px; border-radius: 50%; background: #3b82f6; cursor: pointer; border: 2px solid transparent;"></div>
-                            <div class="color-preset" data-color="#fbbf24" title="Expert Gold" style="width: 30px; height: 30px; border-radius: 50%; background: #fbbf24; cursor: pointer; border: 2px solid transparent;"></div>
-                            <div class="color-preset" data-color="#a855f7" title="Future Purple" style="width: 30px; height: 30px; border-radius: 50%; background: #a855f7; cursor: pointer; border: 2px solid transparent;"></div>
-                        </div>
-                    </div>
-                    <div class="input-group">
                         <label for="userCommitment">Your Commitment</label>
                         <div style="display: flex; gap: 10px;">
                             <select id="userCommitment" style="flex: 1; padding: 1rem; border-radius: 12px; border: 2px solid transparent; background: #f1f5f9; font-family: 'Josefin Sans', sans-serif; cursor: pointer;">
@@ -298,38 +288,36 @@
         const photoInput = document.getElementById('userPhoto');
         const downloadBtn = document.getElementById('downloadBadge');
         let userImage = null;
-        let selectedAccent = '#88eb1a'; // Default green
 
         function updateBadge() {
             const isRed = document.body.classList.contains('theme-red');
-            const accent = selectedAccent;
-            // Use lighter secondary colors for better contrast on dark BG
-            const iconSecondary = (accent === '#88eb1a') ? '#2d7a4d' : (accent === '#ff3e3e' ? '#8b0000' : '#334155');
+            const accent = '#88eb1a'; // Signature Ai Green
+            const iconSecondary = '#2d7a4d';
 
             // Background - Deeper Contrast
-            ctx.fillStyle = '#010409'; // Even deeper black
+            ctx.fillStyle = '#010409';
             ctx.fillRect(0, 0, 1080, 1080);
             
             // Rich Radial Gradient
             const grad = ctx.createRadialGradient(540, 540, 0, 540, 540, 1000);
             grad.addColorStop(0, '#0f172a'); 
-            grad.addColorStop(0.7, '#020617');
+            grad.addColorStop(0.6, '#010409');
             grad.addColorStop(1, '#000000'); 
             ctx.fillStyle = grad;
             ctx.fillRect(0, 0, 1080, 1080);
 
-            // Subtle Atmospheric Glows (sensing accent)
-            ctx.globalAlpha = 0.45;
+            // Intense Atmospheric Glows (Signature Green)
+            ctx.globalAlpha = 0.5;
             const spots = [
-                {x: 100, y: 100, r: 600, c: accent + '22'},
-                {x: 980, y: 100, r: 500, c: accent + '11'},
-                {x: 540, y: 900, r: 700, c: accent + '22'}
+                {x: 100, y: 100, r: 600, c: '#1a5032'},
+                {x: 980, y: 100, r: 500, c: '#064e3b'},
+                {x: 540, y: 900, r: 800, c: '#14532d'}
             ];
             spots.forEach(s => {
                 ctx.fillStyle = s.c;
                 ctx.beginPath();
                 ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
-                ctx.filter = 'blur(160px)';
+                ctx.filter = 'blur(180px)';
                 ctx.fill();
             });
             ctx.filter = 'none';
@@ -339,16 +327,16 @@
             const margin = 80;
             ctx.save();
             ctx.translate(margin, margin);
-            ctx.scale(0.75, 0.75); // Slightly larger logo
-            // Main Rect
+            ctx.scale(0.75, 0.75);
+            ctx.shadowColor = accent + '99'; ctx.shadowBlur = 30; // Glow on Logo
             ctx.save(); ctx.translate(50, 50); ctx.rotate(45*Math.PI/180); ctx.fillStyle = accent; ctx.beginPath(); ctx.roundRect(-50,-15,100,30,15); ctx.fill(); ctx.restore();
-            // Circles (Brighter for contrast)
+            ctx.shadowBlur = 0;
             ctx.fillStyle = iconSecondary; ctx.beginPath(); ctx.arc(22,78,20,0,Math.PI*2); ctx.fill(); ctx.beginPath(); ctx.arc(78,22,20,0,Math.PI*2); ctx.fill();
             ctx.restore();
             
             ctx.textAlign = 'start';
             ctx.fillStyle = '#ffffff';
-            ctx.font = '800 48px Poppins'; // Larger & Bolder
+            ctx.font = '800 48px Poppins';
             ctx.fillText('Ai Anveshana', margin + 100, margin + 45);
 
             // 2. TOP RIGHT: Mastering Sentence
@@ -358,12 +346,14 @@
             ctx.fillText('MASTERING APA WITH', 1000, margin + 20);
             ctx.fillStyle = accent;
             ctx.font = '800 36px "Josefin Sans"';
+            ctx.shadowColor = accent + '66'; ctx.shadowBlur = 15;
             ctx.fillText('5+ INDUSTRY AI TOOLS', 1000, margin + 70);
+            ctx.shadowBlur = 0;
 
             // 3. MIDDLE: Photo, Name, Designation
             const frameX = (1080 - 500) / 2, frameY = 240;
-            // Frame Glow
-            ctx.shadowColor = accent + '66'; ctx.shadowBlur = 60;
+            // Intense Frame Glow
+            ctx.shadowColor = accent + 'cc'; ctx.shadowBlur = 80;
             ctx.fillStyle = '#000'; ctx.beginPath(); ctx.roundRect(frameX-10, frameY-10, 520, 520, 20); ctx.fill();
             ctx.shadowBlur = 0;
             
@@ -383,7 +373,9 @@
             
             ctx.fillStyle = accent;
             ctx.font = '600 36px "Josefin Sans"';
+            ctx.shadowColor = accent + '44'; ctx.shadowBlur = 10;
             ctx.fillText(desInput.value.toUpperCase() || 'DESIGNATION', 540, 870);
+            ctx.shadowBlur = 0;
 
             // 4. BOTTOM CENTER: Inspiring Sentence
             ctx.fillStyle = '#ffffff';
@@ -396,7 +388,7 @@
         function wrapText(context, text, x, y, maxWidth, lineHeight) {
             const words = text.split(' ');
             let line = '';
-            context.textAlign = 'center'; // Center text relative to x
+            context.textAlign = 'center';
             for(let n = 0; n < words.length; n++) {
                 let testLine = line + words[n] + ' ';
                 let metrics = context.measureText(testLine);
@@ -413,20 +405,6 @@
 
         [nameInput, desInput, compInput, commitInput].forEach(el => el.addEventListener('input', updateBadge));
         
-        // Color Presets Logic
-        const presets = document.querySelectorAll('.color-preset');
-        presets.forEach(preset => {
-            preset.addEventListener('click', () => {
-                // Update selection
-                presets.forEach(p => p.style.borderColor = 'transparent');
-                preset.style.borderColor = 'white';
-                preset.style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)';
-                
-                selectedAccent = preset.getAttribute('data-color');
-                updateBadge();
-            });
-        });
-
         shuffleBtn.addEventListener('click', () => {
             const options = commitInput.options;
             const nextIndex = (commitInput.selectedIndex + 1) % options.length;
