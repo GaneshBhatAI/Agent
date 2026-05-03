@@ -77,10 +77,10 @@ body.theme-red .logo-circle { fill: #a80000; }
 /* Theme Toggle Button */
 .theme-toggle {
     position: fixed;
-    bottom: 30px;
-    left: 30px;
-    width: 60px;
-    height: 60px;
+    bottom: 25px;
+    left: 25px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     background: var(--accent-color);
     color: white;
@@ -88,19 +88,19 @@ body.theme-red .logo-circle { fill: #a80000; }
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
     z-index: 1000;
     transition: var(--transition);
     border: 2px solid white;
 }
 
 .theme-toggle:hover {
-    transform: scale(1.1) rotate(15deg);
-    box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+    transform: scale(1.1);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
 }
 
 .theme-toggle i {
-    font-size: 1.5rem;
+    font-size: 1rem;
 }
 
 * {
