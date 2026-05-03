@@ -253,15 +253,21 @@
             ctx.fillStyle = grad;
             ctx.fillRect(0, 0, 1080, 1080);
 
-            // Misty Background Effect
+            // Misty Background Effect (Fixed positions for stability)
             ctx.globalAlpha = 0.3;
-            for(let i=0; i<5; i++) {
-                ctx.fillStyle = i % 2 === 0 ? '#1e40af' : '#1e293b';
+            const spots = [
+                {x: 200, y: 200, r: 400, c: '#1e40af'},
+                {x: 800, y: 300, r: 350, c: '#1e293b'},
+                {x: 400, y: 800, r: 450, c: '#1e40af'},
+                {x: 900, y: 900, r: 400, c: '#1e293b'}
+            ];
+            spots.forEach(s => {
+                ctx.fillStyle = s.c;
                 ctx.beginPath();
-                ctx.arc(Math.random()*1080, Math.random()*1080, 400, 0, Math.PI*2);
-                ctx.filter = 'blur(100px)';
+                ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+                ctx.filter = 'blur(120px)';
                 ctx.fill();
-            }
+            });
             ctx.filter = 'none';
             ctx.globalAlpha = 1.0;
 
