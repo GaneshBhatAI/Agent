@@ -5,8 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>APA Bootcamp Badge Generator | Ai Anveshana</title>
     <link rel="stylesheet" href="assets/css/style.css?v=5">
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        body {
+            background: var(--body-gradient);
+            background-size: 400% 400%;
+            animation: globalGradient 15s ease infinite;
+            color: var(--secondary-color);
+            font-family: 'Josefin Sans', sans-serif;
+            line-height: 1.7;
+        }
+
+        @keyframes globalGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', sans-serif;
+        }
+
         .badge-app {
             min-height: 100vh;
             padding-top: 150px;
@@ -29,17 +49,10 @@
             text-align: left;
         }
 
-        /* Support Red Theme Overrides on the page */
         .theme-red .form-container {
-            background: #1a0a0a;
-            color: white;
-            border-color: rgba(220, 38, 38, 0.2);
-        }
-        .theme-red .input-group label { color: #fca5a5; }
-        .theme-red .input-group input { background: #2d0a0a; color: white; }
-
-        .input-group {
-            margin-bottom: 1.5rem;
+            background: rgba(255, 255, 255, 0.8) !important;
+            border-color: rgba(139, 0, 0, 0.1) !important;
+            color: var(--primary-color);
         }
 
         .input-group label {
@@ -50,6 +63,7 @@
             font-size: 0.85rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            font-family: 'Poppins', sans-serif;
         }
 
         .input-group input {
@@ -59,7 +73,7 @@
             border: 2px solid transparent;
             border-radius: 12px;
             color: #1e293b;
-            font-family: inherit;
+            font-family: 'Josefin Sans', sans-serif;
             font-size: 1rem;
             transition: all 0.3s;
             outline: none;
@@ -299,7 +313,7 @@
             
             ctx.textAlign = 'center';
             ctx.fillStyle = 'rgba(255,255,255,0.6)';
-            ctx.font = '600 24px Poppins';
+            ctx.font = '600 24px "Josefin Sans"'; // Changed to Josefin Sans
             ctx.fillText('MASTERING 5+ INDUSTRY-LEADING AI TOOLS', 540, 240);
 
             // Photo
@@ -316,8 +330,8 @@
             }
 
             ctx.fillStyle = '#ffffff'; ctx.font = '800 64px Poppins'; ctx.fillText(nameInput.value || 'YOUR NAME', 540, 930);
-            ctx.fillStyle = 'rgba(255,255,255,0.7)'; ctx.font = '500 34px Poppins'; ctx.fillText(desInput.value || 'Designation', 540, 985);
-            ctx.fillStyle = accent; ctx.font = '700 32px Poppins'; ctx.fillText(compInput.value || 'Company Name', 540, 1035);
+            ctx.fillStyle = 'rgba(255,255,255,0.7)'; ctx.font = '500 34px "Josefin Sans"'; ctx.fillText(desInput.value || 'Designation', 540, 985);
+            ctx.fillStyle = accent; ctx.font = '700 32px "Josefin Sans"'; ctx.fillText(compInput.value || 'Company Name', 540, 1035);
         }
 
         [nameInput, desInput, compInput].forEach(el => el.addEventListener('input', updateBadge));
