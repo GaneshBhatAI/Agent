@@ -271,19 +271,15 @@
             ctx.filter = 'none';
             ctx.globalAlpha = 1.0;
 
-            // 2. Header Branding (Centered)
-            const brandY = 180;
-            const iconWidth = 70;
-            const gap = 30;
-            ctx.font = '800 48px Poppins';
-            const textWidth = ctx.measureText('Ai Anveshana').width;
-            const totalBrandWidth = iconWidth + gap + textWidth;
-            const startX = (1080 - totalBrandWidth) / 2;
+            // 2. Header Branding (Left-Right Layout)
+            const brandY = 160;
+            const logoX = 80;
             
-            // Draw Icon
+            // Draw Icon (Stable & Precise)
             ctx.save();
-            ctx.translate(startX, brandY - 65);
-            ctx.scale(0.7, 0.7);
+            ctx.translate(logoX, brandY - 60);
+            ctx.scale(0.75, 0.75); 
+            
             // Main Rect
             ctx.save();
             ctx.translate(50, 50);
@@ -297,17 +293,20 @@
             ctx.beginPath(); ctx.arc(78, 22, 20, 0, Math.PI * 2); ctx.fill();
             ctx.restore();
             
-            // Draw Branding Text
+            // Draw Branding Text (Shifted right to avoid overlap)
             ctx.fillStyle = '#ffffff';
-            ctx.font = '800 48px Poppins';
+            ctx.font = '800 44px Poppins';
             ctx.textAlign = 'start';
-            ctx.fillText('Ai Anveshana', startX + iconWidth + gap, brandY);
+            ctx.fillText('Ai Anveshana', logoX + 95, brandY);
             
-            // Sub-branding Info (Mastering Tools)
-            ctx.textAlign = 'center';
+            // Top Right Info (Mastering Tools)
+            ctx.textAlign = 'right';
             ctx.fillStyle = 'rgba(255,255,255,0.6)';
-            ctx.font = '600 24px Poppins';
-            ctx.fillText('MASTERING 5+ INDUSTRY-LEADING AI TOOLS', 540, 240);
+            ctx.font = '600 22px Poppins';
+            ctx.fillText('MASTERING 5+', 1000, 140);
+            ctx.fillStyle = '#88eb1a';
+            ctx.font = '700 26px Poppins';
+            ctx.fillText('INDUSTRY AI TOOLS', 1000, 180);
             ctx.textAlign = 'start';
 
             // 3. Central Photo Frame
