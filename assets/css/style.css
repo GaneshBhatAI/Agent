@@ -139,14 +139,23 @@ h4,
 h5,
 h6 {
     font-family: 'Poppins', sans-serif;
-    /* Heading Font */
     color: var(--primary-color);
     font-weight: 700;
+    line-height: 1.2;
 }
 
 h1 {
-    font-size: 3.5rem;
-    letter-spacing: -2px;
+    font-size: clamp(2.2rem, 8vw, 3.5rem);
+    letter-spacing: -1.5px;
+}
+
+h2 {
+    font-size: clamp(1.8rem, 6vw, 2.5rem);
+    margin-bottom: 1.5rem;
+}
+
+h3 {
+    font-size: clamp(1.3rem, 4vw, 1.5rem);
 }
 
 /* About Section */
@@ -479,7 +488,8 @@ a {
 .container {
     max-width: var(--container-width);
     margin: 0 auto;
-    padding: 0 2rem;
+    padding: 0 1.5rem;
+    width: 100%;
 }
 
 .section {
@@ -999,6 +1009,12 @@ footer i {
     }
 }
 
+@media (max-width: 991px) {
+    .grid-3 {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+}
+
 @media (max-width: 768px) {
     .nav-links {
         display: none;
@@ -1009,71 +1025,68 @@ footer i {
     }
 
     .hero {
-        height: auto;
-        min-height: 100vh;
-        padding: 120px 0 60px;
-    }
-
-    .hero h1 {
-        font-size: 2.5rem;
+        padding: 100px 0 40px;
+        min-height: auto;
     }
 
     .about-stats {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: 1fr !important;
+    }
+
+    .cta-group {
+        flex-direction: column;
+        width: 100%;
+        gap: 1rem;
+    }
+
+    .btn {
+        width: 100%;
+        justify-content: center;
     }
 
     .contact-links {
         flex-direction: column;
         gap: 1rem;
     }
+
+    .footer-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 2rem;
+    }
+
+    .footer-address {
+        margin: 0 auto !important;
+    }
+
+    .social-links {
+        justify-content: center;
+    }
 }
 
 @media (max-width: 480px) {
-    .about-stats {
-        grid-template-columns: 1fr;
+    .hero-impact {
+        padding: 120px 1rem 60px !important;
     }
 
-    .cta-group {
-        flex-direction: column;
-    }
-
-    .btn {
-        width: 100%;
-        text-align: center;
+    .hero-impact h1 {
+        font-size: 2.2rem !important;
     }
 
     /* Mobile Orbit Fixes */
-    .hero {
-        padding-top: 100px;
-        /* Less top padding */
-        min-height: auto;
-        padding-bottom: 4rem;
-        /* Space for chat widget */
-    }
-
-    .hero-content {
-        gap: 3rem;
-        margin-bottom: 3rem;
-        /* Reduce bottom margin */
-    }
-
-    /* Resize Orbit for Small Screens */
     .orbit-container {
-        width: 300px;
-        height: 300px;
-        margin-bottom: 0;
+        width: 280px;
+        height: 280px;
+        margin: 2rem auto;
     }
 
     .profile-img {
-        width: 160px;
-        height: 160px;
+        width: 150px !important;
+        height: 150px !important;
     }
 
-    /* Adjust Orbit Items Radius */
     .orbit-item {
-        /* Reduce radius even further for 300px container */
-        /* d = 300, r = 150. Item center approx 135px? */
-        transform: rotate(calc(45deg * var(--i))) translate(135px) translateY(-50%);
+        transform: rotate(calc(45deg * var(--i))) translate(125px) translateY(-50%) !important;
     }
 
     .tech-icon {
@@ -1082,9 +1095,8 @@ footer i {
         font-size: 1rem;
     }
 
-    .hero h1 {
-        font-size: 2rem;
-        /* Smaller font for mobile */
+    .video-card {
+        flex: 0 0 280px;
     }
 }
 
