@@ -282,72 +282,90 @@
             // Background
             ctx.fillStyle = '#0f172a';
             ctx.fillRect(0, 0, 1080, 1080);
-            const grad = ctx.createRadialGradient(540, 300, 0, 540, 540, 1000);
+            const grad = ctx.createRadialGradient(540, 540, 0, 540, 540, 1000);
             grad.addColorStop(0, '#1e293b');
             grad.addColorStop(1, '#020617');
             ctx.fillStyle = grad;
             ctx.fillRect(0, 0, 1080, 1080);
 
-            // Glow spots
-            ctx.globalAlpha = 0.25;
-            const spots = [{x:200,y:200,r:400,c:isRed?'#450a0a':'#1e40af'},{x:800,y:300,r:350,c:'#1e293b'},{x:400,y:800,r:450,c:isRed?'#450a0a':'#1e40af'},{x:900,y:900,r:400,c:'#1e293b'}];
-            spots.forEach(s => { ctx.fillStyle = s.c; ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI*2); ctx.filter = 'blur(120px)'; ctx.fill(); });
-            ctx.filter = 'none'; ctx.globalAlpha = 1.0;
-
-            // Branding (Centered and Balanced)
-            const brandY = 180;
-            const centerX = 540;
-            const iconSize = 80;
-            const gap = 40;
-            
-            ctx.font = '800 52px Poppins';
-            const textWidth = ctx.measureText('Ai Anveshana').width;
-            const totalWidth = iconSize + gap + textWidth;
-            const startX = centerX - (totalWidth / 2);
-
-            // Draw Icon
+            // 1. TOP LEFT: Logo & Company Name
+            const margin = 80;
             ctx.save();
-            ctx.translate(startX, brandY - 65);
-            ctx.scale(0.8, 0.8);
-            // Main Rect
+            ctx.translate(margin, margin);
+            ctx.scale(0.6, 0.6); // Scale down logo for corner
             ctx.save(); ctx.translate(50, 50); ctx.rotate(45*Math.PI/180); ctx.fillStyle = accent; ctx.beginPath(); ctx.roundRect(-50,-15,100,30,15); ctx.fill(); ctx.restore();
-            // Circles
             ctx.fillStyle = iconSecondary; ctx.beginPath(); ctx.arc(22,78,20,0,Math.PI*2); ctx.fill(); ctx.beginPath(); ctx.arc(78,22,20,0,Math.PI*2); ctx.fill();
             ctx.restore();
             
-            // Branding Text
-            ctx.fillStyle = '#ffffff';
-            ctx.font = '800 52px Poppins';
             ctx.textAlign = 'start';
-            ctx.fillText('Ai Anveshana', startX + iconSize + gap, brandY);
-            
-            // Sub-branding Info
-            ctx.textAlign = 'center';
-            ctx.fillStyle = 'rgba(255,255,255,0.6)';
-            ctx.font = '600 24px "Josefin Sans"';
-            ctx.fillText('MASTERING 5+ INDUSTRY-LEADING AI TOOLS', 540, 260);
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '700 38px Poppins';
+            ctx.fillText('Ai Anveshana', margin + 80, margin + 35);
 
-            // Photo Area
-            const frameX = (1080 - 540) / 2, frameY = 340;
-            ctx.shadowColor = accent + '33'; ctx.shadowBlur = 50;
-            ctx.fillStyle = '#000'; ctx.beginPath(); ctx.roundRect(frameX-20, frameY-20, 580, 580, 30); ctx.fill();
-            ctx.shadowBlur = 0; ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.roundRect(frameX, frameY, 540, 540, 15); ctx.fill();
+            // 2. TOP RIGHT: Mastering Sentence
+            ctx.textAlign = 'right';
+            ctx.fillStyle = 'rgba(255,255,255,0.7)';
+            ctx.font = '600 24px "Josefin Sans"';
+            ctx.fillText('MASTERING APA WITH', 1000, margin + 15);
+            ctx.fillStyle = accent;
+            ctx.font = '700 28px "Josefin Sans"';
+            ctx.fillText('5+ INDUSTRY AI TOOLS', 1000, margin + 50);
+
+            // 3. MIDDLE: Photo, Name, Designation
+            const frameX = (1080 - 480) / 2, frameY = 240;
+            ctx.shadowColor = accent + '33'; ctx.shadowBlur = 40;
+            ctx.fillStyle = '#000'; ctx.beginPath(); ctx.roundRect(frameX-15, frameY-15, 510, 510, 25); ctx.fill();
+            ctx.shadowBlur = 0; ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.roundRect(frameX, frameY, 480, 480, 15); ctx.fill();
 
             if (userImage) {
-                ctx.save(); ctx.beginPath(); ctx.roundRect(frameX, frameY, 540, 540, 15); ctx.clip();
-                const scale = Math.max(540/userImage.width, 540/userImage.height);
-                ctx.drawImage(userImage, frameX+(540-userImage.width*scale)/2, frameY+(540-userImage.height*scale)/2, userImage.width*scale, userImage.height*scale);
+                ctx.save(); ctx.beginPath(); ctx.roundRect(frameX, frameY, 480, 480, 15); ctx.clip();
+                const scale = Math.max(480/userImage.width, 480/userImage.height);
+                ctx.drawImage(userImage, frameX+(480-userImage.width*scale)/2, frameY+(480-userImage.height*scale)/2, userImage.width*scale, userImage.height*scale);
                 ctx.restore();
-            } else {
-                ctx.fillStyle = '#f8fafc'; ctx.fillRect(frameX, frameY, 540, 540);
-                ctx.fillStyle = '#94a3b8'; ctx.font = '400 30px "Josefin Sans"'; ctx.fillText('Photo Preview', 540, 610);
             }
 
-            // User Info
             ctx.textAlign = 'center';
-            ctx.fillStyle = '#ffffff'; ctx.font = '800 68px Poppins'; ctx.fillText(nameInput.value || 'YOUR NAME', 540, 960);
-            ctx.fillStyle = 'rgba(255,255,255,0.8)'; ctx.font = '500 38px "Josefin Sans"'; ctx.fillText(desInput.value || 'Designation', 540, 1015);
-            ctx.fillStyle = accent; ctx.font = '700 36px "Josefin Sans"'; ctx.fillText(compInput.value || 'Company Name', 540, 1065);
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '800 64px Poppins';
+            ctx.fillText(nameInput.value.toUpperCase() || 'YOUR NAME', 540, 800);
+            ctx.fillStyle = 'rgba(255,255,255,0.8)';
+            ctx.font = '500 34px "Josefin Sans"';
+            ctx.fillText(desInput.value || 'Designation', 540, 850);
+
+            // 4. BOTTOM LEFT: Inspiring Sentence (2 lines)
+            ctx.textAlign = 'start';
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'italic 500 24px "Josefin Sans"';
+            const inspiringText = '"I am committing 40 hours of APA learning to master agentic workflows and architect the future with AI."';
+            wrapText(ctx, inspiringText, margin, 960, 500, 32);
+
+            // 5. BOTTOM RIGHT: User Company Name
+            ctx.textAlign = 'right';
+            ctx.fillStyle = 'rgba(255,255,255,0.6)';
+            ctx.font = '600 20px Poppins';
+            ctx.fillText('PARTNERING WITH', 1000, 970);
+            ctx.fillStyle = accent;
+            ctx.font = '700 36px "Josefin Sans"';
+            ctx.fillText(compInput.value.toUpperCase() || 'COMPANY NAME', 1000, 1015);
+            
+            ctx.textAlign = 'start';
+        }
+
+        function wrapText(context, text, x, y, maxWidth, lineHeight) {
+            const words = text.split(' ');
+            let line = '';
+            for(let n = 0; n < words.length; n++) {
+                let testLine = line + words[n] + ' ';
+                let metrics = context.measureText(testLine);
+                if (metrics.width > maxWidth && n > 0) {
+                    context.fillText(line, x, y);
+                    line = words[n] + ' ';
+                    y += lineHeight;
+                } else {
+                    line = testLine;
+                }
+            }
+            context.fillText(line, x, y);
         }
 
         [nameInput, desInput, compInput].forEach(el => el.addEventListener('input', updateBadge));
