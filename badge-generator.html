@@ -189,6 +189,16 @@
                         <input type="file" id="userPhoto" accept="image/*" style="padding: 0.8rem; background: #f8fafc; border: 2px dashed #e2e8f0;">
                     </div>
                     <div class="input-group">
+                        <label>Badge Accent Color</label>
+                        <div id="accentPresets" style="display: flex; gap: 12px; margin-top: 5px;">
+                            <div class="color-preset" data-color="#88eb1a" title="Ai Green" style="width: 30px; height: 30px; border-radius: 50%; background: #88eb1a; cursor: pointer; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.1);"></div>
+                            <div class="color-preset" data-color="#ff3e3e" title="Power Red" style="width: 30px; height: 30px; border-radius: 50%; background: #ff3e3e; cursor: pointer; border: 2px solid transparent;"></div>
+                            <div class="color-preset" data-color="#3b82f6" title="Tech Blue" style="width: 30px; height: 30px; border-radius: 50%; background: #3b82f6; cursor: pointer; border: 2px solid transparent;"></div>
+                            <div class="color-preset" data-color="#fbbf24" title="Expert Gold" style="width: 30px; height: 30px; border-radius: 50%; background: #fbbf24; cursor: pointer; border: 2px solid transparent;"></div>
+                            <div class="color-preset" data-color="#a855f7" title="Future Purple" style="width: 30px; height: 30px; border-radius: 50%; background: #a855f7; cursor: pointer; border: 2px solid transparent;"></div>
+                        </div>
+                    </div>
+                    <div class="input-group">
                         <label for="userCommitment">Your Commitment</label>
                         <div style="display: flex; gap: 10px;">
                             <select id="userCommitment" style="flex: 1; padding: 1rem; border-radius: 12px; border: 2px solid transparent; background: #f1f5f9; font-family: 'Josefin Sans', sans-serif; cursor: pointer;">
@@ -288,29 +298,30 @@
         const photoInput = document.getElementById('userPhoto');
         const downloadBtn = document.getElementById('downloadBadge');
         let userImage = null;
+        let selectedAccent = '#88eb1a'; // Default green
 
         function updateBadge() {
             const isRed = document.body.classList.contains('theme-red');
-            const accent = isRed ? '#ff0000' : '#88eb1a'; // More vibrant
-            const iconSecondary = isRed ? '#450a0a' : '#1a5032';
+            const accent = selectedAccent; // Use custom selected accent
+            const iconSecondary = (accent === '#88eb1a') ? '#1a5032' : (accent === '#ff3e3e' ? '#450a0a' : '#1e293b');
 
             // Background - Deeper Contrast
-            ctx.fillStyle = '#020617'; // Ink Black
+            ctx.fillStyle = '#020617';
             ctx.fillRect(0, 0, 1080, 1080);
             
             // Rich Radial Gradient
             const grad = ctx.createRadialGradient(540, 540, 0, 540, 540, 900);
-            grad.addColorStop(0, '#0f172a'); // Deep Navy center
-            grad.addColorStop(1, '#000000'); // Pure Black edge
+            grad.addColorStop(0, '#0f172a');
+            grad.addColorStop(1, '#000000');
             ctx.fillStyle = grad;
             ctx.fillRect(0, 0, 1080, 1080);
 
-            // Subtle Atmospheric Glows (Fixed)
+            // Subtle Atmospheric Glows (sensing accent)
             ctx.globalAlpha = 0.4;
             const spots = [
-                {x: 100, y: 100, r: 500, c: isRed ? '#450a0a' : '#1e3a8a'},
-                {x: 900, y: 100, r: 400, c: isRed ? '#450a0a' : '#1e3a8a'},
-                {x: 540, y: 900, r: 600, c: isRed ? '#7f1d1d' : '#064e3b'}
+                {x: 100, y: 100, r: 500, c: accent + '33'},
+                {x: 900, y: 100, r: 400, c: accent + '22'},
+                {x: 540, y: 900, r: 600, c: accent + '33'}
             ];
             spots.forEach(s => {
                 ctx.fillStyle = s.c;
@@ -397,6 +408,21 @@
         }
 
         [nameInput, desInput, compInput, commitInput].forEach(el => el.addEventListener('input', updateBadge));
+        
+        // Color Presets Logic
+        const presets = document.querySelectorAll('.color-preset');
+        presets.forEach(preset => {
+            preset.addEventListener('click', () => {
+                // Update selection
+                presets.forEach(p => p.style.borderColor = 'transparent');
+                preset.style.borderColor = 'white';
+                preset.style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)';
+                
+                selectedAccent = preset.getAttribute('data-color');
+                updateBadge();
+            });
+        });
+
         shuffleBtn.addEventListener('click', () => {
             const options = commitInput.options;
             const nextIndex = (commitInput.selectedIndex + 1) % options.length;
