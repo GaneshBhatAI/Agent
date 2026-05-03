@@ -271,45 +271,43 @@
             ctx.filter = 'none';
             ctx.globalAlpha = 1.0;
 
-            // 2. Header Branding
-            const brandY = 160;
-            const logoX = 100;
+            // 2. Header Branding (Centered)
+            const brandY = 180;
+            const iconWidth = 70;
+            const gap = 30;
+            ctx.font = '800 48px Poppins';
+            const textWidth = ctx.measureText('Ai Anveshana').width;
+            const totalBrandWidth = iconWidth + gap + textWidth;
+            const startX = (1080 - totalBrandWidth) / 2;
             
-            // Draw Icon (Stable & Precise)
+            // Draw Icon
             ctx.save();
-            ctx.translate(logoX, brandY - 60);
-            ctx.scale(0.7, 0.7); // Smaller icon
-            
+            ctx.translate(startX, brandY - 65);
+            ctx.scale(0.7, 0.7);
             // Main Rect
             ctx.save();
             ctx.translate(50, 50);
             ctx.rotate(45 * Math.PI / 180);
             ctx.fillStyle = '#88eb1a';
-            ctx.beginPath(); 
-            ctx.roundRect(-50, -15, 100, 30, 15); 
-            ctx.fill();
+            ctx.beginPath(); ctx.roundRect(-50, -15, 100, 30, 15); ctx.fill();
             ctx.restore();
-
             // Circles
             ctx.fillStyle = '#1a5032';
             ctx.beginPath(); ctx.arc(22, 78, 20, 0, Math.PI * 2); ctx.fill();
             ctx.beginPath(); ctx.arc(78, 22, 20, 0, Math.PI * 2); ctx.fill();
             ctx.restore();
             
-            // Draw Branding Text (Completely Separate from icon)
+            // Draw Branding Text
             ctx.fillStyle = '#ffffff';
-            ctx.font = '800 42px Poppins';
+            ctx.font = '800 48px Poppins';
             ctx.textAlign = 'start';
-            ctx.fillText('Ai Anveshana', logoX + 90, brandY); // Clear separation
+            ctx.fillText('Ai Anveshana', startX + iconWidth + gap, brandY);
             
-            // Top Right Info (Smaller)
-            ctx.textAlign = 'right';
+            // Sub-branding Info (Mastering Tools)
+            ctx.textAlign = 'center';
             ctx.fillStyle = 'rgba(255,255,255,0.6)';
-            ctx.font = '600 22px Poppins';
-            ctx.fillText('2 Months APA', 980, 140);
-            ctx.fillStyle = '#88eb1a';
-            ctx.font = '700 24px Poppins';
-            ctx.fillText('Bootcamp Architect', 980, 180);
+            ctx.font = '600 24px Poppins';
+            ctx.fillText('MASTERING 5+ INDUSTRY-LEADING AI TOOLS', 540, 240);
             ctx.textAlign = 'start';
 
             // 3. Central Photo Frame
