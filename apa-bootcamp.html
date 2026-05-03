@@ -162,6 +162,31 @@
             100% { transform: scale(1); box-shadow: 0 0 15px rgba(34, 197, 94, 0.4); }
         }
 
+        /* Flashy Badge Button */
+        .btn-badge-flashy {
+            background: var(--accent-color) !important;
+            color: black !important;
+            border: none !important;
+            padding: 0.6rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 800 !important;
+            animation: pulse-badge 1.5s infinite;
+            box-shadow: 0 0 15px rgba(136, 235, 26, 0.4);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+        }
+
+        @keyframes pulse-badge {
+            0% { transform: scale(1); box-shadow: 0 0 10px rgba(136, 235, 26, 0.4); }
+            50% { transform: scale(1.05); box-shadow: 0 0 25px rgba(136, 235, 26, 0.8); }
+            100% { transform: scale(1); box-shadow: 0 0 10px rgba(136, 235, 26, 0.4); }
+        }
+
         .hero.section {
             padding-top: 180px !important;
         }
@@ -212,7 +237,7 @@
                 <a href="courses.html" class="btn btn-secondary" style="padding: 0.6rem 1.2rem; font-size: 0.9rem; color: var(--primary-color); border-color: var(--accent-color);">
                     <i class="fas fa-arrow-left" style="margin-right: 8px;"></i> Back to Courses
                 </a>
-                <a href="badge-generator.html" class="btn btn-secondary" style="margin-left: 10px; padding: 0.6rem 1.2rem; font-size: 0.9rem; color: var(--accent-color); border-color: var(--accent-color); background: rgba(136, 235, 26, 0.1);">
+                <a href="badge-generator.html" class="btn-badge-flashy" style="margin-left: 10px;">
                     <i class="fas fa-id-badge" style="margin-right: 8px;"></i> Get your Free badge
                 </a>
             </div> 
