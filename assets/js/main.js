@@ -250,6 +250,58 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     // --- Lead Generation Flow ---
+    const FORMSPREE_URL = "https://formspree.io/f/xzdobgev";
+
+    window.sendEmailNotification = async function(data, source = "Contact Form") {
+        console.log("Sending lead to Formspree...", source);
+        
+        // Format the data for Formspree
+        const payload = {
+            name: data.name,
+            email: data.email,
+            subject: data.subject || "General Inquiry",
+            message: data.message,
+            _source: source, // Custom field for tracking
+            _subject: `[New Lead] - ${data.name} via ${source}` // Formspree email subject
+        };
+
+        const response = await fetch(FORMSPREE_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        });
+
+        if (response.ok) {
+            return "OK";
+        } else {
+            const result = await response.json();
+            throw new Error(result.error || "Formspree Error");
+        }
+    };
+
+    window.showSuccessGraphic = function(containerId) {
+        const container = document.getElementById(containerId) || document.body;
+        const graphic = document.createElement('div');
+        graphic.innerHTML = `
+            <div class="success-animation">
+                <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                    <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/>
+                    <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                </svg>
+                <p style="color: #065f46; font-weight: 700; margin-top: 1rem; text-align: center;">Inquiry Sent Successfully!</p>
+            </div>
+        `;
+        container.appendChild(graphic);
+        
+        setTimeout(() => {
+            graphic.style.opacity = '0';
+            setTimeout(() => graphic.remove(), 500);
+        }, 4000);
+    };
+
     let isCollectingLead = false;
     let leadStep = 0;
     let leadData = { name: '', email: '', message: '' };
@@ -295,14 +347,14 @@ document.addEventListener('DOMContentLoaded', () => {
             addMessage('bot', 'Processing your request... <span class="fas fa-spinner fa-spin"></span>');
             
             // Call the email sender
-            if (typeof sendEmailNotification === 'function') {
-                sendEmailNotification(leadData, 'Chatbot Lead')
+            if (typeof window.sendEmailNotification === 'function') {
+                window.sendEmailNotification(leadData, 'Chatbot Lead')
                     .then(message => {
                         if (message === 'OK') {
                             const lastMsg = aiChatLog.lastElementChild;
                             if (lastMsg) lastMsg.remove();
                             addMessage('bot', '✅ <b>Success!</b> Your details have been sent to Ganesh. He will reach out to you shortly.');
-                            if (typeof showSuccessGraphic === 'function') showSuccessGraphic('chatPopup');
+                            if (typeof window.showSuccessGraphic === 'function') window.showSuccessGraphic('chatPopup');
                         } else {
                             throw new Error(message);
                         }
