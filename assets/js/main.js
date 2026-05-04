@@ -91,20 +91,23 @@ document.addEventListener('DOMContentLoaded', () => {
             
             STRICT CONSTRAINTS:
             - ONLY answer based on the provided context.
+            - ALWAYS try to end your response by encouraging the user to connect via WhatsApp for personalized guidance or discounts.
             - DO NOT provide general coding help (e.g., Python code).
-            - DO NOT tell jokes or discuss topics unrelated to Ai Anveshana.
-            - If a user asks something outside this scope, say: "I apologize, but I am specifically programmed to assist with inquiries regarding Ai Anveshana's enterprise services and the APA Bootcamp. I cannot provide general information or code."
+            
+            SPECIFIC ANSWERS:
+            - If asked "How to book a Bootcamp?": Direct them to visit https://www.aianveshana.com/apa-bootcamp and suggest they connect with Ganesh on WhatsApp to secure their spot.
+            - If asked "What is the price of a bootcamp?": Say that the pricing is competitive and they can get an exclusive **Coupon Code** by connecting directly with Ganesh Bhat on WhatsApp.
             
             FORMATTING:
             - Use clear line breaks.
-            - Use bold text for emphasis where appropriate.
+            - Use bold text for emphasis.
             
             CONTEXT DATA:
-            - Ai Anveshana: Your Global Partner in AI, Automation & Digital Transformation. We empower organizations with intelligent, future-ready solutions that simplify complexity and accelerate digital transformation.
-            - Expertise: Agentic Automation (APA), AI Workflow Orchestration (n8n, Zapier), Enterprise AI Transformation (UiPath, Automation Anywhere), Enterprise Integration (Salesforce, SAP, Workday).
-            - APA Bootcamp: A 2-month program mastering Agentic Process Automation with 5+ industry-leading tools. Includes curriculum on Intelligent Document Processing, AI Agents, and Enterprise Workflows.
-            - Contact: contact@aianveshana.com
-            - Office: 164, 1st Main Rd, Vidyaranyapura Post, Chikkabettahalli, Havyakanagara Phase-2, Vidyaranyapura, Bengaluru, Karnataka 560097`
+            - Ai Anveshana: Your Global Partner in AI, Automation & Digital Transformation.
+            - Expertise: Agentic Automation (APA), AI Workflow Orchestration, Enterprise AI Transformation.
+            - APA Bootcamp: A 2-month program mastering Agentic Process Automation.
+            - WhatsApp Link: https://wa.me/919113548342
+            - Contact: contact@aianveshana.com`
         }
     ];
 
@@ -151,7 +154,13 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             const data = await response.json();
-            const botMessageRaw = data.choices[0].message.content;
+            let botMessageRaw = data.choices[0].message.content;
+            
+            // Pro-active WhatsApp conversion
+            if (!botMessageRaw.includes("wa.me")) {
+                botMessageRaw += "\n\nFor a faster response and exclusive discounts, you can **connect with Ganesh Bhat on WhatsApp**: [Click here to Chat](https://wa.me/919113548342)";
+            }
+
             const botMessage = formatResponse(botMessageRaw);
 
             const loadingEl = document.getElementById(loadingId);
@@ -163,7 +172,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error("Mistral API Error:", error);
             const loadingEl = document.getElementById(loadingId);
             if (loadingEl) {
-                loadingEl.innerHTML = "I apologize, I'm having trouble connecting to my neural core. You can directly connect with Ai Anveshana at <a href='mailto:contact@aianveshana.com' style='color:var(--accent-color);'>contact@aianveshana.com</a>.";
+                loadingEl.innerHTML = "I apologize, I'm having trouble connecting to my neural core. You can directly connect with Ganesh Bhat on WhatsApp for immediate assistance: <a href='https://wa.me/919113548342' style='color:var(--accent-color);'>Click here to Chat</a>.";
             }
         }
     }
