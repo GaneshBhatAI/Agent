@@ -4,184 +4,337 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ai Anveshana | Enterprise AI & Automation Consultancy</title>
-    <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <title>Ai Anveshana | AI, Automation & Digital Transformation</title>
+    <meta name="description"
+        content="Your Global Partner in AI, Automation & Digital Transformation. We empower organizations with intelligent, future-ready solutions.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;600&family=Open+Sans:wght@300;400;600&family=Poppins:wght@300;400;600;800&display=swap"
+        rel="stylesheet">
+    <!-- Styles -->
+    <link rel="stylesheet" href="assets/css/style.css?v=5">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
 </head>
 
 <body>
+
     <!-- Navigation -->
-    <nav class="navbar">
-        <div class="container nav-container">
-            <a href="index.html" class="logo">
-                <span class="logo-icon">Ai</span>
-                <span class="logo-text">Anveshana</span>
-            </a>
-            <div class="nav-links">
-                <a href="index.html" class="active">Home</a>
-                <a href="courses.html">Courses</a>
-                <a href="apa-bootcamp.html">APA Bootcamp</a>
-                <a href="about-mentor.html">About Mentor</a>
-                <a href="blog.html">Blog</a>
-            </div>
-            <div class="nav-cta">
-                <a href="apa-bootcamp.html" class="btn btn-primary">Join Bootcamp</a>
-            </div>
-            <button class="mobile-menu-btn">
-                <i class="fas fa-bars"></i>
-            </button>
+    <header class="navbar fade-in">
+        <div class="container nav-content">
+            <a href="index.html" class="logo"><svg viewBox="0 0 100 100" class="logo-img" style="height: 35px; width: 35px;"><rect x="0" y="35" width="100" height="30" rx="15" class="logo-rect" transform="rotate(45 50 50)" /><circle cx="22" cy="78" r="20" class="logo-circle" /><circle cx="78" cy="22" r="20" class="logo-circle" /></svg> <span class="logo-text">Ai <span class="highlight">Anveshana</span></span></a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="index.html#home">Home</a></li>
+                    <li><a href="index.html#expertise">Expertise</a></li>
+            
+                    
+                    <li><a href="index.html#process-deck">Videos</a></li>
+                    <li><a href="about-mentor.html">About Mentor</a></li>
+                    <li><a href="index.html#contact">Contact</a></li>
+                </ul>
+                <div class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </nav>
         </div>
-    </nav>
+    </header>
 
     <!-- Mobile Menu Overlay -->
     <div class="mobile-nav-overlay">
-        <div class="mobile-nav-content">
-            <button class="close-btn">&times;</button>
-            <div class="mobile-links">
-                <a href="index.html" class="active">Home</a>
-                <a href="courses.html">Courses</a>
-                <a href="apa-bootcamp.html">APA Bootcamp</a>
-                <a href="about-mentor.html">About Mentor</a>
-                <a href="blog.html">Blog</a>
-                <a href="apa-bootcamp.html" class="btn btn-primary" style="margin-top: 1rem;">Join Bootcamp</a>
-            </div>
-        </div>
+        <div class="close-btn"><i class="fas fa-times"></i></div>
+        <ul class="mobile-links">
+            <li><a href="index.html#home">Home</a></li>
+            <li><a href="index.html#expertise">Expertise</a></li>
+                    
+            <li><a href="index.html#process-deck">Videos</a></li>
+            <li><a href="about-mentor.html">About Mentor</a></li>
+            <li><a href="index.html#contact">Contact</a></li>
+        </ul>
     </div>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="container hero-container">
-            <div class="hero-content fade-in">
-                <span class="badge">Next-Gen AI Solutions</span>
-                <h1>Empowering Businesses with <span class="highlight">Intelligent</span> Automation</h1>
-                <p>We build autonomous AI agents and enterprise-scale automation frameworks that transform how global
-                    organizations operate.</p>
-                <div class="hero-btns">
-                    <a href="courses.html" class="btn btn-primary">Explore Courses</a>
-                    <a href="apa-bootcamp.html" class="btn btn-secondary">APA Bootcamp</a>
+    <!-- High Impact Header Section -->
+    <section class="hero-impact fade-in" style="padding: 160px 2rem 100px; text-align: center; position: relative; overflow: hidden; border-bottom: 1px solid var(--glass-border);">
+        <!-- Sarvam-Style Live Movement Colors (High Vibrancy) -->
+        <div class="hero-glow-container" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden; pointer-events: none;">
+            <div class="glow-orb orange" style="position: absolute; top: -30%; left: 50%; transform: translateX(-50%); width: 120%; height: 80%; background: radial-gradient(circle, rgba(251, 191, 36, 0.4) 0%, transparent 70%); filter: blur(60px); animation: moveOrb1 15s ease-in-out infinite alternate;"></div>
+            <div class="glow-orb blue-left" style="position: absolute; top: 0; left: -20%; width: 70%; height: 70%; background: radial-gradient(circle, rgba(59, 130, 246, 0.3) 0%, transparent 70%); filter: blur(60px); animation: moveOrb2 20s ease-in-out infinite alternate;"></div>
+            <div class="glow-orb blue-right" style="position: absolute; top: 0; right: -20%; width: 70%; height: 70%; background: radial-gradient(circle, rgba(59, 130, 246, 0.3) 0%, transparent 70%); filter: blur(60px); animation: moveOrb3 18s ease-in-out infinite alternate;"></div>
+        </div>
+        
+        <style>
+            @keyframes moveOrb1 {
+                0% { transform: translateX(-50%) translateY(0) scale(1); }
+                100% { transform: translateX(-50%) translateY(10%) scale(1.1); }
+            }
+            @keyframes moveOrb2 {
+                0% { transform: translate(0, 0) scale(1); }
+                100% { transform: translate(10%, 5%) scale(1.2); }
+            }
+            @keyframes moveOrb3 {
+                0% { transform: translate(0, 0) scale(1); }
+                100% { transform: translate(-10%, 5%) scale(1.2); }
+            }
+        </style>
+
+        <div class="container">
+            <div style="max-width: 900px; margin: 0 auto;">
+                <h1 style="color: var(--primary-color); font-size: clamp(3rem, 7vw, 5rem); font-weight: 800; line-height: 1.1; margin-bottom: 1.5rem; letter-spacing: -1.5px;">AI & <span style="color: var(--accent-color);">Automation</span></h1>
+                <p style="font-size: clamp(1.1rem, 2.5vw, 1.4rem); color: var(--secondary-color); margin-bottom: 3rem; font-weight: 500; opacity: 0.9;">Boost your productivity with our AI & Automation solutions.</p>
+                <div style="display: flex; justify-content: center;">
+                    <a href="courses.html" class="btn btn-primary" style="background: #000000; color: #ffffff !important; border: none; padding: 0.8rem 2.5rem; border-radius: 50px; font-weight: 700; font-size: 1.1rem; display: inline-flex; align-items: center; gap: 10px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
+                        Explore Agentic AI Courses
+                    </a>
                 </div>
-            </div>
-            <div class="hero-visual fade-in">
-                <div class="glow-sphere"></div>
-                <img src="assets/img/hero-ai.png" alt="AI Visualization" class="hero-img">
             </div>
         </div>
     </section>
 
-    <!-- Features Section -->
-    <section class="section">
+    <!-- Hero Section (Modern Clean) -->
+    <section id="home" class="hero-modern fade-in" style="padding-top: 100px !important; min-height: auto;">
         <div class="container">
-            <div class="section-header fade-in">
-                <h2>Our Core <span class="highlight">Expertise</span></h2>
-                <p>Strategic AI implementation designed for enterprise scalability and performance.</p>
+            <div class="hero-modern-content">
+                <h1 style="margin-bottom: 2rem;">Empowering Global Enterprises through<br><span style="color: var(--accent-color);">AI, Automation & Digital Excellence</span></h1>
+                <p class="lead">We bridge the gap between innovation and impact. Our proven track record ensures bespoke solutions that are both technologically advanced and strategically aligned to drive measurable growth and long-term value.</p>
+                
+                    <a href="#contact" class="btn btn-primary" style="background: #000000; color: #ffffff !important; font-size: 1.1rem; padding: 1.2rem 3rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);">Let's Start Project</a>
             </div>
+        </div>
+    </section>
+
+
+
+    <!-- AI Agent Process Deck -->
+    <section id="process-deck" class="section fade-in">
+        <div class="container">
+            <h2>AI Agent Process Deck</h2>
+            <div class="carousel-wrapper">
+                <button class="carousel-btn prev-btn" onclick="scrollVideos('left')"><i
+                        class="fas fa-chevron-left"></i></button>
+                <div class="video-carousel" id="videoCarousel">
+                    <!-- Video 1 -->
+                    <div class="card video-card">
+                        <div class="video-container">
+                            <iframe src="https://www.youtube.com/embed/iAsEzeyMWPw"
+                                title="Autonomous Delivery Routing" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                        <div class="video-info">
+                            <h3>Autonomous Delivery Routing & Fulfillment Optimization AI Agent</h3>
+                        </div>
+                    </div>
+                    <!-- Video 2 -->
+                    <div class="card video-card">
+                        <div class="video-container">
+                            <iframe src="https://www.youtube.com/embed/h9jGDN05Cgw" title="Lead Enrichment Agent"
+                                frameborder="0" allowfullscreen></iframe>
+                        </div>
+                        <div class="video-info">
+                            <h3>Lead Enrichment & Orchestration AI Agent using Automation Anywhere</h3>
+                        </div>
+                    </div>
+                    <!-- Video 3 -->
+                    <div class="card video-card">
+                        <div class="video-container">
+                            <iframe src="https://www.youtube.com/embed/yOMnKjF67ew" title="AI Agent Talks Like Me"
+                                frameborder="0" allowfullscreen></iframe>
+                        </div>
+                        <div class="video-info">
+                            <h3>This AI Agent Talks Like Me 🤖</h3>
+                        </div>
+                    </div>
+                    <!-- Video 4 -->
+                    <div class="card video-card">
+                        <div class="video-container">
+                            <iframe src="https://www.youtube.com/embed/jVeHpSafwrE"
+                                title="Voice-Driven Task Creation" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                        <div class="video-info">
+                            <h3>APA Project : Voice-Driven Task Creation Assistant</h3>
+                        </div>
+                    </div>
+                    <!-- Video 5 -->
+                    <div class="card video-card">
+                        <div class="video-container">
+                            <iframe src="https://www.youtube.com/embed/IdnBAdDNGiU" title="Medical Coding AI Agent"
+                                frameborder="0" allowfullscreen></iframe>
+                        </div>
+                        <div class="video-info">
+                            <h3>Medical Coding AI Agent | Automation Anywhere APA Project</h3>
+                        </div>
+                    </div>
+                    <!-- Video 6 -->
+                    <div class="card video-card">
+                        <div class="video-container">
+                            <iframe src="https://www.youtube-nocookie.com/embed/BqskRve1KtE"
+                                title="Enterprise Customer Support" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                        <div class="video-info">
+                            <h3>Enterprise-Level AI Agent for Customer Support, fully built in Python!</h3>
+                        </div>
+                    </div>
+                    <!-- Video 7 -->
+                    <div class="card video-card">
+                        <div class="video-container">
+                            <iframe src="https://www.youtube-nocookie.com/embed/FD8p2j4-vdE"
+                                title="Automated Customer Support n8n" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                        <div class="video-info">
+                            <h3>#n8n How I Automated Customer Support Using n8n + AI</h3>
+                        </div>
+                    </div>
+                    <!-- Video 8 -->
+                    <div class="card video-card">
+                        <div class="video-container">
+                            <iframe src="https://www.youtube-nocookie.com/embed/c5nYOKRsftM"
+                                title="AI Agent vs Tool" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                        <div class="video-info">
+                            <h3>Who’s the Boss — AI Agent or Tool? 🤖 | ADTF vs TDAF Explained Simply!</h3>
+                        </div>
+                    </div>
+                    <!-- Video 9 -->
+                    <div class="card video-card">
+                        <div class="video-container">
+                            <iframe src="https://www.youtube-nocookie.com/embed/uHUFRtmqyKU"
+                                title="Sprint Planning to Jira" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                        <div class="video-info">
+                            <h3>From Sprint Planning to Jira in Minutes 🤖 | AI Agent Built with Automation Anywhere
+                            </h3>
+                        </div>
+                    </div>
+                    <!-- Video 10 -->
+                    <div class="card video-card">
+                        <div class="video-container">
+                            <iframe src="https://www.youtube-nocookie.com/embed/2-k_pC05dUI"
+                                title="IT & Customer Support Emails" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                    <button class="carousel-btn next-btn" onclick="scrollVideos('right')"><i
+                            class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Core Expertise -->
+    <section id="expertise" class="section fade-in" style="background: var(--bg-dark);">
+        <div class="container">
+            <h2>Core Expertise & What I Bring</h2>
             <div class="grid-3">
-                <div class="card feature-card fade-in">
-                    <div class="card-icon"><i class="fas fa-robot"></i></div>
-                    <h3>Agentic Automation</h3>
-                    <p>Building autonomous AI agents that can think, decide, and act across your entire software stack.
+                <div class="card expertise-card">
+                    <div class="expertise-emoji" style="animation-delay: 0s;">🤖</div>
+                    <h3>Agentic Automation (APA)</h3>
+                    <p>Architecting decision-centric AI agents that autonomously plan, reason, and execute complex
+                        workflows, evolving automation beyond simple rules.</p>
+                </div>
+                <div class="card expertise-card">
+                    <div class="expertise-emoji" style="animation-delay: 0.5s;">⚡</div>
+                    <h3>AI Workflow Orchestration</h3>
+                    <p>Building adaptive, self-healing business ecosystems using <strong>n8n</strong> and
+                        <strong>Zapier</strong>, designing pipelines where AI models drive dynamic routing and
+                        logic.
                     </p>
                 </div>
-                <div class="card feature-card fade-in">
-                    <div class="card-icon"><i class="fas fa-network-wired"></i></div>
-                    <h3>Workflow Orchestration</h3>
-                    <p>Designing seamless integrations between legacy systems and modern AI models using n8n and
-                        advanced APIs.</p>
+                <div class="card expertise-card">
+                    <div class="expertise-emoji" style="animation-delay: 1s;">🦾</div>
+                    <h3>Enterprise AI Transformation</h3>
+                    <p>Redefining enterprise automation by infusing Generative AI into traditional platforms
+                        (Automation Anywhere, UiPath), creating scalable, intelligent digital workforces.</p>
                 </div>
-                <div class="card feature-card fade-in">
-                    <div class="card-icon"><i class="fas fa-brain"></i></div>
-                    <h3>Enterprise AI Strategy</h3>
-                    <p>Helping organizations move from AI experimentation to production-grade deployment with confidence.
+                <div class="card expertise-card">
+                    <div class="expertise-emoji" style="animation-delay: 1.5s;">🔗</div>
+                    <h3>Enterprise Integration</h3>
+                    <p>Strong background in integrating <strong>Salesforce, SAP, Workday</strong>, and Google
+                        Products
+                        for seamless data flow.</p>
+                </div>
+                <div class="card expertise-card">
+                    <div class="expertise-emoji" style="animation-delay: 2s;">🎓</div>
+                    <h3>Training & Mentorship</h3>
+                    <p>Conducting master-level sessions on Agentic AI, LLM Orchestration, and Copilot studios,
+                        empowering the next generation of AI architects.
                     </p>
+                </div>
+                <div class="card expertise-card">
+                    <div class="expertise-emoji" style="animation-delay: 2.5s;">🚀</div>
+                    <h3>Thought Leadership</h3>
+                    <p>Speaker at summits and webinars on AI Agents and GenAI. Passionate about shaping the future
+                        of
+                        digital workforces.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Stats Section -->
-    <section class="section stats-section">
-        <div class="container grid-4">
-            <div class="stat-item fade-in">
-                <div class="stat-number">9+</div>
-                <div class="stat-label">Years Experience</div>
-            </div>
-            <div class="stat-item fade-in">
-                <div class="stat-number">50+</div>
-                <div class="stat-label">Enterprise Clients</div>
-            </div>
-            <div class="stat-item fade-in">
-                <div class="stat-number">500+</div>
-                <div class="stat-label">Students Trained</div>
-            </div>
-            <div class="stat-item fade-in">
-                <div class="stat-number">100%</div>
-                <div class="stat-label">Client Satisfaction</div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Featured Course -->
-    <section class="section bg-secondary">
-        <div class="container">
-            <div class="featured-course-card fade-in">
-                <div class="course-badge">Flagship Program</div>
-                <div class="course-content">
-                    <h2>Agentic Process Automation (APA) Bootcamp</h2>
-                    <p>The world's most comprehensive program for mastering AI agents and next-gen automation frameworks.
-                    </p>
-                    <ul class="course-highlights">
-                        <li><i class="fas fa-check"></i> Master n8n, Automation Anywhere, and UiPath</li>
-                        <li><i class="fas fa-check"></i> Build 5+ Real-world AI Agent Projects</li>
-                        <li><i class="fas fa-check"></i> Personalized Mentorship from Industry Experts</li>
-                    </ul>
-                    <a href="apa-bootcamp.html" class="btn btn-primary">Learn More</a>
-                </div>
+    <!-- Modern CTA Section -->
+    <section id="contact" class="fade-in" style="padding-top: 60px;">
+        <div class="modern-cta-section" style="padding-bottom: 2rem;">
+            <h2 style="font-family: 'Poppins', sans-serif; font-weight: 800;">Let’s Work Together</h2>
+            <p style="font-size: 1.2rem; margin-bottom: 3rem; opacity: 0.9; max-width: 600px; margin-left: auto; margin-right: auto;">Ready to automate the future? Reach out for consulting, implementations, or partnerships by filling out the form below.</p>
+            
+            <!-- Custom Contact Form -->
+            <div class="contact-form-container" style="max-width: 800px; margin: 0 auto; text-align: left;">
+                <form id="contactForm" class="contact-form">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="name">Full Name</label>
+                            <input type="text" id="name" name="name" placeholder="Enter your name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" name="email" placeholder="email@example.com" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="subject">Subject</label>
+                        <select id="subject" name="subject" required>
+                            <option value="" disabled selected>Select an option</option>
+                            <option value="Consulting">AI Consulting</option>
+                            <option value="Implementation">Automation Implementation</option>
+                            <option value="Training">Training & Bootcamps</option>
+                            <option value="Partnership">Partnership Inquiry</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Your Message</label>
+                        <textarea id="message" name="message" rows="5" placeholder="How can we help you?" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block" style="padding: 1rem; font-size: 1.1rem; margin-top: 1rem;">
+                        <i class="fas fa-paper-plane" style="margin-right: 10px;"></i> Send Inquiry
+                    </button>
+                    <div id="formStatus" class="form-status"></div>
+                </form>
             </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="footer">
-        <div class="container grid-4">
-            <div class="footer-brand">
-                <a href="index.html" class="logo">
-                    <span class="logo-icon">Ai</span>
-                    <span class="logo-text">Anveshana</span>
-                </a>
-                <p>Leading the next evolution of enterprise automation through Agentic AI.</p>
+    <footer style="padding: 40px 0 20px;">
+        <div class="container">
+            <div class="footer-content" style="border-top: 1px solid var(--glass-border); padding-top: 40px;">
+                <div class="footer-logo">
+                    <h2><svg viewBox="0 0 100 100" class="logo-img" style="height: 45px; width: 45px; vertical-align: middle;"><rect x="0" y="35" width="100" height="30" rx="15" class="logo-rect" transform="rotate(45 50 50)" /><circle cx="22" cy="78" r="20" class="logo-circle" /><circle cx="78" cy="22" r="20" class="logo-circle" /></svg> <span class="logo-text">Ai <span>Anveshana</span></span></h2>
+                    <p>Partnered with growing companies around the world to deliver smart tech solutions.</p>
+                </div>
+                <div class="footer-address" style="flex: 1; max-width: 300px; margin: 0 2rem; font-size: 0.9rem; color: #ffffff; line-height: 1.6;">
+                    <h4 style="color: #88eb1a; margin-bottom: 0.5rem;"><i class="fas fa-map-marker-alt" style="color: #88eb1a; margin-right: 8px;"></i>Our Office</h4>
+                    164, 1st Main Rd, Vidyaranyapura Post, Chikkabettahalli, Havyakanagara Phase-2, Vidyaranyapura, Bengaluru, Karnataka 560097
+                </div>
                 <div class="social-links">
-                    <a href="https://www.linkedin.com/in/ganeshdhogale/" target="_blank"><i class="fab fa-linkedin"></i></a>
-                    <a href="https://www.youtube.com/@AiAnveshana" target="_blank"><i class="fab fa-youtube"></i></a>
+                    <a href="https://www.linkedin.com/company/aianveshana" target="_blank"><i class="fab fa-linkedin"></i></a>
                     <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="https://www.youtube.com/@AiBhat" target="_blank"><i class="fab fa-youtube"></i></a>
                 </div>
             </div>
-            <div>
-                <h4>Company</h4>
-                <ul class="footer-links">
-                    <li><a href="about-mentor.html">About Us</a></li>
-                    <li><a href="blog.html">Blog</a></li>
-                    <li><a href="#">Careers</a></li>
-                </ul>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Ai Anveshana. All Rights Reserved.</p>
             </div>
-            <div>
-                <h4>Resources</h4>
-                <ul class="footer-links">
-                    <li><a href="courses.html">Courses</a></li>
-                    <li><a href="apa-bootcamp.html">APA Bootcamp</a></li>
-                    <li><a href="badge-generator.html">Badge Generator</a></li>
-                </ul>
-            </div>
-            <div>
-                <h4>Contact</h4>
-                <ul class="footer-links">
-                    <li><i class="fas fa-envelope"></i> contact@aianveshana.com</li>
-                    <li><i class="fas fa-map-marker-alt"></i> Bengaluru, India</li>
-                </ul>
-            </div>
-        </div>
-        <div class="container footer-bottom">
-            <p>&copy; 2024 Ai Anveshana. All rights reserved.</p>
         </div>
     </footer>
 
@@ -190,42 +343,38 @@
         <div class="chat-popup" id="chatPopup">
             <div class="chat-header">
                 <div class="chat-info">
-                    <div class="chat-avatar">
+                    <div class="chat-avatar" style="background: var(--accent-color); color: white;">
                         <i class="fas fa-robot"></i>
                     </div>
-                        <div>
-                            <h4>AI Assistant</h4>
-                            <p class="status"><span class="online-dot"></span>Online</p>
+                    <div>
+                        <h4 >Ai Anveshana Assistant</h4>
+                        <p class="status"><span class="online-dot"></span>Online</p>
+                    </div>
+                </div>
+                <button class="close-chat" id="closeChat" ><i class="fas fa-times"></i></button>
+            </div>
+            <div class="chat-body" id="chatBody" style="padding: 0; background: white;">
+                <div class="ai-agent-view" id="aiAgentView">
+                    <div id="aiChatLog"
+                        style="height: 380px; overflow-y: auto; margin-bottom: 1rem; padding-right: 5px; display: flex; flex-direction: column; gap: 12px; background: white; padding: 15px;">
+                        <div class="message bot" style="background: var(--bg-dark); color: var(--primary-color); border: 1px solid var(--glass-border); padding: 10px; border-radius: 10px;">Hello! I'm Ai Anveshana's Assistant. How can I help you today?</div>
+                        <div class="suggestion-chips" id="suggestionChips">
+                            <button class="suggestion-chip" onclick="askSuggestion('What services do you offer?')">What services do you offer?</button>
+                            <button class="suggestion-chip" onclick="askSuggestion('How can I contact sales?')">How can I contact sales?</button>
+                            <button class="suggestion-chip" onclick="startLeadFlow()" style="border-color: var(--accent-color); color: var(--accent-color); font-weight: 700;">🤝 Connect with Ganesh Bhat</button>
                         </div>
                     </div>
-                    <button class="close-chat" id="closeChat"><i class="fas fa-times"></i></button>
-                </div>
-                <div class="chat-body" id="chatBody" style="padding: 0;">
-
-                    <!-- AI Agent View (Always Active) -->
-                    <div class="ai-agent-view" id="aiAgentView">
-                        <div id="aiChatLog"
-                            style="height: 380px; overflow-y: auto; margin-bottom: 1rem; padding-right: 5px; display: flex; flex-direction: column; gap: 12px;">
-                            <div class="message bot">Hello! I'm Ai Anveshana Assistant. How can I help you with inquiries about our services or the APA Bootcamp?</div>
-                            <div class="suggestion-chips" id="suggestionChips">
-                                <button class="suggestion-chip" onclick="askSuggestion('How to book a Bootcamp?')">How to book a Bootcamp?</button>
-                                <button class="suggestion-chip" onclick="askSuggestion('What is the price of a bootcamp?')">What is the price of a bootcamp?</button>
-                                <button class="suggestion-chip" onclick="window.open('https://wa.me/919113548342', '_blank')">Contact via WhatsApp</button>
-                            </div>
-                        </div>
-                        <div class="chat-input-container" style="display: flex; gap: 8px;">
-                            <input type="text" id="aiChatInput" placeholder="Type your question..." style="flex: 1; padding: 10px 15px; border-radius: 25px; border: 1px solid var(--glass-border); background: #1a1a1a; color: white; font-size: 0.9rem;">
-                            <button onclick="sendChatMessage()" style="background: var(--accent-color); border: none; width: 40px; height: 40px; border-radius: 50%; color: black; cursor: pointer; display: flex; align-items: center; justify-content: center;"><i class="fas fa-paper-plane"></i></button>
-                        </div>
+                    <div class="chat-input-container" style="display: flex; gap: 8px; padding: 10px; border-top: 1px solid var(--glass-border);">
+                        <input type="text" id="aiChatInput" placeholder="Type your question..." style="flex: 1; padding: 10px 15px; border-radius: 25px; border: 1px solid var(--glass-border); background: #f0f2f5; color: #333; font-size: 0.9rem;">
+                        <button onclick="sendChatMessage()" style="background: var(--accent-color); border: none; width: 40px; height: 40px; border-radius: 50%; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center;"><i class="fas fa-paper-plane"></i></button>
                     </div>
-
                 </div>
+            </div>
         </div>
-        <button class="chat-toggle" id="chatToggle">
+        <button class="chat-toggle" id="chatToggle" style="background: var(--accent-color);">
             <i class="fas fa-comment-dots"></i>
-        </button>
     </div>
-
+    
     <!-- Theme Toggle Button -->
     <div class="theme-toggle" id="themeToggle" title="Switch Theme">
         <i class="fas fa-palette"></i>
@@ -235,6 +384,5 @@
     <script src="assets/js/main.js"></script>
     <script src="assets/js/script.js"></script>
     <script src="assets/js/contact.js"></script>
-</body>
 
 </html>
