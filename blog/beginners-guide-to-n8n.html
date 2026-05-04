@@ -242,6 +242,43 @@
         </div>
     </footer>
 
+    <!-- Chatbot Widget -->
+    <div class="chat-widget" id="chatWidget">
+        <div class="chat-popup" id="chatPopup">
+            <div class="chat-header">
+                <div class="chat-info">
+                    <div class="chat-avatar">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div>
+                        <h4>AI Assistant</h4>
+                        <p class="status"><span class="online-dot"></span>Online</p>
+                    </div>
+                </div>
+                <button class="close-chat" id="closeChat"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="chat-body" id="chatBody" style="padding: 0;">
+                <div class="ai-agent-view" id="aiAgentView">
+                    <div id="aiChatLog" style="height: 380px; overflow-y: auto; margin-bottom: 1rem; padding-right: 5px; display: flex; flex-direction: column; gap: 12px;">
+                        <div class="message bot">Hello! I'm Ai Anveshana Assistant. How can I help you with inquiries about our services or the APA Bootcamp?</div>
+                        <div class="suggestion-chips" id="suggestionChips">
+                            <button class="suggestion-chip" onclick="askSuggestion('How to book a Bootcamp?')">How to book a Bootcamp?</button>
+                            <button class="suggestion-chip" onclick="askSuggestion('What is the price of a bootcamp?')">What is the price of a bootcamp?</button>
+                            <button class="suggestion-chip" onclick="window.open('https://wa.me/919113548342', '_blank')" style="border-color: var(--accent-color); color: var(--accent-color); font-weight: 700;">🤝 Contact via WhatsApp</button>
+                        </div>
+                    </div>
+                    <div class="chat-input-container" style="display: flex; gap: 8px;">
+                        <input type="text" id="aiChatInput" placeholder="Type your question..." style="flex: 1; padding: 10px 15px; border-radius: 25px; border: 1px solid var(--glass-border); background: #1a1a1a; color: white; font-size: 0.9rem;">
+                        <button onclick="sendChatMessage()" style="background: var(--accent-color); border: none; width: 40px; height: 40px; border-radius: 50%; color: black; cursor: pointer; display: flex; align-items: center; justify-content: center;"><i class="fas fa-paper-plane"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button class="chat-toggle" id="chatToggle">
+            <i class="fas fa-comment-dots"></i>
+        </button>
+    </div>
+
     <!-- Scripts -->
     <script src="../assets/js/main.js"></script>
     <script src="../assets/js/script.js"></script>

@@ -272,6 +272,11 @@
                 <div class="ai-agent-view" id="aiAgentView">
                     <div id="aiChatLog" style="height: 380px; overflow-y: auto; margin-bottom: 1rem; padding: 15px; display: flex; flex-direction: column; gap: 12px; background: white;">
                         <div class="message bot" style="background: var(--bg-dark); color: var(--primary-color); border: 1px solid var(--glass-border); padding: 10px; border-radius: 10px;">Hello! I'm Ai Anveshana's Assistant. How can I help you today?</div>
+                        <div class="suggestion-chips" id="suggestionChips">
+                            <button class="suggestion-chip" onclick="askSuggestion('How to book a Bootcamp?')">How to book a Bootcamp?</button>
+                            <button class="suggestion-chip" onclick="askSuggestion('What is the price of a bootcamp?')">What is the price of a bootcamp?</button>
+                            <button class="suggestion-chip" onclick="window.open('https://wa.me/919113548342', '_blank')" style="border-color: var(--accent-color); color: var(--accent-color); font-weight: 700;">🤝 Contact via WhatsApp</button>
+                        </div>
                     </div>
                     <div class="chat-input-container" style="display: flex; gap: 8px; padding: 10px; border-top: 1px solid var(--glass-border);">
                         <input type="text" id="aiChatInput" placeholder="Type your question..." style="flex: 1; padding: 10px 15px; border-radius: 25px; border: 1px solid var(--glass-border); background: #f0f2f5; color: #333; font-size: 0.9rem;">
