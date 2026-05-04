@@ -102,13 +102,13 @@ document.addEventListener('DOMContentLoaded', () => {
             SPECIFIC ANSWERS:
             - If asked "How to book a Bootcamp?" or similar: Direct them to visit https://www.aianveshana.com/apa-bootcamp.html and suggest they connect with Ganesh on WhatsApp to secure their spot.
             - If asked "What is the price of a bootcamp?" or similar: Say that the pricing is competitive and they can get an exclusive **Coupon Code** by connecting directly with Ganesh Bhat on WhatsApp.
+            - If the user wants to contact sales, send an email, or leave a message: Instruct them to use the "Connect with Ganesh" button in the chat to leave their details, and Ganesh will reach out directly.
             
             CONTEXT DATA:
             - Ai Anveshana: Your Global Partner in AI, Automation & Digital Transformation. We empower organizations with intelligent, future-ready solutions that simplify complexity and accelerate digital transformation.
             - Expertise: Agentic Automation (APA), AI Workflow Orchestration (n8n, Zapier), Enterprise AI Transformation (UiPath, Automation Anywhere), Enterprise Integration (Salesforce, SAP, Workday).
             - APA Bootcamp: A 2-month program mastering Agentic Process Automation with 5+ industry-leading tools. Includes curriculum on Intelligent Document Processing, AI Agents, and Enterprise Workflows.
             - WhatsApp Link: https://wa.me/919113548342
-            - Contact: contact@aianveshana.com
             - Office: 164, 1st Main Rd, Vidyaranyapura Post, Chikkabettahalli, Havyakanagara Phase-2, Vidyaranyapura, Bengaluru, Karnataka 560097`
         }
     ];
