@@ -1,10 +1,10 @@
 """
 ===============================================================================
-AIAnveshana Framework - Local RPA Orchestrator Agent
+AIAnveshana Framework - Multi-Bot Local RPA Orchestrator Agent
 ===============================================================================
 Lightweight HTTP REST API server running on localhost:8000.
-Bridges GitHub Pages Web Dashboard with local Windows Master Bot execution,
-enabling remote/local triggering, real-time log streaming, and scheduling.
+Bridges GitHub Pages Automation Anywhere Style Control Room with local Windows
+Master Bot execution across all process folders in PROD.
 """
 
 import os
@@ -12,20 +12,23 @@ import sys
 import json
 import time
 import glob
+import re
 import subprocess
 import threading
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib.parse import parse_qs, urlparse
+from socketserver import ThreadingMixIn
 
 # Resolve paths dynamically relative to current agent directory
 AGENT_DIR = os.path.dirname(os.path.abspath(__file__))
 PROD_DIR = os.path.abspath(os.path.join(AGENT_DIR, ".."))
-MASTER_BOT_PATH = os.path.join(PROD_DIR, "Loan", "Loan Team", "Active Loans Process", "Bots", "Master_ActiveLoansProcess.py")
-LOGS_DIR = os.path.join(PROD_DIR, "Loan", "Loan Team", "Active Loans Process", "Process", "Logs")
+DEFAULT_MASTER_BOT_PATH = os.path.join(PROD_DIR, "Loan", "Loan Team", "Active Loans Process", "Bots", "Master_ActiveLoansProcess.py")
+DEFAULT_LOGS_DIR = os.path.join(PROD_DIR, "Loan", "Loan Team", "Active Loans Process", "Process", "Logs")
 
-# Global Process Execution State
+# Global Multi-Bot Execution State
 state_lock = threading.Lock()
 execution_state = {
+    "active_bot_id": None,
     "status": "IDLE",  # IDLE, RUNNING, COMPLETED, FAILED
     "start_time": None,
     "end_time": None,
@@ -34,27 +37,81 @@ execution_state = {
     "error_message": None,
     "pid": None,
     "total_runs": 0,
+    "bot_states": {}  # bot_id -> state dict
 }
 
-scheduled_tasks = []
 current_subprocess = None
 
 
-def run_master_bot_async():
-    """Executes Master_ActiveLoansProcess.py in a background thread/process."""
+def discover_all_bots():
+    """
+    Scans PROD directory for all Master_*.py scripts across all process folders.
+    Returns list of process bot dictionary objects.
+    """
+    bots = []
+    for root, dirs, files in os.walk(PROD_DIR):
+        rel_root = os.path.relpath(root, PROD_DIR)
+        first_segment = rel_root.split(os.sep)[0]
+        if first_segment in ("framework_components", "docs", "orchestrator_agent", ".git", "__pycache__", ".venv"):
+            continue
+
+        for file in files:
+            if file.startswith("Master_") and file.endswith(".py"):
+                full_path = os.path.abspath(os.path.join(root, file))
+                raw_name = file.replace("Master_", "").replace(".py", "")
+                clean_name = re.sub(r'(?<!^)(?=[A-Z])', ' ', raw_name).strip()
+
+                folder_rel = os.path.dirname(rel_root) if os.path.basename(rel_root) == "Bots" else rel_root
+                if folder_rel == ".":
+                    folder_rel = rel_root
+
+                bot_id = raw_name.lower()
+                mtime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(os.path.getmtime(full_path)))
+
+                bot_state = execution_state["bot_states"].get(bot_id, {})
+                bot_status = bot_state.get("status", "IDLE")
+
+                bots.append({
+                    "id": bot_id,
+                    "name": clean_name,
+                    "folder": folder_rel.replace("\\", "/"),
+                    "bot_file": file,
+                    "path": full_path,
+                    "last_modified": mtime,
+                    "status": bot_status,
+                    "last_run": bot_state.get("end_time", "--"),
+                    "duration": f"{bot_state.get('duration_seconds', '--')}s" if bot_state.get('duration_seconds') else "--",
+                    "platform": "Python 3.14 RPA",
+                    "version": "1.0.0"
+                })
+
+    return bots
+
+
+def run_master_bot_async(bot_path=None, bot_id=None):
+    """Executes a target Master bot script in a background thread/process."""
     global current_subprocess, execution_state
 
+    target_path = bot_path or DEFAULT_MASTER_BOT_PATH
+    target_id = bot_id or "active_loans_process"
+
     with state_lock:
+        execution_state["active_bot_id"] = target_id
         execution_state["status"] = "RUNNING"
         execution_state["start_time"] = time.strftime("%Y-%m-%d %H:%M:%S")
         execution_state["end_time"] = None
         execution_state["error_message"] = None
         execution_state["total_runs"] += 1
+
+        if target_id not in execution_state["bot_states"]:
+            execution_state["bot_states"][target_id] = {}
+        execution_state["bot_states"][target_id]["status"] = "RUNNING"
+        execution_state["bot_states"][target_id]["start_time"] = execution_state["start_time"]
+
         start_ts = time.time()
 
     try:
-        # Use sys.executable (current Python environment)
-        cmd = [sys.executable, MASTER_BOT_PATH]
+        cmd = [sys.executable, target_path]
         current_subprocess = subprocess.Popen(
             cmd,
             cwd=PROD_DIR,
@@ -76,39 +133,47 @@ def run_master_bot_async():
         end_ts = time.time()
 
         with state_lock:
-            execution_state["end_time"] = time.strftime("%Y-%m-%d %H:%M:%S")
-            execution_state["duration_seconds"] = round(end_ts - start_ts, 2)
+            end_str = time.strftime("%Y-%m-%d %H:%M:%S")
+            dur = round(end_ts - start_ts, 2)
+            execution_state["end_time"] = end_str
+            execution_state["duration_seconds"] = dur
             execution_state["last_return_code"] = return_code
             execution_state["pid"] = None
 
-            if return_code == 0:
-                execution_state["status"] = "COMPLETED"
-            else:
-                execution_state["status"] = "FAILED"
+            final_status = "COMPLETED" if return_code == 0 else "FAILED"
+            execution_state["status"] = final_status
+            execution_state["bot_states"][target_id]["status"] = final_status
+            execution_state["bot_states"][target_id]["end_time"] = end_str
+            execution_state["bot_states"][target_id]["duration_seconds"] = dur
+
+            if return_code != 0:
                 execution_state["error_message"] = f"Process exited with non-zero code {return_code}"
 
     except Exception as ex:
         with state_lock:
+            end_str = time.strftime("%Y-%m-%d %H:%M:%S")
             execution_state["status"] = "FAILED"
-            execution_state["end_time"] = time.strftime("%Y-%m-%d %H:%M:%S")
+            execution_state["end_time"] = end_str
             execution_state["error_message"] = str(ex)
             execution_state["pid"] = None
+            if target_id in execution_state["bot_states"]:
+                execution_state["bot_states"][target_id]["status"] = "FAILED"
     finally:
         current_subprocess = None
 
 
-def get_latest_log_entries():
-    """Reads the current daily CSV process log file and returns list of log dicts."""
-    if not os.path.exists(LOGS_DIR):
-        return []
+def get_latest_log_entries(process_filter=None):
+    """Reads all daily CSV process log files in PROD and returns list of log dicts."""
+    log_files = []
+    for root, dirs, files in os.walk(PROD_DIR):
+        for f in files:
+            if f.startswith("Log_") and f.endswith(".txt"):
+                log_files.append(os.path.join(root, f))
 
-    log_files = glob.glob(os.path.join(LOGS_DIR, "Log_*.txt"))
     if not log_files:
         return []
 
-    # Get most recent log file by modification time
     latest_file = max(log_files, key=os.path.getmtime)
-
     entries = []
     try:
         with open(latest_file, "r", encoding="utf-8", errors="replace") as f:
@@ -118,10 +183,13 @@ def get_latest_log_entries():
                     continue
                 parts = line.split(",", 5)
                 if len(parts) >= 6:
+                    proc_name = parts[2].strip()
+                    if process_filter and process_filter.lower() not in proc_name.lower():
+                        continue
                     entries.append({
                         "time": parts[0].strip(),
                         "device": parts[1].strip(),
-                        "process": parts[2].strip(),
+                        "process": proc_name,
                         "subbot": parts[3].strip(),
                         "level": parts[4].strip(),
                         "message": parts[5].strip(),
@@ -134,11 +202,7 @@ def get_latest_log_entries():
     return entries
 
 
-from socketserver import ThreadingMixIn
-
-
 class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
-    """Handle requests in separate threads to keep Orchestrator server resilient."""
     daemon_threads = True
 
 
@@ -171,14 +235,19 @@ class OrchestratorHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         parsed = urlparse(self.path)
         path = parsed.path
+        query = parse_qs(parsed.query)
 
         if path in ("/api/health", "/"):
             self._json_response({
                 "status": "ONLINE",
                 "machine": os.getenv("COMPUTERNAME", "GANESH"),
                 "python_version": sys.version.split()[0],
-                "master_bot_exists": os.path.exists(MASTER_BOT_PATH),
+                "master_bot_exists": os.path.exists(DEFAULT_MASTER_BOT_PATH),
             })
+
+        elif path == "/api/bots":
+            bots = discover_all_bots()
+            self._json_response({"total": len(bots), "bots": bots})
 
         elif path == "/api/status":
             with state_lock:
@@ -186,7 +255,8 @@ class OrchestratorHandler(BaseHTTPRequestHandler):
             self._json_response(current)
 
         elif path == "/api/logs":
-            logs = get_latest_log_entries()
+            proc_filter = query.get("process_name", [None])[0]
+            logs = get_latest_log_entries(process_filter=proc_filter)
             self._json_response({"total": len(logs), "logs": logs})
 
         else:
@@ -208,13 +278,16 @@ class OrchestratorHandler(BaseHTTPRequestHandler):
         if path == "/api/trigger":
             with state_lock:
                 if execution_state["status"] == "RUNNING":
-                    self._json_response({"success": False, "message": "Master Bot is already running!"}, status_code=409)
+                    self._json_response({"success": False, "message": "A bot process is already running!"}, status_code=409)
                     return
 
-            thread = threading.Thread(target=run_master_bot_async, daemon=True)
+            target_path = body_data.get("bot_path", DEFAULT_MASTER_BOT_PATH)
+            target_id = body_data.get("bot_id", "active_loans_process")
+
+            thread = threading.Thread(target=run_master_bot_async, args=(target_path, target_id), daemon=True)
             thread.start()
 
-            self._json_response({"success": True, "message": "Master Bot execution triggered successfully!"})
+            self._json_response({"success": True, "message": f"Triggered execution for process '{target_id}'!"})
 
         elif path == "/api/stop":
             global current_subprocess
@@ -223,7 +296,7 @@ class OrchestratorHandler(BaseHTTPRequestHandler):
                     current_subprocess.terminate()
                     execution_state["status"] = "FAILED"
                     execution_state["error_message"] = "Terminated manually by Orchestrator UI"
-                    self._json_response({"success": True, "message": "Master Bot process terminated."})
+                    self._json_response({"success": True, "message": "Process bot terminated."})
                 else:
                     self._json_response({"success": False, "message": "No active process to stop."})
 
@@ -231,7 +304,6 @@ class OrchestratorHandler(BaseHTTPRequestHandler):
             self._json_response({"error": "Endpoint not found"}, status_code=404)
 
     def log_message(self, format, *args):
-        # Silence default HTTP server console noise
         return
 
 
@@ -239,9 +311,9 @@ def start_orchestrator_server(port: int = 8000):
     server_address = ("0.0.0.0", port)
     httpd = ThreadedHTTPServer(server_address, OrchestratorHandler)
     print(f"\n" + "=" * 70)
-    print(f"   AIANVESHANA LOCAL RPA ORCHESTRATOR AGENT ONLINE   ")
+    print(f"   AIANVESHANA MULTI-BOT ORCHESTRATOR AGENT ONLINE   ")
     print(f"   Listening on: http://localhost:{port}")
-    print(f"   Connected Master Bot: {MASTER_BOT_PATH}")
+    print(f"   Root PROD Directory: {PROD_DIR}")
     print(f"=" * 70 + "\n")
     try:
         httpd.serve_forever()

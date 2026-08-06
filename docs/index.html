@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AIAnveshana RPA Orchestrator Control Room</title>
+  <title>AIAnveshana Automation Control Room</title>
   <link rel="stylesheet" href="style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,138 +11,145 @@
 </head>
 <body>
 
-  <div class="app-container">
-    <!-- TOP NAVIGATION BAR -->
-    <header class="navbar">
-      <div class="brand">
-        <div class="logo-icon">⚡</div>
-        <div class="brand-text">
-          <h1>AIAnveshana RPA Control Room</h1>
-          <span class="sub-title">Enterprise Process Orchestrator & Live Monitor</span>
+  <div class="aa-app">
+    <!-- TOP NAVIGATION BAR (A360 Style) -->
+    <header class="aa-header">
+      <div class="header-left">
+        <div class="logo-box">
+          <span class="logo-symbol">⚡</span>
+        </div>
+        <div class="header-title">
+          <h1>AIAnveshana Automation</h1>
+          <span class="header-sub">Enterprise RPA Control Room & Orchestrator</span>
         </div>
       </div>
-      
-      <div class="agent-config-box">
-        <input type="text" id="custom-agent-url" class="agent-url-input" placeholder="http://127.0.0.1:8000" onchange="saveCustomAgentUrl()">
-        <div class="agent-status-badge" id="agent-status-badge">
-          <span class="status-dot offline" id="agent-dot"></span>
-          <span class="status-text" id="agent-status-text">Connecting to Agent...</span>
+
+      <div class="header-center">
+        <div class="tab-pills">
+          <button class="tab-pill active">Private</button>
+          <button class="tab-pill">Public</button>
+          <button class="tab-pill">Agentic App Store</button>
         </div>
+      </div>
+
+      <div class="header-right">
+        <div class="agent-config-box">
+          <input type="text" id="custom-agent-url" class="agent-url-input" placeholder="http://127.0.0.1:8000" onchange="saveCustomAgentUrl()">
+          <div class="agent-status-badge" id="agent-status-badge">
+            <span class="status-dot offline" id="agent-dot"></span>
+            <span class="status-text" id="agent-status-text">Connecting...</span>
+          </div>
+        </div>
+
+        <button class="btn btn-create">+ Create <span class="arrow">▼</span></button>
       </div>
     </header>
 
-    <!-- MAIN DASHBOARD CONTENT -->
-    <main class="dashboard-grid">
+    <!-- MAIN BODY GRID -->
+    <div class="aa-body">
+      <!-- LEFT SIDEBAR FOLDER NAVIGATION -->
+      <aside class="aa-sidebar">
+        <div class="sidebar-search">
+          <span class="search-icon">🔍</span>
+          <input type="text" placeholder="Search subfolders..." oninput="filterFolderTree(this.value)">
+        </div>
 
-      <!-- LEFT COLUMN: PROCESS CONTROL CARDS -->
-      <section class="left-panel">
-        
-        <!-- PROCESS CONTROL CARD -->
-        <div class="card process-card">
-          <div class="card-header">
-            <div class="process-info">
-              <span class="badge category-badge">ACTIVE LOANS</span>
-              <h2>Active Loans Process Master Bot</h2>
-              <p class="description">Web automation, bank ZIP downloads, text parsing, and Excel report generation.</p>
-            </div>
-            <div class="bot-state-badge state-idle" id="bot-state-badge">IDLE</div>
+        <div class="tree-header">
+          <span class="tree-title">FOLDERS</span>
+          <button class="icon-btn" onclick="fetchBotsList()" title="Refresh Folders">🔄</button>
+        </div>
+
+        <div class="tree-container" id="tree-container">
+          <!-- Dynamically populated folder tree -->
+          <div class="tree-item active" onclick="selectFolder('all')">
+            <span class="tree-icon">📁</span>
+            <span class="tree-label">Bots</span>
+          </div>
+          <div class="tree-sub-items" id="tree-sub-items">
+            <!-- Process subfolder items -->
+          </div>
+        </div>
+      </aside>
+
+      <!-- MAIN CONTENT AREA: BOT REPOSITORY TABLE -->
+      <main class="aa-content">
+        <div class="content-toolbar">
+          <div class="toolbar-left">
+            <h2 id="folder-view-title">Files and folders</h2>
+            <span class="item-count" id="bot-count-badge">(0)</span>
           </div>
 
-          <div class="process-actions">
-            <button class="btn btn-primary" id="btn-trigger" onclick="triggerMasterBot()">
-              <span class="icon">▶</span> Trigger Process
-            </button>
-            <button class="btn btn-danger" id="btn-stop" onclick="stopMasterBot()" disabled>
-              <span class="icon">⏹</span> Stop Process
-            </button>
-          </div>
-
-          <!-- PROCESS METRICS -->
-          <div class="metrics-grid">
-            <div class="metric-item">
-              <span class="metric-label">Last Start Time</span>
-              <span class="metric-value" id="metric-start-time">--</span>
+          <div class="toolbar-right">
+            <div class="table-search">
+              <span class="search-icon">🔍</span>
+              <input type="text" id="table-search-input" placeholder="Search process bots..." oninput="filterBotsTable()">
             </div>
-            <div class="metric-item">
-              <span class="metric-label">Duration</span>
-              <span class="metric-value" id="metric-duration">--</span>
-            </div>
-            <div class="metric-item">
-              <span class="metric-label">Total Runs</span>
-              <span class="metric-value" id="metric-total-runs">0</span>
-            </div>
-            <div class="metric-item">
-              <span class="metric-label">Target Machine</span>
-              <span class="metric-value" id="metric-machine">GANESH</span>
-            </div>
+            <button class="icon-btn" onclick="fetchBotsList()" title="Refresh Table">🔄</button>
           </div>
         </div>
 
-        <!-- SCHEDULER & CONFIG CARD -->
-        <div class="card schedule-card">
-          <div class="card-header">
-            <h3>Automated Process Scheduler</h3>
-            <span class="icon-small">⏰</span>
-          </div>
-          <div class="schedule-form">
-            <div class="form-group">
-              <label for="schedule-interval">Run Frequency</label>
-              <select id="schedule-interval" class="form-control">
-                <option value="manual">Manual Trigger Only</option>
-                <option value="15">Every 15 Minutes</option>
-                <option value="60">Every 1 Hour</option>
-                <option value="daily">Daily at 08:00 AM</option>
-              </select>
-            </div>
-            <button class="btn btn-secondary" onclick="saveSchedule()">Save Schedule</button>
+        <!-- REPOSITORY DATA TABLE -->
+        <div class="table-wrapper">
+          <table class="aa-table">
+            <thead>
+              <tr>
+                <th style="width: 40px;"><input type="checkbox"></th>
+                <th style="width: 60px;">Type</th>
+                <th>Name</th>
+                <th>Folder Location</th>
+                <th>Status</th>
+                <th>Last Modified / Run</th>
+                <th>Platform</th>
+                <th style="width: 220px; text-align: center;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="bots-table-body">
+              <tr>
+                <td colspan="8" class="table-loading">Loading process bots repository...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- LOG VIEWER DRAWER / MODAL -->
+  <div class="modal-overlay" id="log-modal">
+    <div class="modal-drawer">
+      <div class="modal-header">
+        <div class="modal-title">
+          <span class="modal-icon">📋</span>
+          <div>
+            <h3 id="modal-bot-name">Process Logs</h3>
+            <span class="modal-sub" id="modal-bot-path">Process Path</span>
           </div>
         </div>
+        <button class="close-btn" onclick="closeLogModal()">✕</button>
+      </div>
 
-      </section>
+      <div class="modal-controls">
+        <input type="text" id="log-modal-search" class="search-input" placeholder="Search log entries..." oninput="renderModalLogs()">
+        <select id="log-modal-level" class="level-select" onchange="renderModalLogs()">
+          <option value="ALL">All Levels</option>
+          <option value="INFO">INFO</option>
+          <option value="WARNING">WARNING</option>
+          <option value="ERROR">ERROR</option>
+        </select>
+        <button class="btn btn-secondary" onclick="fetchModalLogs()">🔄 Refresh Logs</button>
+      </div>
 
-      <!-- RIGHT COLUMN: REAL-TIME LIVE LOG STREAM -->
-      <section class="right-panel">
-        <div class="card console-card">
-          <div class="console-header">
-            <div class="console-title">
-              <span class="terminal-icon">💻</span>
-              <h3>Live Process Log Stream</h3>
-              <span class="live-indicator">LIVE</span>
-            </div>
-            
-            <div class="console-controls">
-              <input type="text" id="log-search" class="search-input" placeholder="Search logs..." oninput="filterLogs()">
-              <select id="log-level-filter" class="level-select" onchange="filterLogs()">
-                <option value="ALL">All Levels</option>
-                <option value="INFO">INFO</option>
-                <option value="WARNING">WARNING</option>
-                <option value="ERROR">ERROR</option>
-              </select>
-              <button class="btn btn-small" onclick="clearLogsUI()">Clear UI</button>
-            </div>
-          </div>
-
-          <!-- TERMINAL STREAM WINDOW -->
-          <div class="terminal-window" id="terminal-window">
-            <div class="terminal-content" id="terminal-content">
-              <div class="log-row info">
-                <span class="log-time">[SYSTEM]</span>
-                <span class="log-level">INFO</span>
-                <span class="log-msg">Connecting to local RPA Orchestrator Agent (http://localhost:8000)...</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="terminal-footer">
-            <span id="log-count">0 entries displayed</span>
-            <label class="autoscroll-toggle">
-              <input type="checkbox" id="autoscroll-check" checked> Auto-scroll
-            </label>
-          </div>
+      <div class="modal-terminal" id="modal-terminal-window">
+        <div class="terminal-content" id="modal-terminal-content">
+          <div class="log-row info"><span class="log-msg">Select a bot to view process logs...</span></div>
         </div>
-      </section>
+      </div>
 
-    </main>
+      <div class="modal-footer">
+        <span id="modal-log-count">0 entries</span>
+        <button class="btn btn-secondary" onclick="closeLogModal()">Close</button>
+      </div>
+    </div>
   </div>
 
   <script src="app.js"></script>

@@ -1,18 +1,18 @@
 /* ===============================================================================
-   AIAnveshana RPA Orchestrator - Frontend JavaScript Engine
+   AIAnveshana Automation - Multi-Bot Orchestrator Frontend Engine
    =============================================================================== */
 
 let activeAgentUrl = "http://127.0.0.1:8000";
-
 let isAgentOnline = false;
-let currentBotStatus = "IDLE";
-let allLogEntries = [];
-let lastLogCount = 0;
+let allDiscoveredBots = [];
+let selectedFolder = "all";
+let currentModalBot = null;
+let currentModalLogs = [];
 let pollTimer = null;
 
 // Initialize Dashboard
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("RPA Control Room Dashboard initialized.");
+  console.log("AIAnveshana Control Room Dashboard initialized.");
   const savedUrl = localStorage.getItem("customAgentUrl");
   if (savedUrl && document.getElementById("custom-agent-url")) {
     document.getElementById("custom-agent-url").value = savedUrl;
@@ -29,18 +29,19 @@ function saveCustomAgentUrl() {
     localStorage.removeItem("customAgentUrl");
   }
   checkAgentHealth();
+  fetchBotsList();
 }
 
 function startPolling() {
   checkAgentHealth();
-  fetchBotStatus();
-  fetchLiveLogs();
+  fetchBotsList();
 
-  // Poll status and logs every 1.5 seconds
   pollTimer = setInterval(() => {
     checkAgentHealth();
-    fetchBotStatus();
-    fetchLiveLogs();
+    fetchBotsList();
+    if (currentModalBot) {
+      fetchModalLogs();
+    }
   }, 1500);
 }
 
@@ -63,8 +64,7 @@ async function checkAgentHealth() {
         activeAgentUrl = cleanUrl;
         isAgentOnline = true;
         dot.className = "status-dot online";
-        text.innerText = `Agent Online (${data.machine})`;
-        document.getElementById("metric-machine").innerText = data.machine;
+        text.innerText = `Online (${data.machine})`;
         return;
       }
     } catch (err) {
@@ -80,128 +80,183 @@ function setAgentOffline() {
   const dot = document.getElementById("agent-dot");
   const text = document.getElementById("agent-status-text");
   dot.className = "status-dot offline";
-  text.innerText = "Agent Offline (Run agent.py)";
+  text.innerText = "Agent Offline";
 }
 
-// 2. Fetch Process Status
-async function fetchBotStatus() {
-  if (!isAgentOnline) return;
-
-  try {
-    const res = await fetch(`${activeAgentUrl}/api/status`);
-    if (res.ok) {
-      const data = await res.json();
-      currentBotStatus = data.status;
-
-      updateStatusUI(data);
-    }
-  } catch (err) {
-    console.error("Error fetching status:", err);
-  }
-}
-
-function updateStatusUI(data) {
-  const badge = document.getElementById("bot-state-badge");
-  const btnTrigger = document.getElementById("btn-trigger");
-  const btnStop = document.getElementById("btn-stop");
-
-  badge.innerText = data.status;
-  badge.className = `bot-state-badge state-${data.status.toLowerCase()}`;
-
-  if (data.status === "RUNNING") {
-    btnTrigger.disabled = true;
-    btnStop.disabled = false;
-    document.getElementById("agent-dot").className = "status-dot running";
-  } else {
-    btnTrigger.disabled = false;
-    btnStop.disabled = true;
-    if (isAgentOnline) {
-      document.getElementById("agent-dot").className = "status-dot online";
-    }
-  }
-
-  if (data.start_time) {
-    document.getElementById("metric-start-time").innerText = data.start_time.split(" ")[1] || data.start_time;
-  }
-  if (data.duration_seconds) {
-    document.getElementById("metric-duration").innerText = `${data.duration_seconds}s`;
-  }
-  if (data.total_runs !== undefined) {
-    document.getElementById("metric-total-runs").innerText = data.total_runs;
-  }
-}
-
-// 3. Trigger Master Bot
-async function triggerMasterBot() {
+// 2. Fetch Multi-Bot Repository List
+async function fetchBotsList() {
   if (!isAgentOnline) {
-    alert("Local Orchestrator Agent is offline. Please start 'python orchestrator_agent/agent.py' on your machine.");
+    renderBotsTable([]);
     return;
   }
 
   try {
-    const res = await fetch(`${activeAgentUrl}/api/trigger`, { method: "POST" });
-    const data = await res.json();
-
-    if (data.success) {
-      fetchBotStatus();
-      fetchLiveLogs();
-    } else {
-      alert(`Trigger Notice: ${data.message}`);
+    const res = await fetch(`${activeAgentUrl}/api/bots`);
+    if (res.ok) {
+      const data = await res.json();
+      allDiscoveredBots = data.bots || [];
+      renderFolderTree();
+      renderBotsTable();
     }
   } catch (err) {
-    alert(`Failed to trigger process: ${err.message}`);
+    console.error("Error fetching bots:", err);
   }
 }
 
-// 4. Stop Master Bot
-async function stopMasterBot() {
-  if (!confirm("Are you sure you want to forcibly terminate the Master Bot process?")) return;
+// Render Left Sidebar Folder Tree
+function renderFolderTree() {
+  const container = document.getElementById("tree-sub-items");
+  const folders = [...new Set(allDiscoveredBots.map(b => b.folder))];
+
+  container.innerHTML = "";
+  folders.forEach(folder => {
+    const item = document.createElement("div");
+    item.className = `tree-sub-item ${selectedFolder === folder ? 'active' : ''}`;
+    item.innerHTML = `📁 ${folder}`;
+    item.onclick = () => selectFolder(folder);
+    container.appendChild(item);
+  });
+}
+
+function selectFolder(folder) {
+  selectedFolder = folder;
+  document.getElementById("folder-view-title").innerText = folder === "all" ? "Files and folders" : `Bots / ${folder}`;
+  renderBotsTable();
+}
+
+// Render Main Bot Repository Data Table
+function renderBotsTable() {
+  const tbody = document.getElementById("bots-table-body");
+  const search = document.getElementById("table-search-input").value.toLowerCase();
+
+  const filtered = allDiscoveredBots.filter(b => {
+    const matchFolder = selectedFolder === "all" || b.folder === selectedFolder;
+    const matchSearch = !search || b.name.toLowerCase().includes(search) || b.folder.toLowerCase().includes(search);
+    return matchFolder && matchSearch;
+  });
+
+  document.getElementById("bot-count-badge").innerText = `(${filtered.length})`;
+  tbody.innerHTML = "";
+
+  if (filtered.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="8" class="table-loading">No process bots found matching criteria.</td></tr>`;
+    return;
+  }
+
+  filtered.forEach(bot => {
+    const tr = document.createElement("tr");
+
+    const statusBadge = `<span class="badge-status status-${bot.status}">${bot.status}</span>`;
+    const isRunning = bot.status === "RUNNING";
+
+    tr.innerHTML = `
+      <td><input type="checkbox"></td>
+      <td>📁</td>
+      <td>
+        <span class="bot-name-link" onclick="openLogModal('${bot.id}')">${bot.name}</span>
+      </td>
+      <td>${bot.folder}</td>
+      <td>${statusBadge}</td>
+      <td>${bot.last_run !== '--' ? bot.last_run : bot.last_modified}</td>
+      <td>${bot.platform}</td>
+      <td>
+        <div class="action-btn-group">
+          <button class="btn-act btn-run" onclick="triggerBot('${bot.id}', '${bot.path}')" ${isRunning ? 'disabled' : ''}>▶ Run</button>
+          <button class="btn-act btn-stop" onclick="stopBot('${bot.id}')" ${!isRunning ? 'disabled' : ''}>⏹ Stop</button>
+          <button class="btn-act btn-log" onclick="openLogModal('${bot.id}')">📋 Logs</button>
+        </div>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function filterBotsTable() {
+  renderBotsTable();
+}
+
+// Trigger Specific Bot Execution
+async function triggerBot(botId, botPath) {
+  if (!isAgentOnline) {
+    alert("Local Agent is offline. Run 'python orchestrator_agent/agent.py' on your machine.");
+    return;
+  }
+
+  try {
+    const res = await fetch(`${activeAgentUrl}/api/trigger`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ bot_id: botId, bot_path: botPath })
+    });
+    const data = await res.json();
+    alert(data.message);
+    fetchBotsList();
+  } catch (err) {
+    alert(`Trigger failed: ${err.message}`);
+  }
+}
+
+// Stop Running Bot Process
+async function stopBot(botId) {
+  if (!confirm("Are you sure you want to terminate this process bot execution?")) return;
 
   try {
     const res = await fetch(`${activeAgentUrl}/api/stop`, { method: "POST" });
     const data = await res.json();
     alert(data.message);
-    fetchBotStatus();
+    fetchBotsList();
   } catch (err) {
-    alert(`Stop request failed: ${err.message}`);
+    alert(`Stop failed: ${err.message}`);
   }
 }
 
-// 5. Live Log Streaming
-async function fetchLiveLogs() {
-  if (!isAgentOnline) return;
+// LOG MODAL DRAWER
+function openLogModal(botId) {
+  const bot = allDiscoveredBots.find(b => b.id === botId);
+  if (!bot) return;
+
+  currentModalBot = bot;
+  document.getElementById("modal-bot-name").innerText = `${bot.name} Logs`;
+  document.getElementById("modal-bot-path").innerText = bot.folder;
+  document.getElementById("log-modal").classList.add("active");
+
+  fetchModalLogs();
+}
+
+function closeLogModal() {
+  currentModalBot = null;
+  document.getElementById("log-modal").classList.remove("active");
+}
+
+async function fetchModalLogs() {
+  if (!isAgentOnline || !currentModalBot) return;
 
   try {
-    const res = await fetch(`${activeAgentUrl}/api/logs`);
+    const res = await fetch(`${activeAgentUrl}/api/logs?process_name=${encodeURIComponent(currentModalBot.name)}`);
     if (res.ok) {
       const data = await res.json();
-      allLogEntries = data.logs || [];
-
-      if (allLogEntries.length !== lastLogCount) {
-        renderLogs();
-        lastLogCount = allLogEntries.length;
-      }
+      currentModalLogs = data.logs || [];
+      renderModalLogs();
     }
   } catch (err) {
-    console.error("Error fetching logs:", err);
+    console.error("Error fetching modal logs:", err);
   }
 }
 
-function renderLogs() {
-  const container = document.getElementById("terminal-content");
-  const search = document.getElementById("log-search").value.toLowerCase();
-  const levelFilter = document.getElementById("log-level-filter").value;
+function renderModalLogs() {
+  const container = document.getElementById("modal-terminal-content");
+  const search = document.getElementById("log-modal-search").value.toLowerCase();
+  const level = document.getElementById("log-modal-level").value;
 
-  const filtered = allLogEntries.filter(entry => {
-    const matchSearch = !search || entry.message.toLowerCase().includes(search) || entry.subbot.toLowerCase().includes(search);
-    const matchLevel = levelFilter === "ALL" || entry.level.toUpperCase() === levelFilter;
+  const filtered = currentModalLogs.filter(l => {
+    const matchSearch = !search || l.message.toLowerCase().includes(search) || l.subbot.toLowerCase().includes(search);
+    const matchLevel = level === "ALL" || l.level.toUpperCase() === level;
     return matchSearch && matchLevel;
   });
 
   container.innerHTML = "";
-
   if (filtered.length === 0) {
-    container.innerHTML = `<div class="log-row info"><span class="log-msg">No logs matching filter.</span></div>`;
+    container.innerHTML = `<div class="log-row info"><span class="log-msg">No logs matching criteria for this process.</span></div>`;
   } else {
     filtered.forEach(log => {
       const row = document.createElement("div");
@@ -216,28 +271,7 @@ function renderLogs() {
     });
   }
 
-  document.getElementById("log-count").innerText = `${filtered.length} of ${allLogEntries.length} entries displayed`;
-
-  // Auto Scroll
-  if (document.getElementById("autoscroll-check").checked) {
-    const terminalWin = document.getElementById("terminal-window");
-    terminalWin.scrollTop = terminalWin.scrollHeight;
-  }
-}
-
-function filterLogs() {
-  renderLogs();
-}
-
-function clearLogsUI() {
-  allLogEntries = [];
-  lastLogCount = 0;
-  renderLogs();
-}
-
-function saveSchedule() {
-  const val = document.getElementById("schedule-interval").value;
-  alert(`Schedule set to: '${val}'. Scheduler active in Orchestrator Agent.`);
+  document.getElementById("modal-log-count").innerText = `${filtered.length} of ${currentModalLogs.length} entries displayed`;
 }
 
 function escapeHtml(str) {
