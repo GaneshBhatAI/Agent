@@ -392,6 +392,11 @@ async function saveBotSchedule() {
       body: JSON.stringify(payload)
     });
 
+    if (res.status === 404) {
+      alert("⚠️ Please restart agent.py in your terminal to activate the new Scheduler API endpoints!\n\n1. Go to your terminal window running agent.py\n2. Press Ctrl + C to stop it\n3. Run: python orchestrator_agent/agent.py");
+      return;
+    }
+
     const data = await res.json();
     if (data.success) {
       alert("✅ Schedule created successfully!");
