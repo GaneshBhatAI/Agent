@@ -1,10 +1,9 @@
 """
 ===============================================================================
-AIAnveshana Framework - Multi-Bot Local RPA Orchestrator Agent
+AIAnveshana Framework - Multi-Bot Local RPA Orchestrator Agent & Scheduler
 ===============================================================================
-Lightweight HTTP REST API server running on localhost:8000.
-Bridges GitHub Pages Automation Anywhere Style Control Room with local Windows
-Master Bot execution across all process folders in PROD.
+Lightweight HTTP REST API server running on localhost:8000 with 24/7 background
+scheduling engine for time, timezone, daily, weekly, and monthly bot execution.
 """
 
 import os
@@ -13,8 +12,10 @@ import json
 import time
 import glob
 import re
+import uuid
 import subprocess
 import threading
+from datetime import datetime, timezone, timedelta
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib.parse import parse_qs, urlparse
 from socketserver import ThreadingMixIn
@@ -23,7 +24,7 @@ from socketserver import ThreadingMixIn
 AGENT_DIR = os.path.dirname(os.path.abspath(__file__))
 PROD_DIR = os.path.abspath(os.path.join(AGENT_DIR, ".."))
 DEFAULT_MASTER_BOT_PATH = os.path.join(PROD_DIR, "Loan", "Loan Team", "Active Loans Process", "Bots", "Master_ActiveLoansProcess.py")
-DEFAULT_LOGS_DIR = os.path.join(PROD_DIR, "Loan", "Loan Team", "Active Loans Process", "Process", "Logs")
+SCHEDULES_FILE = os.path.join(AGENT_DIR, "schedules.json")
 
 # Global Multi-Bot Execution State
 state_lock = threading.Lock()
@@ -41,27 +42,27 @@ execution_state = {
 }
 
 current_subprocess = None
+scheduled_tasks = []
 
 
-def get_bot_last_run_info(clean_name):
-    """Inspects log files to find true last run timestamp and status for process bot."""
-    logs = get_latest_log_entries(process_filter=clean_name)
-    if not logs:
-        return "IDLE", "--"
+def load_schedules():
+    """Loads persistent schedules from schedules.json."""
+    if os.path.exists(SCHEDULES_FILE):
+        try:
+            with open(SCHEDULES_FILE, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception:
+            return []
+    return []
 
-    last_entry = logs[-1]
-    last_time = last_entry.get("time", "--")
 
-    for entry in reversed(logs):
-        msg = entry.get("message", "").upper()
-        lvl = entry.get("level", "").upper()
-
-        if "COMPLETED WITH STATUS: TRUE" in msg or "PROCESS COMPLETED EMAIL SENT" in msg or "COMPLETED SUCCESSFULLY" in msg:
-            return "COMPLETED", last_time
-        if "EXCEPTION ENCOUNTERED" in msg or "MASTER BOT CAUGHT EXCEPTION" in msg or lvl == "EXCEPTION":
-            return "FAILED", last_time
-
-    return "IDLE", last_time
+def save_schedules(schedules):
+    """Saves schedules to schedules.json."""
+    try:
+        with open(SCHEDULES_FILE, "w", encoding="utf-8") as f:
+            json.dump(schedules, f, indent=2)
+    except Exception:
+        pass
 
 
 def discover_all_bots():
@@ -111,6 +112,27 @@ def discover_all_bots():
                 })
 
     return bots
+
+
+def get_bot_last_run_info(clean_name):
+    """Inspects log files to find true last run timestamp and status for process bot."""
+    logs = get_latest_log_entries(process_filter=clean_name)
+    if not logs:
+        return "IDLE", "--"
+
+    last_entry = logs[-1]
+    last_time = last_entry.get("time", "--")
+
+    for entry in reversed(logs):
+        msg = entry.get("message", "").upper()
+        lvl = entry.get("level", "").upper()
+
+        if "COMPLETED WITH STATUS: TRUE" in msg or "PROCESS COMPLETED EMAIL SENT" in msg or "COMPLETED SUCCESSFULLY" in msg:
+            return "COMPLETED", last_time
+        if "EXCEPTION ENCOUNTERED" in msg or "MASTER BOT CAUGHT EXCEPTION" in msg or lvl == "EXCEPTION":
+            return "FAILED", last_time
+
+    return "IDLE", last_time
 
 
 def run_master_bot_async(bot_path=None, bot_id=None):
@@ -238,6 +260,76 @@ def get_latest_log_entries(process_filter=None):
     return entries
 
 
+# ===============================================================================
+# BACKGROUND SCHEDULING ENGINE THREAD
+# ===============================================================================
+TIMEZONE_OFFSETS = {
+    "IST": timedelta(hours=5, minutes=30),
+    "EST": timedelta(hours=-5),
+    "PST": timedelta(hours=-8),
+    "UTC": timedelta(hours=0),
+    "GMT": timedelta(hours=0),
+}
+
+
+def background_scheduler_loop():
+    """Daemon thread evaluating process bot schedules every 30 seconds."""
+    while True:
+        try:
+            schedules = load_schedules()
+            now_utc = datetime.now(timezone.utc)
+
+            for sch in schedules:
+                if not sch.get("enabled", True):
+                    continue
+
+                tz_name = sch.get("timezone", "IST")
+                offset = TIMEZONE_OFFSETS.get(tz_name, timedelta(hours=5, minutes=30))
+                now_tz = now_utc + offset
+
+                current_time_str = now_tz.strftime("%H:%M")
+                current_day_str = now_tz.strftime("%a")  # Mon, Tue...
+                current_dom = now_tz.day  # 1 to 31
+
+                target_time = sch.get("time", "00:00")
+                freq = sch.get("frequency", "daily").lower()
+
+                # Avoid triggering multiple times in the same minute
+                last_triggered = sch.get("last_triggered")
+                today_stamp = now_tz.strftime("%Y-%m-%d %H:%M")
+
+                if last_triggered == today_stamp:
+                    continue
+
+                should_trigger = False
+                if current_time_str == target_time:
+                    if freq == "daily":
+                        should_trigger = True
+                    elif freq == "weekly":
+                        allowed_days = sch.get("days", [])
+                        if current_day_str in allowed_days or "All" in allowed_days:
+                            should_trigger = True
+                    elif freq == "monthly":
+                        target_dom = sch.get("day_of_month", 1)
+                        if current_dom == int(target_dom):
+                            should_trigger = True
+
+                if should_trigger:
+                    with state_lock:
+                        if execution_state["status"] != "RUNNING":
+                            print(f"\n[SCHEDULER] Triggering scheduled bot '{sch.get('bot_name')}' at {current_time_str} {tz_name}")
+                            thread = threading.Thread(target=run_master_bot_async, args=(sch.get("bot_path"), sch.get("bot_id")), daemon=True)
+                            thread.start()
+
+                            sch["last_triggered"] = today_stamp
+                            save_schedules(schedules)
+
+        except Exception as ex:
+            print(f"[SCHEDULER WARNING] Evaluation error: {ex}")
+
+        time.sleep(30)
+
+
 class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
     daemon_threads = True
 
@@ -245,7 +337,7 @@ class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
 class OrchestratorHandler(BaseHTTPRequestHandler):
     def _send_cors_headers(self):
         self.send_header("Access-Control-Allow-Origin", "*")
-        self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+        self.send_header("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS")
         self.send_header("Access-Control-Allow-Headers", "Content-Type, Authorization")
 
     def _json_response(self, data, status_code=200):
@@ -297,6 +389,10 @@ class OrchestratorHandler(BaseHTTPRequestHandler):
             logs = get_latest_log_entries(process_filter=proc_filter)
             self._json_response({"total": len(logs), "logs": logs})
 
+        elif path == "/api/schedules":
+            schedules = load_schedules()
+            self._json_response({"total": len(schedules), "schedules": schedules})
+
         else:
             self._json_response({"error": "Endpoint not found"}, status_code=404)
 
@@ -322,12 +418,31 @@ class OrchestratorHandler(BaseHTTPRequestHandler):
                     return
 
             target_path = body_data.get("bot_path", DEFAULT_MASTER_BOT_PATH)
-            target_id = body_data.get("bot_id", "active_loans_process")
+            target_id = body_data.get("bot_id", "activeloansprocess")
 
             thread = threading.Thread(target=run_master_bot_async, args=(target_path, target_id), daemon=True)
             thread.start()
 
             self._json_response({"success": True, "message": f"Triggered execution for process '{target_id}'!"})
+
+        elif path == "/api/schedules":
+            schedules = load_schedules()
+            new_sch = {
+                "id": str(uuid.uuid4())[:8],
+                "bot_id": body_data.get("bot_id"),
+                "bot_name": body_data.get("bot_name", "Process Bot"),
+                "bot_path": body_data.get("bot_path"),
+                "time": body_data.get("time", "09:00"),
+                "timezone": body_data.get("timezone", "IST"),
+                "frequency": body_data.get("frequency", "daily"),
+                "days": body_data.get("days", ["Mon", "Tue", "Wed", "Thu", "Fri"]),
+                "day_of_month": body_data.get("day_of_month", 1),
+                "enabled": True,
+                "created_at": time.strftime("%Y-%m-%d %H:%M:%S")
+            }
+            schedules.append(new_sch)
+            save_schedules(schedules)
+            self._json_response({"success": True, "message": "Schedule created successfully!", "schedule": new_sch})
 
         elif path == "/api/stop":
             global current_subprocess
@@ -343,17 +458,39 @@ class OrchestratorHandler(BaseHTTPRequestHandler):
         else:
             self._json_response({"error": "Endpoint not found"}, status_code=404)
 
+    def do_DELETE(self):
+        parsed = urlparse(self.path)
+        path = parsed.path.rstrip("/")
+        query = parse_qs(parsed.query)
+
+        if path == "/api/schedules":
+            sch_id = query.get("schedule_id", [None])[0]
+            if sch_id:
+                schedules = load_schedules()
+                filtered = [s for s in schedules if s.get("id") != sch_id]
+                save_schedules(filtered)
+                self._json_response({"success": True, "message": "Schedule deleted successfully!"})
+            else:
+                self._json_response({"error": "Missing schedule_id parameter"}, status_code=400)
+        else:
+            self._json_response({"error": "Endpoint not found"}, status_code=404)
+
     def log_message(self, format, *args):
         return
 
 
 def start_orchestrator_server(port: int = 8000):
+    # Start background scheduler daemon thread
+    sched_thread = threading.Thread(target=background_scheduler_loop, daemon=True)
+    sched_thread.start()
+
     server_address = ("0.0.0.0", port)
     httpd = ThreadedHTTPServer(server_address, OrchestratorHandler)
     print(f"\n" + "=" * 70)
-    print(f"   AIANVESHANA MULTI-BOT ORCHESTRATOR AGENT ONLINE   ")
+    print(f"   AIANVESHANA MULTI-BOT ORCHESTRATOR & SCHEDULER AGENT ONLINE   ")
     print(f"   Listening on: http://localhost:{port}")
     print(f"   Root PROD Directory: {PROD_DIR}")
+    print(f"   Background Scheduler Thread: ACTIVE")
     print(f"=" * 70 + "\n")
     try:
         httpd.serve_forever()

@@ -1,139 +1,155 @@
 /* ===============================================================================
-   AIAnveshana Automation - Multi-Bot Orchestrator Frontend Engine
+   AIAnveshana Automation - Enterprise Control Room REST Client & Bot Scheduler
    =============================================================================== */
 
 let activeAgentUrl = "http://127.0.0.1:8000";
 let isAgentOnline = false;
 let allDiscoveredBots = [];
-let selectedFolder = "all";
+let selectedFolderFilter = "all";
+let pollInterval = null;
 let currentModalBot = null;
 let currentModalLogs = [];
-let pollTimer = null;
+let currentScheduleBot = null;
 
-// Initialize Dashboard
+// INIT DISCOVERY & AGENT CONNECTION
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("AIAnveshana Control Room Dashboard initialized.");
-  const savedUrl = localStorage.getItem("customAgentUrl");
-  if (savedUrl && document.getElementById("custom-agent-url")) {
+  const savedUrl = localStorage.getItem("aianveshana_agent_url");
+  if (savedUrl) {
+    activeAgentUrl = savedUrl;
     document.getElementById("custom-agent-url").value = savedUrl;
+  } else {
+    document.getElementById("custom-agent-url").value = activeAgentUrl;
   }
-  startPolling();
+
+  initAgentConnection();
 });
 
 function saveCustomAgentUrl() {
-  const input = document.getElementById("custom-agent-url");
-  const val = input ? input.value.trim() : "";
-  if (val) {
-    localStorage.setItem("customAgentUrl", val);
-  } else {
-    localStorage.removeItem("customAgentUrl");
+  const inputUrl = document.getElementById("custom-agent-url").value.trim();
+  if (inputUrl) {
+    activeAgentUrl = inputUrl.replace(/\/$/, "");
+    localStorage.setItem("aianveshana_agent_url", activeAgentUrl);
+    initAgentConnection();
   }
-  checkAgentHealth();
-  fetchBotsList();
 }
 
-function startPolling() {
-  checkAgentHealth();
-  fetchBotsList();
+async function initAgentConnection() {
+  updateStatusBadge("connecting", "Connecting...");
+  const candidateUrls = [
+    activeAgentUrl,
+    "http://127.0.0.1:8000",
+    "http://localhost:8000"
+  ];
 
-  pollTimer = setInterval(() => {
-    checkAgentHealth();
-    fetchBotsList();
-    if (currentModalBot) {
-      fetchModalLogs();
-    }
-  }, 1500);
-}
-
-// 1. Agent Health Check
-async function checkAgentHealth() {
-  const dot = document.getElementById("agent-dot");
-  const text = document.getElementById("agent-status-text");
-
-  const custom = localStorage.getItem("customAgentUrl");
-  const candidates = [];
-  if (custom) candidates.push(custom);
-  candidates.push("http://127.0.0.1:8000", "http://localhost:8000");
-
-  for (const url of candidates) {
-    const cleanUrl = url.replace(/\/$/, "");
+  let connected = false;
+  for (const url of candidateUrls) {
     try {
-      const res = await fetch(`${cleanUrl}/api/health`, { method: "GET" });
+      const res = await fetch(`${url}/api/health`, { signal: AbortSignal.timeout(2500) });
       if (res.ok) {
         const data = await res.json();
-        activeAgentUrl = cleanUrl;
-        isAgentOnline = true;
-        dot.className = "status-dot online";
-        text.innerText = `Online (${data.machine})`;
-        return;
+        if (data.status === "ONLINE") {
+          activeAgentUrl = url;
+          isAgentOnline = true;
+          connected = true;
+          updateStatusBadge("online", `Online (${data.machine || 'GANESH'})`);
+          break;
+        }
       }
-    } catch (err) {
-      // Try next candidate
+    } catch (e) {
+      // Continue candidate search
     }
   }
 
-  setAgentOffline();
+  if (!connected) {
+    isAgentOnline = false;
+    updateStatusBadge("offline", "Agent Offline");
+  }
+
+  fetchBotsList();
+  if (pollInterval) clearInterval(pollInterval);
+  pollInterval = setInterval(refreshStateAndLogs, 4000);
 }
 
-function setAgentOffline() {
-  isAgentOnline = false;
+function updateStatusBadge(state, text) {
   const dot = document.getElementById("agent-dot");
-  const text = document.getElementById("agent-status-text");
-  dot.className = "status-dot offline";
-  text.innerText = "Agent Offline";
+  const label = document.getElementById("agent-status-text");
+
+  dot.className = `status-dot ${state}`;
+  label.innerText = text;
 }
 
-// 2. Fetch Multi-Bot Repository List
+// FETCH DISCOVERED BOTS
 async function fetchBotsList() {
+  const tbody = document.getElementById("bots-table-body");
+
   if (!isAgentOnline) {
-    renderBotsTable([]);
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="8" class="table-loading" style="color: var(--status-red);">
+          ⚠️ Orchestrator Agent Offline. Start agent.py at http://127.0.0.1:8000
+        </td>
+      </tr>`;
     return;
   }
 
   try {
     const res = await fetch(`${activeAgentUrl}/api/bots`);
-    if (res.ok) {
-      const data = await res.json();
-      allDiscoveredBots = data.bots || [];
-      renderFolderTree();
-      renderBotsTable();
-    }
+    const data = await res.json();
+
+    allDiscoveredBots = data.bots || [];
+    renderFolderTree(allDiscoveredBots);
+    renderBotsTable();
   } catch (err) {
-    console.error("Error fetching bots:", err);
+    tbody.innerHTML = `<tr><td colspan="8" class="table-loading" style="color: var(--status-red);">Error connecting to Agent API.</td></tr>`;
   }
 }
 
-// Render Left Sidebar Folder Tree
-function renderFolderTree() {
+// RENDER SIDEBAR FOLDER TREE
+function renderFolderTree(bots) {
   const container = document.getElementById("tree-sub-items");
-  const folders = [...new Set(allDiscoveredBots.map(b => b.folder))];
-
   container.innerHTML = "";
-  folders.forEach(folder => {
-    const item = document.createElement("div");
-    item.className = `tree-sub-item ${selectedFolder === folder ? 'active' : ''}`;
-    item.innerHTML = `📁 ${folder}`;
-    item.onclick = () => selectFolder(folder);
-    container.appendChild(item);
+
+  const foldersSet = new Set(bots.map(b => b.folder));
+
+  foldersSet.forEach(folderPath => {
+    const div = document.createElement("div");
+    div.className = `tree-sub-item ${selectedFolderFilter === folderPath ? 'active' : ''}`;
+    div.innerText = `📁 ${folderPath}`;
+    div.onclick = () => selectFolder(folderPath);
+    container.appendChild(div);
   });
 }
 
-function selectFolder(folder) {
-  selectedFolder = folder;
-  document.getElementById("folder-view-title").innerText = folder === "all" ? "Files and folders" : `Bots / ${folder}`;
+function selectFolder(folderPath) {
+  selectedFolderFilter = folderPath;
+  document.getElementById("folder-view-title").innerText = folderPath === "all" ? "Files and folders" : `Bots / ${folderPath}`;
+
+  document.querySelectorAll(".tree-sub-item").forEach(item => item.classList.remove("active"));
   renderBotsTable();
 }
 
-// Render Main Bot Repository Data Table
+function filterFolderTree(query) {
+  const items = document.querySelectorAll(".tree-sub-item");
+  items.forEach(item => {
+    const text = item.innerText.toLowerCase();
+    item.style.display = text.includes(query.toLowerCase()) ? "block" : "none";
+  });
+}
+
+// RENDER BOTS TABLE
 function renderBotsTable() {
   const tbody = document.getElementById("bots-table-body");
-  const search = document.getElementById("table-search-input").value.toLowerCase();
+  const searchVal = document.getElementById("table-search-input").value.toLowerCase();
 
-  const filtered = allDiscoveredBots.filter(b => {
-    const matchFolder = selectedFolder === "all" || b.folder === selectedFolder;
-    const matchSearch = !search || b.name.toLowerCase().includes(search) || b.folder.toLowerCase().includes(search);
-    return matchFolder && matchSearch;
-  });
+  let filtered = allDiscoveredBots;
+
+  if (selectedFolderFilter !== "all") {
+    filtered = filtered.filter(b => b.folder === selectedFolderFilter);
+  }
+
+  if (searchVal) {
+    filtered = filtered.filter(b => b.name.toLowerCase().includes(searchVal) || b.folder.toLowerCase().includes(searchVal));
+  }
 
   document.getElementById("bot-count-badge").innerText = `(${filtered.length})`;
   tbody.innerHTML = "";
@@ -162,6 +178,7 @@ function renderBotsTable() {
       <td>
         <div class="action-btn-group">
           <button class="btn-act btn-run" onclick="triggerBot('${bot.id}', '${bot.path}')" ${isRunning ? 'disabled' : ''}>▶ Run</button>
+          <button class="btn-act btn-sch" onclick="openScheduleModal('${bot.id}')">⏰ Schedule</button>
           <button class="btn-act btn-stop" onclick="stopBot('${bot.id}')" ${!isRunning ? 'disabled' : ''}>⏹ Stop</button>
           <button class="btn-act btn-log" onclick="openLogModal('${bot.id}')">📋 Logs</button>
         </div>
@@ -178,7 +195,7 @@ function filterBotsTable() {
 // Trigger Specific Bot Execution
 async function triggerBot(botId, botPath) {
   if (!isAgentOnline) {
-    alert("Local Agent is offline. Run 'python orchestrator_agent/agent.py' on your machine.");
+    alert("Orchestrator Agent is offline! Please start agent.py first.");
     return;
   }
 
@@ -189,16 +206,20 @@ async function triggerBot(botId, botPath) {
       body: JSON.stringify({ bot_id: botId, bot_path: botPath })
     });
     const data = await res.json();
-    alert(data.message);
-    fetchBotsList();
+
+    if (data.success) {
+      fetchBotsList();
+    } else {
+      alert(data.message || "Failed to trigger bot.");
+    }
   } catch (err) {
-    alert(`Trigger failed: ${err.message}`);
+    alert("Error triggering bot: " + err.message);
   }
 }
 
-// Stop Running Bot Process
+// Stop Execution
 async function stopBot(botId) {
-  if (!confirm("Are you sure you want to terminate this process bot execution?")) return;
+  if (!confirm("Are you sure you want to stop this bot process?")) return;
 
   try {
     const res = await fetch(`${activeAgentUrl}/api/stop`, { method: "POST" });
@@ -206,7 +227,33 @@ async function stopBot(botId) {
     alert(data.message);
     fetchBotsList();
   } catch (err) {
-    alert(`Stop failed: ${err.message}`);
+    alert("Error stopping bot: " + err.message);
+  }
+}
+
+// PERIODIC REFRESH
+async function refreshStateAndLogs() {
+  if (!isAgentOnline) return;
+
+  try {
+    const res = await fetch(`${activeAgentUrl}/api/bots`);
+    const data = await res.json();
+    allDiscoveredBots = data.bots || [];
+
+    const runningBot = allDiscoveredBots.find(b => b.status === "RUNNING");
+    if (runningBot) {
+      updateStatusBadge("running", `Running (${runningBot.name})`);
+    } else {
+      updateStatusBadge("online", `Online (${activeAgentUrl.includes('127.0.0.1') ? 'GANESH' : 'Agent'})`);
+    }
+
+    renderBotsTable();
+
+    if (currentModalBot) {
+      fetchModalLogs();
+    }
+  } catch (e) {
+    // Ignore transient poll error
   }
 }
 
@@ -233,30 +280,33 @@ async function fetchModalLogs() {
 
   try {
     const res = await fetch(`${activeAgentUrl}/api/logs?process_name=${encodeURIComponent(currentModalBot.name)}`);
-    if (res.ok) {
-      const data = await res.json();
-      currentModalLogs = data.logs || [];
-      renderModalLogs();
-    }
-  } catch (err) {
-    console.error("Error fetching modal logs:", err);
+    const data = await res.json();
+    currentModalLogs = data.logs || [];
+    renderModalLogs();
+  } catch (e) {
+    // Fail silently
   }
 }
 
 function renderModalLogs() {
   const container = document.getElementById("modal-terminal-content");
-  const search = document.getElementById("log-modal-search").value.toLowerCase();
-  const level = document.getElementById("log-modal-level").value;
-
-  const filtered = currentModalLogs.filter(l => {
-    const matchSearch = !search || l.message.toLowerCase().includes(search) || l.subbot.toLowerCase().includes(search);
-    const matchLevel = level === "ALL" || l.level.toUpperCase() === level;
-    return matchSearch && matchLevel;
-  });
+  const searchVal = document.getElementById("log-modal-search").value.toLowerCase();
+  const levelVal = document.getElementById("log-modal-level").value;
 
   container.innerHTML = "";
+
+  let filtered = currentModalLogs;
+
+  if (levelVal !== "ALL") {
+    filtered = filtered.filter(l => (l.level || "").toUpperCase() === levelVal);
+  }
+
+  if (searchVal) {
+    filtered = filtered.filter(l => (l.message || "").toLowerCase().includes(searchVal) || (l.subbot || "").toLowerCase().includes(searchVal));
+  }
+
   if (filtered.length === 0) {
-    container.innerHTML = `<div class="log-row info"><span class="log-msg">No logs matching criteria for this process.</span></div>`;
+    container.innerHTML = `<div class="log-row info"><span class="log-msg">No logs found matching filter.</span></div>`;
   } else {
     filtered.forEach(log => {
       const row = document.createElement("div");
@@ -282,5 +332,130 @@ function toggleMobileSidebar() {
   const sidebar = document.querySelector(".aa-sidebar");
   if (sidebar) {
     sidebar.classList.toggle("active");
+  }
+}
+
+// SCHEDULE BOT MODAL LOGIC
+function openScheduleModal(botId) {
+  const bot = allDiscoveredBots.find(b => b.id === botId);
+  if (!bot) return;
+
+  currentScheduleBot = bot;
+  document.getElementById("sch-bot-name").innerText = `Schedule ${bot.name}`;
+  document.getElementById("sch-bot-path").innerText = bot.folder;
+  document.getElementById("schedule-modal").classList.add("active");
+
+  fetchSchedulesList();
+}
+
+function closeScheduleModal() {
+  currentScheduleBot = null;
+  document.getElementById("schedule-modal").classList.remove("active");
+}
+
+function toggleFrequencyOptions() {
+  const freq = document.getElementById("sch-frequency").value;
+  document.getElementById("sch-weekly-box").style.display = (freq === "weekly") ? "block" : "none";
+  document.getElementById("sch-monthly-box").style.display = (freq === "monthly") ? "block" : "none";
+}
+
+async function saveBotSchedule() {
+  if (!isAgentOnline || !currentScheduleBot) return;
+
+  const timeVal = document.getElementById("sch-time").value || "09:00";
+  const tzVal = document.getElementById("sch-timezone").value || "IST";
+  const freqVal = document.getElementById("sch-frequency").value;
+
+  let selectedDays = [];
+  if (freqVal === "weekly") {
+    const checkboxes = document.querySelectorAll('input[name="sch-day"]:checked');
+    checkboxes.forEach(cb => selectedDays.push(cb.value));
+  }
+
+  const domVal = document.getElementById("sch-dom").value;
+
+  const payload = {
+    bot_id: currentScheduleBot.id,
+    bot_name: currentScheduleBot.name,
+    bot_path: currentScheduleBot.path,
+    time: timeVal,
+    timezone: tzVal,
+    frequency: freqVal,
+    days: selectedDays,
+    day_of_month: parseInt(domVal, 10)
+  };
+
+  try {
+    const res = await fetch(`${activeAgentUrl}/api/schedules`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await res.json();
+    if (data.success) {
+      alert("✅ Schedule created successfully!");
+      fetchSchedulesList();
+    } else {
+      alert("⚠️ " + (data.message || "Failed to save schedule."));
+    }
+  } catch (err) {
+    alert("❌ Error saving schedule: " + err.message);
+  }
+}
+
+async function fetchSchedulesList() {
+  if (!isAgentOnline) return;
+
+  const tbody = document.getElementById("sch-table-body");
+  try {
+    const res = await fetch(`${activeAgentUrl}/api/schedules`);
+    const data = await res.json();
+
+    const schedules = data.schedules || [];
+    tbody.innerHTML = "";
+
+    if (schedules.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="5" class="table-loading">No active schedules configured.</td></tr>`;
+      return;
+    }
+
+    schedules.forEach(sch => {
+      const tr = document.createElement("tr");
+
+      let detailsStr = "Every Day";
+      if (sch.frequency === "weekly") {
+        detailsStr = `Days: ${(sch.days || []).join(", ")}`;
+      } else if (sch.frequency === "monthly") {
+        detailsStr = `Date: ${sch.day_of_month} of month`;
+      }
+
+      tr.innerHTML = `
+        <td><b>${sch.bot_name}</b></td>
+        <td>${sch.time} ${sch.timezone}</td>
+        <td><span class="badge-status status-COMPLETED">${(sch.frequency || "daily").toUpperCase()}</span></td>
+        <td>${detailsStr}</td>
+        <td style="text-align: center;">
+          <button class="btn-act btn-stop" onclick="deleteSchedule('${sch.id}')">🗑 Delete</button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  } catch (err) {
+    tbody.innerHTML = `<tr><td colspan="5" class="table-loading">Error fetching schedules.</td></tr>`;
+  }
+}
+
+async function deleteSchedule(schId) {
+  if (!isAgentOnline || !confirm("Delete this schedule?")) return;
+
+  try {
+    const res = await fetch(`${activeAgentUrl}/api/schedules?schedule_id=${schId}`, { method: "DELETE" });
+    const data = await res.json();
+    if (data.success) {
+      fetchSchedulesList();
+    }
+  } catch (err) {
+    alert("Failed to delete schedule: " + err.message);
   }
 }
