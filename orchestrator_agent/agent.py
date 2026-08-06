@@ -352,6 +352,22 @@ class OrchestratorHandler(BaseHTTPRequestHandler):
         except Exception:
             pass
 
+    def _file_response(self, file_path, content_type="text/html"):
+        try:
+            if os.path.exists(file_path):
+                with open(file_path, "rb") as f:
+                    content = f.read()
+                self.send_response(200)
+                self.send_header("Content-Type", content_type)
+                self._send_cors_headers()
+                self.send_header("Content-Length", str(len(content)))
+                self.end_headers()
+                self.wfile.write(content)
+            else:
+                self._json_response({"error": "File not found"}, status_code=404)
+        except Exception as ex:
+            self._json_response({"error": str(ex)}, status_code=500)
+
     def do_OPTIONS(self):
         try:
             self.send_response(204)
@@ -367,7 +383,28 @@ class OrchestratorHandler(BaseHTTPRequestHandler):
             path = "/"
         query = parse_qs(parsed.query)
 
-        if path in ("/api/health", "/"):
+        if path in ("/", "/index.html"):
+            index_path = os.path.join(PROD_DIR, "docs", "index.html")
+            if not os.path.exists(index_path):
+                index_path = os.path.join(PROD_DIR, "index.html")
+            self._file_response(index_path, "text/html")
+            return
+
+        elif path == "/style.css":
+            css_path = os.path.join(PROD_DIR, "docs", "style.css")
+            if not os.path.exists(css_path):
+                css_path = os.path.join(PROD_DIR, "style.css")
+            self._file_response(css_path, "text/css")
+            return
+
+        elif path == "/app.js":
+            js_path = os.path.join(PROD_DIR, "docs", "app.js")
+            if not os.path.exists(js_path):
+                js_path = os.path.join(PROD_DIR, "app.js")
+            self._file_response(js_path, "application/javascript")
+            return
+
+        elif path == "/api/health":
             self._json_response({
                 "status": "ONLINE",
                 "machine": os.getenv("COMPUTERNAME", "GANESH"),
