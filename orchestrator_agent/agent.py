@@ -44,7 +44,7 @@ current_subprocess = None
 
 
 def get_bot_last_run_info(clean_name):
-    """Inspects log files to find last run timestamp and status for process bot."""
+    """Inspects log files to find true last run timestamp and status for process bot."""
     logs = get_latest_log_entries(process_filter=clean_name)
     if not logs:
         return "IDLE", "--"
@@ -52,15 +52,16 @@ def get_bot_last_run_info(clean_name):
     last_entry = logs[-1]
     last_time = last_entry.get("time", "--")
 
-    has_failed = any("EXCEPTION" in l.get("level", "").upper() or "EXCEPTION" in l.get("message", "").upper() for l in logs[-15:])
-    has_completed = any("COMPLETED WITH STATUS: TRUE" in l.get("message", "").upper() or "PROCESS COMPLETED EMAIL SENT" in l.get("message", "").upper() for l in logs[-15:])
+    for entry in reversed(logs):
+        msg = entry.get("message", "").upper()
+        lvl = entry.get("level", "").upper()
 
-    if has_completed:
-        return "COMPLETED", last_time
-    elif has_failed:
-        return "FAILED", last_time
-    else:
-        return "IDLE", last_time
+        if "COMPLETED WITH STATUS: TRUE" in msg or "PROCESS COMPLETED EMAIL SENT" in msg or "COMPLETED SUCCESSFULLY" in msg:
+            return "COMPLETED", last_time
+        if "EXCEPTION ENCOUNTERED" in msg or "MASTER BOT CAUGHT EXCEPTION" in msg or lvl == "EXCEPTION":
+            return "FAILED", last_time
+
+    return "IDLE", last_time
 
 
 def discover_all_bots():
@@ -116,8 +117,18 @@ def run_master_bot_async(bot_path=None, bot_id=None):
     """Executes a target Master bot script in a background thread/process."""
     global current_subprocess, execution_state
 
-    target_path = bot_path or DEFAULT_MASTER_BOT_PATH
-    target_id = bot_id or "active_loans_process"
+    target_id = bot_id or "activeloansprocess"
+    target_path = bot_path
+
+    if not target_path or not os.path.exists(target_path):
+        all_bots = discover_all_bots()
+        matched = next((b for b in all_bots if b["id"] == target_id), None)
+        if matched:
+            target_path = matched["path"]
+        else:
+            target_path = DEFAULT_MASTER_BOT_PATH
+
+    target_path = os.path.abspath(os.path.normpath(target_path))
 
     with state_lock:
         execution_state["active_bot_id"] = target_id
@@ -148,10 +159,10 @@ def run_master_bot_async(bot_path=None, bot_id=None):
         with state_lock:
             execution_state["pid"] = current_subprocess.pid
 
-        # Drain stdout buffer until process terminates
+        output_lines = []
         if current_subprocess.stdout:
-            for _ in current_subprocess.stdout:
-                pass
+            for line in current_subprocess.stdout:
+                output_lines.append(line)
 
         return_code = current_subprocess.wait()
         end_ts = time.time()
@@ -171,7 +182,8 @@ def run_master_bot_async(bot_path=None, bot_id=None):
             execution_state["bot_states"][target_id]["duration_seconds"] = dur
 
             if return_code != 0:
-                execution_state["error_message"] = f"Process exited with non-zero code {return_code}"
+                err_snippet = "".join(output_lines[-5:]).strip()
+                execution_state["error_message"] = f"Exited with code {return_code}: {err_snippet}"
 
     except Exception as ex:
         with state_lock:
