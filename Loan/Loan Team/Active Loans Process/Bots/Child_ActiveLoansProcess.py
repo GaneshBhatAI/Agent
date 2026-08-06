@@ -81,9 +81,12 @@ def execute_child_bot(dicUserConfig: dict = None) -> bool:
     log(f"Starting Active Loans Process. Target URL: '{target_url}'", log_folder, process_name, "Child_ActiveLoansProcess", "INFO")
 
     try:
+        is_headless_str = str(dicUserConfig.get("Headless", "False")).strip().lower()
+        is_headless = True if is_headless_str in ("true", "1", "yes") else False
+
         # 1. Open Browser & Navigate to URL
-        log(f"Opening browser for URL: '{target_url}'", log_folder, process_name, "Child_ActiveLoansProcess", "INFO")
-        page = open_browser(target_url, headless=False)
+        log(f"Opening browser for URL: '{target_url}' (Headless={is_headless})", log_folder, process_name, "Child_ActiveLoansProcess", "INFO")
+        page = open_browser(target_url, headless=is_headless)
         wait_for_element("//table", state="visible", timeout=30000)
         log("Web page and table loaded successfully.", log_folder, process_name, "Child_ActiveLoansProcess", "INFO")
 
