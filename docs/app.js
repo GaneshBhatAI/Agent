@@ -2,7 +2,7 @@
    AIAnveshana RPA Orchestrator - Frontend JavaScript Engine
    =============================================================================== */
 
-const AGENT_BASE_URL = "http://localhost:8000";
+let activeAgentUrl = "http://127.0.0.1:8000";
 
 let isAgentOnline = false;
 let currentBotStatus = "IDLE";
@@ -34,20 +34,26 @@ async function checkAgentHealth() {
   const dot = document.getElementById("agent-dot");
   const text = document.getElementById("agent-status-text");
 
-  try {
-    const res = await fetch(`${AGENT_BASE_URL}/api/health`, { method: "GET" });
-    if (res.ok) {
-      const data = await res.json();
-      isAgentOnline = true;
-      dot.className = "status-dot online";
-      text.innerText = `Agent Online (${data.machine})`;
-      document.getElementById("metric-machine").innerText = data.machine;
-    } else {
-      setAgentOffline();
+  const candidates = ["http://127.0.0.1:8000", "http://localhost:8000"];
+
+  for (const url of candidates) {
+    try {
+      const res = await fetch(`${url}/api/health`, { method: "GET" });
+      if (res.ok) {
+        const data = await res.json();
+        activeAgentUrl = url;
+        isAgentOnline = true;
+        dot.className = "status-dot online";
+        text.innerText = `Agent Online (${data.machine})`;
+        document.getElementById("metric-machine").innerText = data.machine;
+        return;
+      }
+    } catch (err) {
+      // Try next candidate
     }
-  } catch (err) {
-    setAgentOffline();
   }
+
+  setAgentOffline();
 }
 
 function setAgentOffline() {
@@ -63,7 +69,7 @@ async function fetchBotStatus() {
   if (!isAgentOnline) return;
 
   try {
-    const res = await fetch(`${AGENT_BASE_URL}/api/status`);
+    const res = await fetch(`${activeAgentUrl}/api/status`);
     if (res.ok) {
       const data = await res.json();
       currentBotStatus = data.status;
@@ -114,7 +120,7 @@ async function triggerMasterBot() {
   }
 
   try {
-    const res = await fetch(`${AGENT_BASE_URL}/api/trigger`, { method: "POST" });
+    const res = await fetch(`${activeAgentUrl}/api/trigger`, { method: "POST" });
     const data = await res.json();
 
     if (data.success) {
@@ -133,7 +139,7 @@ async function stopMasterBot() {
   if (!confirm("Are you sure you want to forcibly terminate the Master Bot process?")) return;
 
   try {
-    const res = await fetch(`${AGENT_BASE_URL}/api/stop`, { method: "POST" });
+    const res = await fetch(`${activeAgentUrl}/api/stop`, { method: "POST" });
     const data = await res.json();
     alert(data.message);
     fetchBotStatus();
@@ -147,7 +153,7 @@ async function fetchLiveLogs() {
   if (!isAgentOnline) return;
 
   try {
-    const res = await fetch(`${AGENT_BASE_URL}/api/logs`);
+    const res = await fetch(`${activeAgentUrl}/api/logs`);
     if (res.ok) {
       const data = await res.json();
       allLogEntries = data.logs || [];

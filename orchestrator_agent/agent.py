@@ -134,6 +134,14 @@ def get_latest_log_entries():
     return entries
 
 
+from socketserver import ThreadingMixIn
+
+
+class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
+    """Handle requests in separate threads to keep Orchestrator server resilient."""
+    daemon_threads = True
+
+
 class OrchestratorHandler(BaseHTTPRequestHandler):
     def _send_cors_headers(self):
         self.send_header("Access-Control-Allow-Origin", "*")
@@ -141,18 +149,24 @@ class OrchestratorHandler(BaseHTTPRequestHandler):
         self.send_header("Access-Control-Allow-Headers", "Content-Type, Authorization")
 
     def _json_response(self, data, status_code=200):
-        body = json.dumps(data).encode("utf-8")
-        self.send_response(status_code)
-        self.send_header("Content-Type", "application/json")
-        self._send_cors_headers()
-        self.send_header("Content-Length", str(len(body)))
-        self.end_headers()
-        self.wfile.write(body)
+        try:
+            body = json.dumps(data).encode("utf-8")
+            self.send_response(status_code)
+            self.send_header("Content-Type", "application/json")
+            self._send_cors_headers()
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+        except Exception:
+            pass
 
     def do_OPTIONS(self):
-        self.send_response(204)
-        self._send_cors_headers()
-        self.end_headers()
+        try:
+            self.send_response(204)
+            self._send_cors_headers()
+            self.end_headers()
+        except Exception:
+            pass
 
     def do_GET(self):
         parsed = urlparse(self.path)
@@ -223,7 +237,7 @@ class OrchestratorHandler(BaseHTTPRequestHandler):
 
 def start_orchestrator_server(port: int = 8000):
     server_address = ("0.0.0.0", port)
-    httpd = HTTPServer(server_address, OrchestratorHandler)
+    httpd = ThreadedHTTPServer(server_address, OrchestratorHandler)
     print(f"\n" + "=" * 70)
     print(f"   AIANVESHANA LOCAL RPA ORCHESTRATOR AGENT ONLINE   ")
     print(f"   Listening on: http://localhost:{port}")
