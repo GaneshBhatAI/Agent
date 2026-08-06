@@ -43,6 +43,26 @@ execution_state = {
 current_subprocess = None
 
 
+def get_bot_last_run_info(clean_name):
+    """Inspects log files to find last run timestamp and status for process bot."""
+    logs = get_latest_log_entries(process_filter=clean_name)
+    if not logs:
+        return "IDLE", "--"
+
+    last_entry = logs[-1]
+    last_time = last_entry.get("time", "--")
+
+    has_failed = any("EXCEPTION" in l.get("level", "").upper() or "EXCEPTION" in l.get("message", "").upper() for l in logs[-15:])
+    has_completed = any("COMPLETED WITH STATUS: TRUE" in l.get("message", "").upper() or "PROCESS COMPLETED EMAIL SENT" in l.get("message", "").upper() for l in logs[-15:])
+
+    if has_completed:
+        return "COMPLETED", last_time
+    elif has_failed:
+        return "FAILED", last_time
+    else:
+        return "IDLE", last_time
+
+
 def discover_all_bots():
     """
     Scans PROD directory for all Master_*.py scripts across all process folders.
@@ -69,7 +89,14 @@ def discover_all_bots():
                 mtime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(os.path.getmtime(full_path)))
 
                 bot_state = execution_state["bot_states"].get(bot_id, {})
-                bot_status = bot_state.get("status", "IDLE")
+                if bot_state.get("status") == "RUNNING":
+                    bot_status = "RUNNING"
+                    last_run_time = bot_state.get("start_time", "--")
+                elif bot_state.get("status") in ("COMPLETED", "FAILED"):
+                    bot_status = bot_state.get("status")
+                    last_run_time = bot_state.get("end_time", "--")
+                else:
+                    bot_status, last_run_time = get_bot_last_run_info(clean_name)
 
                 bots.append({
                     "id": bot_id,
@@ -79,7 +106,7 @@ def discover_all_bots():
                     "path": full_path,
                     "last_modified": mtime,
                     "status": bot_status,
-                    "last_run": bot_state.get("end_time", "--"),
+                    "last_run": last_run_time if last_run_time != "--" else mtime,
                     "duration": f"{bot_state.get('duration_seconds', '--')}s" if bot_state.get('duration_seconds') else "--",
                     "platform": "Python 3.14 RPA",
                     "version": "1.0.0"
@@ -234,7 +261,9 @@ class OrchestratorHandler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         parsed = urlparse(self.path)
-        path = parsed.path
+        path = parsed.path.rstrip("/")
+        if not path:
+            path = "/"
         query = parse_qs(parsed.query)
 
         if path in ("/api/health", "/"):
@@ -264,7 +293,9 @@ class OrchestratorHandler(BaseHTTPRequestHandler):
 
     def do_POST(self):
         parsed = urlparse(self.path)
-        path = parsed.path
+        path = parsed.path.rstrip("/")
+        if not path:
+            path = "/"
 
         content_length = int(self.headers.get("Content-Length", 0))
         body_data = {}
