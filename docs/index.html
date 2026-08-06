@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AIAnveshana RPA Orchestrator Control Room</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <div class="app-container">
+    <!-- TOP NAVIGATION BAR -->
+    <header class="navbar">
+      <div class="brand">
+        <div class="logo-icon">⚡</div>
+        <div class="brand-text">
+          <h1>AIAnveshana RPA Control Room</h1>
+          <span class="sub-title">Enterprise Process Orchestrator & Live Monitor</span>
+        </div>
+      </div>
+      
+      <div class="agent-status-badge" id="agent-status-badge">
+        <span class="status-dot offline" id="agent-dot"></span>
+        <span class="status-text" id="agent-status-text">Connecting to Agent...</span>
+      </div>
+    </header>
+
+    <!-- MAIN DASHBOARD CONTENT -->
+    <main class="dashboard-grid">
+
+      <!-- LEFT COLUMN: PROCESS CONTROL CARDS -->
+      <section class="left-panel">
+        
+        <!-- PROCESS CONTROL CARD -->
+        <div class="card process-card">
+          <div class="card-header">
+            <div class="process-info">
+              <span class="badge category-badge">ACTIVE LOANS</span>
+              <h2>Active Loans Process Master Bot</h2>
+              <p class="description">Web automation, bank ZIP downloads, text parsing, and Excel report generation.</p>
+            </div>
+            <div class="bot-state-badge state-idle" id="bot-state-badge">IDLE</div>
+          </div>
+
+          <div class="process-actions">
+            <button class="btn btn-primary" id="btn-trigger" onclick="triggerMasterBot()">
+              <span class="icon">▶</span> Trigger Process
+            </button>
+            <button class="btn btn-danger" id="btn-stop" onclick="stopMasterBot()" disabled>
+              <span class="icon">⏹</span> Stop Process
+            </button>
+          </div>
+
+          <!-- PROCESS METRICS -->
+          <div class="metrics-grid">
+            <div class="metric-item">
+              <span class="metric-label">Last Start Time</span>
+              <span class="metric-value" id="metric-start-time">--</span>
+            </div>
+            <div class="metric-item">
+              <span class="metric-label">Duration</span>
+              <span class="metric-value" id="metric-duration">--</span>
+            </div>
+            <div class="metric-item">
+              <span class="metric-label">Total Runs</span>
+              <span class="metric-value" id="metric-total-runs">0</span>
+            </div>
+            <div class="metric-item">
+              <span class="metric-label">Target Machine</span>
+              <span class="metric-value" id="metric-machine">GANESH</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SCHEDULER & CONFIG CARD -->
+        <div class="card schedule-card">
+          <div class="card-header">
+            <h3>Automated Process Scheduler</h3>
+            <span class="icon-small">⏰</span>
+          </div>
+          <div class="schedule-form">
+            <div class="form-group">
+              <label for="schedule-interval">Run Frequency</label>
+              <select id="schedule-interval" class="form-control">
+                <option value="manual">Manual Trigger Only</option>
+                <option value="15">Every 15 Minutes</option>
+                <option value="60">Every 1 Hour</option>
+                <option value="daily">Daily at 08:00 AM</option>
+              </select>
+            </div>
+            <button class="btn btn-secondary" onclick="saveSchedule()">Save Schedule</button>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- RIGHT COLUMN: REAL-TIME LIVE LOG STREAM -->
+      <section class="right-panel">
+        <div class="card console-card">
+          <div class="console-header">
+            <div class="console-title">
+              <span class="terminal-icon">💻</span>
+              <h3>Live Process Log Stream</h3>
+              <span class="live-indicator">LIVE</span>
+            </div>
+            
+            <div class="console-controls">
+              <input type="text" id="log-search" class="search-input" placeholder="Search logs..." oninput="filterLogs()">
+              <select id="log-level-filter" class="level-select" onchange="filterLogs()">
+                <option value="ALL">All Levels</option>
+                <option value="INFO">INFO</option>
+                <option value="WARNING">WARNING</option>
+                <option value="ERROR">ERROR</option>
+              </select>
+              <button class="btn btn-small" onclick="clearLogsUI()">Clear UI</button>
+            </div>
+          </div>
+
+          <!-- TERMINAL STREAM WINDOW -->
+          <div class="terminal-window" id="terminal-window">
+            <div class="terminal-content" id="terminal-content">
+              <div class="log-row info">
+                <span class="log-time">[SYSTEM]</span>
+                <span class="log-level">INFO</span>
+                <span class="log-msg">Connecting to local RPA Orchestrator Agent (http://localhost:8000)...</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="terminal-footer">
+            <span id="log-count">0 entries displayed</span>
+            <label class="autoscroll-toggle">
+              <input type="checkbox" id="autoscroll-check" checked> Auto-scroll
+            </label>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
