@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AIAnveshana Automation Control Room</title>
+  <link rel="stylesheet" href="style.css?v=1.0.3">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <div class="aa-app">
+    <!-- TOP NAVIGATION BAR (A360 Style) -->
+    <header class="aa-header">
+      <div class="header-left">
+        <button class="mobile-menu-toggle" onclick="toggleMobileSidebar()">☰</button>
+        <div class="logo-box">
+          <span class="logo-symbol">⚡</span>
+        </div>
+        <div class="header-title">
+          <h1>AIAnveshana Automation</h1>
+          <span class="header-sub">Enterprise RPA Control Room & Orchestrator</span>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <div class="agent-config-box">
+          <input type="text" id="custom-agent-url" class="agent-url-input" placeholder="http://127.0.0.1:8000" onchange="saveCustomAgentUrl()">
+          <div class="agent-status-badge" id="agent-status-badge">
+            <span class="status-dot offline" id="agent-dot"></span>
+            <span class="status-text" id="agent-status-text">Connecting...</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- MAIN BODY GRID -->
+    <div class="aa-body">
+      <!-- LEFT SIDEBAR FOLDER NAVIGATION -->
+      <aside class="aa-sidebar">
+        <div class="sidebar-search">
+          <span class="search-icon">🔍</span>
+          <input type="text" placeholder="Search subfolders..." oninput="filterFolderTree(this.value)">
+        </div>
+
+        <div class="tree-header">
+          <span class="tree-title">FOLDERS</span>
+          <button class="icon-btn" onclick="fetchBotsList()" title="Refresh Folders">🔄</button>
+        </div>
+
+        <div class="tree-container" id="tree-container">
+          <div class="tree-item active" onclick="selectFolder('all')">
+            <span class="tree-icon">📁</span>
+            <span class="tree-label">Bots</span>
+          </div>
+          <div class="tree-sub-items" id="tree-sub-items">
+            <!-- Process subfolder items -->
+          </div>
+        </div>
+      </aside>
+
+      <!-- MAIN CONTENT AREA: BOT REPOSITORY TABLE -->
+      <main class="aa-content">
+        <div class="content-toolbar">
+          <div class="toolbar-left">
+            <h2 id="folder-view-title">Files and folders</h2>
+            <span class="item-count" id="bot-count-badge">(0)</span>
+          </div>
+
+          <div class="toolbar-right">
+            <div class="table-search">
+              <span class="search-icon">🔍</span>
+              <input type="text" id="table-search-input" placeholder="Search process bots..." oninput="filterBotsTable()">
+            </div>
+            <button class="icon-btn" onclick="fetchBotsList()" title="Refresh Table">🔄</button>
+          </div>
+        </div>
+
+        <!-- REPOSITORY DATA TABLE -->
+        <div class="table-wrapper">
+          <table class="aa-table">
+            <thead>
+              <tr>
+                <th style="width: 40px;"><input type="checkbox"></th>
+                <th style="width: 60px;">Type</th>
+                <th>Name</th>
+                <th>Folder Location</th>
+                <th>Status</th>
+                <th>Last Modified / Run</th>
+                <th>Platform</th>
+                <th style="width: 280px; text-align: center;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="bots-table-body">
+              <tr>
+                <td colspan="8" class="table-loading">Loading process bots repository...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- LOG VIEWER DRAWER / MODAL -->
+  <div class="modal-overlay" id="log-modal">
+    <div class="modal-drawer">
+      <div class="modal-header">
+        <div class="modal-title">
+          <span class="modal-icon">📋</span>
+          <div>
+            <h3 id="modal-bot-name">Process Logs</h3>
+            <span class="modal-sub" id="modal-bot-path">Process Path</span>
+          </div>
+        </div>
+        <button class="close-btn" onclick="closeLogModal()">✕</button>
+      </div>
+
+      <div class="modal-controls">
+        <input type="text" id="log-modal-search" class="search-input" placeholder="Search log entries..." oninput="renderModalLogs()">
+        <select id="log-modal-level" class="level-select" onchange="renderModalLogs()">
+          <option value="ALL">All Levels</option>
+          <option value="INFO">INFO</option>
+          <option value="WARNING">WARNING</option>
+          <option value="ERROR">ERROR</option>
+        </select>
+        <button class="btn btn-secondary" onclick="fetchModalLogs()">🔄 Refresh Logs</button>
+      </div>
+
+      <div class="modal-terminal" id="modal-terminal-window">
+        <div class="terminal-content" id="modal-terminal-content">
+          <div class="log-row info"><span class="log-msg">Select a bot to view process logs...</span></div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <span id="modal-log-count">0 entries</span>
+        <button class="btn btn-secondary" onclick="closeLogModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCHEDULE BOT MODAL -->
+  <div class="modal-overlay" id="schedule-modal">
+    <div class="modal-drawer schedule-drawer">
+      <div class="modal-header">
+        <div class="modal-title">
+          <span class="modal-icon">⏰</span>
+          <div>
+            <h3 id="sch-bot-name">Schedule Process Bot</h3>
+            <span class="modal-sub" id="sch-bot-path">Configure Automated Timers & Frequency</span>
+          </div>
+        </div>
+        <button class="close-btn" onclick="closeScheduleModal()">✕</button>
+      </div>
+
+      <div class="sch-form-grid">
+        <!-- 1. TIME & TIMEZONE -->
+        <div class="sch-field-group">
+          <label>Target Execution Time</label>
+          <input type="time" id="sch-time" class="sch-input" value="09:00">
+        </div>
+
+        <div class="sch-field-group">
+          <label>Timezone</label>
+          <select id="sch-timezone" class="sch-select">
+            <option value="IST" selected>IST (UTC+5:30) - India</option>
+            <option value="EST">EST (UTC-5:00) - Eastern Time</option>
+            <option value="PST">PST (UTC-8:00) - Pacific Time</option>
+            <option value="UTC">UTC (UTC+0:00) - Universal</option>
+            <option value="GMT">GMT (UTC+0:00) - Greenwich</option>
+          </select>
+        </div>
+
+        <!-- 2. FREQUENCY -->
+        <div class="sch-field-group full-width">
+          <label>Frequency</label>
+          <select id="sch-frequency" class="sch-select" onchange="toggleFrequencyOptions()">
+            <option value="daily" selected>Every Day (Daily)</option>
+            <option value="weekly">Weekly (Select Days: Mon to Sun)</option>
+            <option value="monthly">Monthly (Select Date of Month)</option>
+          </select>
+        </div>
+
+        <!-- 3. WEEKLY DAYS SELECTOR (MON TO SUN) -->
+        <div class="sch-field-group full-width" id="sch-weekly-box" style="display: none;">
+          <label>Select Days of Week (Monday to Sunday)</label>
+          <div class="days-checkbox-grid">
+            <label class="day-chip"><input type="checkbox" name="sch-day" value="Mon" checked> Mon</label>
+            <label class="day-chip"><input type="checkbox" name="sch-day" value="Tue" checked> Tue</label>
+            <label class="day-chip"><input type="checkbox" name="sch-day" value="Wed" checked> Wed</label>
+            <label class="day-chip"><input type="checkbox" name="sch-day" value="Thu" checked> Thu</label>
+            <label class="day-chip"><input type="checkbox" name="sch-day" value="Fri" checked> Fri</label>
+            <label class="day-chip"><input type="checkbox" name="sch-day" value="Sat"> Sat</label>
+            <label class="day-chip"><input type="checkbox" name="sch-day" value="Sun"> Sun</label>
+          </div>
+        </div>
+
+        <!-- 4. MONTHLY DATE SELECTOR -->
+        <div class="sch-field-group full-width" id="sch-monthly-box" style="display: none;">
+          <label>Select Day of Month</label>
+          <select id="sch-dom" class="sch-select">
+            <!-- 1 to 31 -->
+            <option value="1">1st of Month</option><option value="2">2nd of Month</option><option value="3">3rd of Month</option><option value="4">4th of Month</option><option value="5">5th of Month</option><option value="10">10th of Month</option><option value="15">15th of Month</option><option value="20">20th of Month</option><option value="25">25th of Month</option><option value="28">28th of Month</option><option value="30">30th of Month</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="sch-actions">
+        <button class="btn btn-create" onclick="saveBotSchedule()">💾 Save Schedule</button>
+      </div>
+
+      <!-- ACTIVE SCHEDULES TABLE -->
+      <div class="active-sch-section">
+        <h4>Active Process Schedules</h4>
+        <div class="table-wrapper">
+          <table class="aa-table">
+            <thead>
+              <tr>
+                <th>Bot Name</th>
+                <th>Time & Timezone</th>
+                <th>Frequency</th>
+                <th>Details</th>
+                <th style="text-align: center;">Action</th>
+              </tr>
+            </thead>
+            <tbody id="sch-table-body">
+              <tr><td colspan="5" class="table-loading">No active schedules configured.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeScheduleModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js?v=1.0.3"></script>
+</body>
+</html>
