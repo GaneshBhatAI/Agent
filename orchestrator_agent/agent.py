@@ -92,9 +92,6 @@ def discover_all_bots():
                 if bot_state.get("status") == "RUNNING":
                     bot_status = "RUNNING"
                     last_run_time = bot_state.get("start_time", "--")
-                elif bot_state.get("status") in ("COMPLETED", "FAILED"):
-                    bot_status = bot_state.get("status")
-                    last_run_time = bot_state.get("end_time", "--")
                 else:
                     bot_status, last_run_time = get_bot_last_run_info(clean_name)
 
