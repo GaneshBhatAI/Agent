@@ -39,6 +39,10 @@
 
 body {
   background-color: var(--ast-global-color-5);
+  background-image: 
+    linear-gradient(to right, rgba(4, 107, 210, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(4, 107, 210, 0.06) 1px, transparent 1px);
+  background-size: 36px 36px;
   color: var(--ast-global-color-3);
   font-family: var(--font-main);
   min-height: 100vh;
