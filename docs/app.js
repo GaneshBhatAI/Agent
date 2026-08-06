@@ -13,8 +13,23 @@ let pollTimer = null;
 // Initialize Dashboard
 document.addEventListener("DOMContentLoaded", () => {
   console.log("RPA Control Room Dashboard initialized.");
+  const savedUrl = localStorage.getItem("customAgentUrl");
+  if (savedUrl && document.getElementById("custom-agent-url")) {
+    document.getElementById("custom-agent-url").value = savedUrl;
+  }
   startPolling();
 });
+
+function saveCustomAgentUrl() {
+  const input = document.getElementById("custom-agent-url");
+  const val = input ? input.value.trim() : "";
+  if (val) {
+    localStorage.setItem("customAgentUrl", val);
+  } else {
+    localStorage.removeItem("customAgentUrl");
+  }
+  checkAgentHealth();
+}
 
 function startPolling() {
   checkAgentHealth();
@@ -34,14 +49,18 @@ async function checkAgentHealth() {
   const dot = document.getElementById("agent-dot");
   const text = document.getElementById("agent-status-text");
 
-  const candidates = ["http://127.0.0.1:8000", "http://localhost:8000"];
+  const custom = localStorage.getItem("customAgentUrl");
+  const candidates = [];
+  if (custom) candidates.push(custom);
+  candidates.push("http://127.0.0.1:8000", "http://localhost:8000");
 
   for (const url of candidates) {
+    const cleanUrl = url.replace(/\/$/, "");
     try {
-      const res = await fetch(`${url}/api/health`, { method: "GET" });
+      const res = await fetch(`${cleanUrl}/api/health`, { method: "GET" });
       if (res.ok) {
         const data = await res.json();
-        activeAgentUrl = url;
+        activeAgentUrl = cleanUrl;
         isAgentOnline = true;
         dot.className = "status-dot online";
         text.innerText = `Agent Online (${data.machine})`;

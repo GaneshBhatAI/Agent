@@ -22,9 +22,12 @@
         </div>
       </div>
       
-      <div class="agent-status-badge" id="agent-status-badge">
-        <span class="status-dot offline" id="agent-dot"></span>
-        <span class="status-text" id="agent-status-text">Connecting to Agent...</span>
+      <div class="agent-config-box">
+        <input type="text" id="custom-agent-url" class="agent-url-input" placeholder="http://127.0.0.1:8000" onchange="saveCustomAgentUrl()">
+        <div class="agent-status-badge" id="agent-status-badge">
+          <span class="status-dot offline" id="agent-dot"></span>
+          <span class="status-text" id="agent-status-text">Connecting to Agent...</span>
+        </div>
       </div>
     </header>
 

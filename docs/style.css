@@ -53,6 +53,30 @@ body {
   margin-bottom: 24px;
 }
 
+.agent-config-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.agent-url-input {
+  background: rgba(13, 17, 23, 0.8);
+  border: 1px solid var(--bg-card-border);
+  border-radius: 8px;
+  color: var(--accent-cyan);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  padding: 8px 12px;
+  width: 220px;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.agent-url-input:focus {
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 10px rgba(88, 166, 255, 0.2);
+}
+
 .brand {
   display: flex;
   align-items: center;
