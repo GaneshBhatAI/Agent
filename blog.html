@@ -1,161 +1,172 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blog - Ai Anveshana | AI & Automation Architect</title>
-    <meta name="description" content="Latest insights on AI, Automation, and Agentic Process Automation (APA) from Ai Anveshana.">
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;600&family=Open+Sans:wght@400;600&family=Poppins:wght@400;600;700&display=swap"
-        rel="stylesheet">
-    <!-- Styles -->
-    <link rel="stylesheet" href="assets/css/style.css?v=5">
-    <!-- Font Awesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog - Ai Anveshana | AI &amp; Automation Insights</title>
+  <meta name="description" content="Latest insights on AI, Automation, and Agentic Process Automation (APA) from Ai Anveshana.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --purple-light: #BA8BBF; --purple-dark: #6F53A3; --purple-deep: #4F3A8A;
+      --bg: #FBF7FF; --text-dark: #111827; --text-mid: #374151; --text-muted: #6B7280;
+      --heading: 'Outfit', sans-serif; --body: 'Inter', sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--body); background: var(--bg); color: var(--text-mid); line-height: 1.7; overflow-x: hidden; min-height: 100vh; display: flex; flex-direction: column; }
+
+    /* Grid Background */
+    .bg-grid { position: relative; overflow: hidden; flex: 1; }
+    .bg-grid::before {
+      content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+      background-image: linear-gradient(rgba(111,83,163,0.055) 1px, transparent 1px), linear-gradient(90deg, rgba(111,83,163,0.055) 1px, transparent 1px);
+      background-size: 52px 52px;
+    }
+
+    /* TOP BANNER */
+    #top-banner {
+      position: relative; z-index: 9999; display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap;
+      padding: 9px 46px 9px 14px; font-size: 13px; color: #4b5563;
+      background: linear-gradient(-45deg,rgba(123,97,201,.12),rgba(255,255,255,.94),rgba(139,92,246,.10),rgba(255,255,255,.94));
+      background-size: 300% 300%; animation: gradBg 8s ease infinite; border-bottom: 1px solid rgba(123,97,201,.12);
+    }
+    @keyframes gradBg { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+    .b-text strong { color: #111827; }
+    .b-hi { background: linear-gradient(90deg,#8B5CF6,#6D4FD6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 700; }
+    .b-cta { display: inline-flex; align-items: center; padding: 5px 14px; border-radius: 999px; font-size: 12px; font-weight: 600; color: #fff; background: linear-gradient(135deg,#8B5CF6,#6D4FD6); text-decoration: none; }
+    .b-close { position: absolute; top: 50%; right: 14px; transform: translateY(-50%); background: none; border: none; font-size: 15px; color: #999; cursor: pointer; }
+
+    /* NAVBAR */
+    .nav-wrap { width: 100%; display: flex; justify-content: center; padding: 18px 20px; position: sticky; top: 0; z-index: 900; }
+    .header-bar {
+      width: 100%; max-width: 1250px; background: rgba(241,232,245,0.55); backdrop-filter: blur(28px) saturate(200%);
+      border: 1px solid rgba(255,255,255,0.7); border-radius: 100px; padding: 8px 12px 8px 20px; display: flex; align-items: center; justify-content: space-between;
+      box-shadow: 0 4px 30px rgba(0,0,0,0.04), inset 0 1px 3px rgba(255,255,255,0.6), 0 10px 40px rgba(186,139,191,0.18);
+    }
+    .logo-wrap { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .logo-name { font-family: var(--heading); font-size: 17px; font-weight: 700; color: var(--text-dark); }
+    .logo-name span { background: linear-gradient(135deg,var(--purple-light),var(--purple-dark)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    nav ul { display: flex; align-items: center; list-style: none; gap: 0; }
+    nav ul li a { font-size: 13.5px; font-weight: 500; color: #4b5563; text-decoration: none; padding: 9px 15px; border-radius: 50px; transition: all 0.3s ease; }
+    nav ul li a:hover { color: var(--text-dark); background: rgba(255,255,255,0.35); }
+    nav ul li.active a { background: #fff; color: #1f2937; box-shadow: 0 3px 10px rgba(0,0,0,0.05); }
+    .btn-nav { font-size: 14px; font-weight: 500; color: #fff; background: linear-gradient(135deg,var(--purple-light),var(--purple-dark)); border: none; padding: 11px 22px; border-radius: 100px; text-decoration: none; }
+
+    /* CONTENT */
+    .container { max-width: 1250px; margin: 0 auto; padding: 40px 20px 80px; position: relative; z-index: 5; }
+    .sec-tag { display: inline-flex; align-items: center; gap: 7px; background: rgba(186,139,191,.1); border: 1px solid rgba(186,139,191,.25); color: var(--purple-dark); padding: 5px 14px; border-radius: 99px; font-size: 11px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; margin-bottom: 14px; }
+    .page-title { font-family: var(--heading); font-size: 42px; font-weight: 800; color: var(--text-dark); margin-bottom: 12px; }
+    .page-title span { background: linear-gradient(135deg,var(--purple-light),var(--purple-dark)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .page-desc { font-size: 16px; color: var(--text-muted); max-width: 600px; margin-bottom: 44px; }
+
+    .blog-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 28px; }
+    .blog-card {
+      background: rgba(255,255,255,0.65); backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.85); border-radius: 24px; overflow: hidden;
+      box-shadow: 0 4px 24px rgba(111,83,163,0.08); transition: all 0.4s ease;
+      display: flex; flex-direction: column; text-decoration: none; color: inherit;
+    }
+    .blog-card:hover { transform: translateY(-8px); box-shadow: 0 18px 48px rgba(111,83,163,0.16); border-color: rgba(186,139,191,0.5); }
+    .blog-thumb { height: 200px; width: 100%; object-fit: cover; }
+    .blog-content { padding: 24px; flex: 1; display: flex; flex-direction: column; }
+    .b-tag { display: inline-flex; padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 700; background: rgba(111,83,163,0.1); color: var(--purple-dark); align-self: flex-start; margin-bottom: 12px; }
+    .blog-content h3 { font-family: var(--heading); font-size: 20px; font-weight: 700; color: var(--text-dark); margin-bottom: 10px; line-height: 1.35; }
+    .blog-content p { font-size: 14px; color: var(--text-muted); line-height: 1.65; margin-bottom: 20px; flex: 1; }
+    .blog-meta { display: flex; gap: 16px; font-size: 12px; color: var(--text-muted); border-top: 1px solid rgba(186,139,191,0.2); padding-top: 14px; }
+
+    /* FOOTER */
+    footer { padding: 40px 20px 20px; border-top: 1px solid rgba(186,139,191,.15); background: var(--bg); }
+    .footer-inner { max-width:1250px; margin:0 auto; display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:28px; }
+    .f-brand h3 { font-family:var(--heading); font-size:20px; font-weight:700; color:var(--text-dark); margin-bottom:8px; display:flex; align-items:center; gap:10px; }
+    .f-brand h3 span { background:linear-gradient(135deg,var(--purple-light),var(--purple-dark)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+    .f-brand p { font-size:13.5px; color:var(--text-muted); max-width:280px; }
+    .f-address h4 { font-size:13px; font-weight:700; color:var(--purple-dark); margin-bottom:8px; }
+    .f-address p { font-size:13px; color:var(--text-muted); max-width:260px; }
+    .f-social { display:flex; gap:10px; margin-top:14px; }
+    .f-social a { width:36px; height:36px; border-radius:50%; background:rgba(186,139,191,.12); border:1px solid rgba(186,139,191,.25); display:flex; align-items:center; justify-content:center; color:var(--purple-dark); text-decoration:none; font-size:14px; }
+    .footer-copy { max-width:1250px; margin:24px auto 0; padding-top:20px; border-top:1px solid rgba(186,139,191,.12); font-size:13px; color:var(--text-muted); text-align:center; }
+  </style>
 </head>
-
 <body>
-    <!-- Navigation -->
-    <header class="navbar fade-in">
-        <div class="container nav-content">
-            <a href="index.html" class="logo"><svg viewBox="0 0 100 100" class="logo-img" style="height: 35px; width: 35px;"><rect x="0" y="35" width="100" height="30" rx="15" class="logo-rect" transform="rotate(45 50 50)" /><circle cx="22" cy="78" r="20" class="logo-circle" /><circle cx="78" cy="22" r="20" class="logo-circle" /></svg> <span class="logo-text">Ai <span class="highlight">Anveshana</span></span></a>
-            <nav>
-                <ul class="nav-links">
-                    <li><a href="index.html#home">Home</a></li>
-                    
-                    <li><a href="index.html#expertise">Expertise</a></li>
-            
-                    
-                    <li><a href="index.html#process-deck">Videos</a></li>
-                    <li><a href="about-mentor.html">About Mentor</a></li>
-                    <li><a href="index.html#contact">Contact</a></li>
-                </ul>
-                <div class="mobile-menu-btn">
-                    <i class="fas fa-bars"></i>
-                </div>
-            </nav>
-        </div>
-    </header>
 
-    <!-- Mobile Menu Overlay -->
-    <div class="mobile-nav-overlay">
-        <div class="close-btn"><i class="fas fa-times"></i></div>
-        <ul class="mobile-links">
-            <li><a href="index.html#home">Home</a></li>
-            
-            <li><a href="index.html#expertise">Expertise</a></li>
-                    
-            <li><a href="index.html#process-deck">Videos</a></li>
-            <li><a href="about-mentor.html">About Mentor</a></li>
-            <li><a href="index.html#contact">Contact</a></li>
-        </ul>
+<!-- TOP BANNER -->
+<div id="top-banner">
+  <div class="b-text">🚀 <strong>Ai Anveshana</strong> — Empowering Enterprises through <span class="b-hi">AI &amp; Automation</span></div>
+  <a href="products/docs/index.html" class="b-cta">Try Now →</a>
+  <button class="b-close" onclick="document.getElementById('top-banner').style.display='none'">✕</button>
+</div>
+
+<!-- NAVBAR -->
+<div class="nav-wrap">
+  <header class="header-bar">
+    <a href="index.html" class="logo-wrap">
+      <svg width="32" height="32" viewBox="0 0 100 100"><defs><linearGradient id="lg1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#BA8BBF"/><stop offset="100%" stop-color="#6F53A3"/></linearGradient><linearGradient id="lg2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#4F3A8A"/><stop offset="100%" stop-color="#2D1B69"/></linearGradient></defs><rect x="0" y="35" width="100" height="30" rx="15" fill="url(#lg1)" transform="rotate(45 50 50)"/><circle cx="22" cy="78" r="20" fill="url(#lg2)"/><circle cx="78" cy="22" r="20" fill="url(#lg2)"/></svg>
+      <span class="logo-name">Ai <span>Anveshana</span></span>
+    </a>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="index.html#expertise">Expertise</a></li>
+        <li><a href="index.html#products">Products</a></li>
+        <li><a href="index.html#videos">Videos</a></li>
+        <li><a href="about-mentor.html">About Mentor</a></li>
+        <li><a href="index.html#contact">Contact</a></li>
+      </ul>
+    </nav>
+    <a href="courses.html" class="btn-nav">Explore Courses</a>
+  </header>
+</div>
+
+<!-- CONTENT -->
+<div class="bg-grid">
+  <div class="container">
+    <div class="sec-tag">📝 Articles &amp; Insights</div>
+    <h1 class="page-title">Insights on <span>AI, Agents &amp; Automation</span></h1>
+    <p class="page-desc">Architecting the future of work, one intelligent agent at a time.</p>
+
+    <div class="blog-grid">
+      <a href="blog/beginners-guide-to-n8n.html" class="blog-card">
+        <img src="assets/img/n8n-agent-workflow.png" class="blog-thumb" alt="n8n Guide">
+        <div class="blog-content">
+          <span class="b-tag">Agentic AI</span>
+          <h3>The Ultimate Beginner’s Guide to n8n: Automation for Everyone</h3>
+          <p>Learn how to build powerful workflows without code using n8n. A comprehensive guide for 2026.</p>
+          <div class="blog-meta">
+            <span><i class="far fa-calendar"></i> Jan 18, 2026</span>
+            <span><i class="far fa-clock"></i> 8 min read</span>
+          </div>
+        </div>
+      </a>
     </div>
+  </div>
+</div>
 
-    <!-- Blog Hero -->
-    <section class="blog-hero">
-        <div class="container">
-            <h1>Insights on AI, Agents & Automation</h1>
-            <p style="font-size: 1.2rem; margin-top: 1rem; color: #cbd5e1;">Architecting the future of work, one agent
-                at a time.</p>
-        </div>
-    </section>
-
-    <!-- Blog Grid -->
-    <section class="section">
-        <div class="container">
-            <div class="blog-grid">
-                <!-- Blog Post 1 -->
-                <a href="blog/beginners-guide-to-n8n.html" class="blog-card">
-                    <img src="assets/img/n8n-agent-workflow.png" class="blog-thumb" alt="n8n Guide">
-                    <div class="blog-card-content">
-                        <span class="blog-tag">Agentic AI</span>
-                        <h3>The Ultimate Beginner’s Guide to n8n: Automation for Everyone</h3>
-                        <p>Learn how to build powerful workflows without code using n8n. A comprehensive guide for 2024.
-                        </p>
-                        <div class="blog-meta"
-                            style="justify-content: flex-start; margin-top: 1rem; font-size: 0.9rem;">
-                            <span><i class="far fa-calendar"></i> Jan 18, 2026</span>
-                            <span><i class="far fa-clock"></i> 8 min read</span>
-                        </div>
-                    </div>
-                </a>
-
-
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer style="padding: 40px 0 20px;">
-        <div class="container">
-            <div class="footer-content" style="border-top: 1px solid var(--glass-border); padding-top: 40px;">
-                <div class="footer-logo">
-                    <h2><svg viewBox="0 0 100 100" class="logo-img" style="height: 45px; width: 45px; vertical-align: middle;"><rect x="0" y="35" width="100" height="30" rx="15" class="logo-rect" transform="rotate(45 50 50)" /><circle cx="22" cy="78" r="20" class="logo-circle" /><circle cx="78" cy="22" r="20" class="logo-circle" /></svg> <span class="logo-text">Ai <span>Anveshana</span></span></h2>
-                    <p>Partnered with growing companies around the world to deliver smart tech solutions.</p>
-                </div>
-                <div class="footer-address" style="flex: 1; max-width: 300px; margin: 0 2rem; font-size: 0.9rem; color: #ffffff; line-height: 1.6;">
-                    <h4 style="color: #88eb1a; margin-bottom: 0.5rem;"><i class="fas fa-map-marker-alt" style="color: #88eb1a; margin-right: 8px;"></i>Our Office</h4>
-                    164, 1st Main Rd, Vidyaranyapura Post, Chikkabettahalli, Havyakanagara Phase-2, Vidyaranyapura, Bengaluru, Karnataka 560097
-                </div>
-                <div class="social-links">
-                    <a href="https://www.linkedin.com/company/aianveshana" target="_blank"><i class="fab fa-linkedin"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="https://www.youtube.com/@AiBhat" target="_blank"><i class="fab fa-youtube"></i></a>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2026 Ai Anveshana. All Rights Reserved.</p>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Chatbot Widget -->
-    <div class="chat-widget" id="chatWidget">
-        <div class="chat-popup" id="chatPopup">
-            <div class="chat-header">
-                <div class="chat-info">
-                    <div class="chat-avatar">
-                        <i class="fas fa-robot"></i>
-                    </div>
-                    <div>
-                        <h4>AI Assistant</h4>
-                        <p class="status"><span class="online-dot"></span>Online</p>
-                    </div>
-                </div>
-                <button class="close-chat" id="closeChat"><i class="fas fa-times"></i></button>
-            </div>
-            <div class="chat-body" id="chatBody" style="padding: 0;">
-                <div class="ai-agent-view" id="aiAgentView">
-                    <div id="aiChatLog" style="height: 380px; overflow-y: auto; margin-bottom: 1rem; padding-right: 5px; display: flex; flex-direction: column; gap: 12px;">
-                        <div class="message bot">Hello! I'm Ai Anveshana Assistant. How can I help you with inquiries about our services or the APA Bootcamp?</div>
-                        <div class="suggestion-chips" id="suggestionChips">
-                            <button class="suggestion-chip" onclick="askSuggestion('How to book a Bootcamp?')">How to book a Bootcamp?</button>
-                            <button class="suggestion-chip" onclick="askSuggestion('What is the price of a bootcamp?')">What is the price of a bootcamp?</button>
-                            <button class="suggestion-chip" onclick="startLeadFlow()">📧 Leave a Message</button>
-                            <button class="suggestion-chip" onclick="window.open('https://wa.me/919113548342', '_blank')" style="border-color: var(--accent-color); color: var(--accent-color); font-weight: 700;">🤝 Contact via WhatsApp</button>
-                        </div>
-                    </div>
-                    <div class="chat-input-container" style="display: flex; gap: 8px;">
-                        <input type="text" id="aiChatInput" placeholder="Type your question..." style="flex: 1; padding: 10px 15px; border-radius: 25px; border: 1px solid var(--glass-border); background: #1a1a1a; color: white; font-size: 0.9rem;">
-                        <button onclick="sendChatMessage()" style="background: var(--accent-color); border: none; width: 40px; height: 40px; border-radius: 50%; color: black; cursor: pointer; display: flex; align-items: center; justify-content: center;"><i class="fas fa-paper-plane"></i></button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <button class="chat-toggle" id="chatToggle">
-            <i class="fas fa-comment-dots"></i>
-        </button>
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="f-brand">
+      <h3>
+        <svg width="32" height="32" viewBox="0 0 100 100"><defs><linearGradient id="fl1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#BA8BBF"/><stop offset="100%" stop-color="#6F53A3"/></linearGradient><linearGradient id="fl2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#4F3A8A"/><stop offset="100%" stop-color="#2D1B69"/></linearGradient></defs><rect x="0" y="35" width="100" height="30" rx="15" fill="url(#fl1)" transform="rotate(45 50 50)"/><circle cx="22" cy="78" r="20" fill="url(#fl2)"/><circle cx="78" cy="22" r="20" fill="url(#fl2)"/></svg>
+        Ai <span>Anveshana</span>
+      </h3>
+      <p>Partnered with growing companies around the world to deliver smart tech solutions.</p>
+      <div class="f-social">
+        <a href="https://www.linkedin.com/company/aianveshana" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+        <a href="https://www.youtube.com/@AiBhat" target="_blank"><i class="fab fa-youtube"></i></a>
+      </div>
     </div>
+    <div class="f-address">
+      <h4><i class="fas fa-map-marker-alt" style="margin-right:6px;"></i>Our Office</h4>
+      <p>164, 1st Main Rd, Vidyaranyapura Post, Chikkabettahalli, Havyakanagara Phase-2, Vidyaranyapura, Bengaluru, Karnataka 560097</p>
+    </div>
+  </div>
+  <p class="footer-copy">© 2026 Ai Anveshana. All Rights Reserved.</p>
+</footer>
 
-    <!-- Scripts -->
-    <script src="assets/js/main.js"></script>
-    <script src="assets/js/script.js"></script>
 </body>
-
 </html>
