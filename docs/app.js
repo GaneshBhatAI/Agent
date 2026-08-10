@@ -282,6 +282,69 @@ async function fetchGitHubRunners() {
 
 // FETCH REAL REPOSITORY DATA FROM AGENT OR DIRECT DISCOVERY
 async function fetchRepositoryData() {
+  const token = localStorage.getItem("github_auth_pat");
+  const repoUrl = localStorage.getItem("github_active_repo") || "aianveshana-collab/Ai-and-Automation";
+
+  // If logged in, fetch file lists directly from the client's GitHub Repository Contents API
+  if (token) {
+    try {
+      const foldersSet = new Set();
+      const itemsList = [];
+
+      async function fetchPathRecursively(path = "") {
+        const res = await fetch(`https://api.github.com/repos/${repoUrl}/contents/${path}`, {
+          headers: { "Authorization": `token ${token}` }
+        });
+        if (!res.ok) return;
+        const contents = await res.json();
+        
+        for (const item of contents) {
+          if (item.type === "dir") {
+            const folderPath = item.path;
+            if (!folderPath.startsWith("docs") && !folderPath.startsWith(".github") && !folderPath.startsWith("products")) {
+              foldersSet.add(folderPath);
+              await fetchPathRecursively(item.path);
+            }
+          } else if (item.type === "file") {
+            const ext = item.name.split(".").pop();
+            if (["py", "json", "xml", "xlsx", "bat"].includes(ext)) {
+              // Skip system files
+              if (item.path.startsWith("docs/") || item.path.startsWith(".github/") || item.path.startsWith("products/")) {
+                continue;
+              }
+              const isBot = (item.name.startsWith("Master_") || item.name.startsWith("Child_")) && ext === "py";
+              const cleanName = item.name.replace("Master_", "").replace("Child_", "").replace(".py", "").replace(/([A-Z])/g, ' $1').trim();
+              const folder = item.path.substring(0, item.path.lastIndexOf('/')) || "Bots";
+              
+              itemsList.push({
+                id: item.name.replace(".py", "").toLowerCase(),
+                name: item.name,
+                clean_name: isBot ? cleanName : item.name,
+                type: isBot ? "Bot" : "Script",
+                folder: folder,
+                path: item.path,
+                last_modified: "Git Repository File",
+                status: "Ready",
+                platform: "Python 3.14 RPA",
+                source_version: "git:" + item.sha.substring(0, 7)
+              });
+            }
+          }
+        }
+      }
+
+      await fetchPathRecursively("");
+      realFolders = Array.from(foldersSet).sort();
+      realRepositoryItems = itemsList;
+      
+      renderFolderTree();
+      renderBotsTable();
+      return; // Handled directly via Git
+    } catch (gitErr) {
+      console.warn("Could not fetch repository contents directly from GitHub API:", gitErr);
+    }
+  }
+
   if (isAgentOnline) {
     try {
       const res = await fetch(`${activeAgentUrl}/api/repository`);
