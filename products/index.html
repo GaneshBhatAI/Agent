@@ -183,8 +183,8 @@
 
     /* ─── PRODUCTS SECTION ─── */
     .products-bg { background: linear-gradient(135deg,#F5EEFF 0%,#EDE2FF 50%,#F9F0FF 100%); }
-    .products-grid { display: flex; justify-content: center; }
-    .product-card { background: rgba(255,255,255,0.72); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.88); border-radius: 24px; padding: 36px 32px; display: flex; flex-direction: column; gap: 14px; transition: all .4s ease; box-shadow: 0 4px 30px rgba(111,83,163,0.08); max-width: 720px; width: 100%; }
+    .products-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+    .product-card { background: rgba(255,255,255,0.72); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.88); border-radius: 24px; padding: 30px 26px; display: flex; flex-direction: column; gap: 14px; transition: all .4s ease; box-shadow: 0 4px 30px rgba(111,83,163,0.08); }
     .product-card:hover { transform: translateY(-7px); box-shadow: 0 18px 50px rgba(111,83,163,0.16); }
     .p-badge { display: inline-flex; padding: 4px 12px; border-radius: 99px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; align-self: flex-start; }
     .p-badge.live { background: rgba(16,185,129,.1); color: #059669; }
@@ -412,12 +412,25 @@
     <p class="sec-desc">Real products that solve real problems — built in-house and available to our community and clients.</p>
     <div class="products-grid">
       <div class="product-card">
-        <span class="p-badge live">● Live</span>
         <div class="p-icon">🤖</div>
         <div class="p-title">Agentic Orchestrator</div>
         <div class="p-tagline">Your Automation Buddy to run Python bots | Powered by AI Anveshana</div>
         <p class="p-desc">A full Control Room to manage, schedule, and remotely run Python automation bots from any device — no local dependency, fully GitHub-powered.</p>
         <a href="products/docs/index.html" class="p-link">Launch Control Room <i class="fas fa-arrow-right"></i></a>
+      </div>
+      <div class="product-card">
+        <div class="p-icon">🧠</div>
+        <div class="p-title">AI Agent Studio</div>
+        <div class="p-tagline">Design &amp; deploy multi-agent AI workflows visually</div>
+        <p class="p-desc">A drag-and-drop AI agent builder for enterprise teams. Connect LLMs, tools, data sources, and human-in-the-loop steps without complex setup.</p>
+        <a href="#contact" class="p-link">Explore Studio <i class="fas fa-arrow-right"></i></a>
+      </div>
+      <div class="product-card">
+        <div class="p-icon">📊</div>
+        <div class="p-title">Enterprise Analytics AI</div>
+        <div class="p-tagline">Chat with your business data in plain English</div>
+        <p class="p-desc">Connect to Salesforce, SAP, or Excel data and get instant AI-powered insights, summaries, and automated reporting via natural language queries.</p>
+        <a href="#contact" class="p-link">Explore Analytics <i class="fas fa-arrow-right"></i></a>
       </div>
     </div>
   </div>
