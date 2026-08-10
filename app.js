@@ -1504,6 +1504,17 @@ async function handleGitHubAuthLogin() {
       localStorage.setItem("github_auth_pat", token);
       localStorage.setItem("github_auth_user", username);
 
+      // Reset active repo to logged-in user's default repo (owner/username)
+      // The user can override this in the Manage tab SSH config card
+      const defaultRepo = localStorage.getItem("github_active_repo");
+      if (!defaultRepo || defaultRepo === "aianveshana-collab/Ai-and-Automation") {
+        localStorage.setItem("github_active_repo", `${username}/${username}`);
+      }
+
+      // Reset stale in-memory repository data from previous session
+      realFolders = [];
+      realRepositoryItems = [];
+
       // Update control room profile instantly
       updateGitHubUserProfile(username);
 
@@ -1516,7 +1527,8 @@ async function handleGitHubAuthLogin() {
         }, 300);
       }
       
-      // Attempt connection initialize with backend agent
+      // Reload repository data fresh for the new user, then init agent
+      await fetchRepositoryData();
       initAgentConnection();
     } else {
       const errData = await response.json().catch(() => ({}));
@@ -1538,15 +1550,31 @@ function showLoginError(message) {
 }
 
 function logoutGitHub() {
+  // Clear all session state - PAT, user, AND active repo so next user starts clean
   localStorage.removeItem("github_auth_pat");
   localStorage.removeItem("github_auth_user");
-  
+  localStorage.removeItem("github_active_repo");
+
+  // Reset in-memory repository data immediately
+  realFolders = [];
+  realRepositoryItems = [];
+
+  // Clear the token input field
   const tokenInput = document.getElementById("github-login-token");
   if (tokenInput) tokenInput.value = "";
-  
+
+  // Hide any previous error messages
   const errorMsg = document.getElementById("login-error-msg");
   if (errorMsg) errorMsg.style.display = "none";
 
+  // Re-render empty repository UI immediately
+  renderFolderTree();
+  renderBotsTable();
+
+  // Show the login overlay again
   const overlay = document.getElementById("github-login-overlay");
-  if (overlay) overlay.classList.add("login-overlay-active");
+  if (overlay) {
+    overlay.style.opacity = "1";
+    overlay.classList.add("login-overlay-active");
+  }
 }
