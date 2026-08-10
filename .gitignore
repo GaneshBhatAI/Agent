@@ -1,54 +1,11 @@
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
-*$py.class
-
-# C extensions
-*.so
-
-# Distribution / packaging
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-
-# Virtual Environments
-.venv/
-venv/
-ENV/
-env/
-
-# Logs and Screenshots
-*.log
-*.txt
-Logs/
-Screenshots/
-ScreenshotLog_*
-
-# Process Runtime Input & Output Data files (Ignore extracted files, downloaded zips, output excels)
-Process/Input/*
-Process/Output/*
-Process/Temp_Extracted/*
-*.zip
-*.xlsx
-!**/Config/*.xlsx
-
-# Keep .gitkeep files if present
-!**/Process/Input/.gitkeep
-!**/Process/Output/.gitkeep
-
-# Operating System Files
 .DS_Store
-Thumbs.db
+node_modules/
+.env
+
+# Exclude local private automation code from public website repository tracking
+Loan/
+framework_components/
+ws_runner_workspace/
+orchestrator_agent/__pycache__/
+*.log
+*.json

@@ -1,0 +1,17 @@
+RewriteEngine On
+
+# 1. Force HTTPS (Optional but recommended for professional sites)
+# RewriteCond %{HTTPS} off
+# RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# 2. Remove .html extension from visible URLs
+RewriteCond %{THE_REQUEST} /([^.]+)\.html [NC]
+RewriteRule ^ /%1 [NC,L,R=301]
+
+# 3. Handle internal mapping of /page to /page.html
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.html -f
+RewriteRule ^(.*)$ $1.html [NC,L]
+
+# 4. Custom 404 page (if you have one)
+# ErrorDocument 404 /404.html

@@ -1,244 +1,388 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AIAnveshana Automation Control Room</title>
-  <link rel="stylesheet" href="style.css?v=1.0.3">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ai Anveshana | AI, Automation & Digital Transformation</title>
+    <meta name="description"
+        content="Your Global Partner in AI, Automation & Digital Transformation. We empower organizations with intelligent, future-ready solutions.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;600&family=Open+Sans:wght@300;400;600&family=Poppins:wght@300;400;600;800&display=swap"
+        rel="stylesheet">
+    <!-- Styles -->
+    <link rel="stylesheet" href="assets/css/style.css?v=5">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
 </head>
+
 <body>
 
-  <div class="aa-app">
-    <!-- TOP NAVIGATION BAR (A360 Style) -->
-    <header class="aa-header">
-      <div class="header-left">
-        <button class="mobile-menu-toggle" onclick="toggleMobileSidebar()">☰</button>
-        <div class="logo-box">
-          <span class="logo-symbol">⚡</span>
+    <!-- Navigation -->
+    <header class="navbar fade-in">
+        <div class="container nav-content">
+            <a href="index.html" class="logo"><svg viewBox="0 0 100 100" class="logo-img" style="height: 35px; width: 35px;"><rect x="0" y="35" width="100" height="30" rx="15" class="logo-rect" transform="rotate(45 50 50)" /><circle cx="22" cy="78" r="20" class="logo-circle" /><circle cx="78" cy="22" r="20" class="logo-circle" /></svg> <span class="logo-text">Ai <span class="highlight">Anveshana</span></span></a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="index.html#home">Home</a></li>
+                    <li><a href="index.html#expertise">Expertise</a></li>
+                    <li><a href="products/docs/index.html" target="_blank">Products</a></li>
+                    <li><a href="index.html#process-deck">Videos</a></li>
+                    <li><a href="about-mentor.html">About Mentor</a></li>
+                    <li><a href="index.html#contact">Contact</a></li>
+                </ul>
+                <div class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </nav>
         </div>
-        <div class="header-title">
-          <h1>AIAnveshana Automation</h1>
-          <span class="header-sub">Enterprise RPA Control Room & Orchestrator</span>
-        </div>
-      </div>
-
-      <div class="header-right">
-        <div class="agent-config-box">
-          <input type="text" id="custom-agent-url" class="agent-url-input" placeholder="http://127.0.0.1:8000" onchange="saveCustomAgentUrl()">
-          <div class="agent-status-badge" id="agent-status-badge">
-            <span class="status-dot offline" id="agent-dot"></span>
-            <span class="status-text" id="agent-status-text">Connecting...</span>
-          </div>
-        </div>
-      </div>
     </header>
 
-    <!-- MAIN BODY GRID -->
-    <div class="aa-body">
-      <!-- LEFT SIDEBAR FOLDER NAVIGATION -->
-      <aside class="aa-sidebar">
-        <div class="sidebar-search">
-          <span class="search-icon">🔍</span>
-          <input type="text" placeholder="Search subfolders..." oninput="filterFolderTree(this.value)">
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-nav-overlay">
+        <div class="close-btn"><i class="fas fa-times"></i></div>
+        <ul class="mobile-links">
+            <li><a href="index.html#home">Home</a></li>
+            <li><a href="index.html#expertise">Expertise</a></li>
+            <li><a href="products/docs/index.html" target="_blank">Products</a></li>
+            <li><a href="index.html#process-deck">Videos</a></li>
+            <li><a href="about-mentor.html">About Mentor</a></li>
+            <li><a href="index.html#contact">Contact</a></li>
+        </ul>
+    </div>
+
+    <!-- High Impact Header Section -->
+    <section class="hero-impact fade-in" style="padding: 160px 2rem 100px; text-align: center; position: relative; overflow: hidden; border-bottom: 1px solid var(--glass-border);">
+        <!-- Sarvam-Style Live Movement Colors (High Vibrancy) -->
+        <div class="hero-glow-container" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden; pointer-events: none;">
+            <div class="glow-orb orange" style="position: absolute; top: -30%; left: 50%; transform: translateX(-50%); width: 120%; height: 80%; background: radial-gradient(circle, rgba(251, 191, 36, 0.4) 0%, transparent 70%); filter: blur(60px); animation: moveOrb1 15s ease-in-out infinite alternate;"></div>
+            <div class="glow-orb blue-left" style="position: absolute; top: 0; left: -20%; width: 70%; height: 70%; background: radial-gradient(circle, rgba(59, 130, 246, 0.3) 0%, transparent 70%); filter: blur(60px); animation: moveOrb2 20s ease-in-out infinite alternate;"></div>
+            <div class="glow-orb blue-right" style="position: absolute; top: 0; right: -20%; width: 70%; height: 70%; background: radial-gradient(circle, rgba(59, 130, 246, 0.3) 0%, transparent 70%); filter: blur(60px); animation: moveOrb3 18s ease-in-out infinite alternate;"></div>
         </div>
+        
+        <style>
+            @keyframes moveOrb1 {
+                0% { transform: translateX(-50%) translateY(0) scale(1); }
+                100% { transform: translateX(-50%) translateY(10%) scale(1.1); }
+            }
+            @keyframes moveOrb2 {
+                0% { transform: translate(0, 0) scale(1); }
+                100% { transform: translate(10%, 5%) scale(1.2); }
+            }
+            @keyframes moveOrb3 {
+                0% { transform: translate(0, 0) scale(1); }
+                100% { transform: translate(-10%, 5%) scale(1.2); }
+            }
+        </style>
 
-        <div class="tree-header">
-          <span class="tree-title">FOLDERS</span>
-          <button class="icon-btn" onclick="fetchBotsList()" title="Refresh Folders">🔄</button>
-        </div>
-
-        <div class="tree-container" id="tree-container">
-          <div class="tree-item active" onclick="selectFolder('all')">
-            <span class="tree-icon">📁</span>
-            <span class="tree-label">Bots</span>
-          </div>
-          <div class="tree-sub-items" id="tree-sub-items">
-            <!-- Process subfolder items -->
-          </div>
-        </div>
-      </aside>
-
-      <!-- MAIN CONTENT AREA: BOT REPOSITORY TABLE -->
-      <main class="aa-content">
-        <div class="content-toolbar">
-          <div class="toolbar-left">
-            <h2 id="folder-view-title">Files and folders</h2>
-            <span class="item-count" id="bot-count-badge">(0)</span>
-          </div>
-
-          <div class="toolbar-right">
-            <div class="table-search">
-              <span class="search-icon">🔍</span>
-              <input type="text" id="table-search-input" placeholder="Search process bots..." oninput="filterBotsTable()">
+        <div class="container">
+            <div style="max-width: 900px; margin: 0 auto;">
+                <h1 style="color: var(--primary-color); font-size: clamp(3rem, 7vw, 5rem); font-weight: 800; line-height: 1.1; margin-bottom: 1.5rem; letter-spacing: -1.5px;">AI & <span style="color: var(--accent-color);">Automation</span></h1>
+                <p style="font-size: clamp(1.1rem, 2.5vw, 1.4rem); color: var(--secondary-color); margin-bottom: 3rem; font-weight: 500; opacity: 0.9;">Boost your productivity with our AI & Automation solutions.</p>
+                <div style="display: flex; justify-content: center;">
+                    <a href="courses.html" class="btn btn-primary" style="background: #000000; color: #ffffff !important; border: none; padding: 0.8rem 2.5rem; border-radius: 50px; font-weight: 700; font-size: 1.1rem; display: inline-flex; align-items: center; gap: 10px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
+                        Explore Agentic AI Courses
+                    </a>
+                </div>
             </div>
-            <button class="icon-btn" onclick="fetchBotsList()" title="Refresh Table">🔄</button>
-          </div>
         </div>
+    </section>
 
-        <!-- REPOSITORY DATA TABLE -->
-        <div class="table-wrapper">
-          <table class="aa-table">
-            <thead>
-              <tr>
-                <th style="width: 40px;"><input type="checkbox"></th>
-                <th style="width: 60px;">Type</th>
-                <th>Name</th>
-                <th>Folder Location</th>
-                <th>Status</th>
-                <th>Last Modified / Run</th>
-                <th>Platform</th>
-                <th style="width: 280px; text-align: center;">Actions</th>
-              </tr>
-            </thead>
-            <tbody id="bots-table-body">
-              <tr>
-                <td colspan="8" class="table-loading">Loading process bots repository...</td>
-              </tr>
-            </tbody>
-          </table>
+    <!-- Hero Section (Modern Clean) -->
+    <section id="home" class="hero-modern fade-in" style="padding-top: 100px !important; min-height: auto;">
+        <div class="container">
+            <div class="hero-modern-content">
+                <h1 style="margin-bottom: 2rem;">Empowering Global Enterprises through<br><span style="color: var(--accent-color);">AI, Automation & Digital Excellence</span></h1>
+                <p class="lead">We bridge the gap between innovation and impact. Our proven track record ensures bespoke solutions that are both technologically advanced and strategically aligned to drive measurable growth and long-term value.</p>
+                
+                    <a href="#contact" class="btn btn-primary" style="background: #000000; color: #ffffff !important; font-size: 1.1rem; padding: 1.2rem 3rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);">Let's Start Project</a>
+            </div>
         </div>
-      </main>
+    </section>
+
+
+
+    <!-- AI Agent Process Deck -->
+    <section id="process-deck" class="section fade-in">
+        <div class="container">
+            <h2>AI Agent Process Deck</h2>
+            <div class="carousel-wrapper">
+                <button class="carousel-btn prev-btn" onclick="scrollVideos('left')"><i
+                        class="fas fa-chevron-left"></i></button>
+                <div class="video-carousel" id="videoCarousel">
+                    <!-- Video 1 -->
+                    <div class="card video-card">
+                        <div class="video-container">
+                            <iframe src="https://www.youtube.com/embed/iAsEzeyMWPw"
+                                title="Autonomous Delivery Routing" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                        <div class="video-info">
+                            <h3>Autonomous Delivery Routing & Fulfillment Optimization AI Agent</h3>
+                        </div>
+                    </div>
+                    <!-- Video 2 -->
+                    <div class="card video-card">
+                        <div class="video-container">
+                            <iframe src="https://www.youtube.com/embed/h9jGDN05Cgw" title="Lead Enrichment Agent"
+                                frameborder="0" allowfullscreen></iframe>
+                        </div>
+                        <div class="video-info">
+                            <h3>Lead Enrichment & Orchestration AI Agent using Automation Anywhere</h3>
+                        </div>
+                    </div>
+                    <!-- Video 3 -->
+                    <div class="card video-card">
+                        <div class="video-container">
+                            <iframe src="https://www.youtube.com/embed/yOMnKjF67ew" title="AI Agent Talks Like Me"
+                                frameborder="0" allowfullscreen></iframe>
+                        </div>
+                        <div class="video-info">
+                            <h3>This AI Agent Talks Like Me 🤖</h3>
+                        </div>
+                    </div>
+                    <!-- Video 4 -->
+                    <div class="card video-card">
+                        <div class="video-container">
+                            <iframe src="https://www.youtube.com/embed/jVeHpSafwrE"
+                                title="Voice-Driven Task Creation" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                        <div class="video-info">
+                            <h3>APA Project : Voice-Driven Task Creation Assistant</h3>
+                        </div>
+                    </div>
+                    <!-- Video 5 -->
+                    <div class="card video-card">
+                        <div class="video-container">
+                            <iframe src="https://www.youtube.com/embed/IdnBAdDNGiU" title="Medical Coding AI Agent"
+                                frameborder="0" allowfullscreen></iframe>
+                        </div>
+                        <div class="video-info">
+                            <h3>Medical Coding AI Agent | Automation Anywhere APA Project</h3>
+                        </div>
+                    </div>
+                    <!-- Video 6 -->
+                    <div class="card video-card">
+                        <div class="video-container">
+                            <iframe src="https://www.youtube-nocookie.com/embed/BqskRve1KtE"
+                                title="Enterprise Customer Support" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                        <div class="video-info">
+                            <h3>Enterprise-Level AI Agent for Customer Support, fully built in Python!</h3>
+                        </div>
+                    </div>
+                    <!-- Video 7 -->
+                    <div class="card video-card">
+                        <div class="video-container">
+                            <iframe src="https://www.youtube-nocookie.com/embed/FD8p2j4-vdE"
+                                title="Automated Customer Support n8n" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                        <div class="video-info">
+                            <h3>#n8n How I Automated Customer Support Using n8n + AI</h3>
+                        </div>
+                    </div>
+                    <!-- Video 8 -->
+                    <div class="card video-card">
+                        <div class="video-container">
+                            <iframe src="https://www.youtube-nocookie.com/embed/c5nYOKRsftM"
+                                title="AI Agent vs Tool" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                        <div class="video-info">
+                            <h3>Who’s the Boss — AI Agent or Tool? 🤖 | ADTF vs TDAF Explained Simply!</h3>
+                        </div>
+                    </div>
+                    <!-- Video 9 -->
+                    <div class="card video-card">
+                        <div class="video-container">
+                            <iframe src="https://www.youtube-nocookie.com/embed/uHUFRtmqyKU"
+                                title="Sprint Planning to Jira" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                        <div class="video-info">
+                            <h3>From Sprint Planning to Jira in Minutes 🤖 | AI Agent Built with Automation Anywhere
+                            </h3>
+                        </div>
+                    </div>
+                    <!-- Video 10 -->
+                    <div class="card video-card">
+                        <div class="video-container">
+                            <iframe src="https://www.youtube-nocookie.com/embed/2-k_pC05dUI"
+                                title="IT & Customer Support Emails" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                    <button class="carousel-btn next-btn" onclick="scrollVideos('right')"><i
+                            class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Core Expertise -->
+    <section id="expertise" class="section fade-in" style="background: var(--bg-dark);">
+        <div class="container">
+            <h2>Core Expertise & What I Bring</h2>
+            <div class="grid-3">
+                <div class="card expertise-card">
+                    <div class="expertise-emoji" style="animation-delay: 0s;">🤖</div>
+                    <h3>Agentic Automation (APA)</h3>
+                    <p>Architecting decision-centric AI agents that autonomously plan, reason, and execute complex
+                        workflows, evolving automation beyond simple rules.</p>
+                </div>
+                <div class="card expertise-card">
+                    <div class="expertise-emoji" style="animation-delay: 0.5s;">⚡</div>
+                    <h3>AI Workflow Orchestration</h3>
+                    <p>Building adaptive, self-healing business ecosystems using <strong>n8n</strong> and
+                        <strong>Zapier</strong>, designing pipelines where AI models drive dynamic routing and
+                        logic.
+                    </p>
+                </div>
+                <div class="card expertise-card">
+                    <div class="expertise-emoji" style="animation-delay: 1s;">🦾</div>
+                    <h3>Enterprise AI Transformation</h3>
+                    <p>Redefining enterprise automation by infusing Generative AI into traditional platforms
+                        (Automation Anywhere, UiPath), creating scalable, intelligent digital workforces.</p>
+                </div>
+                <div class="card expertise-card">
+                    <div class="expertise-emoji" style="animation-delay: 1.5s;">🔗</div>
+                    <h3>Enterprise Integration</h3>
+                    <p>Strong background in integrating <strong>Salesforce, SAP, Workday</strong>, and Google
+                        Products
+                        for seamless data flow.</p>
+                </div>
+                <div class="card expertise-card">
+                    <div class="expertise-emoji" style="animation-delay: 2s;">🎓</div>
+                    <h3>Training & Mentorship</h3>
+                    <p>Conducting master-level sessions on Agentic AI, LLM Orchestration, and Copilot studios,
+                        empowering the next generation of AI architects.
+                    </p>
+                </div>
+                <div class="card expertise-card">
+                    <div class="expertise-emoji" style="animation-delay: 2.5s;">🚀</div>
+                    <h3>Thought Leadership</h3>
+                    <p>Speaker at summits and webinars on AI Agents and GenAI. Passionate about shaping the future
+                        of
+                        digital workforces.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modern CTA Section -->
+    <section id="contact" class="fade-in" style="padding-top: 60px;">
+        <div class="modern-cta-section" style="padding-bottom: 2rem;">
+            <h2 style="font-family: 'Poppins', sans-serif; font-weight: 800;">Let’s Work Together</h2>
+            <p style="font-size: 1.2rem; margin-bottom: 3rem; opacity: 0.9; max-width: 600px; margin-left: auto; margin-right: auto;">Ready to automate the future? Reach out for consulting, implementations, or partnerships by filling out the form below.</p>
+            
+            <!-- Custom Contact Form -->
+            <div class="contact-form-container" style="max-width: 800px; margin: 0 auto; text-align: left;">
+                <form id="contactForm" class="contact-form">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="name">Full Name</label>
+                            <input type="text" id="name" name="name" placeholder="Enter your name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" name="email" placeholder="email@example.com" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="subject">Subject</label>
+                        <select id="subject" name="subject" required>
+                            <option value="" disabled selected>Select an option</option>
+                            <option value="Consulting">AI Consulting</option>
+                            <option value="Implementation">Automation Implementation</option>
+                            <option value="Training">Training & Bootcamps</option>
+                            <option value="Partnership">Partnership Inquiry</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Your Message</label>
+                        <textarea id="message" name="message" rows="5" placeholder="How can we help you?" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block" style="padding: 1rem; font-size: 1.1rem; margin-top: 1rem;">
+                        <i class="fas fa-paper-plane" style="margin-right: 10px;"></i> Send Inquiry
+                    </button>
+                    <div id="formStatus" class="form-status"></div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer style="padding: 40px 0 20px;">
+        <div class="container">
+            <div class="footer-content" style="border-top: 1px solid var(--glass-border); padding-top: 40px;">
+                <div class="footer-logo">
+                    <h2><svg viewBox="0 0 100 100" class="logo-img" style="height: 45px; width: 45px; vertical-align: middle;"><rect x="0" y="35" width="100" height="30" rx="15" class="logo-rect" transform="rotate(45 50 50)" /><circle cx="22" cy="78" r="20" class="logo-circle" /><circle cx="78" cy="22" r="20" class="logo-circle" /></svg> <span class="logo-text">Ai <span>Anveshana</span></span></h2>
+                    <p>Partnered with growing companies around the world to deliver smart tech solutions.</p>
+                </div>
+                <div class="footer-address" style="flex: 1; max-width: 300px; margin: 0 2rem; font-size: 0.9rem; color: #ffffff; line-height: 1.6;">
+                    <h4 style="color: #88eb1a; margin-bottom: 0.5rem;"><i class="fas fa-map-marker-alt" style="color: #88eb1a; margin-right: 8px;"></i>Our Office</h4>
+                    164, 1st Main Rd, Vidyaranyapura Post, Chikkabettahalli, Havyakanagara Phase-2, Vidyaranyapura, Bengaluru, Karnataka 560097
+                </div>
+                <div class="social-links">
+                    <a href="https://www.linkedin.com/company/aianveshana" target="_blank"><i class="fab fa-linkedin"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="https://www.youtube.com/@AiBhat" target="_blank"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Ai Anveshana. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Chatbot Widget -->
+    <div class="chat-widget" id="chatWidget">
+        <div class="chat-popup" id="chatPopup">
+            <div class="chat-header">
+                <div class="chat-info">
+                    <div class="chat-avatar" style="background: var(--accent-color); color: white;">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div>
+                        <h4 >Ai Anveshana Assistant</h4>
+                        <p class="status"><span class="online-dot"></span>Online</p>
+                    </div>
+                </div>
+                <button class="close-chat" id="closeChat" ><i class="fas fa-times"></i></button>
+            </div>
+            <div class="chat-body" id="chatBody" style="padding: 0; background: white;">
+                <div class="ai-agent-view" id="aiAgentView">
+                    <div id="aiChatLog"
+                        style="height: 380px; overflow-y: auto; margin-bottom: 1rem; padding-right: 5px; display: flex; flex-direction: column; gap: 12px; background: white; padding: 15px;">
+                        <div class="message bot" style="background: var(--bg-dark); color: var(--primary-color); border: 1px solid var(--glass-border); padding: 10px; border-radius: 10px;">Hello! I'm Ai Anveshana's Assistant. How can I help you today?</div>
+                        <div class="suggestion-chips" id="suggestionChips">
+                            <button class="suggestion-chip" onclick="askSuggestion('How to book a Bootcamp?')">How to book a Bootcamp?</button>
+                            <button class="suggestion-chip" onclick="askSuggestion('What is the price of a bootcamp?')">What is the price of a bootcamp?</button>
+                            <button class="suggestion-chip" onclick="startLeadFlow()">📧 Leave a Message</button>
+                            <button class="suggestion-chip" onclick="window.open('https://wa.me/919113548342', '_blank')" style="border-color: var(--accent-color); color: var(--accent-color); font-weight: 700;">🤝 Contact via WhatsApp</button>
+                        </div>
+                    </div>
+                    <div class="chat-input-container" style="display: flex; gap: 8px; padding: 10px; border-top: 1px solid var(--glass-border);">
+                        <input type="text" id="aiChatInput" placeholder="Type your question..." style="flex: 1; padding: 10px 15px; border-radius: 25px; border: 1px solid var(--glass-border); background: #f0f2f5; color: #333; font-size: 0.9rem;">
+                        <button onclick="sendChatMessage()" style="background: var(--accent-color); border: none; width: 40px; height: 40px; border-radius: 50%; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center;"><i class="fas fa-paper-plane"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button class="chat-toggle" id="chatToggle" style="background: var(--accent-color);">
+            <i class="fas fa-comment-dots"></i>
     </div>
-  </div>
-
-  <!-- LOG VIEWER DRAWER / MODAL -->
-  <div class="modal-overlay" id="log-modal">
-    <div class="modal-drawer">
-      <div class="modal-header">
-        <div class="modal-title">
-          <span class="modal-icon">📋</span>
-          <div>
-            <h3 id="modal-bot-name">Process Logs</h3>
-            <span class="modal-sub" id="modal-bot-path">Process Path</span>
-          </div>
-        </div>
-        <button class="close-btn" onclick="closeLogModal()">✕</button>
-      </div>
-
-      <div class="modal-controls">
-        <input type="text" id="log-modal-search" class="search-input" placeholder="Search log entries..." oninput="renderModalLogs()">
-        <select id="log-modal-level" class="level-select" onchange="renderModalLogs()">
-          <option value="ALL">All Levels</option>
-          <option value="INFO">INFO</option>
-          <option value="WARNING">WARNING</option>
-          <option value="ERROR">ERROR</option>
-        </select>
-        <button class="btn btn-secondary" onclick="fetchModalLogs()">🔄 Refresh Logs</button>
-      </div>
-
-      <div class="modal-terminal" id="modal-terminal-window">
-        <div class="terminal-content" id="modal-terminal-content">
-          <div class="log-row info"><span class="log-msg">Select a bot to view process logs...</span></div>
-        </div>
-      </div>
-
-      <div class="modal-footer">
-        <span id="modal-log-count">0 entries</span>
-        <button class="btn btn-secondary" onclick="closeLogModal()">Close</button>
-      </div>
+    
+    <!-- Theme Toggle Button -->
+    <div class="theme-toggle" id="themeToggle" title="Switch Theme">
+        <i class="fas fa-palette"></i>
     </div>
-  </div>
 
-  <!-- SCHEDULE BOT MODAL -->
-  <div class="modal-overlay" id="schedule-modal">
-    <div class="modal-drawer schedule-drawer">
-      <div class="modal-header">
-        <div class="modal-title">
-          <span class="modal-icon">⏰</span>
-          <div>
-            <h3 id="sch-bot-name">Schedule Process Bot</h3>
-            <span class="modal-sub" id="sch-bot-path">Configure Automated Timers & Frequency</span>
-          </div>
-        </div>
-        <button class="close-btn" onclick="closeScheduleModal()">✕</button>
-      </div>
+    <!-- Scripts -->
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/script.js"></script>
+    <script src="assets/js/contact.js"></script>
 
-      <div class="sch-form-grid">
-        <!-- 1. TIME & TIMEZONE -->
-        <div class="sch-field-group">
-          <label>Target Execution Time</label>
-          <input type="time" id="sch-time" class="sch-input" value="09:00">
-        </div>
-
-        <div class="sch-field-group">
-          <label>Timezone</label>
-          <select id="sch-timezone" class="sch-select">
-            <option value="IST" selected>IST (UTC+5:30) - India</option>
-            <option value="EST">EST (UTC-5:00) - Eastern Time</option>
-            <option value="PST">PST (UTC-8:00) - Pacific Time</option>
-            <option value="UTC">UTC (UTC+0:00) - Universal</option>
-            <option value="GMT">GMT (UTC+0:00) - Greenwich</option>
-          </select>
-        </div>
-
-        <!-- 2. FREQUENCY -->
-        <div class="sch-field-group full-width">
-          <label>Frequency</label>
-          <select id="sch-frequency" class="sch-select" onchange="toggleFrequencyOptions()">
-            <option value="daily" selected>Every Day (Daily)</option>
-            <option value="weekly">Weekly (Select Days: Mon to Sun)</option>
-            <option value="monthly">Monthly (Select Date of Month)</option>
-          </select>
-        </div>
-
-        <!-- 3. WEEKLY DAYS SELECTOR (MON TO SUN) -->
-        <div class="sch-field-group full-width" id="sch-weekly-box" style="display: none;">
-          <label>Select Days of Week (Monday to Sunday)</label>
-          <div class="days-checkbox-grid">
-            <label class="day-chip"><input type="checkbox" name="sch-day" value="Mon" checked> Mon</label>
-            <label class="day-chip"><input type="checkbox" name="sch-day" value="Tue" checked> Tue</label>
-            <label class="day-chip"><input type="checkbox" name="sch-day" value="Wed" checked> Wed</label>
-            <label class="day-chip"><input type="checkbox" name="sch-day" value="Thu" checked> Thu</label>
-            <label class="day-chip"><input type="checkbox" name="sch-day" value="Fri" checked> Fri</label>
-            <label class="day-chip"><input type="checkbox" name="sch-day" value="Sat"> Sat</label>
-            <label class="day-chip"><input type="checkbox" name="sch-day" value="Sun"> Sun</label>
-          </div>
-        </div>
-
-        <!-- 4. MONTHLY DATE SELECTOR -->
-        <div class="sch-field-group full-width" id="sch-monthly-box" style="display: none;">
-          <label>Select Day of Month</label>
-          <select id="sch-dom" class="sch-select">
-            <!-- 1 to 31 -->
-            <option value="1">1st of Month</option><option value="2">2nd of Month</option><option value="3">3rd of Month</option><option value="4">4th of Month</option><option value="5">5th of Month</option><option value="10">10th of Month</option><option value="15">15th of Month</option><option value="20">20th of Month</option><option value="25">25th of Month</option><option value="28">28th of Month</option><option value="30">30th of Month</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="sch-actions">
-        <button class="btn btn-create" onclick="saveBotSchedule()">💾 Save Schedule</button>
-      </div>
-
-      <!-- ACTIVE SCHEDULES TABLE -->
-      <div class="active-sch-section">
-        <h4>Active Process Schedules</h4>
-        <div class="table-wrapper">
-          <table class="aa-table">
-            <thead>
-              <tr>
-                <th>Bot Name</th>
-                <th>Time & Timezone</th>
-                <th>Frequency</th>
-                <th>Details</th>
-                <th style="text-align: center;">Action</th>
-              </tr>
-            </thead>
-            <tbody id="sch-table-body">
-              <tr><td colspan="5" class="table-loading">No active schedules configured.</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="modal-footer">
-        <button class="btn btn-secondary" onclick="closeScheduleModal()">Close</button>
-      </div>
-    </div>
-  </div>
-
-  <script src="app.js?v=1.0.3"></script>
-</body>
 </html>
