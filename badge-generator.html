@@ -41,7 +41,9 @@
     @keyframes gradBg { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
     .b-text { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; text-align: center; }
     .b-text strong { color: #111827; }
-    .b-hi { background: linear-gradient(90deg,#8B5CF6,#6D4FD6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 700; }
+    .b-ticker-wrap { display: flex; align-items: center; overflow: hidden; white-space: nowrap; }
+    .b-sep { color: #c5c6d3; margin: 0 6px; font-weight: bold; }
+    .b-hi{ background: linear-gradient(90deg,#8B5CF6,#6D4FD6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 700; }
     .b-badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 999px; background: rgba(123,97,201,.08); border: 1px solid rgba(123,97,201,.18); color: #7B61C9; font-size: 12px; font-weight: 600; animation: softPulse 2.5s ease-in-out infinite; }
     @keyframes softPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.04)} }
     .b-cta { display: inline-flex; align-items: center; padding: 6px 16px; border-radius: 999px; font-size: 12px; font-weight: 600; color: #fff; background: linear-gradient(135deg,#8B5CF6,#6D4FD6); text-decoration: none; animation: bPulse 1.8s infinite; }
@@ -282,7 +284,12 @@
       .contact-inner{grid-template-columns:1fr;}
       .stats-3{grid-template-columns:repeat(3,1fr);}
     }
-    @media(max-width:768px){
+    
+      #top-banner { justify-content: space-between; gap: 8px; padding: 8px 38px 8px 12px; }
+      .b-ticker-wrap { flex: 1; min-width: 0; overflow: hidden; position: relative; }
+      .b-text { display: inline-flex; white-space: nowrap; animation: bannerMarquee 15s linear infinite; }
+      @keyframes bannerMarquee { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+
       nav ul{display:none!important;}
       .btn-nav{display:none;}
       .hamburger{display:flex!important;}
@@ -302,104 +309,12 @@
 
     <!-- Navigation (Identical to index.html) -->
     <div id="top-banner">
-  <div class="b-text">
-    🚀 <strong>Ai Anveshana</strong> — Empowering Enterprises through
-    <span class="b-hi">AI &amp; Automation</span>
-    <span style="color:#c5c6d3">|</span>
-    <span class="b-badge">🤖 Agentic Orchestrator — Now Live</span>
+  <div class="b-ticker-wrap">
+    <div class="b-text">?? <strong>Ai Anveshana</strong> � Empowering Enterprises through <span class="b-hi">AI &amp; Automation</span> <span class="b-sep">|</span> ?? <strong>Agentic Orchestrator</strong> � <span class="b-hi">Now Live</span></div>
   </div>
-  <a href="products/docs/index.html" class="b-cta">Try Now →</a>
-  <button class="b-close" onclick="document.getElementById('top-banner').style.display='none'">✕</button>
+  <a href="products/docs/index.html" class="b-cta">Try Now ?</a>
+  <button class="b-close" onclick="document.getElementById('top-banner').style.display='none'">?</button>
 </div>
-
-<!-- FLOATING NAVBAR -->
-<div class="nav-wrap">
-  <header class="header-bar">
-    <a href="/" class="logo-wrap">
-      <svg class="logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="lg1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#BA8BBF"/><stop offset="100%" stop-color="#6F53A3"/></linearGradient>
-          <linearGradient id="lg2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#4F3A8A"/><stop offset="100%" stop-color="#2D1B69"/></linearGradient>
-        </defs>
-        <rect x="0" y="35" width="100" height="30" rx="15" fill="url(#lg1)" transform="rotate(45 50 50)"/>
-        <circle cx="22" cy="78" r="20" fill="url(#lg2)"/>
-        <circle cx="78" cy="22" r="20" fill="url(#lg2)"/>
-      </svg>
-      <span class="logo-name">Ai <span>Anveshana</span></span>
-    </a>
-
-    <nav>
-      <ul>
-        <li class="active"><a href="/">Home</a></li>
-        <li><a href="/#expertise">Expertise</a></li>
-        <li><a href="/#products">Products</a></li>
-        <li><a href="/#videos">Videos</a></li>
-        <li><a href="about-mentor.html">About Mentor</a></li>
-        <li><a href="/#contact">Contact</a></li>
-      </ul>
-    </nav>
-
-    <div style="display:flex;align-items:center;gap:12px;">
-      <a href="courses.html" class="btn-nav">Explore Courses</a>
-      <button class="hamburger" id="ham-btn" onclick="toggleMobileNav()">
-        <span></span><span></span><span></span>
-      </button>
-    </div>
-  </header>
-</div>
-
-
-    <!-- Mobile Menu Overlay -->
-    <div class="mobile-nav-overlay">
-        <div class="close-btn"><i class="fas fa-times"></i></div>
-        <ul class="mobile-links">
-            <li><a href="/#home">Home</a></li>
-            <li><a href="/#expertise">Expertise</a></li>
-            <li><a href="/#process-deck">Videos</a></li>
-            <li><a href="about-mentor.html">About Mentor</a></li>
-            <li><a href="/#contact">Contact</a></li>
-        </ul>
-    </div>
-
-    <main class="badge-app">
-        <div class="container">
-            <div style="text-align: center; margin-bottom: 4rem;">
-                <h4 style="color: var(--accent-color); text-transform: uppercase; letter-spacing: 2px; font-size: 0.9rem; margin-bottom: 1rem;">Student Exclusive</h4>
-                <h1 style="font-size: clamp(2.5rem, 5vw, 3.5rem); font-weight: 800; margin-bottom: 1rem;">Personalized <span class="gradient-text">Bootcamp Badge</span></h1>
-                <p style="color: #64748b; font-size: 1.1rem;">Celebrate your commitment to Agentic Process Automation (APA).</p>
-            </div>
-
-            <div class="generator-grid">
-                <div class="form-container">
-                    <div class="input-group">
-                        <label for="userName">Full Name</label>
-                        <input type="text" id="userName" placeholder="Enter your full name" maxlength="25">
-                    </div>
-                    <div class="input-group">
-                        <label for="userDesignation">Designation</label>
-                        <input type="text" id="userDesignation" placeholder="e.g. Solution Architect" maxlength="30">
-                    </div>
-                    <div class="input-group">
-                        <label for="userCompany">Company</label>
-                        <input type="text" id="userCompany" placeholder="e.g. Global Tech Solutions" maxlength="30">
-                    </div>
-                    <div class="input-group">
-                        <label for="userPhoto">Professional Photo</label>
-                        <input type="file" id="userPhoto" accept="image/*" style="padding: 0.8rem; background: #f8fafc; border: 2px dashed #e2e8f0;">
-                    </div>
-                    <div class="input-group">
-                        <label for="userCommitment">Your Commitment</label>
-                        <div style="display: flex; gap: 10px;">
-                            <select id="userCommitment" style="flex: 1; padding: 1rem; border-radius: 12px; border: 2px solid transparent; background: #f1f5f9; font-family: 'Josefin Sans', sans-serif; cursor: pointer;">
-                                <option value='"I am committing 40 hours of APA learning to master agentic workflows and architect the future with AI."'>Mastering Agentic Workflows</option>
-                                <option value='"Embarking on a 40-hour journey to unlock the full potential of Agentic Process Automation."'>Unlocking Potential</option>
-                                <option value='"Committing to 40 hours of intensive APA training to become a leader in AI-driven automation."'>AI Automation Leader</option>
-                                <option value='"Architecting the next generation of business efficiency with 40 hours of APA expertise."'>Business Efficiency</option>
-                                <option value='"Dedicating 40 hours to mastering AI tools and building high-impact agentic solutions."'>High-Impact Solutions</option>
-                            </select>
-                            <button id="shuffleCommitment" title="Shuffle Statement" style="background: var(--accent-color); color: white; border: none; width: 50px; border-radius: 12px; cursor: pointer;"><i class="fas fa-random"></i></button>
-                        </div>
-                    </div>
                 </div>
 
                 <div class="preview-container">
