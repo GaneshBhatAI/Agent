@@ -4,12 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <link rel="icon" type="image/png" href="/assets/img/favicon.png">
   <link rel="icon" type="image/svg+xml" href="/assets/img/favicon.svg">
-  <meta name="description" content="Master AI and Automation with our industry-leading courses and bootcamps.">
+  <title>Available Programs &amp; Bootcamps | Ai Anveshana</title>
+  <meta name="description" content="Master AI and Automation with our industry-leading courses, Agentic Process Automation bootcamps, and architect mentorship.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Inter:wght@300;400;500;600&family=Nunito:wght@700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Inter:wght@300;400;500;600&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
@@ -23,8 +23,8 @@
       --text-dark: #111827;
       --text-mid: #374151;
       --text-muted: #6B7280;
-      --glass-bg: rgba(255,255,255,0.5);
-      --glass-border: rgba(255,255,255,0.8);
+      --glass-bg: rgba(255,255,255,0.65);
+      --glass-border: rgba(255,255,255,0.85);
       --heading: 'Outfit', sans-serif;
       --body: 'Inter', sans-serif;
     }
@@ -45,8 +45,6 @@
     .b-text { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; text-align: center; }
     .b-text strong { color: #111827; }
     .b-hi { background: linear-gradient(90deg,#8B5CF6,#6D4FD6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 700; }
-    .b-badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 999px; background: rgba(123,97,201,.08); border: 1px solid rgba(123,97,201,.18); color: #7B61C9; font-size: 12px; font-weight: 600; animation: softPulse 2.5s ease-in-out infinite; }
-    @keyframes softPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.04)} }
     .b-cta { display: inline-flex; align-items: center; padding: 6px 16px; border-radius: 999px; font-size: 12px; font-weight: 600; color: #fff; background: linear-gradient(135deg,#8B5CF6,#6D4FD6); text-decoration: none; animation: bPulse 1.8s infinite; }
     @keyframes bPulse { 0%{transform:scale(1);box-shadow:0 0 0 0 rgba(123,97,201,.45)} 70%{transform:scale(1.04);box-shadow:0 0 0 10px rgba(123,97,201,0)} 100%{transform:scale(1);box-shadow:0 0 0 0 rgba(123,97,201,0)} }
     .b-close { position: absolute; top: 50%; right: 14px; transform: translateY(-50%); background: none; border: none; font-size: 15px; color: #999; cursor: pointer; transition: .3s; }
@@ -85,138 +83,98 @@
     #mobile-nav {
       display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 9999;
       background: rgba(247,240,249,0.97); backdrop-filter: blur(20px);
-      flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+      flex-direction: column; align-items: center; justify-content: center; gap: 12px;
     }
     #mobile-nav.open { display: flex; }
-    #mobile-nav a { font-family: var(--heading); font-size: 22px; font-weight: 700; color: var(--text-dark); text-decoration: none; padding: 10px 30px; border-radius: 14px; transition: all .3s; }
+    #mobile-nav a { font-family: var(--heading); font-size: 20px; font-weight: 700; color: var(--text-dark); text-decoration: none; padding: 10px 30px; border-radius: 14px; transition: all .3s; }
     #mobile-nav a:hover { background: rgba(186,139,191,0.15); color: var(--purple-dark); }
     #mobile-nav .close-mob { position: absolute; top: 24px; right: 24px; font-size: 24px; background: none; border: none; cursor: pointer; color: #666; }
 
-    /* ── HERO ── */
-    .hero-outer {
-      position: relative; overflow: hidden;
-      background-color: var(--bg);
+    /* ── HERO HEADER SECTION ── */
+    .hero-sec {
+      position: relative; max-width: 1250px; margin: 20px auto 40px; padding: 40px 20px 20px;
+      text-align: center; display: flex; flex-direction: column; align-items: center;
     }
-    /* Light rectilinear grid pattern */
-    .hero-outer::before {
-      content: '';
-      position: absolute; inset: 0; z-index: 0; pointer-events: none;
-      background-image:
-        linear-gradient(rgba(111,83,163,0.055) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(111,83,163,0.055) 1px, transparent 1px);
-      background-size: 52px 52px;
-    }
-    /* Soft fade vignette so grid fades toward edges */
-    .hero-outer::after {
-      content: '';
-      position: absolute; inset: 0; z-index: 1; pointer-events: none;
-      background: radial-gradient(ellipse 80% 70% at 50% 50%,
-        transparent 40%,
-        var(--bg) 100%);
-    }
-    .hero {
-      position: relative; z-index: 5; max-width: 1250px; margin: 0 auto;
-      min-height: 540px; display: grid; grid-template-columns: 1.15fr 1fr;
-      align-items: center; gap: 60px; padding: 30px 20px 60px;
-    }
-    .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.65); border: 1px solid rgba(255,255,255,0.9); padding: 6px 14px; border-radius: 100px; font-size: 11px; font-weight: 600; color: #7E57C2; letter-spacing: 0.1em; margin-bottom: 20px; }
-    .hero-dot { width: 7px; height: 7px; background: var(--purple-light); border-radius: 50%; position: relative; }
-    .hero-dot::after { content: ""; position: absolute; top: -3px; left: -3px; width: 13px; height: 13px; border: 1.5px solid var(--purple-light); border-radius: 50%; animation: ripple 2s infinite ease-out; }
-    @keyframes ripple { 0%{transform:scale(.5);opacity:1} 100%{transform:scale(1.8);opacity:0} }
-    .hero-title { font-family: var(--heading); font-size: 60px; font-weight: 800; line-height: 1.08; color: var(--text-dark); letter-spacing: -0.03em; margin-bottom: 20px; }
+    .sec-tag { display: inline-flex; align-items: center; gap: 7px; background: rgba(186,139,191,.14); border: 1px solid rgba(186,139,191,.35); color: var(--purple-dark); padding: 6px 16px; border-radius: 99px; font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 18px; }
+    .hero-title { font-family: var(--heading); font-size: 52px; font-weight: 800; line-height: 1.12; color: var(--text-dark); letter-spacing: -0.03em; margin-bottom: 20px; max-width: 850px; }
     .hero-title span { background: linear-gradient(135deg,var(--purple-light),var(--purple-dark)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .hero-desc { font-size: 16px; line-height: 1.75; color: #4b5563; margin-bottom: 36px; max-width: 500px; }
-    .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; }
-    .btn-primary { font-size: 15px; font-weight: 500; color: #fff; background: linear-gradient(135deg,var(--purple-light),var(--purple-dark)); border: none; padding: 15px 30px; border-radius: 100px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 20px rgba(111,83,163,0.35); transition: all .3s; }
-    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(111,83,163,0.5); }
-    .btn-outline { font-size: 15px; font-weight: 500; color: #4b5563; background: rgba(255,255,255,0.6); border: 1px solid rgba(255,255,255,0.9); padding: 15px 30px; border-radius: 100px; text-decoration: none; transition: all .3s; }
-    .btn-outline:hover { background: rgba(255,255,255,0.95); transform: translateY(-2px); }
+    .hero-subtitle { font-size: 18px; line-height: 1.75; color: var(--text-muted); margin-bottom: 36px; max-width: 680px; }
 
-    /* ── AI ICON CLOUD (Aylence exact) ── */
-    .hv{position:relative;z-index:5;height:460px;display:flex;align-items:center;justify-content:center;}
-    .ic{position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center;}
-    .ai{position:absolute;width:62px;height:62px;border-radius:16px;background:rgba(255,255,255,0.65);backdrop-filter:blur(14px);border:1px solid rgba(186,139,191,0.38);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 18px rgba(111,83,163,0.13);}
-    .ai img{width:38px;height:38px;object-fit:contain;border-radius:8px;}
-    .ai-1{top:8%;left:10%;animation:fl1 4.0s ease-in-out infinite;}
-    .ai-2{top:12%;right:12%;animation:fl2 4.5s ease-in-out infinite;}
-    .ai-3{top:35%;left:4%;animation:fl3 3.8s ease-in-out infinite;}
-    .ai-4{top:30%;right:4%;animation:fl4 4.2s ease-in-out infinite;}
-    .ai-5{top:55%;left:8%;animation:fl5 4.8s ease-in-out infinite;}
-    .ai-6{top:52%;right:8%;animation:fl6 3.6s ease-in-out infinite;}
-    .ai-7{bottom:14%;left:14%;animation:fl7 5.0s ease-in-out infinite;}
-    .ai-8{bottom:10%;right:14%;animation:fl8 4.3s ease-in-out infinite;}
-    .ai-9{top:20%;left:32%;animation:fl9 3.9s ease-in-out infinite;}
-    .ai-10{top:20%;right:30%;animation:fl10 4.6s ease-in-out infinite;}
-    .ai-11{top:50%;left:38%;animation:fl11 4.1s ease-in-out infinite;}
-    .ai-12{bottom:22%;left:42%;animation:fl12 5.2s ease-in-out infinite;}
-    @keyframes fl1{0%,100%{transform:translateY(0) translateX(0)}33%{transform:translateY(-18px) translateX(-10px)}66%{transform:translateY(-8px) translateX(-5px)}}
-    @keyframes fl2{0%,100%{transform:translateY(0) translateX(0)}33%{transform:translateY(-22px) translateX(12px)}66%{transform:translateY(-12px) translateX(6px)}}
-    @keyframes fl3{0%,100%{transform:translateY(0) translateX(0)}33%{transform:translateY(-14px) translateX(-16px)}66%{transform:translateY(-7px) translateX(-8px)}}
-    @keyframes fl4{0%,100%{transform:translateY(0) translateX(0)}33%{transform:translateY(-20px) translateX(14px)}66%{transform:translateY(-10px) translateX(7px)}}
-    @keyframes fl5{0%,100%{transform:translateY(0) translateX(0)}33%{transform:translateY(-16px) translateX(-12px)}66%{transform:translateY(-8px) translateX(-6px)}}
-    @keyframes fl6{0%,100%{transform:translateY(0) translateX(0)}33%{transform:translateY(-24px) translateX(10px)}66%{transform:translateY(-12px) translateX(5px)}}
-    @keyframes fl7{0%,100%{transform:translateY(0) translateX(0)}33%{transform:translateY(-12px) translateX(-14px)}66%{transform:translateY(-6px) translateX(-7px)}}
-    @keyframes fl8{0%,100%{transform:translateY(0) translateX(0)}33%{transform:translateY(-18px) translateX(16px)}66%{transform:translateY(-9px) translateX(8px)}}
-    @keyframes fl9{0%,100%{transform:translateY(0) translateX(0)}33%{transform:translateY(-20px) translateX(8px)}66%{transform:translateY(-10px) translateX(4px)}}
-    @keyframes fl10{0%,100%{transform:translateY(0) translateX(0)}33%{transform:translateY(-16px) translateX(-10px)}66%{transform:translateY(-8px) translateX(-5px)}}
-    @keyframes fl11{0%,100%{transform:translateY(0) translateX(0)}33%{transform:translateY(-22px) translateX(6px)}66%{transform:translateY(-11px) translateX(3px)}}
-    @keyframes fl12{0%,100%{transform:translateY(0) translateX(0)}33%{transform:translateY(-14px) translateX(-8px)}66%{transform:translateY(-7px) translateX(-4px)}}
+    /* Hero Stats Bar */
+    .hero-stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; width: 100%; max-width: 780px; margin-bottom: 20px; }
+    .hero-stat-card { background: rgba(255,255,255,0.72); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.95); border-radius: 20px; padding: 20px 16px; display: flex; flex-direction: column; gap: 4px; box-shadow: 0 4px 20px rgba(111,83,163,0.06); transition: all 0.3s ease; }
+    .hero-stat-card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(111,83,163,0.15); border-color: rgba(186,139,191,0.5); }
+    .hero-stat-num { font-family: var(--heading); font-size: 28px; font-weight: 800; color: var(--purple-deep); line-height: 1.1; }
+    .hero-stat-lbl { font-size: 13px; color: var(--text-muted); font-weight: 600; }
 
-    /* Stats */
-    .stats-row { margin-top: 40px; }
-    .trust-row { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
-    .avatars { display: flex; }
-    .avatars img { width: 40px; height: 40px; border-radius: 50%; border: 2.5px solid #fff; margin-left: -12px; object-fit: cover; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-    .avatars img:first-child { margin-left: 0; }
-    .trust-txt { font-size: 14px; font-weight: 500; color: var(--text-mid); }
-    .stats-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; }
-    .stat-card { background: rgba(255,255,255,0.48); border: 1px solid rgba(255,255,255,0.75); backdrop-filter: blur(10px); border-radius: 18px; padding: 20px 16px; display: flex; flex-direction: column; gap: 4px; box-shadow: 0 4px 20px rgba(0,0,0,0.02); transition: all .35s ease; }
-    .stat-card:hover { transform: translateY(-5px); box-shadow: 0 14px 36px rgba(111,83,163,0.12); border-color: rgba(186,139,191,.5); }
-    .stat-num { font-family: var(--heading); font-size: 30px; font-weight: 700; color: #1e143c; line-height: 1; }
-    .stat-lbl { font-size: 11.5px; color: var(--text-muted); font-weight: 500; margin-top: 3px; }
-
-    /* ─── SHARED SECTION ─── */
-    .section { padding: 80px 20px; }
-    .section-inner { max-width: 1250px; margin: 0 auto; }
-    .sec-tag { display: inline-flex; align-items: center; gap: 7px; background: rgba(186,139,191,.1); border: 1px solid rgba(186,139,191,.25); color: var(--purple-dark); padding: 5px 14px; border-radius: 99px; font-size: 11px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; margin-bottom: 14px; }
-    .sec-title { font-family: var(--heading); font-size: 40px; font-weight: 800; color: var(--text-dark); line-height: 1.2; letter-spacing: -0.025em; margin-bottom: 14px; }
+    /* ── SECTION COMMON ── */
+    .section { padding: 60px 20px; }
+    .sec-inner { max-width: 1250px; margin: 0 auto; }
+    .sec-title { font-family: var(--heading); font-size: 38px; font-weight: 800; color: var(--text-dark); line-height: 1.2; letter-spacing: -0.025em; margin-bottom: 16px; }
     .sec-title span { background: linear-gradient(135deg,var(--purple-light),var(--purple-dark)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .sec-desc { font-size: 16px; color: var(--text-muted); max-width: 560px; line-height: 1.75; margin-bottom: 44px; }
+    .sec-desc { font-size: 16px; color: var(--text-muted); max-width: 600px; line-height: 1.7; margin-bottom: 40px; }
 
-    /* ─── PRODUCTS SECTION ─── */
-    .products-bg { background: linear-gradient(135deg,#F5EEFF 0%,#EDE2FF 50%,#F9F0FF 100%); }
-    .products-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
-    .product-card { background: rgba(255,255,255,0.72); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.88); border-radius: 24px; padding: 30px 26px; display: flex; flex-direction: column; gap: 14px; transition: all .4s ease; box-shadow: 0 4px 30px rgba(111,83,163,0.08); }
-    .product-card:hover { transform: translateY(-7px); box-shadow: 0 18px 50px rgba(111,83,163,0.16); }
-    .p-badge { display: inline-flex; padding: 4px 12px; border-radius: 99px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; align-self: flex-start; }
-    .p-badge.live { background: rgba(16,185,129,.1); color: #059669; }
-    .p-badge.soon { background: rgba(111,83,163,.1); color: var(--purple-dark); }
-    .p-icon { font-size: 40px; line-height: 1; }
-    .p-title { font-family: var(--heading); font-size: 21px; font-weight: 700; color: var(--text-dark); }
-    .p-tagline { font-size: 13px; font-weight: 600; color: var(--purple-dark); }
-    .p-desc { font-size: 14px; color: var(--text-muted); line-height: 1.65; }
-    .p-link { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--purple-dark); text-decoration: none; padding: 10px 20px; border-radius: 99px; border: 1.5px solid rgba(111,83,163,.3); transition: all .3s; align-self: flex-start; margin-top: 4px; }
-    .p-link:hover { background: var(--purple-dark); color: #fff; border-color: var(--purple-dark); }
-    .p-link.disabled { opacity: .45; pointer-events: none; }
+    /* ── FEATURED MASTER BOOTCAMP CARD ── */
+    .featured-bootcamp-card {
+      background: rgba(255,255,255,0.8); backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.95); border-radius: 30px;
+      overflow: hidden; box-shadow: 0 16px 50px rgba(111,83,163,0.12);
+      display: grid; grid-template-columns: 1.1fr 1.3fr; gap: 0; transition: all 0.4s ease;
+    }
+    .featured-bootcamp-card:hover { transform: translateY(-6px); box-shadow: 0 22px 60px rgba(111,83,163,0.18); border-color: rgba(186,139,191,0.6); }
+    .f-img-wrap { position: relative; height: 100%; min-height: 340px; overflow: hidden; background: #1e143c; }
+    .f-img-wrap img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+    .featured-bootcamp-card:hover .f-img-wrap img { transform: scale(1.05); }
+    .f-status-badge { position: absolute; top: 20px; left: 20px; background: rgba(16,185,129,0.92); color: #fff; padding: 7px 16px; border-radius: 100px; font-size: 12px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; z-index: 2; box-shadow: 0 4px 15px rgba(16,185,129,0.4); }
 
-    /* ─── VIDEOS ─── */
-    .videos-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
-    .vid-card { background: rgba(255,255,255,0.5); border: 1px solid rgba(255,255,255,.8); border-radius: 20px; overflow: hidden; box-shadow: 0 4px 24px rgba(111,83,163,0.07); transition: all .35s ease; }
-    .vid-card:hover { transform: translateY(-6px); box-shadow: 0 16px 40px rgba(111,83,163,0.14); }
-    .vid-thumb { position: relative; padding-top: 56.25%; background: #1e143c; }
-    .vid-thumb iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
-    .vid-title { padding: 14px 16px; font-size: 13.5px; font-weight: 600; color: var(--text-dark); line-height: 1.45; }
+    .f-body { padding: 40px; display: flex; flex-direction: column; justify-content: space-between; }
+    .f-header h3 { font-family: var(--heading); font-size: 28px; font-weight: 800; color: var(--text-dark); margin-bottom: 12px; line-height: 1.25; }
+    .f-header p { font-size: 15.5px; color: var(--text-mid); line-height: 1.7; margin-bottom: 24px; }
 
-    /* ─── EXPERTISE ─── */
-    .exp-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
-    .exp-card { background: rgba(255,255,255,0.52); border: 1px solid rgba(255,255,255,.82); backdrop-filter: blur(12px); border-radius: 22px; padding: 28px 24px; transition: all .4s cubic-bezier(.175,.885,.32,1.275); box-shadow: 0 4px 24px rgba(111,83,163,0.06); }
-    .exp-card:hover { transform: translateY(-8px); box-shadow: 0 22px 52px rgba(111,83,163,0.15); border-color: rgba(186,139,191,.5); }
-    .exp-icon { width: 50px; height: 50px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 16px; background: linear-gradient(135deg,rgba(186,139,191,.18),rgba(111,83,163,.12)); }
-    .exp-title { font-family: var(--heading); font-size: 18px; font-weight: 700; color: var(--text-dark); margin-bottom: 8px; }
-    .exp-desc { font-size: 14px; color: var(--text-muted); line-height: 1.65; }
+    /* Tag Cloud */
+    .tag-cloud { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }
+    .tag-pill { background: rgba(186,139,191,0.14); border: 1px solid rgba(186,139,191,0.3); color: var(--purple-dark); padding: 5px 14px; border-radius: 50px; font-size: 12px; font-weight: 600; }
 
-    /* ─── CONTACT ─── */
-    .contact-wrap { max-width: 1250px; margin: 0 auto; padding: 0 20px 70px; }
+    /* Meta Grid */
+    .f-meta-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; padding-top: 20px; border-top: 1px solid rgba(186,139,191,0.2); margin-bottom: 28px; }
+    .f-meta-item { display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 600; color: var(--text-dark); }
+    .f-meta-item i { width: 32px; height: 32px; border-radius: 50%; background: rgba(186,139,191,0.15); color: var(--purple-dark); display: flex; align-items: center; justify-content: center; font-size: 14px; }
+
+    /* Actions */
+    .f-actions { display: flex; gap: 14px; flex-wrap: wrap; }
+    .btn-primary { font-size: 15px; font-weight: 600; color: #fff; background: linear-gradient(135deg,var(--purple-light),var(--purple-dark)); border: none; padding: 14px 28px; border-radius: 100px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 20px rgba(111,83,163,0.35); transition: all .3s; }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(111,83,163,0.5); }
+    .btn-outline { font-size: 15px; font-weight: 600; color: var(--text-mid); background: rgba(255,255,255,0.7); border: 1.5px solid rgba(186,139,191,0.4); padding: 14px 28px; border-radius: 100px; text-decoration: none; transition: all .3s; }
+    .btn-outline:hover { background: #fff; transform: translateY(-2px); border-color: var(--purple-dark); color: var(--purple-dark); }
+
+    /* ── SPECIALTY TRACKS GRID ── */
+    .tracks-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .track-card {
+      background: rgba(255,255,255,0.75); backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.9); border-radius: 24px; padding: 30px 26px;
+      display: flex; flex-direction: column; justify-content: space-between; gap: 20px;
+      box-shadow: 0 6px 26px rgba(111,83,163,0.06); transition: all 0.35s ease;
+    }
+    .track-card:hover { transform: translateY(-6px); box-shadow: 0 16px 45px rgba(111,83,163,0.15); border-color: rgba(186,139,191,0.5); }
+    .track-badge { display: inline-flex; padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; align-self: flex-start; background: rgba(111,83,163,0.12); color: var(--purple-dark); }
+    .track-icon { width: 52px; height: 52px; border-radius: 16px; background: linear-gradient(135deg,rgba(186,139,191,0.22),rgba(111,83,163,0.14)); color: var(--purple-dark); display: flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 12px; }
+    .track-title { font-family: var(--heading); font-size: 20px; font-weight: 700; color: var(--text-dark); margin-bottom: 8px; }
+    .track-desc { font-size: 14px; color: var(--text-muted); line-height: 1.65; margin-bottom: 16px; }
+
+    /* ── PILLARS OF EXCELLENCE ── */
+    .pillars-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+    .p-pillar-card {
+      background: rgba(255,255,255,0.7); backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.9); border-radius: 22px; padding: 26px 20px;
+      display: flex; flex-direction: column; gap: 12px; box-shadow: 0 4px 20px rgba(111,83,163,0.05); transition: all 0.3s ease;
+    }
+    .p-pillar-card:hover { transform: translateY(-5px); box-shadow: 0 14px 35px rgba(111,83,163,0.14); border-color: rgba(186,139,191,0.5); }
+    .pp-icon { width: 44px; height: 44px; border-radius: 12px; background: linear-gradient(135deg,rgba(186,139,191,0.2),rgba(111,83,163,0.12)); color: var(--purple-dark); display: flex; align-items: center; justify-content: center; font-size: 18px; }
+    .pp-title { font-family: var(--heading); font-size: 17px; font-weight: 700; color: var(--text-dark); }
+    .pp-desc { font-size: 13.5px; color: var(--text-muted); line-height: 1.55; }
+
+    /* ── CONTACT FORM SECTION ── */
+    .contact-wrap { max-width: 1250px; margin: 0 auto 70px; padding: 0 20px; }
     .contact-box { background: linear-gradient(135deg,#1e143c 0%,#2D1B69 60%,#4F3A8A 100%); border-radius: 30px; padding: 58px 40px; overflow: hidden; position: relative; }
     .contact-box::before { content:""; position:absolute; top:-80px; right:-80px; width:360px; height:360px; border-radius:50%; background:radial-gradient(circle,rgba(186,139,191,.22) 0%,transparent 70%); pointer-events:none; }
     .contact-box::after { content:""; position:absolute; bottom:-60px; left:-60px; width:280px; height:280px; border-radius:50%; background:radial-gradient(circle,rgba(111,83,163,.18) 0%,transparent 70%); pointer-events:none; }
@@ -233,7 +191,7 @@
     .c-btn:hover { transform:translateY(-2px); box-shadow:0 10px 30px rgba(0,0,0,.32); }
     #formStatus { font-size:14px; text-align:center; margin-top:4px; }
 
-    /* ─── FOOTER ─── */
+    /* ── FOOTER ── */
     footer { padding: 40px 20px 20px; border-top: 1px solid rgba(186,139,191,.15); }
     .footer-inner { max-width:1250px; margin:0 auto; display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:28px; }
     .f-brand h3 { font-family:var(--heading); font-size:20px; font-weight:700; color:var(--text-dark); margin-bottom:8px; display:flex; align-items:center; gap:10px; }
@@ -246,7 +204,7 @@
     .f-social a:hover { background:var(--purple-dark); color:#fff; }
     .footer-copy { max-width:1250px; margin:24px auto 0; padding-top:20px; border-top:1px solid rgba(186,139,191,.12); font-size:13px; color:var(--text-muted); text-align:center; }
 
-    /* ─── CHATBOT ─── */
+    /* ── CHATBOT ── */
     .chat-widget { position:fixed; bottom:24px; right:24px; z-index:9999; }
     .chat-toggle { width:54px; height:54px; border-radius:50%; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:22px; color:#fff; background:linear-gradient(135deg,var(--purple-light),var(--purple-dark)); box-shadow:0 4px 18px rgba(111,83,163,.5); transition:transform .3s; }
     .chat-toggle:hover { transform:scale(1.08); }
@@ -271,59 +229,30 @@
     .chat-input-row input:focus { outline:none; border-color:var(--purple-light); }
     .chat-send { background:linear-gradient(135deg,var(--purple-light),var(--purple-dark)); border:none; width:36px; height:36px; border-radius:50%; color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:13px; }
 
-    /* ─── RESPONSIVE ─── */
-    @media(max-width:1024px){
-      .hero{grid-template-columns:1fr;gap:40px;}
-      .hv{height:320px;}
-      .ai{width:54px;height:54px;border-radius:14px;}
-      .ai img{width:32px;height:32px;}
-      .ai-1{top:5%;left:8%;} .ai-2{top:5%;right:8%;} .ai-3{top:30%;left:2%;} .ai-4{top:30%;right:2%;}
-      .ai-5{top:55%;left:6%;} .ai-6{top:55%;right:6%;} .ai-7{bottom:5%;left:12%;} .ai-8{bottom:5%;right:12%;}
-      .ai-9{top:15%;left:28%;} .ai-10{top:15%;right:28%;} .ai-11{top:48%;left:36%;} .ai-12{bottom:18%;left:40%;}
-      .hero-title{font-size:46px;}
-      .exp-grid,.videos-grid,.products-grid{grid-template-columns:repeat(2,1fr);}
-      .contact-inner{grid-template-columns:1fr;}
-      .stats-3{grid-template-columns:repeat(3,1fr);}
+    /* ── RESPONSIVE MEDIA QUERIES ── */
+    @media (max-width: 1024px) {
+      .hero-title { font-size: 42px; }
+      .featured-bootcamp-card { grid-template-columns: 1fr; }
+      .f-img-wrap { min-height: 260px; }
+      .tracks-grid { grid-template-columns: repeat(2, 1fr); }
+      .pillars-grid { grid-template-columns: repeat(2, 1fr); }
+      .contact-inner { grid-template-columns: 1fr; gap: 40px; }
     }
-    @media(max-width:768px){
-      nav ul{display:none!important;}
-      .btn-nav{display:none;}
-      .hamburger{display:flex!important;}
-      .hv{height:280px;}
-      .ai{width:50px;height:50px;border-radius:13px;}
-      .ai img{width:30px;height:30px;}
-      .hero-title{font-size:36px;}
-      .sec-title{font-size:28px;}
-      .exp-grid,.videos-grid,.products-grid{grid-template-columns:1fr;}
-      .cf-row{grid-template-columns:1fr;}
-      .contact-box{padding:36px 20px;}
-      .chat-popup{width:290px;}
+    @media (max-width: 768px) {
+      nav ul { display: none !important; }
+      .btn-nav { display: none; }
+      .hamburger { display: flex !important; }
+      .hero-title { font-size: 34px; }
+      .sec-title { font-size: 28px; }
+      .hero-stats-row { grid-template-columns: 1fr; }
+      .f-meta-grid { grid-template-columns: 1fr; }
+      .tracks-grid { grid-template-columns: 1fr; }
+      .pillars-grid { grid-template-columns: 1fr; }
+      .cf-row { grid-template-columns: 1fr; }
+      .contact-box { padding: 36px 20px; }
       #top-banner { overflow: hidden; white-space: nowrap; flex-wrap: nowrap; justify-content: space-between; gap: 8px; padding: 8px 38px 8px 12px; }
       .b-text { white-space: nowrap; flex-wrap: nowrap; display: inline-flex; animation: bannerMarquee 15s linear infinite; }
       @keyframes bannerMarquee { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
-    /* ─── COURSES SPECIFIC ─── */
-    .container { max-width: 1250px; margin: 40px auto; padding: 40px 20px; }
-    .page-title { font-family: var(--heading); font-size: 48px; font-weight: 800; color: var(--text-dark); margin-bottom: 15px; text-align: center; }
-    .page-title span { background: linear-gradient(135deg,var(--purple-light),var(--purple-dark)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .page-desc { font-size: 18px; color: var(--text-muted); text-align: center; max-width: 600px; margin: 0 auto 50px; line-height: 1.6; }
-    .course-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; }
-    .course-card { display: flex; flex-direction: column; background: rgba(255,255,255,0.7); backdrop-filter: blur(10px); border-radius: 20px; border: 1px solid rgba(255,255,255,0.8); overflow: hidden; text-decoration: none; transition: transform 0.3s, box-shadow 0.3s; box-shadow: 0 10px 30px rgba(111,83,163,0.05); }
-    .course-card:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(111,83,163,0.15); }
-    .course-img-wrap { position: relative; height: 220px; overflow: hidden; background: #e0d4f5; }
-    .course-img-wrap img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
-    .course-card:hover .course-img-wrap img { transform: scale(1.05); }
-    .c-badge { position: absolute; top: 15px; left: 15px; background: rgba(16,185,129,0.9); color: #fff; padding: 6px 14px; border-radius: 20px; font-size: 11px; font-weight: 600; z-index: 2; letter-spacing: 0.05em; text-transform: uppercase; }
-    .course-body { padding: 30px; display: flex; flex-direction: column; flex: 1; }
-    .course-body h3 { font-family: var(--heading); font-size: 22px; font-weight: 700; color: var(--text-dark); margin-bottom: 12px; }
-    .course-body p { font-size: 15px; color: var(--text-mid); line-height: 1.6; margin-bottom: 25px; flex: 1; }
-    .course-meta { display: flex; align-items: center; gap: 15px; border-top: 1px solid rgba(111,83,163,0.1); padding-top: 20px; }
-    .meta-item { font-size: 14px; font-weight: 600; color: var(--purple-dark); display: flex; align-items: center; gap: 6px; }
-    
-    @media (max-width: 768px) {
-      .container { padding: 20px; margin: 20px auto; }
-      .page-title { font-size: 36px; }
-      .page-desc { font-size: 16px; margin-bottom: 30px; }
-      .course-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -336,11 +265,11 @@
   <button class="b-close" onclick="document.getElementById('top-banner').style.display='none'">✕</button>
 </div>
 
-<!-- NAVBAR -->
+<!-- FLOATING NAVBAR -->
 <div class="nav-wrap">
   <header class="header-bar">
     <a href="/" class="logo-wrap">
-      <svg width="32" height="32" viewBox="0 0 100 100"><defs><linearGradient id="lg1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#BA8BBF"/><stop offset="100%" stop-color="#6F53A3"/></linearGradient><linearGradient id="lg2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#4F3A8A"/><stop offset="100%" stop-color="#2D1B69"/></linearGradient></defs><rect x="0" y="35" width="100" height="30" rx="15" fill="url(#lg1)" transform="rotate(45 50 50)"/><circle cx="22" cy="78" r="20" fill="url(#lg2)"/><circle cx="78" cy="22" r="20" fill="url(#lg2)"/></svg>
+      <svg class="logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="lg1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#BA8BBF"/><stop offset="100%" stop-color="#6F53A3"/></linearGradient><linearGradient id="lg2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#4F3A8A"/><stop offset="100%" stop-color="#2D1B69"/></linearGradient></defs><rect x="0" y="35" width="100" height="30" rx="15" fill="url(#lg1)" transform="rotate(45 50 50)"/><circle cx="22" cy="78" r="20" fill="url(#lg2)"/><circle cx="78" cy="22" r="20" fill="url(#lg2)"/></svg>
       <span class="logo-name">Ai <span>Anveshana</span></span>
     </a>
     <nav>
@@ -354,32 +283,191 @@
       </ul>
     </nav>
     <a href="courses.html" class="btn-nav">Explore Courses</a>
+    <button class="hamburger" onclick="toggleMobileNav()">
+      <span></span><span></span><span></span>
+    </button>
   </header>
 </div>
 
-<!-- CONTENT -->
-<div class="bg-grid">
-  <div class="container">
-    <div class="sec-tag">🎓 Industry Programs</div>
-    <h1 class="page-title">Available <span>Programs</span></h1>
-    <p class="page-desc">Accelerate your career with our master-level bootcamp designed for the next generation of AI and Automation architects.</p>
+<!-- MOBILE NAV MODAL -->
+<div id="mobile-nav">
+  <button class="close-mob" onclick="toggleMobileNav()">✕</button>
+  <a href="/" onclick="toggleMobileNav()">Home</a>
+  <a href="/#expertise" onclick="toggleMobileNav()">Expertise</a>
+  <a href="/#products" onclick="toggleMobileNav()">Products</a>
+  <a href="/#videos" onclick="toggleMobileNav()">Videos</a>
+  <a href="about-mentor.html" onclick="toggleMobileNav()">About Mentor</a>
+  <a href="/#contact" onclick="toggleMobileNav()">Contact</a>
+  <a href="courses.html" style="background:linear-gradient(135deg,#BA8BBF,#6F53A3);color:#fff;margin-top:10px;">Explore Courses →</a>
+</div>
 
-    <div class="course-grid">
-      <a href="apa-bootcamp.html" class="course-card">
-        <div class="course-img-wrap">
-          <span class="c-badge">● Active Registration</span>
-          <img src="assets/img/Course/apa-course.jpg" alt="Master Agentic Process Automation (APA)">
-        </div>
-        <div class="course-body">
+<!-- HERO HEADER SECTION -->
+<section class="hero-sec">
+  <div class="sec-tag">🎓 ACADEMY &amp; BOOTCAMPS</div>
+  <h1 class="hero-title">Master <span>Agentic AI &amp; Automation</span></h1>
+  <p class="hero-subtitle">Industry-grade, project-based bootcamps engineered to transform automation engineers into lead AI Solution Architects.</p>
+
+  <!-- Hero Stats Row -->
+  <div class="hero-stats-row">
+    <div class="hero-stat-card">
+      <span class="hero-stat-num">2 Months</span>
+      <span class="hero-stat-lbl">Intensive Masterclass</span>
+    </div>
+    <div class="hero-stat-card">
+      <span class="hero-stat-num">5+ Projects</span>
+      <span class="hero-stat-lbl">Production Capstones</span>
+    </div>
+    <div class="hero-stat-card">
+      <span class="hero-stat-num">100% Live</span>
+      <span class="hero-stat-lbl">Architect Mentorship</span>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED MASTER BOOTCAMP SECTION -->
+<section class="section" style="padding-top: 10px;">
+  <div class="sec-inner">
+    <div class="sec-tag">🔥 Flagship Masterclass</div>
+    <h2 class="sec-title">Featured <span>Bootcamp</span></h2>
+
+    <div class="featured-bootcamp-card">
+      <div class="f-img-wrap">
+        <span class="f-status-badge">● Active Registration</span>
+        <img src="assets/img/Course/apa-course.jpg" alt="Master Agentic Process Automation (APA)">
+      </div>
+      <div class="f-body">
+        <div class="f-header">
           <h3>Master Agentic Process Automation (APA)</h3>
-          <p>Architect the future. Master the next generation of AI-driven automation that autonomously reasons, plans, and executes using 5+ industry-leading tools and architectures.</p>
-          <div class="course-meta">
-            <span class="meta-item"><i class="far fa-clock"></i> 2 Months</span>
-            <span class="meta-item"><i class="fas fa-tools"></i> 5+ Tools</span>
-            <span class="meta-item" style="margin-left:auto;"><i class="fas fa-arrow-right"></i> Details</span>
-          </div>
+          <p>Architect the future. Master the next generation of AI-driven automation that autonomously reasons, plans, and executes using 5+ industry-leading tools and enterprise architectures.</p>
         </div>
-      </a>
+
+        <!-- Curriculum Pills -->
+        <div class="tag-cloud">
+          <span class="tag-pill"><i class="fas fa-brain"></i> LLM Reasoning</span>
+          <span class="tag-pill"><i class="fas fa-link"></i> LangChain Framework</span>
+          <span class="tag-pill"><i class="fas fa-project-diagram"></i> n8n Workflows</span>
+          <span class="tag-pill"><i class="fas fa-database"></i> RAG Systems</span>
+          <span class="tag-pill"><i class="fas fa-robot"></i> Autogen &amp; Multi-Agent</span>
+          <span class="tag-pill"><i class="fas fa-cog"></i> Automation Anywhere / UiPath</span>
+        </div>
+
+        <!-- Meta Grid -->
+        <div class="f-meta-grid">
+          <div class="f-meta-item"><i class="far fa-clock"></i> Duration: 2 Months</div>
+          <div class="f-meta-item"><i class="fas fa-tools"></i> Tools: 5+ Platforms</div>
+          <div class="f-meta-item"><i class="fas fa-user-shield"></i> Level: Advanced Architect</div>
+          <div class="f-meta-item"><i class="fas fa-certificate"></i> Verified Certificate</div>
+        </div>
+
+        <!-- Actions -->
+        <div class="f-actions">
+          <a href="apa-bootcamp.html" class="btn-primary"><i class="fas fa-rocket"></i> View APA Curriculum →</a>
+          <a href="#inquire-form" class="btn-outline">Inquire / Reserve Seat</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SPECIALTY TRACKS & UPCOMING MODULES -->
+<section class="section" style="background: rgba(245,238,255,0.4);">
+  <div class="sec-inner">
+    <div class="sec-tag">⚡ Specialized Modules</div>
+    <h2 class="sec-title">Upcoming <span>Specialty Tracks</span></h2>
+    <p class="sec-desc">Targeted deep-dive modules designed to master specific cutting-edge AI technologies.</p>
+
+    <div class="tracks-grid">
+      <!-- Track 1 -->
+      <div class="track-card">
+        <div>
+          <span class="track-badge">Upcoming Cohort</span>
+          <div class="track-icon"><i class="fas fa-database"></i></div>
+          <h3 class="track-title">Enterprise RAG &amp; Knowledge Systems</h3>
+          <p class="track-desc">Build production Retrieval-Augmented Generation pipelines with ChromaDB, hybrid search, and RAG evaluation frameworks.</p>
+        </div>
+        <a href="#inquire-form" class="btn-outline" style="padding:10px 20px;font-size:13px;text-align:center;">Join Waitlist →</a>
+      </div>
+
+      <!-- Track 2 -->
+      <div class="track-card">
+        <div>
+          <span class="track-badge">Upcoming Cohort</span>
+          <div class="track-icon"><i class="fas fa-sitemap"></i></div>
+          <h3 class="track-title">Multi-Agent Networks with LangGraph</h3>
+          <p class="track-desc">Design stateful, cyclic multi-agent graphs that orchestrate complex human-in-the-loop enterprise decisions.</p>
+        </div>
+        <a href="#inquire-form" class="btn-outline" style="padding:10px 20px;font-size:13px;text-align:center;">Join Waitlist →</a>
+      </div>
+
+      <!-- Track 3 -->
+      <div class="track-card">
+        <div>
+          <span class="track-badge">Masterclass</span>
+          <div class="track-icon"><i class="fas fa-file-invoice"></i></div>
+          <h3 class="track-title">IDP &amp; Unstructured Doc Parsing</h3>
+          <p class="track-desc">Combine vision LLMs, OCR, and structured data extractors to process complex invoices, contracts, and claims.</p>
+        </div>
+        <a href="#inquire-form" class="btn-outline" style="padding:10px 20px;font-size:13px;text-align:center;">Join Waitlist →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PILLARS OF EXCELLENCE -->
+<section class="section">
+  <div class="sec-inner">
+    <div class="sec-tag">💡 The AI Anveshana Difference</div>
+    <h2 class="sec-title">Why Learn With <span>Us</span></h2>
+    <p class="sec-desc">Our curriculum is built from real-world enterprise deployments, not synthetic tutorials.</p>
+
+    <div class="pillars-grid">
+      <div class="p-pillar-card">
+        <div class="pp-icon"><i class="fas fa-code"></i></div>
+        <h4 class="pp-title">Production-Grade Code</h4>
+        <p class="pp-desc">Write clean, scalable Python &amp; workflow pipelines built for enterprise security and stability.</p>
+      </div>
+
+      <div class="p-pillar-card">
+        <div class="pp-icon"><i class="fas fa-user-ninja"></i></div>
+        <h4 class="pp-title">Architect Mentorship</h4>
+        <p class="pp-desc">Direct guidance and code reviews from Automation Anywhere MVP Ganesh Bhat.</p>
+      </div>
+
+      <div class="p-pillar-card">
+        <div class="pp-icon"><i class="fas fa-cubes"></i></div>
+        <h4 class="pp-title">Portfolio Capstones</h4>
+        <p class="pp-desc">Graduate with 5+ complete, deployable projects to showcase to employers and clients.</p>
+      </div>
+
+      <div class="p-pillar-card">
+        <div class="pp-icon"><i class="fas fa-users-cog"></i></div>
+        <h4 class="pp-title">Elite AI Network</h4>
+        <p class="pp-desc">Join an active community of 15,000+ automation leaders, solution architects, and peers.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INQUIRY & CONSULTATION FORM SECTION -->
+<div class="contact-wrap" id="inquire-form">
+  <div class="contact-box">
+    <div class="contact-inner">
+      <div class="contact-left">
+        <h2>Reserve Your <span>Seat</span></h2>
+        <p>Have questions about syllabus fit, team training discounts, or enrollment pre-requisites? Submit your inquiry and our team will get back to you within 24 hours.</p>
+      </div>
+      <div class="contact-form">
+        <form id="contactForm" onsubmit="handleSubmit(event)">
+          <div class="cf-row">
+            <input type="text" class="c-input" placeholder="Your Full Name" required>
+            <input type="email" class="c-input" placeholder="Your Email Address" required>
+          </div>
+          <input type="text" class="c-input" placeholder="Program of Interest (e.g. Master APA Bootcamp)" required>
+          <textarea class="c-input" placeholder="Share your experience background or questions..."></textarea>
+          <button type="submit" class="c-btn">Submit Inquiry →</button>
+          <div id="formStatus"></div>
+        </form>
+      </div>
     </div>
   </div>
 </div>
@@ -405,6 +493,89 @@
   </div>
   <p class="footer-copy">© 2026 Ai Anveshana. All Rights Reserved.</p>
 </footer>
+
+<!-- CHATBOT WIDGET -->
+<div class="chat-widget">
+  <div class="chat-popup" id="chatPopup">
+    <div class="chat-header">
+      <div class="chat-info">
+        <div class="chat-avatar"><i class="fas fa-robot"></i></div>
+        <div>
+          <h4>Ai Anveshana Assistant</h4>
+          <p class="status"><span class="online-dot"></span>Online</p>
+        </div>
+      </div>
+      <button class="close-chat" onclick="toggleChat()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="chat-body">
+      <div id="aiChatLog">
+        <div class="message bot">Hello! I'm Ai Anveshana's Assistant. How can I help you today?</div>
+        <div class="suggestion-chips" id="suggestionChips">
+          <button class="suggestion-chip" onclick="askSuggestion('How to book a Bootcamp?')">How to book a Bootcamp?</button>
+          <button class="suggestion-chip" onclick="askSuggestion('What is the price of a bootcamp?')">What is the price of a bootcamp?</button>
+          <button class="suggestion-chip" onclick="startLeadFlow()">📧 Leave a Message</button>
+          <button class="suggestion-chip" onclick="window.open('https://wa.me/919113548342','_blank')" style="border-color:var(--purple-light);color:var(--purple-dark);font-weight:700;">🤝 Contact via WhatsApp</button>
+        </div>
+      </div>
+      <div class="chat-input-row">
+        <input type="text" id="aiChatInput" placeholder="Type your question...">
+        <button class="chat-send" onclick="sendChatMessage()"><i class="fas fa-paper-plane"></i></button>
+      </div>
+    </div>
+  </div>
+  <button class="chat-toggle" onclick="toggleChat()"><i class="fas fa-comment-dots"></i></button>
+</div>
+
+<script>
+/* ── MOBILE NAV ── */
+function toggleMobileNav(){
+  document.getElementById('mobile-nav').classList.toggle('open');
+}
+
+/* ── CHAT ── */
+function toggleChat(){
+  document.getElementById('chatPopup').classList.toggle('open');
+}
+
+function addMsg(text,who){
+  const log=document.getElementById('aiChatLog');
+  const d=document.createElement('div');
+  d.className=`message ${who}`;d.textContent=text;
+  log.appendChild(d);log.scrollTop=log.scrollHeight;
+}
+
+function askSuggestion(q){
+  document.getElementById('suggestionChips').style.display='none';
+  addMsg(q,'user');
+  setTimeout(()=>{
+    if(q.includes('book'))addMsg('To book a bootcamp, visit our Courses page or contact us via WhatsApp at +91 9113548342.','bot');
+    else if(q.includes('price'))addMsg('Bootcamp pricing varies by program. Please visit our Courses page or WhatsApp us for the latest pricing.','bot');
+  },600);
+}
+
+function startLeadFlow(){
+  document.getElementById('suggestionChips').style.display='none';
+  addMsg('Please share your name and email — we will reach out shortly!','bot');
+}
+
+function sendChatMessage(){
+  const inp=document.getElementById('aiChatInput');
+  const txt=inp.value.trim();if(!txt)return;
+  addMsg(txt,'user');inp.value='';
+  setTimeout(()=>addMsg('Thanks for reaching out! Our team will respond shortly. You can also WhatsApp us at +91 9113548342.','bot'),700);
+}
+document.getElementById('aiChatInput').addEventListener('keydown',e=>{if(e.key==='Enter')sendChatMessage();});
+
+/* ── CONTACT FORM ── */
+function handleSubmit(e){
+  e.preventDefault();
+  const s=document.getElementById('formStatus');
+  s.style.color='rgba(255,255,255,.85)';
+  s.textContent='✅ Thank you for your inquiry! We\'ll be in touch within 24 hours.';
+  document.getElementById('contactForm').reset();
+  setTimeout(()=>s.textContent='',5000);
+}
+</script>
 
 </body>
 </html>
