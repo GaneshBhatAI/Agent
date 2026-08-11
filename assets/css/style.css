@@ -1015,12 +1015,7 @@ footer i {
     }
 }
 
-
-      #top-banner { justify-content: space-between; gap: 8px; padding: 8px 38px 8px 12px; }
-      .b-ticker-wrap { flex: 1; min-width: 0; overflow: hidden; position: relative; }
-      .b-text { display: inline-flex; white-space: nowrap; animation: bannerMarquee 15s linear infinite; }
-      @keyframes bannerMarquee { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
-
+@media (max-width: 768px) {
     .nav-links {
         display: none;
     }
@@ -1751,12 +1746,7 @@ footer i {
     /* Float slightly outside */
 }
 
-
-      #top-banner { justify-content: space-between; gap: 8px; padding: 8px 38px 8px 12px; }
-      .b-ticker-wrap { flex: 1; min-width: 0; overflow: hidden; position: relative; }
-      .b-text { display: inline-flex; white-space: nowrap; animation: bannerMarquee 15s linear infinite; }
-      @keyframes bannerMarquee { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
-
+@media (max-width: 768px) {
     .prev-btn {
         left: 10px;
     }
@@ -1955,12 +1945,7 @@ footer {
     color: #64748b;
 }
 
-
-      #top-banner { justify-content: space-between; gap: 8px; padding: 8px 38px 8px 12px; }
-      .b-ticker-wrap { flex: 1; min-width: 0; overflow: hidden; position: relative; }
-      .b-text { display: inline-flex; white-space: nowrap; animation: bannerMarquee 15s linear infinite; }
-      @keyframes bannerMarquee { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
-
+@media (max-width: 768px) {
     .footer-content {
         flex-direction: column;
         text-align: center;
@@ -2235,12 +2220,7 @@ footer {
 }
 
 /* Updated Responsive for Engagement Bar */
-
-      #top-banner { justify-content: space-between; gap: 8px; padding: 8px 38px 8px 12px; }
-      .b-ticker-wrap { flex: 1; min-width: 0; overflow: hidden; position: relative; }
-      .b-text { display: inline-flex; white-space: nowrap; animation: bannerMarquee 15s linear infinite; }
-      @keyframes bannerMarquee { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
-
+@media (max-width: 768px) {
     .wa-group-card {
         width: 100%;
         max-width: 100%;
@@ -2348,12 +2328,7 @@ footer {
 }
 
 /* Mobile Responsive For Achievements & Videos */
-
-      #top-banner { justify-content: space-between; gap: 8px; padding: 8px 38px 8px 12px; }
-      .b-ticker-wrap { flex: 1; min-width: 0; overflow: hidden; position: relative; }
-      .b-text { display: inline-flex; white-space: nowrap; animation: bannerMarquee 15s linear infinite; }
-      @keyframes bannerMarquee { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
-
+@media (max-width: 768px) {
     .achievement-card {
         min-width: 300px;
         /* Reduce width for mobile */
@@ -2532,12 +2507,7 @@ footer {
     gap: 1.5rem;
 }
 
-
-      #top-banner { justify-content: space-between; gap: 8px; padding: 8px 38px 8px 12px; }
-      .b-ticker-wrap { flex: 1; min-width: 0; overflow: hidden; position: relative; }
-      .b-text { display: inline-flex; white-space: nowrap; animation: bannerMarquee 15s linear infinite; }
-      @keyframes bannerMarquee { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
-
+@media (max-width: 768px) {
     .form-grid {
         grid-template-columns: 1fr;
     }
