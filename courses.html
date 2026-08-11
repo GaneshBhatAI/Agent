@@ -296,6 +296,29 @@
       .cf-row{grid-template-columns:1fr;}
       .contact-box{padding:36px 20px;}
       .chat-popup{width:290px;}
+    /* ─── COURSES SPECIFIC ─── */
+    .container { max-width: 1250px; margin: 40px auto; padding: 40px 20px; }
+    .page-title { font-family: var(--heading); font-size: 48px; font-weight: 800; color: var(--text-dark); margin-bottom: 15px; text-align: center; }
+    .page-title span { background: linear-gradient(135deg,var(--purple-light),var(--purple-dark)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .page-desc { font-size: 18px; color: var(--text-muted); text-align: center; max-width: 600px; margin: 0 auto 50px; line-height: 1.6; }
+    .course-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; }
+    .course-card { display: flex; flex-direction: column; background: rgba(255,255,255,0.7); backdrop-filter: blur(10px); border-radius: 20px; border: 1px solid rgba(255,255,255,0.8); overflow: hidden; text-decoration: none; transition: transform 0.3s, box-shadow 0.3s; box-shadow: 0 10px 30px rgba(111,83,163,0.05); }
+    .course-card:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(111,83,163,0.15); }
+    .course-img-wrap { position: relative; height: 220px; overflow: hidden; background: #e0d4f5; }
+    .course-img-wrap img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+    .course-card:hover .course-img-wrap img { transform: scale(1.05); }
+    .c-badge { position: absolute; top: 15px; left: 15px; background: rgba(16,185,129,0.9); color: #fff; padding: 6px 14px; border-radius: 20px; font-size: 11px; font-weight: 600; z-index: 2; letter-spacing: 0.05em; text-transform: uppercase; }
+    .course-body { padding: 30px; display: flex; flex-direction: column; flex: 1; }
+    .course-body h3 { font-family: var(--heading); font-size: 22px; font-weight: 700; color: var(--text-dark); margin-bottom: 12px; }
+    .course-body p { font-size: 15px; color: var(--text-mid); line-height: 1.6; margin-bottom: 25px; flex: 1; }
+    .course-meta { display: flex; align-items: center; gap: 15px; border-top: 1px solid rgba(111,83,163,0.1); padding-top: 20px; }
+    .meta-item { font-size: 14px; font-weight: 600; color: var(--purple-dark); display: flex; align-items: center; gap: 6px; }
+    
+    @media (max-width: 768px) {
+      .container { padding: 20px; margin: 20px auto; }
+      .page-title { font-size: 36px; }
+      .page-desc { font-size: 16px; margin-bottom: 30px; }
+      .course-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
