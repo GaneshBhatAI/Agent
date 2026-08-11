@@ -139,10 +139,12 @@
     .p-social-btn:hover { background: var(--purple-dark); color: #fff; transform: translateY(-3px); box-shadow: 0 6px 18px rgba(111,83,163,0.3); }
 
     /* Floating Badges around profile */
-    .f-badge { position: absolute; z-index: 10; background: rgba(255,255,255,0.92); backdrop-filter: blur(14px); border: 1px solid rgba(255,255,255,0.95); padding: 8px 16px; border-radius: 100px; box-shadow: 0 10px 30px rgba(111,83,163,0.18); display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; color: var(--text-dark); transition: transform 0.3s; }
+    .f-badge { position: absolute; z-index: 10; background: rgba(255,255,255,0.92); backdrop-filter: blur(14px); border: 1px solid rgba(255,255,255,0.95); padding: 8px 16px; border-radius: 100px; box-shadow: 0 10px 30px rgba(111,83,163,0.18); display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; color: var(--text-dark); transition: transform 0.3s; white-space: nowrap; }
     .f-badge:hover { transform: scale(1.06); }
-    .fb-top-left { top: -15px; left: -20px; animation: floatAnim1 4s ease-in-out infinite; }
-    .fb-bottom-right { bottom: 20px; right: -25px; animation: floatAnim2 4.5s ease-in-out infinite; }
+    .fb-top-left { top: -15px; left: -25px; animation: floatAnim1 4s ease-in-out infinite; }
+    .fb-top-right { top: -15px; right: -25px; animation: floatAnim2 4.2s ease-in-out infinite; }
+    .fb-bottom-left { bottom: 25px; left: -30px; animation: floatAnim2 4.5s ease-in-out infinite; }
+    .fb-bottom-right { bottom: 25px; right: -30px; animation: floatAnim1 4.8s ease-in-out infinite; }
     @keyframes floatAnim1 { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
     @keyframes floatAnim2 { 0%,100%{transform:translateY(0)} 50%{transform:translateY(8px)} }
 
@@ -369,10 +371,16 @@
   <div class="profile-container">
     <!-- Floating Badges -->
     <div class="f-badge fb-top-left">
-      <i class="fas fa-trophy" style="color:#f59e0b;"></i> Automation Anywhere MVP
+      <i class="fas fa-laptop-code" style="color:#6366f1;"></i> AI Staff Engineer
+    </div>
+    <div class="f-badge fb-top-right">
+      <i class="fas fa-brain" style="color:#8b5cf6;"></i> Agentic AI Architect
+    </div>
+    <div class="f-badge fb-bottom-left">
+      <i class="fas fa-bolt" style="color:#ec4899;"></i> RAG &amp; LLM Specialist
     </div>
     <div class="f-badge fb-bottom-right">
-      <i class="fas fa-brain" style="color:#8b5cf6;"></i> Agentic AI Pioneer
+      <i class="fas fa-trophy" style="color:#f59e0b;"></i> Automation Anywhere MVP
     </div>
 
     <div class="profile-card">
@@ -381,7 +389,7 @@
       </div>
       <h2 class="profile-name">Ganesh Bhat</h2>
       <p class="profile-role">AI &amp; Automation Solution Architect · MVP</p>
-      <p class="profile-bio-snippet">Founder of BotIQ.AI &amp; AI Anveshana. Speaker, Educator, and Enterprise Automation Strategist.</p>
+      <p class="profile-bio-snippet">Founder of AI Anveshana. Speaker, Educator, and Enterprise AI Architect.</p>
 
       <!-- Quick Social Icons -->
       <div class="profile-socials">
