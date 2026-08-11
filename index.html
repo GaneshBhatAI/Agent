@@ -298,6 +298,9 @@
       .cf-row{grid-template-columns:1fr;}
       .contact-box{padding:36px 20px;}
       .chat-popup{width:290px;}
+      #top-banner { overflow: hidden; white-space: nowrap; flex-wrap: nowrap; justify-content: space-between; gap: 8px; padding: 8px 38px 8px 12px; }
+      .b-text { white-space: nowrap; flex-wrap: nowrap; display: inline-flex; animation: bannerMarquee 15s linear infinite; }
+      @keyframes bannerMarquee { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
     }
   </style>
 </head>
