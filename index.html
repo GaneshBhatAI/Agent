@@ -134,7 +134,8 @@
 
     /* ── AI ICON CLOUD (Aylence exact) ── */
     .hv{position:relative;z-index:5;height:460px;display:flex;align-items:center;justify-content:center;}
-    .ic{position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center;}
+    #networkCanvas{position:absolute;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;}
+    .ic{position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center;z-index:1;}
     .ai{position:absolute;width:62px;height:62px;border-radius:16px;background:rgba(255,255,255,0.65);backdrop-filter:blur(14px);border:1px solid rgba(186,139,191,0.38);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 18px rgba(111,83,163,0.13);}
     .ai img{width:38px;height:38px;object-fit:contain;border-radius:8px;}
     .ai-1{top:8%;left:10%;animation:fl1 4.0s ease-in-out infinite;}
@@ -391,6 +392,7 @@
 
     <!-- Right Visual — AI Icon Cloud (Aylence style) -->
     <div class="hv">
+      <canvas id="networkCanvas"></canvas>
       <div class="ic">
                 <div class="ai ai-1"><img src="assets/img/logos/aa.jpg" alt="Automation Anywhere"></div>
         <div class="ai ai-2"><img src="assets/img/logos/uipath.png" alt="UiPath"></div>
@@ -664,6 +666,70 @@ function handleSubmit(e){
   document.getElementById('contactForm').reset();
   setTimeout(()=>s.textContent='',5000);
 }
+
+/* ── CONNECTED DOTS BACKGROUND ── */
+(function(){
+  const canvas = document.getElementById('networkCanvas');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let width, height;
+  let particles = [];
+  
+  function init() {
+    width = canvas.width = canvas.offsetWidth;
+    height = canvas.height = canvas.offsetHeight;
+    particles = [];
+    const numParticles = width < 768 ? 30 : 60;
+    for (let i = 0; i < numParticles; i++) {
+      particles.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: (Math.random() - 0.5) * 0.8,
+        vy: (Math.random() - 0.5) * 0.8,
+        radius: Math.random() * 1.5 + 1.5
+      });
+    }
+  }
+  
+  function draw() {
+    ctx.clearRect(0, 0, width, height);
+    for (let i = 0; i < particles.length; i++) {
+      let p = particles[i];
+      p.x += p.vx;
+      p.y += p.vy;
+      if (p.x < 0 || p.x > width) p.vx *= -1;
+      if (p.y < 0 || p.y > height) p.vy *= -1;
+      
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(111,83,163,0.6)';
+      ctx.fill();
+      
+      for (let j = i + 1; j < particles.length; j++) {
+        let p2 = particles[j];
+        let dx = p.x - p2.x;
+        let dy = p.y - p2.y;
+        let dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < 110) {
+          ctx.beginPath();
+          ctx.strokeStyle = `rgba(111,83,163,${0.25 - dist/440})`;
+          ctx.lineWidth = 1.2;
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(p2.x, p2.y);
+          ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(draw);
+  }
+  
+  window.addEventListener('resize', init);
+  // Give it a tiny delay to ensure layout is done
+  setTimeout(function(){
+    init();
+    draw();
+  }, 100);
+})();
 </script>
 </body>
 </html>
