@@ -3,15 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agentic Orchestrator - Enterprise Control Room</title>
   
   <link rel="icon" type="image/png" href="/assets/img/favicon.png">
   <link rel="icon" type="image/svg+xml" href="/assets/img/favicon.svg">
-  <link rel="stylesheet" href="style.css?v=1.5.0">
+  <link rel="stylesheet" href="style.css?v=2.0.0">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
+
+  <!-- Ambient Glow Background Orbs -->
+  <div class="bg-glow-orb orb-1"></div>
+  <div class="bg-glow-orb orb-2"></div>
+  <div class="bg-glow-orb orb-3"></div>
 
   <!-- ===== PREMIUM GITHUB LOGIN PORTAL OVERLAY ===== -->
   <div id="github-login-overlay" class="login-overlay-active">
@@ -20,9 +26,11 @@
       <!-- Left Panel: Login Form Inputs -->
       <div class="login-left-panel">
         <div class="login-brand-header">
-          <svg width="42" height="42" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 2L2 22H6.5L8.75 17.5H15.25L17.5 22H22L12 2ZM10.2 14L12 8.5L13.8 14H10.2Z" fill="#FF7900"/>
-          </svg>
+          <div class="brand-symbol">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2L2 22H6.5L8.75 17.5H15.25L17.5 22H22L12 2ZM10.2 14L12 8.5L13.8 14H10.2Z" fill="#FFFFFF"/>
+            </svg>
+          </div>
           <div class="login-brand-text">
             <span class="login-brand-title">AGENTIC ORCHESTRATOR</span>
             <span class="login-brand-subtitle">Enterprise Control Room</span>
@@ -30,21 +38,21 @@
         </div>
 
         <div class="login-form-content">
-          <p class="login-description">Welcome to the Control Room. Please authenticate with your GitHub Personal Access Token (PAT) to synchronize workflows, runners, and bot scripts.</p>
+          <p class="login-description">Welcome to the Agentic Control Room. Please authenticate with your GitHub Personal Access Token (PAT) to synchronize workflows, runners, and bot scripts.</p>
           
-          <div class="login-field-group">
+          <div class="login-field-group" style="margin-top: 14px;">
             <label for="github-login-token">GitHub Personal Access Token (PAT)</label>
             <div class="login-input-wrapper">
-              <input type="password" id="github-login-token" placeholder="Paste ghp_... token here" autocomplete="current-password">
+              <input type="password" id="github-login-token" placeholder="Paste ghp_... token here" autocomplete="current-password" onkeydown="if(event.key==='Enter') handleGitHubAuthLogin()">
             </div>
           </div>
 
-          <div class="login-btn-row">
-            <button class="btn btn-create" id="btn-github-login" onclick="handleGitHubAuthLogin()">
+          <div class="login-btn-row" style="margin-top: 18px;">
+            <button class="btn-primary-purple" id="btn-github-login" onclick="handleGitHubAuthLogin()" style="width: 100%; justify-content: center;">
               <span id="login-btn-text">Authenticate Securely</span>
             </button>
           </div>
-          <div id="login-error-msg" class="login-error-container" style="display:none;"></div>
+          <div id="login-error-msg" class="login-error-container" style="display:none; color: #EF4444; font-size: 12px; margin-top: 10px;"></div>
         </div>
       </div>
 
@@ -52,20 +60,14 @@
       <div class="login-right-panel">
         <h4 class="info-panel-title">How to get a GitHub PAT Token?</h4>
         <ol class="info-step-list">
-          <li>Sign in to your account at <a href="https://github.com" target="_blank" rel="noopener noreferrer">github.com</a></li>
+          <li>Sign in to your account at <a href="https://github.com" target="_blank" rel="noopener noreferrer" style="color: var(--purple-primary); font-weight: 600;">github.com</a></li>
           <li>Click your profile picture in the top-right corner, then choose <strong>Settings</strong></li>
           <li>Scroll down the left sidebar menu and click on <strong>Developer settings</strong></li>
           <li>Under Personal access tokens, click on <strong>Tokens (classic)</strong></li>
-          <li>Click the <strong>Generate new token</strong> dropdown -> select <strong>Generate new token (classic)</strong></li>
+          <li>Click <strong>Generate new token (classic)</strong></li>
           <li>Give your token a descriptive name (e.g., <em>AgenticOrchestrator</em>)</li>
-          <li>Under scopes, select check boxes for:
-            <ul>
-              <li><strong>repo</strong> (Full control of private repositories)</li>
-              <li><strong>workflow</strong> (To manage runner triggers)</li>
-            </ul>
-          </li>
-          <li>Click <strong>Generate token</strong> at the bottom of the page</li>
-          <li>Copy the token string (starts with <code>ghp_</code>) and paste it on the left form field</li>
+          <li>Select scopes for: <strong>repo</strong> &amp; <strong>workflow</strong></li>
+          <li>Click <strong>Generate token</strong> and copy your token string (starts with <code>ghp_</code>)</li>
         </ol>
       </div>
 
@@ -74,48 +76,86 @@
 
   <div class="a360-container">
     
-    <!-- 1. LEFT PRIMARY NAVIGATION BAR -->
+    <!-- 1. LEFT PRIMARY NAVIGATION BAR (CATEGORIZED SIDEBAR) -->
     <aside class="a360-primary-nav" id="primary-nav">
       
       <!-- Brand Logo Header -->
-      <div class="brand-logo">
+      <a href="#" class="brand-logo" onclick="switchNavSection('dashboard'); return false;">
         <div class="brand-symbol">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 2L2 22H6.5L8.75 17.5H15.25L17.5 22H22L12 2ZM10.2 14L12 8.5L13.8 14H10.2Z" fill="#FF7900"/>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2L2 22H6.5L8.75 17.5H15.25L17.5 22H22L12 2ZM10.2 14L12 8.5L13.8 14H10.2Z" fill="#FFFFFF"/>
           </svg>
         </div>
         <div class="brand-text">
-          <span class="brand-title">AGENTIC</span>
-          <span class="brand-sub">Orchestrator</span>
+          <span class="brand-title">Agentic Orchestrator</span>
+          <span class="brand-sub">AI and Automation</span>
         </div>
-      </div>
+      </a>
 
       <!-- Main Navigation Menu -->
       <nav class="nav-menu">
-        <a href="#" class="nav-item active" id="nav-automation" onclick="switchNavSection('automation')">
-          <span class="nav-icon">⚙️</span>
-          <span class="nav-label">Automation</span>
-        </a>
+        
+        <!-- PRACTICE SECTION -->
+        <div class="nav-section">
+          <span class="nav-section-header">Practice</span>
+          <a href="#" class="nav-item active" id="nav-dashboard" onclick="switchNavSection('dashboard'); return false;">
+            <span class="nav-icon">📊</span>
+            <span class="nav-label">Dashboard</span>
+          </a>
+          <a href="#" class="nav-item" id="nav-automation" onclick="switchNavSection('automation'); return false;">
+            <span class="nav-icon">🤖</span>
+            <span class="nav-label">Clients & Bots</span>
+          </a>
+          <a href="#" class="nav-item" id="nav-engagements" onclick="switchNavSection('automation'); return false;">
+            <span class="nav-icon">💼</span>
+            <span class="nav-label">Engagements</span>
+          </a>
+        </div>
 
-        <a href="#" class="nav-item" id="nav-ai" onclick="switchNavSection('ai')">
-          <span class="nav-icon">🤖</span>
-          <span class="nav-label">AI</span>
-        </a>
+        <!-- GOVERNANCE SECTION -->
+        <div class="nav-section">
+          <span class="nav-section-header">Governance</span>
+          <a href="#" class="nav-item" id="nav-knowledge" onclick="switchNavSection('automation'); return false;">
+            <span class="nav-icon">◇</span>
+            <span class="nav-label">Knowledge</span>
+          </a>
+          <a href="#" class="nav-item" id="nav-audit-log" onclick="switchNavSection('automation'); return false;">
+            <span class="nav-icon">≡</span>
+            <span class="nav-label">Audit Log</span>
+          </a>
+        </div>
 
-        <a href="#" class="nav-item" id="nav-manage" onclick="switchNavSection('manage')">
-          <span class="nav-icon">🛠️</span>
-          <span class="nav-label">Manage</span>
-        </a>
+        <!-- ACTIVITY SECTION -->
+        <div class="nav-section">
+          <span class="nav-section-header">Activity</span>
+          <a href="#" class="nav-item" id="nav-activity" onclick="switchNavSection('automation'); return false;">
+            <span class="nav-icon">↗</span>
+            <span class="nav-label">Activity &amp; Progress</span>
+          </a>
+        </div>
+
+        <!-- ADMINISTRATION SECTION -->
+        <div class="nav-section">
+          <span class="nav-section-header">Administration</span>
+          <a href="#" class="nav-item" id="nav-manage" onclick="switchNavSection('manage'); return false;">
+            <span class="nav-icon">⚙️</span>
+            <span class="nav-label">Admin Console</span>
+          </a>
+        </div>
+
       </nav>
 
-      <!-- Connected GitHub Profile Footer -->
+      <!-- Connected User Profile Footer -->
       <div class="nav-footer">
-        <div class="user-profile" title="Connected GitHub Profile">
-          <div class="avatar-circle" id="user-avatar-circle">A</div>
-          <span class="username" id="github-user-name">aibrahmabusiness-hub</span>
-        </div>
-        <div class="footer-icons">
-          <button class="footer-btn" onclick="logoutGitHub()" title="Sign Out">✕</button>
+        <div class="user-profile-card">
+          <div class="user-profile-info">
+            <div class="avatar-circle" id="user-avatar-circle">DR</div>
+            <div class="user-details">
+              <span class="username" id="github-user-name">Design Review User</span>
+              <span class="user-role">Admin • Account</span>
+            </div>
+          </div>
+          <button class="logout-btn-icon" onclick="logoutGitHub()" title="Sign Out">✕</button>
         </div>
       </div>
     </aside>
@@ -125,34 +165,167 @@
       
       <!-- TOP HEADER -->
       <header class="a360-header">
-        <div class="header-top">
-          <div class="header-left-title">
-            <button class="mobile-toggle-btn" onclick="togglePrimaryNav()">☰</button>
-            <h1 class="page-title" id="page-main-title">Automation</h1>
-          </div>
+        <div class="header-brand-title">
+          <button class="mobile-toggle-btn" onclick="togglePrimaryNav()">☰</button>
+          <span class="platform-title-badge">
+            <span style="color: var(--purple-primary);">≡</span> Agentic Orchestrator Platform
+          </span>
+        </div>
 
-          <div class="header-right-controls">
-            <button class="btn btn-secondary" onclick="logoutGitHub()" style="gap: 6px; font-size: 12px; font-weight: 600; padding: 8px 12px; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); color: #f87171;" title="Secure Sign Out">
-              <span>🚪</span> Sign Out
-            </button>
+        <div class="header-center-search">
+          <div class="top-search-pill">
+            <span style="color: var(--text-muted);">🔍</span>
+            <input type="text" placeholder="Search review screens" id="top-search-input">
           </div>
+        </div>
+
+        <div class="header-right-actions">
+          <button class="btn-header-admin" onclick="switchNavSection('manage')">Admin ▾</button>
         </div>
       </header>
 
-      <!-- 3. DUAL-PANE WORKSPACE (AUTOMATION / AI VIEW) -->
-      <div class="a360-workspace" id="section-workspace">
+      <!-- 3. EXECUTIVE DASHBOARD SECTION -->
+      <div class="dashboard-view-container" id="section-dashboard">
+        
+        <!-- Breadcrumb & Header Title -->
+        <div class="dash-header-block">
+          <div class="dash-breadcrumbs">Practice › <span>Dashboard</span></div>
+          <div class="dash-title-row">
+            <div class="dash-title-group">
+              <h1 class="dash-main-title">Dashboard</h1>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dashboard Dual Widgets (Pipeline Bar Chart + Priority Actions) -->
+        <div class="dash-widgets-grid">
+          
+          <!-- Left Widget: Audit Pipeline Bar Chart -->
+          <div class="glass-widget-card">
+            <div class="widget-card-header">
+              <span class="widget-card-title">Audit Pipeline</span>
+              <span class="widget-expand-icon" title="Expand Pipeline">↗</span>
+            </div>
+
+            <div class="pipeline-bars-container">
+              <div class="pipeline-stage-col">
+                <span class="pipeline-stage-count">3</span>
+                <div class="pipeline-bar-wrapper">
+                  <div class="pipeline-bar-fill" style="height: 18%;"></div>
+                </div>
+                <span class="pipeline-stage-label">Client Created</span>
+              </div>
+
+              <div class="pipeline-stage-col">
+                <span class="pipeline-stage-count">4</span>
+                <div class="pipeline-bar-wrapper">
+                  <div class="pipeline-bar-fill" style="height: 24%;"></div>
+                </div>
+                <span class="pipeline-stage-label">Document Upload</span>
+              </div>
+
+              <div class="pipeline-stage-col">
+                <span class="pipeline-stage-count">5</span>
+                <div class="pipeline-bar-wrapper">
+                  <div class="pipeline-bar-fill" style="height: 30%;"></div>
+                </div>
+                <span class="pipeline-stage-label">Pre-Audit Gate</span>
+              </div>
+
+              <div class="pipeline-stage-col">
+                <span class="pipeline-stage-count">23</span>
+                <div class="pipeline-bar-wrapper">
+                  <div class="pipeline-bar-fill" style="height: 82%;"></div>
+                </div>
+                <span class="pipeline-stage-label">Audit Running</span>
+              </div>
+
+              <div class="pipeline-stage-col">
+                <span class="pipeline-stage-count">17</span>
+                <div class="pipeline-bar-wrapper">
+                  <div class="pipeline-bar-fill" style="height: 60%;"></div>
+                </div>
+                <span class="pipeline-stage-label">Draft Outputs Ready</span>
+              </div>
+
+              <div class="pipeline-stage-col">
+                <span class="pipeline-stage-count">28</span>
+                <div class="pipeline-bar-wrapper">
+                  <div class="pipeline-bar-fill" style="height: 100%;"></div>
+                </div>
+                <span class="pipeline-stage-label">Completed</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Widget: Priority Actions Panel -->
+          <div class="glass-widget-card">
+            <div class="widget-card-header">
+              <span class="widget-card-title">Priority Actions</span>
+              <span class="widget-expand-icon" title="View All Actions">↗</span>
+            </div>
+
+            <div class="priority-actions-list">
+              <div class="action-item-row" onclick="switchNavSection('automation')">
+                <span class="action-left">Blocked audits</span>
+                <div class="action-right-badge">
+                  <span class="action-count">9</span>
+                  <span class="badge-urgency badge-critical">• Critical</span>
+                </div>
+              </div>
+
+              <div class="action-item-row" onclick="switchNavSection('automation')">
+                <span class="action-left">Missing critical documents</span>
+                <div class="action-right-badge">
+                  <span class="action-count">15</span>
+                  <span class="badge-urgency badge-critical">• Critical</span>
+                </div>
+              </div>
+
+              <div class="action-item-row" onclick="switchNavSection('automation')">
+                <span class="action-left">Failed imports</span>
+                <div class="action-right-badge">
+                  <span class="action-count">2</span>
+                  <span class="badge-urgency badge-high">• High</span>
+                </div>
+              </div>
+
+              <div class="action-item-row" onclick="switchNavSection('automation')">
+                <span class="action-left">Failed audit runs</span>
+                <div class="action-right-badge">
+                  <span class="action-count">5</span>
+                  <span class="badge-urgency badge-high">• High</span>
+                </div>
+              </div>
+
+              <div class="action-item-row" onclick="switchNavSection('automation')">
+                <span class="action-left">Draft outputs ready</span>
+                <div class="action-right-badge">
+                  <span class="action-count">17</span>
+                  <span class="badge-urgency badge-info">• Information</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- 4. DUAL-PANE WORKSPACE (AUTOMATION / REPOSITORY BOT EXPLORER) -->
+      <div class="a360-workspace" id="section-workspace" style="display: none;">
         
         <!-- LEFT SUB-PANE: FOLDERS TREE -->
         <aside class="folders-pane">
           <div class="folders-pane-header">
             <span class="folders-title">Folders</span>
-            <button class="icon-btn-sm" onclick="fetchRepositoryData()" title="Refresh Folders">↻</button>
+            <button class="btn-sm-action" onclick="fetchRepositoryData()" title="Refresh Folders">↻ Refresh</button>
           </div>
 
           <div class="subfolder-search-option">
             <label class="checkbox-label">
               <input type="checkbox" id="search-subfolders-check" onchange="toggleSubfolderSearch()">
-              <span>Search within subfolders</span>
+              <span>Search subfolders</span>
             </label>
           </div>
 
@@ -184,7 +357,7 @@
             </div>
 
             <div class="toolbar-title-box">
-              <span class="files-count-label" id="table-items-count">Files and folders</span>
+              <span class="files-count-label" id="table-items-count" style="font-weight: 700; color: var(--text-primary);">Files and folders</span>
             </div>
           </div>
 
@@ -200,12 +373,12 @@
                   <th class="col-modified">Last modified</th>
                   <th class="col-platform">Platform</th>
                   <th class="col-source">Source version</th>
-                  <th class="col-actions"></th>
+                  <th class="col-actions">Actions</th>
                 </tr>
               </thead>
               <tbody id="bots-table-body">
                 <tr>
-                  <td colspan="8" class="table-loading">Loading repository...</td>
+                  <td colspan="8" class="table-loading" style="text-align: center; padding: 24px; color: var(--text-muted);">Loading repository...</td>
                 </tr>
               </tbody>
             </table>
@@ -214,16 +387,16 @@
         </main>
       </div>
 
-      <!-- 4. MANAGE SECTION (GITHUB SSH & RUNNER DEVICES CONTROL DASHBOARD) -->
+      <!-- 5. MANAGE SECTION (GITHUB SSH & RUNNER DEVICES CONTROL DASHBOARD) -->
       <div class="manage-dashboard-container" id="section-manage" style="display: none;">
         
         <!-- CARD 1: GITHUB SSH & REPOSITORY CONNECTION -->
         <div class="manage-card">
           <div class="card-header">
             <div class="card-title-box">
-              <span class="card-icon">🔑</span>
+              <span class="card-icon" style="font-size: 20px;">🔑</span>
               <div>
-                <h3>GitHub SSH & Repository Connection</h3>
+                <h3>GitHub SSH &amp; Repository Connection</h3>
                 <span class="card-subtitle">Connect Agentic Orchestrator directly to your remote GitHub Repository</span>
               </div>
             </div>
@@ -238,12 +411,12 @@
               </div>
 
               <div class="form-field">
-                <label>GitHub Personal Access Token (PAT) / SSH Key</label>
-                <input type="password" id="github-pat-token" class="manage-input" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx (Optional for live runner API)">
+                <label>GitHub Personal Access Token (PAT)</label>
+                <input type="password" id="github-pat-token" class="manage-input" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
               </div>
 
-              <div class="form-field align-end">
-                <button class="btn btn-create" onclick="saveGitHubSshConfig()">💾 Save & Test Connection</button>
+              <div class="form-field align-end" style="justify-content: flex-end;">
+                <button class="btn-primary-purple" onclick="saveGitHubSshConfig()">💾 Save &amp; Test Connection</button>
               </div>
             </div>
           </div>
@@ -253,23 +426,23 @@
         <div class="manage-card">
           <div class="card-header">
             <div class="card-title-box">
-              <span class="card-icon">💻</span>
+              <span class="card-icon" style="font-size: 20px;">💻</span>
               <div>
-                <h3>GitHub Self-Hosted Runners & Device Nodes</h3>
+                <h3>GitHub Self-Hosted Runners &amp; Device Nodes</h3>
                 <span class="card-subtitle">Target devices available for running Python bots and executing scheduled workflows</span>
               </div>
             </div>
-            <button class="btn btn-secondary" onclick="fetchGitHubRunners()">↻ Refresh Devices</button>
+            <button class="btn-sm-action" onclick="fetchGitHubRunners()">↻ Refresh Devices</button>
           </div>
 
           <div class="card-body">
-            <div class="table-wrapper">
+            <div class="table-container">
               <table class="a360-table">
                 <thead>
                   <tr>
                     <th>Device / Runner Name</th>
                     <th>Host Machine</th>
-                    <th>OS & Architecture</th>
+                    <th>OS &amp; Architecture</th>
                     <th>Status</th>
                     <th>Runner Labels</th>
                     <th>Dependencies Status</th>
@@ -277,7 +450,7 @@
                   </tr>
                 </thead>
                 <tbody id="github-runners-tbody">
-                  <tr><td colspan="7" class="table-loading">Loading connected runner devices...</td></tr>
+                  <tr><td colspan="7" class="table-loading" style="text-align: center; padding: 24px; color: var(--text-muted);">Loading connected runner devices...</td></tr>
                 </tbody>
               </table>
             </div>
@@ -289,367 +462,50 @@
     </div>
   </div>
 
-  <!-- 5. INTERACTIVE PYTHON CODE VIEWER MODAL -->
+  <!-- 6. INTERACTIVE BEAUTIFIED CODE VIEWER & NOTEPAD MODAL -->
   <div class="modal-overlay" id="code-viewer-modal">
-    <div class="modal-drawer code-drawer">
-      <div class="modal-header">
-        <div class="modal-title">
-          <span class="modal-icon">📄</span>
+    <div class="modal-drawer code-drawer" style="max-width: 900px; width: 92%; background: #0f172a; color: #f8fafc; border: 1px solid rgba(255,255,255,0.15); border-radius: 16px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6); overflow: hidden; display: flex; flex-direction: column; max-height: 85vh;">
+      
+      <!-- Modal Header -->
+      <div class="modal-header" style="padding: 16px 24px; border-bottom: 1px solid rgba(255,255,255,0.1); background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: space-between;">
+        <div class="modal-title" style="display: flex; align-items: center; gap: 12px;">
+          <span style="font-size: 22px;" id="code-file-icon">📄</span>
           <div>
-            <h3 id="code-file-name">Script Code Viewer</h3>
-            <span class="modal-sub" id="code-file-path">Repository File Path</span>
+            <h3 id="code-file-name" style="margin: 0; font-size: 16px; font-weight: 700; color: #f8fafc;">Script Code Viewer</h3>
+            <span class="modal-sub" id="code-file-path" style="font-size: 12px; color: #94a3b8; font-family: monospace;">path/to/file.py</span>
           </div>
         </div>
-        <div class="header-right-actions">
-          <span class="lang-tag" id="code-lang-tag">PYTHON 3.14</span>
-          <button class="close-btn" onclick="closeCodeViewer()">✕</button>
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span id="code-lines-count" style="font-size: 12px; color: #94a3b8; background: rgba(255,255,255,0.06); padding: 4px 10px; border-radius: 20px;">0 lines</span>
+          <button class="btn-sm-action" onclick="copyCodeToClipboard()" style="background: rgba(147, 51, 234, 0.2); border: 1px solid rgba(147, 51, 234, 0.4); color: #c084fc; padding: 6px 12px; border-radius: 8px; font-size: 12px; cursor: pointer;">📋 Copy Code</button>
+          <button class="btn-sm-action" onclick="downloadCodeFile()" style="background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: #e2e8f0; padding: 6px 12px; border-radius: 8px; font-size: 12px; cursor: pointer;">⬇️ Download</button>
+          <button class="btn-sm-action" onclick="executeCurrentCodeFile()" id="btn-code-run-script" style="background: linear-gradient(135deg, #8b5cf6, #6366f1); border: none; color: #ffffff; padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 4px;">⚡ Run Script</button>
+          <button class="logout-btn-icon" onclick="closeCodeViewer()" style="background: transparent; border: none; color: #94a3b8; font-size: 18px; cursor: pointer; padding: 4px 8px;">✕</button>
         </div>
       </div>
 
-      <div class="code-modal-toolbar">
-        <span class="code-meta-info" id="code-lines-count">0 lines</span>
-        <button class="btn btn-secondary" onclick="copyCodeToClipboard()">📋 Copy Code</button>
-        <button class="btn btn-create" id="btn-code-deploy" onclick="openDeployWizardFromCode()">🚀 Deploy Bot to Runner</button>
+      <!-- Search Bar -->
+      <div style="padding: 8px 24px; background: #1e293b; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; gap: 12px;">
+        <span style="font-size: 13px; color: #94a3b8;">🔍</span>
+        <input type="text" id="code-search-input" placeholder="Search within code file..." oninput="highlightCodeSearch(this.value)" style="background: rgba(15,23,42,0.6); border: 1px solid rgba(255,255,255,0.1); color: #f8fafc; border-radius: 6px; padding: 6px 12px; font-size: 12px; flex: 1; outline: none;">
       </div>
 
-      <div class="code-viewer-container" id="code-viewer-box">
-        <div class="code-loading">Fetching source code from repository...</div>
+      <!-- Code & Line Numbers Container -->
+      <div class="code-box-container" style="flex: 1; overflow-y: auto; padding: 16px 0; font-family: 'Fira Code', 'Consolas', monospace; font-size: 13px; line-height: 1.6; background: #090d16;">
+        <div class="code-box" id="code-viewer-box" style="display: table; width: 100%;">
+          <!-- Line numbers and beautified code rendered by JS -->
+        </div>
       </div>
 
-      <div class="modal-footer">
-        <span>Git Tracked Source Code</span>
-        <button class="btn btn-secondary" onclick="closeCodeViewer()">Close Viewer</button>
+      <!-- Modal Footer -->
+      <div style="padding: 10px 24px; background: #0f172a; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: #64748b;">
+        <span id="code-file-status-indicator">UTF-8 | Code Beautifier</span>
+        <button class="btn-sm-action" onclick="closeCodeViewer()" style="background: rgba(255,255,255,0.1); color: #f8fafc; border: 1px solid rgba(255,255,255,0.2); padding: 6px 16px; border-radius: 6px; cursor: pointer;">Close</button>
       </div>
+
     </div>
   </div>
 
-  <!-- 6. AUTOMATION ANYWHERE STYLE BOT DEPLOYMENT WIZARD MODAL -->
-  <div class="modal-overlay" id="deploy-wizard-modal">
-    <div class="modal-drawer deploy-wizard-drawer">
-      <div class="modal-header">
-        <div class="modal-title">
-          <span class="modal-icon">🤖</span>
-          <div>
-            <h3>Automation Anywhere Bot Deployment Wizard</h3>
-            <span class="modal-sub">Deploy & Execute Python Bot on Target GitHub Runner Device</span>
-          </div>
-        </div>
-        <button class="close-btn" onclick="closeDeployWizard()">✕</button>
-      </div>
-
-      <div class="deploy-wizard-body">
-        
-        <!-- STEP 1: BOT METADATA -->
-        <div class="deploy-section-card">
-          <div class="deploy-section-header">
-            <span class="step-num">1</span>
-            <h4>Bot Process Identification</h4>
-          </div>
-          <div class="deploy-info-grid">
-            <div class="info-item">
-              <span class="info-label">Bot Name</span>
-              <strong class="info-value" id="dw-bot-name">Master_ActiveLoansProcess.py</strong>
-            </div>
-            <div class="info-item">
-              <span class="info-label">Repository Location</span>
-              <span class="info-value path" id="dw-bot-path">Loan/Loan Team/Active Loans Process/Bots/...</span>
-            </div>
-            <div class="info-item">
-              <span class="info-label">Source Git Commit</span>
-              <span class="info-value badge" id="dw-git-sha">git:dac841a</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- STEP 2: TARGET RUNNER DEVICE SELECTOR -->
-        <div class="deploy-section-card">
-          <div class="deploy-section-header">
-            <span class="step-num">2</span>
-            <h4>Select Connected Execution Runner Device</h4>
-          </div>
-          <div class="form-field full-width">
-            <label>Available Connected GitHub Runner Device Nodes</label>
-            <select id="dw-runner-select" class="sch-select">
-              <!-- Populated dynamically -->
-            </select>
-          </div>
-        </div>
-
-        <!-- STEP 3: DEPLOYMENT MODE (RUN NOW VS SCHEDULE) -->
-        <div class="deploy-section-card">
-          <div class="deploy-section-header">
-            <span class="step-num">3</span>
-            <h4>Choose Deployment Action</h4>
-          </div>
-          <div class="deploy-mode-selector">
-            <label class="mode-chip active" id="chip-mode-now" onclick="setDeployMode('NOW')">
-              <input type="radio" name="deploy-mode-radio" value="NOW" checked>
-              <div>
-                <strong>▶ Run Bot Now (Immediate Execution)</strong>
-                <span>Triggers immediate process execution on selected runner</span>
-              </div>
-            </label>
-
-            <label class="mode-chip" id="chip-mode-schedule" onclick="setDeployMode('SCHEDULE')">
-              <input type="radio" name="deploy-mode-radio" value="SCHEDULE">
-              <div>
-                <strong>⏰ Schedule Bot Execution</strong>
-                <span>Configure recurring timer or execution schedule</span>
-              </div>
-            </label>
-          </div>
-
-          <!-- SCHEDULE OPTIONS BOX (Shown when SCHEDULE chosen) -->
-          <div class="dw-schedule-options" id="dw-schedule-box" style="display: none;">
-            <div class="sch-form-grid" style="padding:10px 0 0 0;">
-              <div class="sch-field-group">
-                <label>Target Execution Time</label>
-                <input type="time" id="dw-sch-time" class="sch-input" value="09:00">
-              </div>
-              <div class="sch-field-group">
-                <label>Frequency</label>
-                <select id="dw-sch-freq" class="sch-select">
-                  <option value="daily" selected>Daily</option>
-                  <option value="weekly">Weekly</option>
-                  <option value="monthly">Monthly</option>
-                </select>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- STEP 4: DEPENDENCIES CHECKLIST -->
-        <div class="deploy-section-card">
-          <div class="deploy-section-header">
-            <span class="step-num">4</span>
-            <h4>Bot Dependency Verification</h4>
-          </div>
-          <div class="dep-checklist">
-            <div class="dep-item success">✓ Python 3.14 Runtime & Environment</div>
-            <div class="dep-item success">✓ Excel & Data Libraries (pandas, openpyxl)</div>
-            <div class="dep-item success">✓ Shared Framework Components (File_Handler, Excel_Manager)</div>
-          </div>
-        </div>
-
-      </div>
-
-      <div class="modal-footer deploy-footer">
-        <button class="btn btn-secondary" onclick="closeDeployWizard()">Cancel</button>
-        <button class="btn btn-create btn-deploy-action" onclick="executeDeployWizard()">⚡ Deploy Bot to Target Runner</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- BOT LOGS DRAWER / MODAL -->
-  <div class="modal-overlay" id="log-modal">
-    <div class="modal-drawer">
-      <div class="modal-header">
-        <div class="modal-title">
-          <span class="modal-icon">📋</span>
-          <div>
-            <h3 id="modal-bot-name">Process Execution Logs</h3>
-            <span class="modal-sub" id="modal-bot-path">Process Location</span>
-          </div>
-        </div>
-        <button class="close-btn" onclick="closeLogModal()">✕</button>
-      </div>
-
-      <div class="modal-controls">
-        <input type="text" id="log-modal-search" class="search-input" placeholder="Search log entries..." oninput="renderModalLogs()">
-        <select id="log-modal-level" class="level-select" onchange="renderModalLogs()">
-          <option value="ALL">All Levels</option>
-          <option value="INFO">INFO</option>
-          <option value="WARNING">WARNING</option>
-          <option value="ERROR">ERROR</option>
-        </select>
-        <button class="btn btn-secondary" onclick="fetchModalLogs()">↻ Refresh</button>
-      </div>
-
-      <div class="modal-terminal" id="modal-terminal-window">
-        <div class="terminal-content" id="modal-terminal-content">
-          <div class="log-row info"><span class="log-msg">Select a bot to view process logs...</span></div>
-        </div>
-      </div>
-
-      <div class="modal-footer">
-        <span id="modal-log-count">0 entries</span>
-        <button class="btn btn-secondary" onclick="closeLogModal()">Close</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- SCHEDULE BOT MODAL -->
-  <div class="modal-overlay" id="schedule-modal">
-    <div class="modal-drawer schedule-drawer">
-      <div class="modal-header">
-        <div class="modal-title">
-          <span class="modal-icon">⏰</span>
-          <div>
-            <h3 id="sch-bot-name">Schedule Process Bot</h3>
-            <span class="modal-sub" id="sch-bot-path">Configure Automated Execution Schedule</span>
-          </div>
-        </div>
-        <button class="close-btn" onclick="closeScheduleModal()">✕</button>
-      </div>
-
-      <div class="sch-form-grid">
-        <div class="sch-field-group full-width">
-          <label style="color: var(--brand-orange);">🎯 Target Runner Device</label>
-          <select id="sch-target-runner" class="sch-select">
-            <!-- Populated dynamically -->
-          </select>
-        </div>
-
-        <div class="sch-field-group">
-          <label>Target Execution Time</label>
-          <input type="time" id="sch-time" class="sch-input" value="09:00">
-        </div>
-
-        <div class="sch-field-group">
-          <label>Timezone</label>
-          <select id="sch-timezone" class="sch-select">
-            <option value="IST" selected>IST (UTC+5:30) - India</option>
-            <option value="EST">EST (UTC-5:00) - Eastern Time</option>
-            <option value="PST">PST (UTC-8:00) - Pacific Time</option>
-            <option value="UTC">UTC (UTC+0:00) - Universal</option>
-          </select>
-        </div>
-
-        <div class="sch-field-group full-width">
-          <label>Frequency</label>
-          <select id="sch-frequency" class="sch-select" onchange="toggleFrequencyOptions()">
-            <option value="daily" selected>Every Day (Daily)</option>
-            <option value="weekly">Weekly (Select Days: Mon to Sun)</option>
-            <option value="monthly">Monthly (Select Date of Month)</option>
-          </select>
-        </div>
-
-        <div class="sch-field-group full-width" id="sch-weekly-box" style="display: none;">
-          <label>Select Days of Week</label>
-          <div class="days-checkbox-grid">
-            <label class="day-chip"><input type="checkbox" name="sch-day" value="Mon" checked> Mon</label>
-            <label class="day-chip"><input type="checkbox" name="sch-day" value="Tue" checked> Tue</label>
-            <label class="day-chip"><input type="checkbox" name="sch-day" value="Wed" checked> Wed</label>
-            <label class="day-chip"><input type="checkbox" name="sch-day" value="Thu" checked> Thu</label>
-            <label class="day-chip"><input type="checkbox" name="sch-day" value="Fri" checked> Fri</label>
-            <label class="day-chip"><input type="checkbox" name="sch-day" value="Sat"> Sat</label>
-            <label class="day-chip"><input type="checkbox" name="sch-day" value="Sun"> Sun</label>
-          </div>
-        </div>
-
-        <div class="sch-field-group full-width" id="sch-monthly-box" style="display: none;">
-          <label>Select Day of Month</label>
-          <select id="sch-dom" class="sch-select">
-            <option value="1">1st of Month</option>
-            <option value="15">15th of Month</option>
-            <option value="28">28th of Month</option>
-            <option value="30">30th of Month</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="sch-actions">
-        <button class="btn btn-create" onclick="saveBotSchedule()">💾 Save Schedule to Target Device</button>
-      </div>
-
-      <div class="active-sch-section">
-        <h4>Active Process Schedules</h4>
-        <div class="table-wrapper">
-          <table class="a360-table">
-            <thead>
-              <tr>
-                <th>Bot Name</th>
-                <th>Target Runner</th>
-                <th>Time & Timezone</th>
-                <th>Frequency</th>
-                <th style="text-align: center;">Action</th>
-              </tr>
-            </thead>
-            <tbody id="sch-table-body">
-              <tr><td colspan="5" class="table-loading">No active schedules configured.</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="modal-footer">
-        <button class="btn btn-secondary" onclick="closeScheduleModal()">Close</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ===== BOT EXECUTION PROGRESS TOAST (Automation Anywhere Style) ===== -->
-  <div id="bot-execution-toast">
-    <!-- SVG gradient defs (hidden) -->
-    <svg width="0" height="0" style="position:absolute">
-      <defs>
-        <linearGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" style="stop-color:#ff7900"/>
-          <stop offset="100%" style="stop-color:#ff3d00"/>
-        </linearGradient>
-      </defs>
-    </svg>
-
-    <div class="toast-header" onclick="toggleToastMinimize()">
-      <span class="toast-header-icon" id="toast-icon">🤖</span>
-      <div class="toast-header-info">
-        <div class="toast-header-title">Bot Execution Monitor</div>
-        <div class="toast-bot-name" id="toast-bot-name">Initializing...</div>
-      </div>
-      <div class="toast-header-controls">
-        <button class="toast-ctrl-btn" onclick="toggleToastMinimize(); event.stopPropagation();" title="Minimize">—</button>
-        <button class="toast-ctrl-btn" onclick="closeExecutionToast(); event.stopPropagation();" title="Dismiss">✕</button>
-      </div>
-    </div>
-
-    <div class="toast-body">
-      <!-- Circular Progress Ring -->
-      <div class="toast-ring-wrap">
-        <svg class="toast-ring-svg" viewBox="0 0 86 86">
-          <circle class="toast-ring-bg" cx="43" cy="43" r="36"/>
-          <circle class="toast-ring-progress" id="toast-ring-progress" cx="43" cy="43" r="36"/>
-        </svg>
-        <div class="toast-ring-center">
-          <span class="toast-pct" id="toast-pct">0</span>
-          <span class="toast-pct-symbol">%</span>
-          <span class="toast-ring-label" id="toast-ring-label">Running</span>
-        </div>
-      </div>
-
-      <!-- Stats Column -->
-      <div class="toast-stats">
-        <div class="toast-stat-row">
-          <span class="toast-stat-label">Status</span>
-          <span class="toast-stat-value running" id="toast-status-val">● Running</span>
-        </div>
-        <div class="toast-stat-row">
-          <span class="toast-stat-label">Runner Device</span>
-          <span class="toast-stat-value" id="toast-runner-val">GANESH-RUNNER</span>
-        </div>
-        <div class="toast-stat-row">
-          <span class="toast-stat-label">Elapsed Time</span>
-          <span class="toast-stat-value" id="toast-elapsed-val" style="font-family:var(--font-mono);">00:00</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Linear progress bar -->
-    <div class="toast-linear-bar-wrap">
-      <span class="toast-linear-label">Execution Progress</span>
-      <div class="toast-linear-track">
-        <div class="toast-linear-fill" id="toast-linear-fill"></div>
-      </div>
-    </div>
-
-    <!-- Step log -->
-    <div class="toast-steps" id="toast-steps-container">
-      <div class="toast-step-item active">
-        <span class="toast-step-dot spinning"></span>
-        <span>Initializing bot runtime environment...</span>
-      </div>
-    </div>
-  </div>
-
-  <script src="app.js?v=1.7.0"></script>
+  <script src="app.js?v=2.0.0"></script>
 </body>
 </html>
