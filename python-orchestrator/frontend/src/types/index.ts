@@ -109,6 +109,7 @@ export interface Job {
   commit_sha?: string;
   entry_point: string;
   machine_id: string;
+  machine_name?: string;
   status: JobStatus;
   parameters?: string[];
   environment_variables?: Record<string, string>;

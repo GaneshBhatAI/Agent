@@ -324,6 +324,10 @@ export const supabaseService = {
     return localItems.find((j) => j.job_id === jobId) || null;
   },
 
+  async getJobById(jobId: string): Promise<any> {
+    return this.getJob(jobId);
+  },
+
   async insertJob(job: any): Promise<any> {
     const user = job.created_by || getActiveUsername();
     const payload = {

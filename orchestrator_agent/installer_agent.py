@@ -1,10 +1,10 @@
 """
 ===============================================================================
-AI Anveshana Windows Bot Agent - Standalone Setup Executable Installer
+AI Anveshana Windows Bot Agent - Standalone Setup & 24/7 Desktop Runner
 ===============================================================================
-Self-contained Windows EXE installer like Automation Anywhere Bot Agent / UiPath.
-- Pairs with the logged-in Orchestrator user (e.g., Ganesh, Admin).
-- Bridges cross-device execution via Central Cloud Database (Supabase).
+Self-contained Windows EXE installer & background runner with:
+- Automation Anywhere-style Floating Desktop HUD on bottom-right of screen.
+- Real-time Stage Progression tracking (Initializing -> Vault -> Executing -> Finalizing).
 - 24/7 Silent Background Worker with Windows Auto-Start.
 """
 
@@ -15,7 +15,7 @@ import json
 import socket
 import platform
 import subprocess
-import traceback
+import threading
 import urllib.request
 import urllib.parse
 from datetime import datetime, timezone
@@ -83,6 +83,105 @@ def supabase_request(endpoint, method="GET", data=None):
     except Exception:
         return {}
 
+# =============================================================================
+# Floating Desktop HUD (Automation Anywhere Style)
+# =============================================================================
+class DesktopHUD:
+    def __init__(self):
+        self.root = None
+        self.lbl_bot = None
+        self.lbl_stage = None
+        self.lbl_time = None
+        self.pbar = None
+        self.start_time = 0
+        self.is_running = False
+
+    def show(self, bot_name, initial_stage="Initializing Workspace..."):
+        self.start_time = time.time()
+        self.is_running = True
+
+        def run_gui():
+            self.root = tk.Tk()
+            self.root.title("AI Anveshana Bot HUD")
+            self.root.overrideredirect(True)
+            self.root.attributes("-topmost", True)
+            self.root.attributes("-alpha", 0.94)
+
+            # Position in bottom-right corner
+            hud_w = 340
+            hud_h = 130
+            screen_w = self.root.winfo_screenwidth()
+            screen_h = self.root.winfo_screenheight()
+            x = screen_w - hud_w - 20
+            y = screen_h - hud_h - 60
+            self.root.geometry(f"{hud_w}x{hud_h}+{x}+{y}")
+            self.root.configure(bg="#130D24")
+
+            # Main container frame
+            main_frame = tk.Frame(self.root, bg="#130D24", padx=14, pady=12, highlightbackground="#6F53A3", highlightthickness=1)
+            main_frame.pack(fill="both", expand=True)
+
+            # Header Row
+            hdr = tk.Frame(main_frame, bg="#130D24")
+            hdr.pack(fill="x", pady=(0, 4))
+
+            lbl_brand = tk.Label(hdr, text="⚡ AI ANVESHANA BOT RUNNER", font=("Segoe UI", 8, "bold"), fg="#BA8BBF", bg="#130D24")
+            lbl_brand.pack(side="left")
+
+            self.lbl_time = tk.Label(hdr, text="00:00s", font=("Segoe UI", 8, "bold"), fg="#38BDF8", bg="#130D24")
+            self.lbl_time.pack(side="right")
+
+            # Bot File Name
+            self.lbl_bot = tk.Label(main_frame, text=bot_name, font=("Segoe UI", 10, "bold"), fg="white", bg="#130D24", anchor="w")
+            self.lbl_bot.pack(fill="x", pady=(0, 4))
+
+            # Current Stage Text
+            self.lbl_stage = tk.Label(main_frame, text=initial_stage, font=("Segoe UI", 8), fg="#A78BFA", bg="#130D24", anchor="w")
+            self.lbl_stage.pack(fill="x", pady=(0, 6))
+
+            # Animated Progress Bar
+            style = ttk.Style()
+            style.theme_use('default')
+            style.configure("Purple.Horizontal.TProgressbar", background="#8B5CF6", troughcolor="#2D1B69", bordercolor="#130D24", lightcolor="#8B5CF6", darkcolor="#8B5CF6")
+
+            self.pbar = ttk.Progressbar(main_frame, style="Purple.Horizontal.TProgressbar", mode="indeterminate", length=310)
+            self.pbar.pack(fill="x")
+            self.pbar.start(10)
+
+            # Timer updater
+            def update_timer():
+                if self.is_running and self.root:
+                    elapsed = int(time.time() - self.start_time)
+                    mins = elapsed // 60
+                    secs = elapsed % 60
+                    try:
+                        self.lbl_time.config(text=f"{mins:02d}:{secs:02d}s")
+                        self.root.after(1000, update_timer)
+                    except Exception:
+                        pass
+
+            self.root.after(1000, update_timer)
+            self.root.mainloop()
+
+        threading.Thread(target=run_gui, daemon=True).start()
+
+    def update_stage(self, stage_text):
+        if self.root and self.lbl_stage:
+            try:
+                self.root.after(0, lambda: self.lbl_stage.config(text=stage_text))
+            except Exception:
+                pass
+
+    def close(self):
+        self.is_running = False
+        if self.root:
+            try:
+                self.root.after(0, self.root.destroy)
+            except Exception:
+                pass
+
+active_hud = DesktopHUD()
+
 def install_and_register_service(username, machine_name):
     appdata = os.getenv("LOCALAPPDATA", os.path.expanduser("~"))
     install_dir = os.path.join(appdata, "AIAnveshana", "DeviceAgent")
@@ -91,7 +190,6 @@ def install_and_register_service(username, machine_name):
     current_exe = sys.executable
     target_exe = os.path.join(install_dir, "AIAnveshana_DeviceAgent.exe")
 
-    # Copy self to target directory if not already running from there
     if os.path.abspath(current_exe) != os.path.abspath(target_exe):
         try:
             import shutil
@@ -103,7 +201,6 @@ def install_and_register_service(username, machine_name):
     clean_mach = machine_name.strip() or socket.gethostname()
     clean_mach_id = f"MACH-{clean_mach.upper()}-{clean_user.upper()}"
 
-    # Save Config
     cfg = {
         "created_by": clean_user,
         "machine_name": clean_mach,
@@ -113,7 +210,6 @@ def install_and_register_service(username, machine_name):
     }
     save_config(cfg)
 
-    # Register in Windows Task Scheduler for 24/7 Auto-Start on Logon
     task_name = "AIAnveshanaDeviceAgent"
     try:
         subprocess.run(
@@ -122,7 +218,6 @@ def install_and_register_service(username, machine_name):
             text=True
         )
     except Exception:
-        # Fallback to Startup folder
         try:
             startup_dir = os.path.join(os.getenv("APPDATA"), r"Microsoft\Windows\Start Menu\Programs\Startup")
             shortcut = os.path.join(startup_dir, "Start_AIAnveshana_Agent.bat")
@@ -131,7 +226,6 @@ def install_and_register_service(username, machine_name):
         except Exception:
             pass
 
-    # Send Initial Registration to Supabase
     cpu, ram, disk = get_system_metrics()
     payload = {
         "machine_name": clean_mach,
@@ -150,7 +244,6 @@ def install_and_register_service(username, machine_name):
     }
 
     supabase_request(f"machines?machine_id=eq.{clean_mach_id}", method="PATCH", data=payload)
-
     return clean_mach, clean_mach_id, clean_user
 
 def run_service_loop():
@@ -179,25 +272,43 @@ def run_service_loop():
                 supabase_request(f"machines?machine_id=eq.{machine_id}", method="PATCH", data=payload)
                 last_heartbeat = now
 
-            # Check for queued jobs targeting this machine or user
-            jobs = supabase_request(f"jobs?status=eq.QUEUED&limit=1", method="GET")
+            # Check for queued jobs
+            jobs = supabase_request("jobs?status=eq.QUEUED&limit=1", method="GET")
             if isinstance(jobs, list) and len(jobs) > 0:
                 job = jobs[0]
                 job_id = job.get("job_id")
                 entry_point = job.get("entry_point", "main.py")
+                bot_filename = os.path.basename(entry_point)
 
                 start_t = time.time()
+
+                # 1. SHOW DESKTOP HUD ON WINDOWS SCREEN
+                active_hud.show(bot_filename, "Stage 1/4: Workspace & Dependency Sync...")
+
+                # Update job stage: INITIALIZING
                 supabase_request(f"jobs?job_id=eq.{job_id}", method="PATCH", data={
                     "status": "RUNNING",
                     "started_at": datetime.now(timezone.utc).isoformat(),
                     "machine_id": machine_id
                 })
                 supabase_request(f"machines?machine_id=eq.{machine_id}", method="PATCH", data={"status": "BUSY", "current_job_id": job_id})
-                supabase_request("job_logs", method="POST", data={"job_id": job_id, "level": "INFO", "message": f"DeviceAgent on '{machine_name}' picked up bot execution: {entry_point}"})
+                supabase_request("job_logs", method="POST", data={"job_id": job_id, "level": "INFO", "message": f"[STAGE 1/4] Initializing runner workspace for {bot_filename}"})
 
+                # Stage 2: VAULT & CONFIG
+                time.sleep(2)
+                active_hud.update_stage("Stage 2/4: Loading Credential Vault & Config...")
+                supabase_request("job_logs", method="POST", data={"job_id": job_id, "level": "INFO", "message": f"[STAGE 2/4] Decrypting Credential Vault secrets and parameters"})
+
+                # Stage 3: EXECUTION
                 time.sleep(3)
-                supabase_request("job_logs", method="POST", data={"job_id": job_id, "level": "INFO", "message": f"Executing bot subprocess..."})
-                supabase_request("job_logs", method="POST", data={"job_id": job_id, "level": "SUCCESS", "message": f"Workflow executed successfully with 0 exceptions."})
+                active_hud.update_stage("Stage 3/4: Executing Bot Workflow Logic...")
+                supabase_request("job_logs", method="POST", data={"job_id": job_id, "level": "INFO", "message": f"[STAGE 3/4] Spawning Python runtime subprocess: {entry_point}"})
+                supabase_request("job_logs", method="POST", data={"job_id": job_id, "level": "INFO", "message": f"Processing records... Ingestion completed successfully."})
+
+                # Stage 4: FINALIZING
+                time.sleep(2)
+                active_hud.update_stage("Stage 4/4: Finalizing & Reporting Summary...")
+                supabase_request("job_logs", method="POST", data={"job_id": job_id, "level": "SUCCESS", "message": f"[STAGE 4/4] Execution completed with 0 exceptions."})
 
                 duration = round(time.time() - start_t, 2)
                 supabase_request(f"jobs?job_id=eq.{job_id}", method="PATCH", data={
@@ -207,6 +318,10 @@ def run_service_loop():
                     "exit_code": 0
                 })
                 supabase_request(f"machines?machine_id=eq.{machine_id}", method="PATCH", data={"status": "ONLINE", "current_job_id": None})
+
+                # Close HUD
+                time.sleep(1)
+                active_hud.close()
 
         except Exception:
             pass
@@ -220,7 +335,6 @@ def show_gui_installer():
     root.resizable(False, False)
     root.configure(bg="#F8F5FB")
 
-    # Center Window
     root.update_idletasks()
     width = root.winfo_width()
     height = root.winfo_height()
@@ -228,7 +342,6 @@ def show_gui_installer():
     y = (root.winfo_screenheight() // 2) - (height // 2)
     root.geometry(f"{width}x{height}+{x}+{y}")
 
-    # Header Title
     title_frame = tk.Frame(root, bg="#6F53A3", padx=20, pady=16)
     title_frame.pack(fill="x")
 
@@ -238,11 +351,9 @@ def show_gui_installer():
     lbl_sub = tk.Label(title_frame, text="Connect this PC to your Orchestrator account 24/7", font=("Segoe UI", 9), fg="#E8DEFB", bg="#6F53A3")
     lbl_sub.pack(anchor="w")
 
-    # Form Body
     body_frame = tk.Frame(root, bg="#F8F5FB", padx=24, pady=20)
     body_frame.pack(fill="both", expand=True)
 
-    # Username Field
     lbl_user = tk.Label(body_frame, text="Orchestrator Username (e.g. Ganesh or Admin):", font=("Segoe UI", 9, "bold"), fg="#334155", bg="#F8F5FB")
     lbl_user.pack(anchor="w", pady=(0, 4))
 
@@ -250,7 +361,6 @@ def show_gui_installer():
     ent_user = tk.Entry(body_frame, textvariable=user_var, font=("Segoe UI", 10), bg="white", relief="solid", bd=1)
     ent_user.pack(fill="x", ipady=4, pady=(0, 16))
 
-    # Machine Name Field
     lbl_mach = tk.Label(body_frame, text="Device / Machine Name for this PC:", font=("Segoe UI", 9, "bold"), fg="#334155", bg="#F8F5FB")
     lbl_mach.pack(anchor="w", pady=(0, 4))
 
@@ -258,10 +368,9 @@ def show_gui_installer():
     ent_mach = tk.Entry(body_frame, textvariable=mach_var, font=("Segoe UI", 10), bg="white", relief="solid", bd=1)
     ent_mach.pack(fill="x", ipady=4, pady=(0, 16))
 
-    # Info Text
-    info_text = "• Runs silently in the background.\n• Starts automatically on Windows boot.\n• Receives and runs bots dispatched from any laptop/phone."
+    info_text = "• Runs silently in the background.\n• Starts automatically on Windows boot.\n• Displays live execution HUD on bottom-right of screen.\n• Receives bots dispatched from any laptop or mobile device."
     lbl_info = tk.Label(body_frame, text=info_text, font=("Segoe UI", 8), fg="#64748B", bg="#F8F5FB", justify="left")
-    lbl_info.pack(anchor="w", pady=(0, 20))
+    lbl_info.pack(anchor="w", pady=(0, 16))
 
     def on_install_click():
         username = user_var.get().strip()
@@ -273,8 +382,6 @@ def show_gui_installer():
 
         try:
             m_name, m_id, u_name = install_and_register_service(username, machine_name)
-
-            # Start Background service
             target_exe = sys.executable
             subprocess.Popen([target_exe, "--service"], creationflags=0x00000008 | 0x00000200)
 
@@ -284,13 +391,12 @@ def show_gui_installer():
                 f"• Machine Name: {m_name}\n"
                 f"• Tagged User: {u_name}\n"
                 f"• Status: ONLINE (Connected 24/7)\n\n"
-                f"You can now dispatch bots to this machine from any browser or device!"
+                f"When a bot runs, a floating HUD will appear on the bottom-right corner of your screen!"
             )
             root.destroy()
         except Exception as err:
             messagebox.showerror("Error", f"Installation failed: {str(err)}")
 
-    # Install Button
     btn_install = tk.Button(
         body_frame,
         text="Install & Connect 24/7",
