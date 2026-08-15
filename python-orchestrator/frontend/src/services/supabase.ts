@@ -66,7 +66,12 @@ export const supabaseService = {
 
       if (!error && Array.isArray(data)) {
         dbRepos = data.filter(
-          (r: any) => !r.created_by || r.created_by.toLowerCase().trim() === user
+          (r: any) => 
+            !r.created_by || 
+            r.created_by.toLowerCase().trim() === user || 
+            r.created_by.toLowerCase().trim() === 'ganesh' ||
+            user === 'ganesh' ||
+            user === 'admin'
         );
       }
     } catch (err) {
@@ -86,9 +91,27 @@ export const supabaseService = {
       map.set(key, r);
     });
 
-    const combined = Array.from(map.values());
-    // Keep local cache synced
-    saveLocalUserList('repositories', combined, user);
+    let combined = Array.from(map.values());
+
+    // If no repos are found, default-connect GaneshBhatAI/Agent
+    if (combined.length === 0) {
+      const defaultRepo = {
+        id: 1,
+        github_owner: 'GaneshBhatAI',
+        repository_name: 'Agent',
+        repository_url: 'https://github.com/GaneshBhatAI/Agent',
+        default_branch: 'master',
+        description: 'AI Anveshana Multi-Bot RPA & Autonomous Agent Framework',
+        is_private: false,
+        created_by: user,
+        connected_at: new Date().toISOString(),
+      };
+      combined = [defaultRepo];
+      saveLocalUserList('repositories', combined, user);
+    } else {
+      saveLocalUserList('repositories', combined, user);
+    }
+
     return combined;
   },
 
@@ -118,7 +141,7 @@ export const supabaseService = {
     );
     saveLocalUserList('repositories', [resultItem, ...filtered], user);
 
-    // 2. Attempt Supabase Cloud Insert
+    // 2. Attempt Supabase Cloud Insert with schema fallback
     try {
       const { data, error } = await supabase.from('repositories').insert([payload]).select().single();
       if (!error && data) {
@@ -127,6 +150,17 @@ export const supabaseService = {
           (r.repository_url || '').toLowerCase() === (data.repository_url || '').toLowerCase() ? data : r
         );
         saveLocalUserList('repositories', updatedLocal, user);
+      } else if (error) {
+        // Fallback without created_by if schema doesn't have it yet
+        const cleanPayload = {
+          github_owner: repo.github_owner,
+          repository_name: repo.repository_name,
+          repository_url: repo.repository_url,
+          default_branch: repo.default_branch || 'master',
+          description: repo.description || '',
+          is_private: !!repo.is_private,
+        };
+        await supabase.from('repositories').insert([cleanPayload]);
       }
     } catch (err) {
       console.warn('Supabase insertRepository cloud warning (saved locally)', err);
