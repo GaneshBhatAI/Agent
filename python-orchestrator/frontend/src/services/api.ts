@@ -22,7 +22,7 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Real Supabase PostgreSQL database interceptor with Multi-Tenant User Isolation
+// Real Supabase PostgreSQL database interceptor with Strict Multi-Tenant User Isolation
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
@@ -35,7 +35,7 @@ api.interceptors.response.use(
     const url = config.url.replace(api.defaults.baseURL || '', '').replace(/^\//, '');
     const method = (config.method || 'get').toLowerCase();
 
-    // 1. Dashboard summary (Scoped to user)
+    // 1. Dashboard summary (Scoped strictly to user)
     if (url === 'dashboard' && method === 'get') {
       try {
         const [machines, jobs, schedules, repos] = await Promise.all([
@@ -54,7 +54,7 @@ api.interceptors.response.use(
             successful_jobs: jobs.filter((j: any) => j.status === 'SUCCESS').length,
             failed_jobs: jobs.filter((j: any) => j.status === 'FAILED').length,
             active_schedules: schedules.filter((s: any) => s.enabled).length,
-            connected_repos_count: repos.length || 1,
+            connected_repos_count: repos.length,
             recent_jobs: jobs.slice(0, 10),
             machines: machines,
           },
@@ -77,11 +77,11 @@ api.interceptors.response.use(
       }
     }
 
-    // 2. Machines (Scoped to user)
+    // 2. Machines (Scoped strictly to user)
     if (url === 'machines' && method === 'get') {
       try {
         const data = await supabaseService.getMachines(currentUsername);
-        return { data };
+        return { data: data || [] };
       } catch (err) {
         console.error('Failed to fetch machines from Supabase', err);
         return { data: [] };
@@ -139,6 +139,7 @@ api.interceptors.response.use(
         const { data, error } = await supabase
           .from('machines')
           .select('*')
+          .eq('created_by', currentUsername)
           .or(`machine_id.eq.${mId},id.eq.${mId}`)
           .single();
         if (data && !error) return { data };
@@ -148,26 +149,15 @@ api.interceptors.response.use(
       return { data: null };
     }
 
-    // 3. Repositories (Scoped to user)
+    // 3. Repositories (Strictly queried from Supabase without mock fallback)
     if (url === 'github/repositories' && method === 'get') {
       try {
         const data = await supabaseService.getRepositories(currentUsername);
-        if (data && data.length > 0) return { data };
-      } catch (err) {}
-      return {
-        data: [
-          {
-            id: 1,
-            github_owner: 'GaneshBhatAI',
-            repository_name: 'Agent',
-            repository_url: 'https://github.com/GaneshBhatAI/Agent',
-            default_branch: 'master',
-            description: 'Enterprise Python Automation Framework & Bot Workflows',
-            is_private: false,
-            created_by: currentUsername,
-          },
-        ],
-      };
+        return { data: data || [] };
+      } catch (err) {
+        console.error('Failed to get repositories from Supabase', err);
+        return { data: [] };
+      }
     }
 
     if (url === 'github/repositories' && method === 'post') {
@@ -203,11 +193,11 @@ api.interceptors.response.use(
       }
     }
 
-    // 4. Jobs (Scoped to user)
+    // 4. Jobs (Scoped strictly to user)
     if (url === 'jobs' && method === 'get') {
       try {
         const data = await supabaseService.getJobs(currentUsername);
-        return { data };
+        return { data: data || [] };
       } catch (err) {
         console.error('Failed to get jobs from Supabase', err);
         return { data: [] };
@@ -222,7 +212,7 @@ api.interceptors.response.use(
         repository_url: body.repository_url || 'https://github.com/GaneshBhatAI/Agent',
         branch: body.branch || 'master',
         commit_sha: body.commit_sha || 'c6db9d5',
-        entry_point: body.entry_point || 'Master_ActiveLoansProcess.py',
+        entry_point: body.entry_point || 'main.py',
         machine_id: body.machine_id || 'LOCAL-NODE',
         status: 'RUNNING',
         parameters: body.parameters || [],
@@ -251,7 +241,7 @@ api.interceptors.response.use(
       const jobId = url.split('/')[1];
       try {
         const logs = await supabaseService.getJobLogs(jobId);
-        return { data: logs };
+        return { data: logs || [] };
       } catch (err) {
         console.error('Failed to fetch logs from Supabase', err);
         return { data: [] };
@@ -303,11 +293,11 @@ api.interceptors.response.use(
       return { data: null };
     }
 
-    // 5. Schedules (Scoped to user)
+    // 5. Schedules (Scoped strictly to user)
     if (url === 'schedules' && method === 'get') {
       try {
         const data = await supabaseService.getSchedules(currentUsername);
-        return { data };
+        return { data: data || [] };
       } catch (err) {
         console.error('Failed to fetch schedules from Supabase', err);
         return { data: [] };
@@ -321,7 +311,7 @@ api.interceptors.response.use(
         repository_name: body.repository_name || 'Agent',
         repository_url: body.repository_url || 'https://github.com/GaneshBhatAI/Agent',
         branch: body.branch || 'master',
-        entry_point: body.entry_point || 'Master_ActiveLoansProcess.py',
+        entry_point: body.entry_point || 'main.py',
         machine_id: body.machine_id,
         schedule_type: body.schedule_type || 'CRON',
         cron_expression: body.cron_expression || '0 8 * * *',
@@ -343,7 +333,7 @@ api.interceptors.response.use(
     if (url.startsWith('schedules/') && url.endsWith('/toggle') && method === 'post') {
       const id = parseInt(url.split('/')[1]);
       try {
-        const { data: cur } = await supabase.from('schedules').select('enabled').eq('id', id).single();
+        const { data: cur } = await supabase.from('schedules').select('enabled').eq('id', id).eq('created_by', currentUsername).single();
         const data = await supabaseService.toggleSchedule(id, !!cur?.enabled);
         return { data };
       } catch (err) {
@@ -361,11 +351,11 @@ api.interceptors.response.use(
       }
     }
 
-    // 6. Credentials (Scoped to user)
+    // 6. Credentials (Scoped strictly to user)
     if (url === 'credentials' && method === 'get') {
       try {
         const data = await supabaseService.getCredentials(currentUsername);
-        return { data };
+        return { data: data || [] };
       } catch (err) {
         console.error('Failed to fetch credentials from Supabase', err);
         return { data: [] };
@@ -402,11 +392,11 @@ api.interceptors.response.use(
       }
     }
 
-    // 7. Audit logs (Scoped to user)
+    // 7. Audit logs (Scoped strictly to user)
     if (url === 'audit-logs' && method === 'get') {
       try {
         const data = await supabaseService.getAuditLogs(currentUsername);
-        return { data };
+        return { data: data || [] };
       } catch (err) {
         console.error('Failed to fetch audit logs from Supabase', err);
         return { data: [] };

@@ -1,8 +1,21 @@
-import React, { useState } from 'react';
-import { FolderGit2, Key, Check, AlertCircle, ExternalLink, GitBranch } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import {
+  FolderGit2,
+  Key,
+  Check,
+  AlertCircle,
+  ExternalLink,
+  Search,
+  Lock,
+  Globe,
+  CheckSquare,
+  Square,
+  Sparkles,
+  ArrowRight,
+  Database,
+} from 'lucide-react';
 import { Modal } from './Modal';
 import api from '../services/api';
-import { supabaseService } from '../services/supabase';
 import { authService } from '../services/auth';
 
 interface ConnectRepoModalProps {
@@ -11,251 +24,400 @@ interface ConnectRepoModalProps {
   onRepoConnected: () => void;
 }
 
+interface FetchedRepoItem {
+  id: number;
+  name: string;
+  full_name: string;
+  owner: { login: string };
+  html_url: string;
+  description?: string;
+  default_branch: string;
+  private: boolean;
+}
+
 export const ConnectRepoModal: React.FC<ConnectRepoModalProps> = ({
   isOpen,
   onClose,
   onRepoConnected,
 }) => {
-  const [repoInput, setRepoInput] = useState<string>('');
+  const [step, setStep] = useState<'token' | 'select'>('token');
   const [patToken, setPatToken] = useState<string>('');
-  const [defaultBranch, setDefaultBranch] = useState<string>('main');
-  const [description, setDescription] = useState<string>('');
-  const [isPrivate, setIsPrivate] = useState<boolean>(false);
-  const [isValidating, setIsValidating] = useState<boolean>(false);
+  const [singleRepoInput, setSingleRepoInput] = useState<string>('');
+  const [fetchedRepos, setFetchedRepos] = useState<FetchedRepoItem[]>([]);
+  const [selectedRepoIds, setSelectedRepoIds] = useState<Set<number>>(new Set());
+  const [repoSearch, setRepoSearch] = useState<string>('');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!repoInput.trim()) return;
+  useEffect(() => {
+    if (isOpen) {
+      setError(null);
+      setSuccess(null);
+      // Check if user already has a saved GITHUB_PAT credential in Supabase
+      api.get('/credentials').then((res) => {
+        const found = res.data.find((c: any) => c.credential_type === 'GITHUB_PAT');
+        if (found && found.encrypted_value && found.encrypted_value.startsWith('ghp_')) {
+          setPatToken(found.encrypted_value);
+        }
+      }).catch(() => {});
+    }
+  }, [isOpen]);
 
+  const handleFetchReposWithToken = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!patToken.trim() && !singleRepoInput.trim()) {
+      setError('Please provide a GitHub Personal Access Token (PAT) or a specific repository URL.');
+      return;
+    }
+
+    setIsLoading(true);
     setError(null);
-    setSuccess(null);
-    setIsValidating(true);
 
     try {
-      // 1. Parse owner and repo name
-      let cleanInput = repoInput.trim().replace(/^https?:\/\/github\.com\//, '').replace(/\.git$/, '');
-      const parts = cleanInput.split('/');
-      if (parts.length < 2) {
-        throw new Error('Please enter a valid repository format: "owner/repository" or "https://github.com/owner/repository"');
-      }
-      const owner = parts[0];
-      const repoName = parts[1];
-      const fullUrl = `https://github.com/${owner}/${repoName}`;
-
-      // 2. Validate live against GitHub API if token provided
       const headers: Record<string, string> = {
         Accept: 'application/vnd.github.v3+json',
       };
       if (patToken.trim()) {
-        headers.Authorization = `token ${patToken.trim()}`;
+        headers.Authorization = `Bearer ${patToken.trim()}`;
       }
 
-      let detectedBranch = defaultBranch;
-      try {
-        const ghRes = await fetch(`https://api.github.com/repos/${owner}/${repoName}`, { headers });
-        if (ghRes.ok) {
-          const ghData = await ghRes.json();
-          detectedBranch = ghData.default_branch || defaultBranch;
-          if (ghData.private) {
-            setIsPrivate(true);
+      // If user provided a single repo path directly (e.g. GaneshBhatAI/Agent)
+      if (singleRepoInput.trim()) {
+        let clean = singleRepoInput.trim().replace(/^https?:\/\/github\.com\//, '').replace(/\.git$/, '');
+        const parts = clean.split('/');
+        if (parts.length >= 2) {
+          const owner = parts[0];
+          const repo = parts[1];
+          const ghRes = await fetch(`https://api.github.com/repos/${owner}/${repo}`, { headers });
+          if (!ghRes.ok) {
+            throw new Error(`Repository "${owner}/${repo}" not found or private. Check your PAT token.`);
           }
-        } else if (ghRes.status === 404 && !patToken.trim()) {
-          throw new Error('Repository not found or is private. If it is a private repository, please provide a GitHub Personal Access Token (PAT).');
-        } else if (ghRes.status === 401) {
+          const item = await ghRes.json();
+          setFetchedRepos([item]);
+          setSelectedRepoIds(new Set([item.id]));
+          setStep('select');
+          setIsLoading(false);
+          return;
+        }
+      }
+
+      // Otherwise fetch all repos accessible to this PAT
+      const res = await fetch('https://api.github.com/user/repos?per_page=100&sort=updated', { headers });
+      if (!res.ok) {
+        if (res.status === 401) {
           throw new Error('Invalid GitHub Personal Access Token. Please check token permissions (requires "repo" scope).');
         }
-      } catch (fetchErr: any) {
-        if (fetchErr.message && !fetchErr.message.includes('Failed to fetch')) {
-          throw fetchErr;
-        }
+        throw new Error(`GitHub API error: ${res.statusText}`);
       }
 
-      // 3. Store in Supabase database scoped to current user
-      const currentUser = authService.getCurrentUser();
-      const newRepoPayload = {
-        github_owner: owner,
-        repository_name: repoName,
-        repository_url: fullUrl,
-        default_branch: detectedBranch,
-        description: description.trim() || `Connected repository ${owner}/${repoName}`,
-        is_private: isPrivate || !!patToken.trim(),
-        created_by: currentUser?.username || 'admin',
-      };
+      const repos: FetchedRepoItem[] = await res.json();
+      if (!Array.isArray(repos) || repos.length === 0) {
+        throw new Error('No repositories found for this GitHub account.');
+      }
 
-      await api.post('/github/repositories', newRepoPayload);
+      setFetchedRepos(repos);
+      // Pre-select first repo or Agent repo if present
+      const match = repos.find((r) => r.name.toLowerCase() === 'agent') || repos[0];
+      setSelectedRepoIds(new Set(match ? [match.id] : []));
+      setStep('select');
+    } catch (err: any) {
+      console.error('Failed to fetch repositories from GitHub', err);
+      setError(err.message || 'Failed to authenticate with GitHub.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-      // 4. If PAT provided, save encrypted credential in user's vault
-      if (patToken.trim()) {
-        await api.post('/credentials', {
-          name: `GITHUB_PAT_${owner.toUpperCase()}_${repoName.toUpperCase()}`,
-          credential_type: 'GITHUB_PAT',
-          value: patToken.trim(),
-          description: `Access token for repository ${owner}/${repoName}`,
+  const toggleSelectRepo = (id: number) => {
+    setSelectedRepoIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
+  };
+
+  const handleSelectAll = () => {
+    if (selectedRepoIds.size === filteredRepos.length) {
+      setSelectedRepoIds(new Set());
+    } else {
+      setSelectedRepoIds(new Set(filteredRepos.map((r) => r.id)));
+    }
+  };
+
+  const handleSaveSelectedRepos = async () => {
+    if (selectedRepoIds.size === 0) {
+      setError('Please select at least one repository to connect.');
+      return;
+    }
+
+    setIsLoading(true);
+    setError(null);
+
+    const currentUser = authService.getCurrentUser();
+    const currentUsername = currentUser?.username || 'admin';
+
+    try {
+      const chosenRepos = fetchedRepos.filter((r) => selectedRepoIds.has(r.id));
+
+      // 1. Save chosen repositories in Supabase database
+      for (const repo of chosenRepos) {
+        await api.post('/github/repositories', {
+          github_owner: repo.owner?.login || currentUsername,
+          repository_name: repo.name,
+          repository_url: repo.html_url,
+          default_branch: repo.default_branch || 'master',
+          description: repo.description || `Automation Bot Workspace for ${repo.name}`,
+          is_private: repo.private,
+          created_by: currentUsername,
         });
       }
 
-      setSuccess(`Successfully connected ${owner}/${repoName}!`);
+      // 2. Save PAT in Credential Vault if provided
+      if (patToken.trim()) {
+        await api.post('/credentials', {
+          name: `GITHUB_PAT_${currentUsername.toUpperCase()}`,
+          credential_type: 'GITHUB_PAT',
+          value: patToken.trim(),
+          description: `GitHub Access Token for ${chosenRepos.map((r) => r.name).join(', ')}`,
+        });
+      }
+
+      setSuccess(`Connected ${chosenRepos.length} repository${chosenRepos.length > 1 ? 'ies' : ''} to your workspace!`);
       setTimeout(() => {
         onRepoConnected();
         onClose();
-        setRepoInput('');
-        setPatToken('');
-        setDescription('');
+        setStep('token');
         setSuccess(null);
       }, 1000);
     } catch (err: any) {
-      console.error('Failed to connect repository', err);
-      setError(err.message || 'Failed to connect repository.');
+      console.error('Failed to save repositories in Supabase', err);
+      setError(err.message || 'Failed to save repository selections.');
     } finally {
-      setIsValidating(false);
+      setIsLoading(false);
     }
   };
+
+  const filteredRepos = fetchedRepos.filter((r) =>
+    r.full_name.toLowerCase().includes(repoSearch.toLowerCase()) ||
+    (r.description && r.description.toLowerCase().includes(repoSearch.toLowerCase()))
+  );
 
   return (
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="Connect GitHub Repository"
-      subtitle="Add your own public or private repository using a Personal Access Token (PAT)"
-      maxWidth="xl"
+      title={step === 'token' ? 'Connect GitHub Repositories' : 'Select Repositories for Workspace'}
+      subtitle={
+        step === 'token'
+          ? 'Enter your GitHub Personal Access Token (PAT) to load and choose your repositories'
+          : 'Choose which specific bot repositories to include in your Orchestrator workspace'
+      }
+      maxWidth="2xl"
     >
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="space-y-4">
         {error && (
-          <div className="flex items-center gap-2 rounded-2xl border border-rose-200 bg-rose-50 p-3 text-xs text-rose-700 font-semibold">
+          <div className="flex items-center gap-2 rounded-2xl border border-rose-200 bg-rose-50 p-3.5 text-xs text-rose-700 font-semibold">
             <AlertCircle className="h-4 w-4 shrink-0 text-rose-600" />
             <span>{error}</span>
           </div>
         )}
 
         {success && (
-          <div className="flex items-center gap-2 rounded-2xl border border-emerald-200 bg-emerald-50 p-3 text-xs text-emerald-800 font-semibold">
+          <div className="flex items-center gap-2 rounded-2xl border border-emerald-200 bg-emerald-50 p-3.5 text-xs text-emerald-800 font-semibold">
             <Check className="h-4 w-4 shrink-0 text-emerald-600" />
             <span>{success}</span>
           </div>
         )}
 
-        <div>
-          <label className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center justify-between">
-            <span className="flex items-center gap-1.5">
-              <FolderGit2 className="h-3.5 w-3.5 text-purple-600" />
-              <span>Repository URL or Name *</span>
-            </span>
-            <span className="text-[10px] text-slate-400 font-mono">e.g. GaneshBhatAI/Agent or full GitHub URL</span>
-          </label>
-          <input
-            type="text"
-            required
-            placeholder="https://github.com/your-org/your-automation-repo"
-            value={repoInput}
-            onChange={(e) => setRepoInput(e.target.value)}
-            className="w-full rounded-2xl border border-purple-200 bg-purple-50/40 px-3.5 py-2.5 text-xs text-slate-800 focus:border-purple-600 focus:bg-white focus:outline-none font-mono"
-          />
-        </div>
-
-        <div>
-          <label className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center justify-between">
-            <span className="flex items-center gap-1.5">
-              <Key className="h-3.5 w-3.5 text-purple-600" />
-              <span>GitHub Personal Access Token (PAT)</span>
-            </span>
-            <a
-              href="https://github.com/settings/tokens"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[10px] text-purple-700 hover:underline flex items-center gap-0.5"
-            >
-              <span>Generate PAT</span>
-              <ExternalLink className="h-2.5 w-2.5" />
-            </a>
-          </label>
-          <input
-            type="password"
-            placeholder="ghp_xxxxxxxxxxxxxxxxxxxx (Optional for public, required for private)"
-            value={patToken}
-            onChange={(e) => setPatToken(e.target.value)}
-            className="w-full rounded-2xl border border-purple-200 bg-purple-50/40 px-3.5 py-2.5 text-xs text-slate-800 focus:border-purple-600 focus:bg-white focus:outline-none font-mono"
-          />
-          <p className="text-[10.5px] text-slate-500 mt-1">
-            Token is stored AES-256 encrypted in your private Credential Vault.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center gap-1.5">
-              <GitBranch className="h-3.5 w-3.5 text-purple-600" />
-              <span>Default Branch</span>
-            </label>
-            <input
-              type="text"
-              value={defaultBranch}
-              onChange={(e) => setDefaultBranch(e.target.value)}
-              placeholder="main or master"
-              className="w-full rounded-2xl border border-purple-200 bg-purple-50/40 px-3.5 py-2.5 text-xs text-slate-800 focus:border-purple-600 focus:bg-white focus:outline-none font-mono"
-            />
-          </div>
-
-          <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1.5">
-              Repository Type
-            </label>
-            <div className="flex items-center gap-4 pt-2">
-              <label className="flex items-center gap-1.5 text-xs font-semibold text-slate-700 cursor-pointer">
-                <input
-                  type="radio"
-                  name="repo_priv"
-                  checked={!isPrivate}
-                  onChange={() => setIsPrivate(false)}
-                  className="text-purple-600 focus:ring-purple-500"
-                />
-                <span>Public Repo</span>
+        {step === 'token' ? (
+          <form onSubmit={handleFetchReposWithToken} className="space-y-4">
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center justify-between">
+                <span className="flex items-center gap-1.5">
+                  <Key className="h-3.5 w-3.5 text-purple-600" />
+                  <span>GitHub Personal Access Token (PAT) *</span>
+                </span>
+                <a
+                  href="https://github.com/settings/tokens/new?scopes=repo,read:user"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[10.5px] text-purple-700 hover:underline flex items-center gap-0.5 font-bold"
+                >
+                  <span>Generate Token (repo scope)</span>
+                  <ExternalLink className="h-2.5 w-2.5" />
+                </a>
               </label>
-              <label className="flex items-center gap-1.5 text-xs font-semibold text-slate-700 cursor-pointer">
-                <input
-                  type="radio"
-                  name="repo_priv"
-                  checked={isPrivate}
-                  onChange={() => setIsPrivate(true)}
-                  className="text-purple-600 focus:ring-purple-500"
-                />
-                <span>Private Repo</span>
+              <input
+                type="password"
+                placeholder="ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                value={patToken}
+                onChange={(e) => setPatToken(e.target.value)}
+                className="w-full rounded-2xl border border-purple-200 bg-purple-50/40 px-3.5 py-2.5 text-xs text-slate-800 focus:border-purple-600 focus:bg-white focus:outline-none font-mono"
+              />
+              <p className="text-[10.5px] text-slate-500 mt-1">
+                Your PAT token is stored AES-256 encrypted in your private Credential Vault.
+              </p>
+            </div>
+
+            <div className="relative flex py-1 items-center">
+              <div className="flex-grow border-t border-purple-100"></div>
+              <span className="flex-shrink mx-3 text-[11px] text-slate-400 font-bold uppercase">or single repo</span>
+              <div className="flex-grow border-t border-purple-100"></div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                Target Specific Repository (Optional)
               </label>
+              <input
+                type="text"
+                placeholder="e.g. GaneshBhatAI/Agent or https://github.com/GaneshBhatAI/Agent"
+                value={singleRepoInput}
+                onChange={(e) => setSingleRepoInput(e.target.value)}
+                className="w-full rounded-2xl border border-purple-200 bg-purple-50/40 px-3.5 py-2.5 text-xs text-slate-800 focus:border-purple-600 focus:bg-white focus:outline-none font-mono"
+              />
+            </div>
+
+            <div className="pt-3 flex justify-end gap-3 border-t border-purple-100">
+              <button
+                type="button"
+                onClick={onClose}
+                className="rounded-full border border-purple-200 bg-white px-4 py-2 text-xs font-bold text-slate-700 hover:bg-purple-50 cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="flex items-center gap-1.5 rounded-full bg-gradient-to-r from-[#6F53A3] to-[#4F3A8A] px-5 py-2 text-xs font-bold text-white shadow-purple-sm hover:from-[#5E4391] hover:to-[#3F2B75] disabled:opacity-50 transition-all cursor-pointer"
+              >
+                {isLoading ? (
+                  <>
+                    <span className="animate-spin rounded-full h-3.5 w-3.5 border-2 border-white border-t-transparent mr-1" />
+                    <span>Connecting to GitHub...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>Next: Select Repositories</span>
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </>
+                )}
+              </button>
+            </div>
+          </form>
+        ) : (
+          <div className="space-y-3">
+            {/* Filter / Search Bar */}
+            <div className="flex items-center justify-between gap-3">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-purple-400" />
+                <input
+                  type="text"
+                  placeholder="Filter repositories..."
+                  value={repoSearch}
+                  onChange={(e) => setRepoSearch(e.target.value)}
+                  className="w-full rounded-full border border-purple-200 bg-purple-50/40 pl-8 pr-3 py-1.5 text-xs text-slate-800 focus:border-purple-600 focus:bg-white focus:outline-none"
+                />
+              </div>
+
+              <button
+                type="button"
+                onClick={handleSelectAll}
+                className="text-xs font-bold text-purple-700 hover:text-purple-900 cursor-pointer whitespace-nowrap"
+              >
+                {selectedRepoIds.size === filteredRepos.length ? 'Deselect All' : 'Select All'}
+              </button>
+            </div>
+
+            {/* Repositories Checkbox List */}
+            <div className="max-h-72 overflow-y-auto space-y-2 pr-1 border border-purple-100 rounded-2xl p-2 bg-purple-50/20">
+              {filteredRepos.length > 0 ? (
+                filteredRepos.map((r) => {
+                  const isSelected = selectedRepoIds.has(r.id);
+                  return (
+                    <div
+                      key={r.id}
+                      onClick={() => toggleSelectRepo(r.id)}
+                      className={`flex items-start gap-3 p-3 rounded-2xl border transition-all cursor-pointer ${
+                        isSelected
+                          ? 'border-purple-300 bg-purple-50/90 shadow-2xs'
+                          : 'border-purple-100/70 bg-white hover:bg-purple-50/40'
+                      }`}
+                    >
+                      <div className="pt-0.5 text-purple-600">
+                        {isSelected ? (
+                          <CheckSquare className="h-4 w-4 text-purple-600" />
+                        ) : (
+                          <Square className="h-4 w-4 text-slate-300" />
+                        )}
+                      </div>
+
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <span className="font-bold text-xs text-slate-900 font-mono truncate">
+                            {r.full_name}
+                          </span>
+                          <span
+                            className={`rounded-full px-2 py-0.2 text-[9.5px] font-bold border ${
+                              r.private
+                                ? 'bg-amber-50 text-amber-800 border-amber-200'
+                                : 'bg-emerald-50 text-emerald-800 border-emerald-200'
+                            }`}
+                          >
+                            {r.private ? 'Private' : 'Public'}
+                          </span>
+                        </div>
+
+                        {r.description && (
+                          <p className="text-[11px] text-slate-500 line-clamp-1 mt-0.5 font-medium">
+                            {r.description}
+                          </p>
+                        )}
+                        <p className="text-[10px] text-purple-700 font-mono mt-0.5">
+                          branch: {r.default_branch || 'master'}
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })
+              ) : (
+                <div className="py-8 text-center text-xs text-slate-500 font-medium">
+                  No repositories matched "{repoSearch}".
+                </div>
+              )}
+            </div>
+
+            <div className="flex items-center justify-between text-xs text-slate-600 pt-2 border-t border-purple-100">
+              <span className="font-bold">
+                {selectedRepoIds.size} of {fetchedRepos.length} repositories selected
+              </span>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setStep('token')}
+                  className="rounded-full border border-purple-200 bg-white px-3.5 py-1.5 text-xs font-bold text-slate-700 hover:bg-purple-50 cursor-pointer"
+                >
+                  ← Back
+                </button>
+                <button
+                  type="button"
+                  onClick={handleSaveSelectedRepos}
+                  disabled={isLoading || selectedRepoIds.size === 0}
+                  className="rounded-full bg-gradient-to-r from-[#6F53A3] to-[#4F3A8A] px-5 py-1.5 text-xs font-bold text-white shadow-purple-sm hover:from-[#5E4391] hover:to-[#3F2B75] disabled:opacity-50 transition-all cursor-pointer"
+                >
+                  {isLoading ? 'Saving in Database...' : 'Save Selected Repositories'}
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-
-        <div>
-          <label className="block text-xs font-bold text-slate-700 mb-1.5">
-            Description (Optional)
-          </label>
-          <input
-            type="text"
-            placeholder="e.g. Finance team bot scripts, ETL workflows"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            className="w-full rounded-2xl border border-purple-200 bg-purple-50/40 px-3.5 py-2.5 text-xs text-slate-800 focus:border-purple-600 focus:bg-white focus:outline-none"
-          />
-        </div>
-
-        <div className="pt-2 flex justify-end gap-3 border-t border-purple-100">
-          <button
-            type="button"
-            onClick={onClose}
-            className="rounded-full border border-purple-200 bg-white px-4 py-2 text-xs font-bold text-slate-700 hover:bg-purple-50 cursor-pointer"
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            disabled={isValidating}
-            className="rounded-full bg-gradient-to-r from-[#6F53A3] to-[#4F3A8A] px-5 py-2 text-xs font-bold text-white shadow-purple-sm hover:from-[#5E4391] hover:to-[#3F2B75] disabled:opacity-50 transition-all cursor-pointer"
-          >
-            {isValidating ? 'Connecting & Verifying...' : 'Connect Repository'}
-          </button>
-        </div>
-      </form>
+        )}
+      </div>
     </Modal>
   );
 };

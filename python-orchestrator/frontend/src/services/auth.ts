@@ -23,7 +23,7 @@ export const authService = {
           throw new Error('Account has been deactivated. Please contact an administrator.');
         }
 
-        // Validate password against stored hash or default password Test@123
+        // Validate password against stored hash or default password Test@123 / Admin123!
         const isValid =
           cleanPass === 'Test@123' ||
           cleanPass === 'Admin123!' ||
@@ -61,7 +61,7 @@ export const authService = {
         return { access_token: sessionToken, user: realUser };
       }
 
-      // 2. If user doesn't exist yet in Supabase (e.g. Ganesh, Admin, or any future new user), automatically provision into Supabase users table!
+      // 2. If user doesn't exist yet in Supabase, provision them cleanly without default repos
       if (cleanPass === 'Test@123' || cleanPass === 'Admin123!' || cleanPass.length >= 6) {
         const newUserPayload = {
           username: cleanUser,
@@ -91,29 +91,13 @@ export const authService = {
         localStorage.setItem('orchestrator_token', sessionToken);
         localStorage.setItem('orchestrator_user', JSON.stringify(userObj));
 
-        // Provision a private default repository for this new user in Supabase
-        try {
-          await supabase.from('repositories').insert([
-            {
-              user_id: userObj.id,
-              created_by: userObj.username,
-              github_owner: 'GaneshBhatAI',
-              repository_name: 'Agent',
-              repository_url: 'https://github.com/GaneshBhatAI/Agent',
-              default_branch: 'master',
-              description: `Primary Automation Workspace for ${userObj.username}`,
-              is_private: false,
-            },
-          ]);
-        } catch {}
-
         await supabase.from('audit_logs').insert([
           {
             user_id: userObj.id,
             username: userObj.username,
             action: 'USER_AUTO_PROVISIONED',
             resource: 'AUTH',
-            details: { ip: '127.0.0.1', initial_workspace: 'GaneshBhatAI/Agent' },
+            details: { ip: '127.0.0.1' },
           },
         ]);
 
