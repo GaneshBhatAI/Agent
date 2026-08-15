@@ -49,7 +49,7 @@ if (!localStorage.getItem('orchestrator_data_repositories')) {
       repository_name: 'Agent',
       repository_url: 'https://github.com/GaneshBhatAI/Agent',
       default_branch: 'master',
-      description: 'Enterprise Python RPA Automation Framework & Bot Workflows',
+      description: 'Enterprise Python Automation Framework & Bot Workflows',
       is_private: false,
       connected_at: new Date().toISOString(),
       created_at: new Date().toISOString(),

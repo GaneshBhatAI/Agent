@@ -61,7 +61,7 @@ export const Login: React.FC = () => {
               AI <span className="bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">ANVESHANA</span>
             </h1>
             <p className="text-xs text-purple-700 font-semibold mt-0.5">
-              Agentic Orchestrator • Enterprise Control Room
+              Enterprise Agentic Orchestrator
             </p>
           </div>
         </div>
@@ -118,7 +118,7 @@ export const Login: React.FC = () => {
                 </>
               ) : (
                 <>
-                  <span>Sign In to Control Room</span>
+                  <span>Sign In to Orchestrator</span>
                   <ArrowRight className="h-4 w-4" />
                 </>
               )}

@@ -97,7 +97,7 @@ export const Credentials: React.FC = () => {
           <Shield className="h-5 w-5" />
         </div>
         <div className="text-xs text-slate-600">
-          <span className="font-bold text-slate-800">Hardware & Vault Security Active:</span> All
+          <span className="font-bold text-slate-800">Credential Vault:</span> All
           credentials are encrypted at rest using AES-256 (Fernet) keys. Plain-text secrets are
           never exposed in logs or network responses.
         </div>

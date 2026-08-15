@@ -44,11 +44,8 @@ export const Sidebar: React.FC = () => {
         <div>
           <h1 className="font-extrabold text-sm text-slate-900 tracking-tight flex items-center gap-1.5 font-sans">
             AI <span className="bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">ANVESHANA</span>
-            <span className="rounded-full bg-purple-100 px-1.5 py-0.2 text-[9px] font-semibold text-purple-700 border border-purple-200">
-              RPA
-            </span>
           </h1>
-          <p className="text-[10.5px] text-purple-600/80 font-medium">Agentic Control Room</p>
+          <p className="text-[10.5px] text-purple-600/80 font-medium">Agentic Orchestrator</p>
         </div>
       </div>
 
