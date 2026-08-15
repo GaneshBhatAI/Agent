@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { supabase, supabaseService } from './supabase';
+import { authService } from './auth';
 
 const savedApiUrl = localStorage.getItem('orchestrator_api_url');
 export const API_BASE_URL = savedApiUrl || (window.location.hostname === 'localhost' ? 'http://localhost:8000/api' : '/api');
@@ -21,24 +22,27 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Real Supabase PostgreSQL database interceptor
+// Real Supabase PostgreSQL database interceptor with Multi-Tenant User Isolation
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const { config } = error;
     if (!config || !config.url) return Promise.reject(error);
 
+    const currentUser = authService.getCurrentUser();
+    const currentUsername = currentUser?.username || 'admin';
+
     const url = config.url.replace(api.defaults.baseURL || '', '').replace(/^\//, '');
     const method = (config.method || 'get').toLowerCase();
 
-    // 1. Dashboard summary directly from Supabase
+    // 1. Dashboard summary (Scoped to user)
     if (url === 'dashboard' && method === 'get') {
       try {
         const [machines, jobs, schedules, repos] = await Promise.all([
-          supabaseService.getMachines(),
-          supabaseService.getJobs(),
-          supabaseService.getSchedules(),
-          supabaseService.getRepositories(),
+          supabaseService.getMachines(currentUsername),
+          supabaseService.getJobs(currentUsername),
+          supabaseService.getSchedules(currentUsername),
+          supabaseService.getRepositories(currentUsername),
         ]);
 
         return {
@@ -73,10 +77,10 @@ api.interceptors.response.use(
       }
     }
 
-    // 2. Machines directly from Supabase
+    // 2. Machines (Scoped to user)
     if (url === 'machines' && method === 'get') {
       try {
-        const data = await supabaseService.getMachines();
+        const data = await supabaseService.getMachines(currentUsername);
         return { data };
       } catch (err) {
         console.error('Failed to fetch machines from Supabase', err);
@@ -91,6 +95,8 @@ api.interceptors.response.use(
         machine_name: body.machine_name || 'Worker-Node-1',
         machine_id: 'MACH-' + Math.random().toString(36).substring(2, 8).toUpperCase(),
         status: 'OFFLINE',
+        created_by: currentUsername,
+        user_id: currentUser?.id,
         created_at: new Date().toISOString(),
       };
       try {
@@ -142,10 +148,10 @@ api.interceptors.response.use(
       return { data: null };
     }
 
-    // 3. Repositories directly from Supabase
+    // 3. Repositories (Scoped to user)
     if (url === 'github/repositories' && method === 'get') {
       try {
-        const data = await supabaseService.getRepositories();
+        const data = await supabaseService.getRepositories(currentUsername);
         if (data && data.length > 0) return { data };
       } catch (err) {}
       return {
@@ -158,38 +164,49 @@ api.interceptors.response.use(
             default_branch: 'master',
             description: 'Enterprise Python Automation Framework & Bot Workflows',
             is_private: false,
+            created_by: currentUsername,
           },
         ],
       };
     }
 
-    if (url.startsWith('github/repositories/') && url.endsWith('/branches')) {
-      return {
-        data: [
-          { name: 'master', commit_sha: 'c6db9d5', protected: false, is_default: true },
-          { name: 'main', commit_sha: 'c6db9d5', protected: false, is_default: false },
-        ],
+    if (url === 'github/repositories' && method === 'post') {
+      const body = JSON.parse(config.data || '{}');
+      const newRepo = {
+        github_owner: body.github_owner,
+        repository_name: body.repository_name,
+        repository_url: body.repository_url,
+        default_branch: body.default_branch || 'master',
+        description: body.description || '',
+        is_private: !!body.is_private,
+        created_by: currentUsername,
+        user_id: currentUser?.id,
+        connected_at: new Date().toISOString(),
+        created_at: new Date().toISOString(),
       };
+      try {
+        const data = await supabaseService.insertRepository(newRepo);
+        return { data };
+      } catch (err) {
+        console.error('Failed to insert repository to Supabase', err);
+        return { data: newRepo };
+      }
     }
 
-    if (url.startsWith('github/repositories/') && url.includes('/files')) {
-      return {
-        data: [
-          { name: 'Master_ActiveLoansProcess.py', path: 'Loan/Loan Team/Active Loans Process/Bots/Master_ActiveLoansProcess.py', type: 'file', is_python_file: true },
-          { name: 'Child_ActiveLoansProcess.py', path: 'Loan/Loan Team/Active Loans Process/Bots/Child_ActiveLoansProcess.py', type: 'file', is_python_file: true },
-          { name: 'excel_manager.py', path: 'framework_components/Excel_Manager/excel_manager.py', type: 'file', is_python_file: true },
-          { name: 'file_handler.py', path: 'framework_components/File_Handler/file_handler.py', type: 'file', is_python_file: true },
-          { name: 'agent.py', path: 'orchestrator_agent/agent.py', type: 'file', is_python_file: true },
-          { name: 'config.json', path: 'Loan/Loan Team/Active Loans Process/Config/config.json', type: 'file', is_python_file: false },
-          { name: 'requirements.txt', path: 'requirements.txt', type: 'file', is_python_file: false },
-        ],
-      };
+    if (url.startsWith('github/repositories/') && method === 'delete') {
+      const repoId = parseInt(url.split('/')[2]);
+      try {
+        await supabaseService.deleteRepository(repoId);
+        return { data: { success: true } };
+      } catch (err) {
+        return { data: { success: true } };
+      }
     }
 
-    // 4. Jobs directly from Supabase
+    // 4. Jobs (Scoped to user)
     if (url === 'jobs' && method === 'get') {
       try {
-        const data = await supabaseService.getJobs();
+        const data = await supabaseService.getJobs(currentUsername);
         return { data };
       } catch (err) {
         console.error('Failed to get jobs from Supabase', err);
@@ -210,16 +227,17 @@ api.interceptors.response.use(
         status: 'RUNNING',
         parameters: body.parameters || [],
         started_at: new Date().toISOString(),
-        created_by: 'admin',
+        created_by: currentUsername,
+        user_id: currentUser?.id,
         created_at: new Date().toISOString(),
       };
       try {
         const data = await supabaseService.insertJob(newJob);
-        // Insert initial log
+        // Insert initial audit log
         await supabaseService.insertJobLog({
           job_id: newJob.job_id,
           level: 'INFO',
-          message: `Job ${newJob.job_id} dispatched for ${newJob.entry_point} on branch ${newJob.branch}`,
+          message: `Job ${newJob.job_id} dispatched for ${newJob.entry_point} by user ${currentUsername}`,
           timestamp: new Date().toISOString(),
         });
         return { data };
@@ -263,6 +281,8 @@ api.interceptors.response.use(
           started_at: new Date().toISOString(),
           completed_at: null,
           exit_code: null,
+          created_by: currentUsername,
+          user_id: currentUser?.id,
           created_at: new Date().toISOString(),
         };
         const data = await supabaseService.insertJob(retryJob);
@@ -283,10 +303,10 @@ api.interceptors.response.use(
       return { data: null };
     }
 
-    // 5. Schedules directly from Supabase
+    // 5. Schedules (Scoped to user)
     if (url === 'schedules' && method === 'get') {
       try {
-        const data = await supabaseService.getSchedules();
+        const data = await supabaseService.getSchedules(currentUsername);
         return { data };
       } catch (err) {
         console.error('Failed to fetch schedules from Supabase', err);
@@ -307,7 +327,8 @@ api.interceptors.response.use(
         cron_expression: body.cron_expression || '0 8 * * *',
         interval_minutes: body.interval_minutes || 60,
         enabled: true,
-        created_by: 'admin',
+        created_by: currentUsername,
+        user_id: currentUser?.id,
         created_at: new Date().toISOString(),
       };
       try {
@@ -340,10 +361,10 @@ api.interceptors.response.use(
       }
     }
 
-    // 6. Credentials directly from Supabase
+    // 6. Credentials (Scoped to user)
     if (url === 'credentials' && method === 'get') {
       try {
-        const data = await supabaseService.getCredentials();
+        const data = await supabaseService.getCredentials(currentUsername);
         return { data };
       } catch (err) {
         console.error('Failed to fetch credentials from Supabase', err);
@@ -355,10 +376,11 @@ api.interceptors.response.use(
       const body = JSON.parse(config.data || '{}');
       const newCred = {
         name: body.name,
-        credential_type: body.credential_type,
+        credential_type: body.credential_type || 'GITHUB_PAT',
         encrypted_value: body.value || 'enc_aes256',
         description: body.description || '',
-        created_by: 'admin',
+        created_by: currentUsername,
+        user_id: currentUser?.id,
         created_at: new Date().toISOString(),
       };
       try {
@@ -380,10 +402,10 @@ api.interceptors.response.use(
       }
     }
 
-    // 7. Audit logs directly from Supabase
+    // 7. Audit logs (Scoped to user)
     if (url === 'audit-logs' && method === 'get') {
       try {
-        const data = await supabaseService.getAuditLogs();
+        const data = await supabaseService.getAuditLogs(currentUsername);
         return { data };
       } catch (err) {
         console.error('Failed to fetch audit logs from Supabase', err);

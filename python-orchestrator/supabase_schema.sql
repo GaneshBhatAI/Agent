@@ -1,5 +1,5 @@
 -- ==============================================================================
--- Python GitHub Orchestrator - Supabase Database Schema
+-- Ai Anveshana Agentic Orchestrator - Supabase Multi-Tenant Database Schema
 -- Run this in your Supabase SQL Editor: https://supabase.com/dashboard/project/qwutrfmmcorktztefrja/sql
 -- ==============================================================================
 
@@ -15,10 +15,29 @@ CREATE TABLE IF NOT EXISTS public.users (
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
--- 2. MACHINES TABLE
+-- 2. REPOSITORIES TABLE (Scoped to User / Organization)
+CREATE TABLE IF NOT EXISTS public.repositories (
+    id BIGSERIAL PRIMARY KEY,
+    user_id BIGINT REFERENCES public.users(id) ON DELETE CASCADE,
+    created_by VARCHAR(100) NOT NULL DEFAULT 'admin',
+    github_owner VARCHAR(100) NOT NULL,
+    repository_name VARCHAR(255) NOT NULL,
+    repository_url VARCHAR(500) NOT NULL,
+    default_branch VARCHAR(100) NOT NULL DEFAULT 'master',
+    description TEXT,
+    is_private BOOLEAN NOT NULL DEFAULT FALSE,
+    credential_id BIGINT,
+    connected_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- 3. MACHINES TABLE (Scoped to User / Organization)
 CREATE TABLE IF NOT EXISTS public.machines (
     id BIGSERIAL PRIMARY KEY,
-    machine_name VARCHAR(100) UNIQUE NOT NULL,
+    user_id BIGINT REFERENCES public.users(id) ON DELETE CASCADE,
+    created_by VARCHAR(100) NOT NULL DEFAULT 'admin',
+    machine_name VARCHAR(100) NOT NULL,
     machine_id VARCHAR(100) UNIQUE NOT NULL,
     hostname VARCHAR(255),
     ip_address VARCHAR(100),
@@ -38,31 +57,18 @@ CREATE TABLE IF NOT EXISTS public.machines (
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
--- 3. REPOSITORIES TABLE
-CREATE TABLE IF NOT EXISTS public.repositories (
-    id BIGSERIAL PRIMARY KEY,
-    github_owner VARCHAR(100) NOT NULL,
-    repository_name VARCHAR(255) NOT NULL,
-    repository_url VARCHAR(500) NOT NULL,
-    default_branch VARCHAR(100) NOT NULL DEFAULT 'main',
-    description TEXT,
-    is_private BOOLEAN NOT NULL DEFAULT FALSE,
-    credential_id BIGINT,
-    connected_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-);
-
--- 4. JOBS TABLE
+-- 4. JOBS TABLE (Scoped to User / Organization)
 CREATE TABLE IF NOT EXISTS public.jobs (
     id BIGSERIAL PRIMARY KEY,
+    user_id BIGINT REFERENCES public.users(id) ON DELETE CASCADE,
+    created_by VARCHAR(100) NOT NULL DEFAULT 'admin',
     job_id VARCHAR(100) UNIQUE NOT NULL,
-    repository_id BIGINT,
+    repository_id BIGINT REFERENCES public.repositories(id) ON DELETE SET NULL,
     repository_name VARCHAR(255) NOT NULL,
     repository_url VARCHAR(500) NOT NULL,
-    branch VARCHAR(100) NOT NULL DEFAULT 'main',
+    branch VARCHAR(100) NOT NULL DEFAULT 'master',
     commit_sha VARCHAR(100),
-    entry_point VARCHAR(255) NOT NULL DEFAULT 'main.py',
+    entry_point VARCHAR(255) NOT NULL DEFAULT 'Master_ActiveLoansProcess.py',
     machine_id VARCHAR(100) NOT NULL,
     status VARCHAR(50) NOT NULL DEFAULT 'QUEUED',
     parameters JSONB DEFAULT '[]'::jsonb,
@@ -76,7 +82,6 @@ CREATE TABLE IF NOT EXISTS public.jobs (
     retry_count INTEGER NOT NULL DEFAULT 0,
     max_retries INTEGER NOT NULL DEFAULT 0,
     timeout_seconds INTEGER NOT NULL DEFAULT 1800,
-    created_by VARCHAR(100) NOT NULL DEFAULT 'admin',
     schedule_id BIGINT,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
@@ -91,18 +96,20 @@ CREATE TABLE IF NOT EXISTS public.job_logs (
     message TEXT NOT NULL
 );
 
--- 6. SCHEDULES TABLE
+-- 6. SCHEDULES TABLE (Scoped to User / Organization)
 CREATE TABLE IF NOT EXISTS public.schedules (
     id BIGSERIAL PRIMARY KEY,
-    name VARCHAR(255) UNIQUE NOT NULL,
+    user_id BIGINT REFERENCES public.users(id) ON DELETE CASCADE,
+    created_by VARCHAR(100) NOT NULL DEFAULT 'admin',
+    name VARCHAR(255) NOT NULL,
     repository_id BIGINT,
     repository_name VARCHAR(255) NOT NULL,
     repository_url VARCHAR(500) NOT NULL,
-    branch VARCHAR(100) NOT NULL DEFAULT 'main',
-    entry_point VARCHAR(255) NOT NULL DEFAULT 'main.py',
+    branch VARCHAR(100) NOT NULL DEFAULT 'master',
+    entry_point VARCHAR(255) NOT NULL DEFAULT 'Master_ActiveLoansProcess.py',
     machine_id VARCHAR(100) NOT NULL,
     schedule_type VARCHAR(50) NOT NULL DEFAULT 'CRON',
-    cron_expression VARCHAR(100) DEFAULT '0 * * * *',
+    cron_expression VARCHAR(100) DEFAULT '0 8 * * *',
     interval_minutes INTEGER DEFAULT 60,
     enabled BOOLEAN NOT NULL DEFAULT TRUE,
     parameters JSONB DEFAULT '[]'::jsonb,
@@ -110,24 +117,24 @@ CREATE TABLE IF NOT EXISTS public.schedules (
     next_run_at TIMESTAMPTZ,
     last_run_at TIMESTAMPTZ,
     last_job_id VARCHAR(100),
-    created_by VARCHAR(100) NOT NULL DEFAULT 'admin',
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
--- 7. CREDENTIALS TABLE
+-- 7. CREDENTIALS TABLE (Scoped to User / Organization)
 CREATE TABLE IF NOT EXISTS public.credentials (
     id BIGSERIAL PRIMARY KEY,
-    name VARCHAR(255) UNIQUE NOT NULL,
+    user_id BIGINT REFERENCES public.users(id) ON DELETE CASCADE,
+    created_by VARCHAR(100) NOT NULL DEFAULT 'admin',
+    name VARCHAR(255) NOT NULL,
     credential_type VARCHAR(50) NOT NULL DEFAULT 'GITHUB_PAT',
     encrypted_value TEXT NOT NULL,
     description TEXT,
-    created_by VARCHAR(100) NOT NULL DEFAULT 'admin',
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
--- 8. AUDIT LOGS TABLE
+-- 8. AUDIT LOGS TABLE (Scoped to User)
 CREATE TABLE IF NOT EXISTS public.audit_logs (
     id BIGSERIAL PRIMARY KEY,
     timestamp TIMESTAMPTZ NOT NULL DEFAULT NOW(),
@@ -140,15 +147,22 @@ CREATE TABLE IF NOT EXISTS public.audit_logs (
     ip_address VARCHAR(100)
 );
 
--- SEED INITIAL DATA IF EMPTY
+-- PERFORMANCE INDICES FOR MULTI-TENANT ISOLATION
+CREATE INDEX IF NOT EXISTS idx_repositories_created_by ON public.repositories(created_by);
+CREATE INDEX IF NOT EXISTS idx_machines_created_by ON public.machines(created_by);
+CREATE INDEX IF NOT EXISTS idx_jobs_created_by ON public.jobs(created_by);
+CREATE INDEX IF NOT EXISTS idx_schedules_created_by ON public.schedules(created_by);
+CREATE INDEX IF NOT EXISTS idx_credentials_created_by ON public.credentials(created_by);
+CREATE INDEX IF NOT EXISTS idx_audit_logs_username ON public.audit_logs(username);
+
+-- SEED PRIMARY ADMIN AND REPOSITORY
 INSERT INTO public.users (username, email, password_hash, role)
 VALUES ('admin', 'admin@aianveshana.com', '$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW', 'ADMIN')
 ON CONFLICT (username) DO NOTHING;
 
-INSERT INTO public.repositories (github_owner, repository_name, repository_url, default_branch, description)
+INSERT INTO public.repositories (github_owner, repository_name, repository_url, default_branch, description, created_by)
 VALUES 
-('orchestrator-demo', 'hello-bot', 'https://github.com/orchestrator-demo/hello-bot', 'main', 'Starter demonstration bot with requirements.txt and main.py'),
-('orchestrator-demo', 'invoice-automation', 'https://github.com/orchestrator-demo/invoice-automation', 'main', 'Invoice OCR extraction and ERP sync bot')
+('GaneshBhatAI', 'Agent', 'https://github.com/GaneshBhatAI/Agent', 'master', 'Enterprise Python Automation Framework & Bot Workflows', 'admin')
 ON CONFLICT DO NOTHING;
 
 -- ENABLE REAL-TIME REPLICATION

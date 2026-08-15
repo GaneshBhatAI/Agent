@@ -5,17 +5,50 @@ const SUPABASE_ANON_KEY = 'sb_publishable_E4XKAZgjI27EdpVNP6qC0w_UlcwlTpe';
 
 export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// Supabase Database Service API
+// Helper to get active session username for user isolation
+const getActiveUsername = (): string => {
+  try {
+    const raw = localStorage.getItem('orchestrator_user');
+    if (raw) {
+      const u = JSON.parse(raw);
+      return u.username || 'admin';
+    }
+  } catch {}
+  return 'admin';
+};
+
+const getActiveUserId = (): number | undefined => {
+  try {
+    const raw = localStorage.getItem('orchestrator_user');
+    if (raw) {
+      const u = JSON.parse(raw);
+      return u.id;
+    }
+  } catch {}
+  return undefined;
+};
+
+// Supabase Multi-Tenant Database Service API
 export const supabaseService = {
-  // Machines
-  async getMachines() {
-    const { data, error } = await supabase.from('machines').select('*').order('created_at', { ascending: false });
+  // Machines (Filtered by user)
+  async getMachines(username?: string) {
+    const user = username || getActiveUsername();
+    let query = supabase.from('machines').select('*').order('created_at', { ascending: false });
+    if (user && user !== 'admin') {
+      query = query.eq('created_by', user);
+    }
+    const { data, error } = await query;
     if (error) throw error;
     return data || [];
   },
 
   async insertMachine(machine: any) {
-    const { data, error } = await supabase.from('machines').insert([machine]).select().single();
+    const payload = {
+      ...machine,
+      created_by: machine.created_by || getActiveUsername(),
+      user_id: machine.user_id || getActiveUserId(),
+    };
+    const { data, error } = await supabase.from('machines').insert([payload]).select().single();
     if (error) throw error;
     return data;
   },
@@ -26,22 +59,43 @@ export const supabaseService = {
     return data;
   },
 
-  // Repositories
-  async getRepositories() {
-    const { data, error } = await supabase.from('repositories').select('*').order('created_at', { ascending: false });
+  // Repositories (Filtered by user)
+  async getRepositories(username?: string) {
+    const user = username || getActiveUsername();
+    let query = supabase.from('repositories').select('*').order('created_at', { ascending: false });
+    if (user && user !== 'admin') {
+      query = query.eq('created_by', user);
+    }
+    const { data, error } = await query;
     if (error) throw error;
     return data || [];
   },
 
   async insertRepository(repo: any) {
-    const { data, error } = await supabase.from('repositories').insert([repo]).select().single();
+    const payload = {
+      ...repo,
+      created_by: repo.created_by || getActiveUsername(),
+      user_id: repo.user_id || getActiveUserId(),
+    };
+    const { data, error } = await supabase.from('repositories').insert([payload]).select().single();
     if (error) throw error;
     return data;
   },
 
-  // Jobs
-  async getJobs() {
-    const { data, error } = await supabase.from('jobs').select('*').order('created_at', { ascending: false });
+  async deleteRepository(repoId: number) {
+    const { error } = await supabase.from('repositories').delete().eq('id', repoId);
+    if (error) throw error;
+    return true;
+  },
+
+  // Jobs (Filtered by user)
+  async getJobs(username?: string) {
+    const user = username || getActiveUsername();
+    let query = supabase.from('jobs').select('*').order('created_at', { ascending: false });
+    if (user && user !== 'admin') {
+      query = query.eq('created_by', user);
+    }
+    const { data, error } = await query;
     if (error) throw error;
     return data || [];
   },
@@ -53,7 +107,12 @@ export const supabaseService = {
   },
 
   async insertJob(job: any) {
-    const { data, error } = await supabase.from('jobs').insert([job]).select().single();
+    const payload = {
+      ...job,
+      created_by: job.created_by || getActiveUsername(),
+      user_id: job.user_id || getActiveUserId(),
+    };
+    const { data, error } = await supabase.from('jobs').insert([payload]).select().single();
     if (error) throw error;
     return data;
   },
@@ -77,15 +136,25 @@ export const supabaseService = {
     return data;
   },
 
-  // Schedules
-  async getSchedules() {
-    const { data, error } = await supabase.from('schedules').select('*').order('created_at', { ascending: false });
+  // Schedules (Filtered by user)
+  async getSchedules(username?: string) {
+    const user = username || getActiveUsername();
+    let query = supabase.from('schedules').select('*').order('created_at', { ascending: false });
+    if (user && user !== 'admin') {
+      query = query.eq('created_by', user);
+    }
+    const { data, error } = await query;
     if (error) throw error;
     return data || [];
   },
 
   async insertSchedule(schedule: any) {
-    const { data, error } = await supabase.from('schedules').insert([schedule]).select().single();
+    const payload = {
+      ...schedule,
+      created_by: schedule.created_by || getActiveUsername(),
+      user_id: schedule.user_id || getActiveUserId(),
+    };
+    const { data, error } = await supabase.from('schedules').insert([payload]).select().single();
     if (error) throw error;
     return data;
   },
@@ -102,15 +171,25 @@ export const supabaseService = {
     return true;
   },
 
-  // Credentials
-  async getCredentials() {
-    const { data, error } = await supabase.from('credentials').select('*').order('created_at', { ascending: false });
+  // Credentials (Filtered by user)
+  async getCredentials(username?: string) {
+    const user = username || getActiveUsername();
+    let query = supabase.from('credentials').select('*').order('created_at', { ascending: false });
+    if (user && user !== 'admin') {
+      query = query.eq('created_by', user);
+    }
+    const { data, error } = await query;
     if (error) throw error;
     return data || [];
   },
 
   async insertCredential(cred: any) {
-    const { data, error } = await supabase.from('credentials').insert([cred]).select().single();
+    const payload = {
+      ...cred,
+      created_by: cred.created_by || getActiveUsername(),
+      user_id: cred.user_id || getActiveUserId(),
+    };
+    const { data, error } = await supabase.from('credentials').insert([payload]).select().single();
     if (error) throw error;
     return data;
   },
@@ -121,15 +200,25 @@ export const supabaseService = {
     return true;
   },
 
-  // Audit Logs
-  async getAuditLogs() {
-    const { data, error } = await supabase.from('audit_logs').select('*').order('timestamp', { ascending: false }).limit(100);
+  // Audit Logs (Filtered by user)
+  async getAuditLogs(username?: string) {
+    const user = username || getActiveUsername();
+    let query = supabase.from('audit_logs').select('*').order('timestamp', { ascending: false }).limit(100);
+    if (user && user !== 'admin') {
+      query = query.eq('username', user);
+    }
+    const { data, error } = await query;
     if (error) throw error;
     return data || [];
   },
 
   async insertAuditLog(log: any) {
-    const { data, error } = await supabase.from('audit_logs').insert([log]).select().single();
+    const payload = {
+      ...log,
+      username: log.username || getActiveUsername(),
+      user_id: log.user_id || getActiveUserId(),
+    };
+    const { data, error } = await supabase.from('audit_logs').insert([payload]).select().single();
     if (error) throw error;
     return data;
   },

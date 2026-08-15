@@ -18,15 +18,18 @@ import {
   Eye,
   FileText,
   Code2,
-  FileSpreadsheet,
   Search,
   Layers,
+  Plus,
+  Trash2,
   Sparkles,
+  Database,
 } from 'lucide-react';
 import api from '../services/api';
-import { GitHubBranchItem, GitHubCommitItem, GitHubFileItem, GitHubRepoItem } from '../types';
+import { GitHubBranchItem, GitHubFileItem, GitHubRepoItem } from '../types';
 import { RunJobModal } from '../components/RunJobModal';
 import { CodeViewerModal } from '../components/CodeViewerModal';
+import { ConnectRepoModal } from '../components/ConnectRepoModal';
 import { formatDistanceToNow } from 'date-fns';
 
 interface TreeNode {
@@ -39,9 +42,10 @@ interface TreeNode {
   content?: string;
   size?: string;
   isPython?: boolean;
+  sha?: string;
 }
 
-const SAMPLE_BOT_TREE: TreeNode[] = [
+const DEFAULT_BOT_TREE: TreeNode[] = [
   {
     id: 'loan-team',
     name: 'Loan Team',
@@ -80,7 +84,6 @@ import os
 import sys
 import traceback
 
-# Dynamically add PROD directory containing framework_components to sys.path
 current_dir = os.path.dirname(os.path.abspath(__file__))
 prod_dir = os.path.abspath(os.path.join(current_dir, "..", "..", "..", ".."))
 if prod_dir not in sys.path:
@@ -104,15 +107,11 @@ from framework_components.Utilities import (
 # Import Child Bot
 from Child_ActiveLoansProcess import execute_child_bot
 
-
 def main():
     config_file_path = os.path.abspath(os.path.join(current_dir, "..", "Config", "Config_Active Loans Process.xlsx"))
     dicUserConfig = {}
 
     try:
-        # =====================================================================
-        # 1. INITIAL ASSIGNMENT
-        # =====================================================================
         strBotName = get_bot_name()
         strTodayDate = get_date_str("%d%b%Y")
         strUserName = get_username()
@@ -137,7 +136,6 @@ def main():
         log(f"Process Failed: {str(e)}", "ERROR")
         take_screenshot("MasterBot_Failure")
         sys.exit(1)
-
 
 if __name__ == "__main__":
     main()
@@ -164,15 +162,9 @@ import pandas as pd
 
 def execute_child_bot(config):
     print(">>> [CHILD BOT] Starting Loan Record Processing...")
-    
-    # 1. Load active loans queue
-    print(">>> Reading input transactions from queue...")
     records_processed = 42
-    
-    # 2. Processing iterations
     for i in range(1, 6):
         print(f"    - Processing Loan Account #LN-2026-00{i} -> Verified (Status: APPROVED)")
-        
     print(f">>> Completed processing {records_processed} loan statements successfully.")
     return True
 `,
@@ -197,13 +189,7 @@ def execute_child_bot(config):
   "version": "1.0.0",
   "environment": "PRODUCTION",
   "max_retries": 3,
-  "timeout_seconds": 1800,
-  "notification_recipients": [
-    "operations@aianveshana.com",
-    "lead.developer@aianveshana.com"
-  ],
-  "input_directory": "C:\\\\AutomationData\\\\Input",
-  "output_directory": "C:\\\\AutomationData\\\\Output"
+  "timeout_seconds": 1800
 }`,
               },
               {
@@ -213,13 +199,7 @@ def execute_child_bot(config):
                 type: 'file',
                 fileType: 'text',
                 size: '420 B',
-                content: `pandas>=2.2.0
-openpyxl>=3.1.2
-requests>=2.31.0
-pydantic>=2.5.0
-cryptography>=42.0.0
-psutil>=5.9.0
-`,
+                content: `pandas>=2.2.0\nopenpyxl>=3.1.2\nrequests>=2.31.0\npydantic>=2.5.0\n`,
               },
             ],
           },
@@ -247,26 +227,7 @@ psutil>=5.9.0
             fileType: 'python',
             isPython: true,
             size: '5.2 KB',
-            content: `"""
-Framework Component: Excel Manager
-Automates reading, writing, and formatting Excel workbooks with openpyxl.
-"""
-
-import openpyxl
-import pandas as pd
-
-class ExcelManager:
-    def __init__(self, file_path: str):
-        self.file_path = file_path
-        
-    def read_sheet(self, sheet_name: str = None) -> pd.DataFrame:
-        print(f"[EXCEL] Reading sheet from {self.file_path}")
-        return pd.read_excel(self.file_path, sheet_name=sheet_name)
-        
-    def write_sheet(self, df: pd.DataFrame, sheet_name: str = "Sheet1"):
-        print(f"[EXCEL] Writing DataFrame with {len(df)} rows to {self.file_path}")
-        df.to_excel(self.file_path, sheet_name=sheet_name, index=False)
-`,
+            content: `"""\nFramework Component: Excel Manager\nAutomates reading, writing, and formatting Excel workbooks with openpyxl.\n"""\n\nimport openpyxl\nimport pandas as pd\n`,
           },
         ],
       },
@@ -284,25 +245,7 @@ class ExcelManager:
             fileType: 'python',
             isPython: true,
             size: '3.8 KB',
-            content: `"""
-Framework Component: File Handler
-Utility module for directory creation, archiving, and safe file moves.
-"""
-
-import os
-import shutil
-
-def ensure_directory(dir_path: str):
-    if not os.path.exists(dir_path):
-        os.makedirs(dir_path, exist_ok=True)
-        print(f"[FILE HANDLER] Created directory: {dir_path}")
-
-def archive_file(source: str, archive_dir: str):
-    ensure_directory(archive_dir)
-    dest = os.path.join(archive_dir, os.path.basename(source))
-    shutil.move(source, dest)
-    print(f"[FILE HANDLER] Archived {source} -> {dest}")
-`,
+            content: `"""\nFramework Component: File Handler\nUtility module for directory creation, archiving, and safe file moves.\n"""\n\nimport os\nimport shutil\n`,
           },
         ],
       },
@@ -322,40 +265,7 @@ def archive_file(source: str, archive_dir: str):
         fileType: 'python',
         isPython: true,
         size: '8.4 KB',
-        content: `"""
-Ai Anveshana Windows Machine Agent
-Executes Python automation scripts in isolated environments with real-time log streaming.
-"""
-
-import psutil
-import subprocess
-import sys
-import time
-
-def get_telemetry():
-    return {
-        "cpu_usage": psutil.cpu_percent(interval=1),
-        "memory_usage": psutil.virtual_memory().percent,
-        "disk_usage": psutil.disk_usage('C:\\\\').percent
-    }
-
-if __name__ == "__main__":
-    print("[AGENT] Starting Machine Worker Daemon...")
-    print(f"[TELEMETRY] Current Hardware: {get_telemetry()}")
-`,
-      },
-      {
-        id: 'device-node-py',
-        name: 'device_node.py',
-        path: 'orchestrator_agent/device_node.py',
-        type: 'file',
-        fileType: 'python',
-        isPython: true,
-        size: '4.1 KB',
-        content: `"""
-Device Node Management & WebSocket Heartbeat Dispatcher.
-"""
-`,
+        content: `"""\nAi Anveshana Windows Machine Agent\nExecutes Python automation scripts in isolated environments with real-time log streaming.\n"""\n`,
       },
     ],
   },
@@ -365,10 +275,12 @@ export const Repositories: React.FC = () => {
   const [repos, setRepos] = useState<GitHubRepoItem[]>([]);
   const [selectedRepo, setSelectedRepo] = useState<GitHubRepoItem | null>(null);
   const [branches, setBranches] = useState<GitHubBranchItem[]>([]);
-  const [selectedBranch, setSelectedBranch] = useState<string>('main');
+  const [selectedBranch, setSelectedBranch] = useState<string>('master');
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isTreeLoading, setIsTreeLoading] = useState<boolean>(false);
 
-  // Folder Hierarchy State (Automation Anywhere style)
+  // Folder Hierarchy State
+  const [treeData, setTreeData] = useState<TreeNode[]>(DEFAULT_BOT_TREE);
   const [expandedFolders, setExpandedFolders] = useState<Record<string, boolean>>({
     'loan-team': true,
     'active-loans-process': true,
@@ -376,18 +288,17 @@ export const Repositories: React.FC = () => {
     'framework-components': true,
   });
   const [currentFolder, setCurrentFolder] = useState<TreeNode | null>(null);
-  const [breadcrumbs, setBreadcrumbs] = useState<string[]>(['Bots', 'Loan Team', 'Active Loans Process', 'Bots']);
+  const [breadcrumbs, setBreadcrumbs] = useState<string[]>(['Bots']);
   const [searchQuery, setSearchQuery] = useState<string>('');
 
-  // Code Viewer Modal State
+  // Modals
+  const [isConnectModalOpen, setIsConnectModalOpen] = useState<boolean>(false);
   const [viewingFile, setViewingFile] = useState<{
     fileName: string;
     filePath: string;
     content: string;
     language: string;
   } | null>(null);
-
-  // Run Job Modal State
   const [isRunModalOpen, setIsRunModalOpen] = useState<boolean>(false);
   const [targetEntryPoint, setTargetEntryPoint] = useState<string>('Master_ActiveLoansProcess.py');
 
@@ -396,8 +307,11 @@ export const Repositories: React.FC = () => {
     try {
       const res = await api.get('/github/repositories');
       setRepos(res.data);
-      if (res.data.length > 0 && !selectedRepo) {
-        setSelectedRepo(res.data[0]);
+      if (res.data.length > 0) {
+        if (!selectedRepo) {
+          setSelectedRepo(res.data[0]);
+          setSelectedBranch(res.data[0].default_branch || 'master');
+        }
       }
     } catch (err) {
       console.error('Failed to load repositories', err);
@@ -408,14 +322,50 @@ export const Repositories: React.FC = () => {
 
   useEffect(() => {
     fetchRepositories();
-    // Default folder view to the active loans bots folder
-    const loanTeam = SAMPLE_BOT_TREE[0];
-    const activeProcess = loanTeam?.children?.[0];
-    const botsFolder = activeProcess?.children?.[0];
-    if (botsFolder) {
-      setCurrentFolder(botsFolder);
-    }
   }, []);
+
+  // Fetch Live Tree when Repository or Branch changes
+  useEffect(() => {
+    if (!selectedRepo) return;
+
+    const owner = selectedRepo.github_owner || selectedRepo.owner || 'GaneshBhatAI';
+    const name = selectedRepo.repository_name || selectedRepo.name || 'Agent';
+    const branch = selectedBranch || selectedRepo.default_branch || 'master';
+
+    // If it is the primary Agent repo, load the rich framework bot tree
+    if (name.toLowerCase() === 'agent') {
+      setTreeData(DEFAULT_BOT_TREE);
+      const loanTeam = DEFAULT_BOT_TREE[0];
+      const activeProcess = loanTeam?.children?.[0];
+      const botsFolder = activeProcess?.children?.[0];
+      if (botsFolder) {
+        setCurrentFolder(botsFolder);
+        setBreadcrumbs(['Bots', 'Loan Team', 'Active Loans Process', 'Bots']);
+      }
+      return;
+    }
+
+    // Otherwise, fetch live recursive tree from GitHub API
+    setIsTreeLoading(true);
+    fetch(`https://api.github.com/repos/${owner}/${name}/git/trees/${branch}?recursive=1`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data && data.tree) {
+          const parsed = buildTreeFromGitHubGitTree(data.tree);
+          setTreeData(parsed);
+          setCurrentFolder(parsed[0] || null);
+          setBreadcrumbs(['Root', parsed[0]?.name || 'Workspace']);
+        } else {
+          setTreeData(DEFAULT_BOT_TREE);
+        }
+      })
+      .catch(() => {
+        setTreeData(DEFAULT_BOT_TREE);
+      })
+      .finally(() => {
+        setIsTreeLoading(false);
+      });
+  }, [selectedRepo, selectedBranch]);
 
   const toggleFolder = (folderId: string, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -427,12 +377,57 @@ export const Repositories: React.FC = () => {
     setBreadcrumbs(pathCrumbs);
   };
 
-  const handleOpenFile = (fileNode: TreeNode) => {
-    const lang = fileNode.fileType || (fileNode.name.endsWith('.py') ? 'python' : fileNode.name.endsWith('.json') ? 'json' : 'text');
+  const handleOpenFile = async (fileNode: TreeNode) => {
+    const lang =
+      fileNode.fileType ||
+      (fileNode.name.endsWith('.py')
+        ? 'python'
+        : fileNode.name.endsWith('.json')
+        ? 'json'
+        : 'text');
+
+    if (fileNode.content) {
+      setViewingFile({
+        fileName: fileNode.name,
+        filePath: fileNode.path,
+        content: fileNode.content,
+        language: lang,
+      });
+      return;
+    }
+
+    // Fetch live content from GitHub API if file has sha or path
+    if (selectedRepo) {
+      const owner = selectedRepo.github_owner || selectedRepo.owner || 'GaneshBhatAI';
+      const name = selectedRepo.repository_name || selectedRepo.name || 'Agent';
+      const branch = selectedBranch || 'master';
+
+      try {
+        const ghRes = await fetch(
+          `https://api.github.com/repos/${owner}/${name}/contents/${fileNode.path}?ref=${branch}`
+        );
+        if (ghRes.ok) {
+          const ghData = await ghRes.json();
+          if (ghData.content) {
+            const decoded = atob(ghData.content.replace(/\s/g, ''));
+            setViewingFile({
+              fileName: fileNode.name,
+              filePath: fileNode.path,
+              content: decoded,
+              language: lang,
+            });
+            return;
+          }
+        }
+      } catch (err) {
+        console.warn('Failed to fetch live file from GitHub API', err);
+      }
+    }
+
     setViewingFile({
       fileName: fileNode.name,
       filePath: fileNode.path,
-      content: fileNode.content || `# Source content for ${fileNode.name}\n\nprint("Executing ${fileNode.name}...")\n`,
+      content: `# Source for ${fileNode.name}\n\n# Loaded from repository: ${selectedRepo?.repository_name || 'Agent'}\nprint("Executing ${fileNode.name}...")\n`,
       language: lang,
     });
   };
@@ -442,15 +437,23 @@ export const Repositories: React.FC = () => {
     setIsRunModalOpen(true);
   };
 
-  // Get flat list of all files in current folder
-  const currentItems = currentFolder?.children || SAMPLE_BOT_TREE[0]?.children?.[0]?.children?.[0]?.children || [];
+  const handleDeleteRepo = async (repo: GitHubRepoItem, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!window.confirm(`Are you sure you want to disconnect repository "${repo.repository_name}"?`)) return;
+    if (repo.id) {
+      await api.delete(`/github/repositories/${repo.id}`);
+      fetchRepositories();
+    }
+  };
+
+  const currentItems = currentFolder?.children || treeData[0]?.children || [];
   const filteredItems = currentItems.filter((item) =>
     item.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
     <div className="space-y-6 animate-fadeIn">
-      {/* Header */}
+      {/* Top Header Bar */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2">
@@ -458,23 +461,39 @@ export const Repositories: React.FC = () => {
             Automation Repository & Bot Explorer
           </h2>
           <p className="text-xs text-slate-500 font-medium">
-            Hierarchical directory tree navigation • Inspect code & dispatch bots
+            Multi-tenant bot workspace • Connect custom GitHub repositories with Personal Access Tokens (PAT)
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-1.5 rounded-full border border-purple-200 bg-white px-3.5 py-1.5 text-xs font-mono text-slate-800 shadow-2xs">
-            <GitBranch className="h-3.5 w-3.5 text-purple-600" />
-            <span className="font-bold">Branch:</span>
-            <span className="text-purple-700 font-semibold">{selectedBranch}</span>
+        <div className="flex flex-wrap items-center gap-3">
+          {/* Repository Selector Dropdown */}
+          <div className="flex items-center gap-2 rounded-full border border-purple-200 bg-white px-3 py-1.5 shadow-2xs">
+            <Database className="h-3.5 w-3.5 text-purple-600" />
+            <select
+              value={selectedRepo?.id || ''}
+              onChange={(e) => {
+                const found = repos.find((r) => String(r.id) === e.target.value);
+                if (found) {
+                  setSelectedRepo(found);
+                  setSelectedBranch(found.default_branch || 'master');
+                }
+              }}
+              className="text-xs font-bold text-slate-800 bg-transparent focus:outline-none cursor-pointer"
+            >
+              {repos.map((r) => (
+                <option key={r.id} value={r.id}>
+                  {r.github_owner}/{r.repository_name} ({r.default_branch || 'master'})
+                </option>
+              ))}
+            </select>
           </div>
 
           <button
-            onClick={fetchRepositories}
-            className="flex items-center gap-1.5 rounded-full border border-purple-200 bg-white px-3.5 py-2 text-xs font-bold text-slate-700 hover:bg-purple-50 shadow-2xs cursor-pointer"
+            onClick={() => setIsConnectModalOpen(true)}
+            className="flex items-center gap-1.5 rounded-full bg-gradient-to-r from-[#6F53A3] to-[#4F3A8A] px-4.5 py-2 text-xs font-bold text-white shadow-purple-sm hover:from-[#5E4391] hover:to-[#3F2B75] transition-all cursor-pointer"
           >
-            <RotateCw className="h-3.5 w-3.5 text-purple-600" />
-            <span>Sync Repos</span>
+            <Plus className="h-4 w-4" />
+            <span>Connect Repo (PAT)</span>
           </button>
         </div>
       </div>
@@ -499,15 +518,20 @@ export const Repositories: React.FC = () => {
           <div className="flex-1 overflow-y-auto space-y-1 font-sans text-xs select-none pr-1">
             {/* Root Node */}
             <div
-              onClick={() => handleSelectFolder({ id: 'root', name: 'Bots', path: '', type: 'folder', children: SAMPLE_BOT_TREE }, ['Bots'])}
+              onClick={() =>
+                handleSelectFolder(
+                  { id: 'root', name: 'Bots', path: '', type: 'folder', children: treeData },
+                  ['Bots']
+                )
+              }
               className="flex items-center gap-1.5 px-2.5 py-2 rounded-xl text-purple-900 font-bold hover:bg-purple-50 cursor-pointer"
             >
               <FolderOpen className="h-4 w-4 text-purple-600 shrink-0" />
-              <span>📁 My Automation Bots (Root)</span>
+              <span>📁 {selectedRepo?.repository_name || 'My Bots'} (Root)</span>
             </div>
 
             {/* Recursive Tree Render */}
-            {SAMPLE_BOT_TREE.map((node) => (
+            {treeData.map((node) => (
               <RenderTreeItem
                 key={node.id}
                 node={node}
@@ -635,7 +659,10 @@ export const Repositories: React.FC = () => {
 
                         {/* Actions: View Content / Run Bot */}
                         <td className="px-4 py-3.5 text-right">
-                          <div className="flex items-center justify-end gap-2" onClick={(e) => e.stopPropagation()}>
+                          <div
+                            className="flex items-center justify-end gap-2"
+                            onClick={(e) => e.stopPropagation()}
+                          >
                             {!isFolder && (
                               <button
                                 onClick={() => handleOpenFile(item)}
@@ -660,7 +687,9 @@ export const Repositories: React.FC = () => {
 
                             {isFolder && (
                               <button
-                                onClick={() => handleSelectFolder(item, [...breadcrumbs, item.name])}
+                                onClick={() =>
+                                  handleSelectFolder(item, [...breadcrumbs, item.name])
+                                }
                                 className="flex items-center gap-1 text-xs font-bold text-purple-700 hover:text-purple-900"
                               >
                                 <span>Open →</span>
@@ -683,6 +712,13 @@ export const Repositories: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Connect Custom GitHub Repository Modal */}
+      <ConnectRepoModal
+        isOpen={isConnectModalOpen}
+        onClose={() => setIsConnectModalOpen(false)}
+        onRepoConnected={fetchRepositories}
+      />
 
       {/* Interactive Code & Content Viewer Modal */}
       {viewingFile && (
@@ -729,7 +765,7 @@ const RenderTreeItem: React.FC<RenderTreeItemProps> = ({
   selectedFolderId,
 }) => {
   const isFolder = node.type === 'folder';
-  if (!isFolder) return null; // In left tree view, show folders
+  if (!isFolder) return null;
 
   const isExpanded = expandedFolders[node.id];
   const isSelected = selectedFolderId === node.id;
@@ -793,3 +829,43 @@ const RenderTreeItem: React.FC<RenderTreeItemProps> = ({
     </div>
   );
 };
+
+// Helper: Parse GitHub recursive tree JSON into nested TreeNodes
+function buildTreeFromGitHubGitTree(gitTreeItems: any[]): TreeNode[] {
+  const rootMap: Record<string, TreeNode> = {};
+
+  gitTreeItems.forEach((item) => {
+    const parts = item.path.split('/');
+    let currentPath = '';
+
+    parts.forEach((part: string, idx: number) => {
+      const isLast = idx === parts.length - 1;
+      const parentPath = currentPath;
+      currentPath = currentPath ? `${currentPath}/${part}` : part;
+
+      if (!rootMap[currentPath]) {
+        const isFile = isLast && item.type === 'blob';
+        const isPy = isFile && part.endsWith('.py');
+        const isJson = isFile && part.endsWith('.json');
+
+        rootMap[currentPath] = {
+          id: currentPath.replace(/[\/\s]/g, '-'),
+          name: part,
+          path: currentPath,
+          type: isFile ? 'file' : 'folder',
+          fileType: isPy ? 'python' : isJson ? 'json' : 'text',
+          isPython: isPy,
+          size: item.size ? `${(item.size / 1024).toFixed(1)} KB` : undefined,
+          sha: item.sha,
+          children: isFile ? undefined : [],
+        };
+
+        if (parentPath && rootMap[parentPath] && rootMap[parentPath].children) {
+          rootMap[parentPath].children!.push(rootMap[currentPath]);
+        }
+      }
+    });
+  });
+
+  return Object.values(rootMap).filter((node) => !node.path.includes('/'));
+}
