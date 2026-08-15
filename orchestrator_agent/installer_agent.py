@@ -229,7 +229,7 @@ def install_and_register_service(username, machine_name):
     task_name = "AIAnveshanaDeviceAgent"
     try:
         subprocess.run(
-            ["schtasks", "/create", "/tn", task_name, "/tr", f'"{target_exe}" --service', "/sc", "ONLOGON", "/rl", "HIGHEST", "/f"],
+            ["schtasks", "/create", "/tn", task_name, "/tr", f'"{target_exe}" --service', "/sc", "ONLOGON", "/f"],
             capture_output=True,
             text=True
         )

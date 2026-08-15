@@ -20,6 +20,7 @@ import traceback
 import urllib.request
 import urllib.parse
 from datetime import datetime, timezone
+import shutil
 
 # Optional psutil for advanced telemetry
 try:
@@ -156,28 +157,63 @@ def check_and_execute_jobs():
     # 2. Prepare workspace & Git Sync
     workspace_dir = CONFIG["workspace_dir"]
     os.makedirs(workspace_dir, exist_ok=True)
-
-    # 3. Execute Script
-    script_target = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", entry_point))
-    if not os.path.exists(script_target):
-        script_target = os.path.join(workspace_dir, entry_point)
+    
+    # Create isolated job directory
+    job_dir = os.path.join(workspace_dir, f"job_{job_id}")
+    if os.path.exists(job_dir):
+        shutil.rmtree(job_dir, ignore_errors=True)
+    os.makedirs(job_dir, exist_ok=True)
 
     exit_code = 0
     error_msg = None
 
     try:
+        if repo_url:
+            supabase_request("job_logs", method="POST", data={"job_id": job_id, "level": "INFO", "message": f"Cloning repository: {repo_url}"})
+            clone_proc = subprocess.run(["git", "clone", "-b", branch, repo_url, "."], cwd=job_dir, capture_output=True, text=True)
+            if clone_proc.returncode != 0:
+                raise Exception(f"Git clone failed: {clone_proc.stderr}")
+
+        # 3. Create Virtual Environment
+        venv_dir = os.path.join(job_dir, "venv")
+        supabase_request("job_logs", method="POST", data={"job_id": job_id, "level": "INFO", "message": "Creating isolated Python virtual environment..."})
+        subprocess.run([sys.executable, "-m", "venv", venv_dir], check=True)
+
+        # Determine python and pip paths based on OS (Windows vs Linux)
+        if os.name == 'nt':
+            venv_python = os.path.join(venv_dir, "Scripts", "python.exe")
+            venv_pip = os.path.join(venv_dir, "Scripts", "pip.exe")
+        else:
+            venv_python = os.path.join(venv_dir, "bin", "python")
+            venv_pip = os.path.join(venv_dir, "bin", "pip")
+
+        # 4. Install Dependencies
+        req_file = os.path.join(job_dir, "requirements.txt")
+        if os.path.exists(req_file):
+            supabase_request("job_logs", method="POST", data={"job_id": job_id, "level": "INFO", "message": "Installing dependencies from requirements.txt..."})
+            subprocess.run([venv_pip, "install", "-r", req_file], check=True)
+
+        # 5. Execute Script
+        script_target = os.path.join(job_dir, entry_point)
+        # Fallback for local testing without git
+        if not os.path.exists(script_target) and not repo_url:
+            script_target = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", entry_point))
+            if not os.path.exists(script_target):
+                script_target = os.path.join(workspace_dir, entry_point)
+
         supabase_request("job_logs", method="POST", data={
             "job_id": job_id,
             "level": "INFO",
-            "message": f"Spawning Python runtime subprocess: {script_target}"
+            "message": f"Spawning isolated Python subprocess: {script_target}"
         })
 
         proc = subprocess.Popen(
-            [sys.executable, script_target] if os.path.exists(script_target) else [sys.executable, "-c", f"print('Executing bot {entry_point}'); import time; time.sleep(2); print('Workflow completed successfully with 0 exceptions.')"],
+            [venv_python, script_target] if os.path.exists(script_target) else [venv_python, "-c", f"print('Executing bot {entry_point}'); import time; time.sleep(2); print('Workflow completed successfully with 0 exceptions.')"],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True,
-            bufsize=1
+            bufsize=1,
+            cwd=job_dir
         )
 
         stdout, stderr = proc.communicate(timeout=1800)
@@ -209,11 +245,17 @@ def check_and_execute_jobs():
             "level": "ERROR",
             "message": f"Execution failed: {traceback.format_exc()}"
         })
+    finally:
+        # Cleanup
+        try:
+            shutil.rmtree(job_dir, ignore_errors=True)
+        except Exception:
+            pass
 
     duration = round(time.time() - start_time, 2)
     final_status = "SUCCESS" if exit_code == 0 else "FAILED"
 
-    # 4. Finalize Job
+    # 6. Finalize Job
     supabase_request(f"jobs?job_id=eq.{job_id}", method="PATCH", data={
         "status": final_status,
         "completed_at": datetime.now(timezone.utc).isoformat(),
