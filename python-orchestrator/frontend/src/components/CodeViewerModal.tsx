@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   FileCode,
   FileText,
@@ -34,6 +34,20 @@ export const CodeViewerModal: React.FC<CodeViewerModalProps> = ({
   const [copied, setCopied] = useState<boolean>(false);
   const [isMaximized, setIsMaximized] = useState<boolean>(false);
 
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+      window.addEventListener('keydown', handleEscape);
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+      window.removeEventListener('keydown', handleEscape);
+    };
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   const lines = content.split('\n');
@@ -59,10 +73,10 @@ export const CodeViewerModal: React.FC<CodeViewerModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6 md:p-8 overflow-hidden">
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-slate-950/40 backdrop-blur-md transition-opacity animate-fadeIn"
+        className="fixed inset-0 bg-slate-950/60 backdrop-blur-md transition-opacity animate-fadeIn"
         onClick={onClose}
       />
 
@@ -70,10 +84,10 @@ export const CodeViewerModal: React.FC<CodeViewerModalProps> = ({
       <div
         className={`relative w-full ${
           isMaximized ? 'max-w-7xl h-[92vh]' : 'max-w-5xl h-[82vh]'
-        } flex flex-col rounded-3xl border border-purple-200 bg-white shadow-2xl shadow-purple-950/20 overflow-hidden z-10 animate-scaleUp transition-all duration-300`}
+        } max-h-[90vh] flex flex-col rounded-3xl border border-purple-200 bg-white shadow-2xl shadow-purple-950/25 overflow-hidden z-10 animate-scaleUp transition-all duration-300`}
       >
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-purple-100 bg-purple-50/70 px-6 py-4 shrink-0">
+        <div className="flex items-center justify-between border-b border-purple-100 bg-purple-50/80 px-6 py-3.5 shrink-0">
           <div className="flex items-center gap-3">
             <div className="rounded-2xl bg-purple-100 p-2.5 text-purple-700">
               {isPython ? (
@@ -86,13 +100,13 @@ export const CodeViewerModal: React.FC<CodeViewerModalProps> = ({
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="text-base font-extrabold text-slate-900 tracking-tight">
+                <h3 className="text-sm sm:text-base font-extrabold text-slate-900 tracking-tight font-mono">
                   {fileName}
                 </h3>
-                <span className="rounded-full bg-purple-100 border border-purple-200 px-2.5 py-0.5 text-[10px] font-bold text-purple-800 font-mono">
+                <span className="rounded-full bg-purple-100 border border-purple-200 px-2 py-0.5 text-[9.5px] font-bold text-purple-800 font-mono">
                   {language.toUpperCase()}
                 </span>
-                <span className="text-[11px] text-slate-400 font-medium font-mono">
+                <span className="text-[10.5px] text-slate-400 font-medium font-mono">
                   {lines.length} lines • {(new Blob([content]).size / 1024).toFixed(1)} KB
                 </span>
               </div>
@@ -109,7 +123,7 @@ export const CodeViewerModal: React.FC<CodeViewerModalProps> = ({
                   onClose();
                   onRun(filePath);
                 }}
-                className="flex items-center gap-1.5 rounded-full bg-gradient-to-r from-[#6F53A3] to-[#4F3A8A] px-4 py-1.5 text-xs font-bold text-white shadow-purple-sm hover:from-[#5E4391] hover:to-[#3F2B75] transition-all cursor-pointer mr-2"
+                className="flex items-center gap-1.5 rounded-full bg-gradient-to-r from-[#6F53A3] to-[#4F3A8A] px-3.5 py-1.5 text-xs font-bold text-white shadow-purple-sm hover:from-[#5E4391] hover:to-[#3F2B75] transition-all cursor-pointer"
               >
                 <Play className="h-3.5 w-3.5 fill-white" />
                 <span>Run this Bot</span>
@@ -119,7 +133,7 @@ export const CodeViewerModal: React.FC<CodeViewerModalProps> = ({
             <button
               onClick={handleCopy}
               title="Copy code"
-              className="flex items-center gap-1.5 rounded-full border border-purple-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-700 hover:bg-purple-50 transition-colors cursor-pointer shadow-2xs"
+              className="flex items-center gap-1 rounded-full border border-purple-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-700 hover:bg-purple-50 transition-colors cursor-pointer shadow-2xs"
             >
               {copied ? <Check className="h-3.5 w-3.5 text-emerald-600" /> : <Copy className="h-3.5 w-3.5 text-purple-600" />}
               <span>{copied ? 'Copied' : 'Copy'}</span>
@@ -151,13 +165,13 @@ export const CodeViewerModal: React.FC<CodeViewerModalProps> = ({
           </div>
         </div>
 
-        {/* Code Content Viewer */}
-        <div className="flex-1 overflow-y-auto bg-[#140e26] p-4 text-slate-100 font-mono text-xs leading-relaxed select-text">
+        {/* Code Content Viewer - Contained with min-h-0 and internal scroll */}
+        <div className="flex-1 min-h-0 overflow-y-auto overflow-x-auto bg-[#140e26] p-4 text-slate-100 font-mono text-xs leading-relaxed select-text">
           <table className="w-full border-collapse">
             <tbody>
               {lines.map((line, idx) => (
                 <tr key={idx} className="hover:bg-white/5 transition-colors">
-                  <td className="w-12 pr-4 text-right select-none text-purple-300/30 text-[11px] font-mono border-r border-purple-900/40">
+                  <td className="w-12 pr-4 text-right select-none text-purple-300/30 text-[11px] font-mono border-r border-purple-900/40 align-top">
                     {idx + 1}
                   </td>
                   <td className="pl-4 whitespace-pre font-mono text-slate-200 py-0.5">
@@ -170,9 +184,9 @@ export const CodeViewerModal: React.FC<CodeViewerModalProps> = ({
         </div>
 
         {/* Footer info */}
-        <div className="border-t border-purple-100 bg-purple-50/50 px-6 py-2.5 flex items-center justify-between text-xs text-slate-500 shrink-0 font-medium">
-          <span>Read-only source inspector</span>
-          <span className="font-mono text-[11px]">UTF-8 • Ready for Dispatch</span>
+        <div className="border-t border-purple-100 bg-purple-50/60 px-6 py-2.5 flex items-center justify-between text-xs text-slate-500 shrink-0 font-medium">
+          <span>Source Code Inspector</span>
+          <span className="font-mono text-[11px] text-purple-800 font-semibold">UTF-8 • Validated</span>
         </div>
       </div>
     </div>
@@ -180,7 +194,6 @@ export const CodeViewerModal: React.FC<CodeViewerModalProps> = ({
 };
 
 function formatSyntax(line: string, lang: string): React.ReactNode {
-  // Simple syntax colorizer for Python, JSON, text
   if (line.trim().startsWith('#') || line.trim().startsWith('//')) {
     return <span className="text-purple-300/50 italic">{line}</span>;
   }
@@ -188,7 +201,6 @@ function formatSyntax(line: string, lang: string): React.ReactNode {
     return <span className="text-emerald-400 italic">{line}</span>;
   }
   if (lang === 'python') {
-    // Highlight def, import, from, return, class, if, else, try, except
     const parts = line.split(/(\b(?:def|class|import|from|return|if|else|elif|try|except|finally|for|while|in|as|with|pass|break|continue|True|False|None)\b)/g);
     return (
       <>

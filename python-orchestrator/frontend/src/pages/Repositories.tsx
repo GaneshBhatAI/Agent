@@ -458,7 +458,7 @@ export const Repositories: React.FC = () => {
             Automation Repository & Bot Explorer
           </h2>
           <p className="text-xs text-slate-500 font-medium">
-            Automation Anywhere style hierarchical folder navigation • Inspect code & dispatch bots
+            Hierarchical directory tree navigation • Inspect code & dispatch bots
           </p>
         </div>
 
@@ -479,7 +479,7 @@ export const Repositories: React.FC = () => {
         </div>
       </div>
 
-      {/* Main Automation Anywhere Explorer Container */}
+      {/* Main Bot Explorer Container */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 min-h-[580px]">
         {/* Left 4 Cols: Tree Structure (Hierarchy) */}
         <div className="lg:col-span-4 rounded-3xl border border-purple-100 bg-white/90 p-4 shadow-[0_4px_20px_rgba(111,83,163,0.03)] backdrop-blur-xl flex flex-col space-y-3">
@@ -490,8 +490,8 @@ export const Repositories: React.FC = () => {
                 Bot Folders Hierarchy
               </span>
             </div>
-            <span className="rounded-full bg-purple-100 px-2 py-0.5 text-[10px] font-bold text-purple-800">
-              A360 Style
+            <span className="rounded-full bg-purple-100 px-2.5 py-0.5 text-[10px] font-bold text-purple-800">
+              Workspace Tree
             </span>
           </div>
 

@@ -36,50 +36,20 @@ const setLocalData = (key: string, data: any) => {
   localStorage.setItem(`orchestrator_data_${key}`, JSON.stringify(data));
 };
 
-// Seed initial fallback data
+// Seed initial repository configuration
 if (!localStorage.getItem('orchestrator_data_machines')) {
-  setLocalData('machines', [
-    {
-      id: 1,
-      machine_name: 'Machine-A',
-      machine_id: 'MACH-1024',
-      hostname: 'DESKTOP-WIN11-PRO',
-      operating_system: 'Windows 11 Enterprise',
-      python_version: '3.11.0',
-      agent_version: '1.0.0',
-      status: 'ONLINE',
-      last_heartbeat: new Date().toISOString(),
-      cpu_usage: 18.5,
-      memory_usage: 42.0,
-      disk_usage: 55.4,
-      registered_at: new Date().toISOString(),
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-    },
-  ]);
+  setLocalData('machines', []);
 }
 
 if (!localStorage.getItem('orchestrator_data_repositories')) {
   setLocalData('repositories', [
     {
       id: 1,
-      github_owner: 'orchestrator-demo',
-      repository_name: 'hello-bot',
-      repository_url: 'https://github.com/orchestrator-demo/hello-bot',
-      default_branch: 'main',
-      description: 'Starter demonstration bot with requirements.txt and main.py',
-      is_private: false,
-      connected_at: new Date().toISOString(),
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-    },
-    {
-      id: 2,
-      github_owner: 'orchestrator-demo',
-      repository_name: 'invoice-automation',
-      repository_url: 'https://github.com/orchestrator-demo/invoice-automation',
-      default_branch: 'main',
-      description: 'Invoice OCR extraction and ERP sync bot',
+      github_owner: 'GaneshBhatAI',
+      repository_name: 'Agent',
+      repository_url: 'https://github.com/GaneshBhatAI/Agent',
+      default_branch: 'master',
+      description: 'Enterprise Python RPA Automation Framework & Bot Workflows',
       is_private: false,
       connected_at: new Date().toISOString(),
       created_at: new Date().toISOString(),
@@ -89,27 +59,7 @@ if (!localStorage.getItem('orchestrator_data_repositories')) {
 }
 
 if (!localStorage.getItem('orchestrator_data_jobs')) {
-  setLocalData('jobs', [
-    {
-      id: 1,
-      job_id: 'JOB-90241',
-      repository_name: 'hello-bot',
-      repository_url: 'https://github.com/orchestrator-demo/hello-bot',
-      branch: 'main',
-      commit_sha: 'a1b2c3d4e5f6',
-      entry_point: 'main.py',
-      machine_id: 'MACH-1024',
-      status: 'SUCCESS',
-      parameters: ['--env', 'production'],
-      started_at: new Date(Date.now() - 3600000).toISOString(),
-      completed_at: new Date(Date.now() - 3570000).toISOString(),
-      duration_seconds: 30.5,
-      exit_code: 0,
-      created_by: 'admin',
-      created_at: new Date(Date.now() - 3600000).toISOString(),
-      updated_at: new Date(Date.now() - 3570000).toISOString(),
-    },
-  ]);
+  setLocalData('jobs', []);
 }
 
 // Interceptor: seamlessly routes through Supabase tables if backend is unavailable
