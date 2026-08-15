@@ -16,6 +16,7 @@ import {
   ShieldCheck,
   Clock,
   Sparkles,
+  Package,
 } from 'lucide-react';
 import { supabaseService } from '../services/supabase';
 import { Machine } from '../types';
@@ -49,6 +50,21 @@ export const Machines: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
+  const handleDownload = (filename: string) => {
+    const isProdDocs = window.location.pathname.includes('/products/docs');
+    const isDocs = window.location.pathname.includes('/docs');
+    let prefix = '.';
+    if (isProdDocs) prefix = '/products/docs';
+    else if (isDocs) prefix = '/docs';
+
+    const link = document.createElement('a');
+    link.href = `${prefix}/downloads/${filename}`;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const handleToggleStatus = async (machine: Machine, e: React.MouseEvent) => {
     e.stopPropagation();
     try {
@@ -73,26 +89,26 @@ export const Machines: React.FC = () => {
             <span>Runner Fleet & Device Agents</span>
           </h2>
           <p className="text-xs text-slate-500 font-medium">
-            24/7 background Windows Bot Agents • Live telemetry heartbeats • Subprocess bot runners
+            24/7 background Windows Bot Agents (EXE) • Live telemetry heartbeats • Subprocess bot runners
           </p>
         </div>
 
         <div className="flex flex-wrap items-center gap-3">
-          <a
-            href="./downloads/AIAnveshana_DeviceAgent_Setup.zip"
-            download="AIAnveshana_DeviceAgent_Setup.zip"
-            className="flex items-center gap-1.5 rounded-full border border-purple-200 bg-white px-4 py-2 text-xs font-bold text-purple-700 hover:bg-purple-50 shadow-2xs transition-all cursor-pointer"
+          <button
+            onClick={() => handleDownload('AIAnveshana_DeviceAgent_Setup.exe')}
+            className="flex items-center gap-1.5 rounded-full bg-gradient-to-r from-[#6F53A3] to-[#4F3A8A] px-4.5 py-2 text-xs font-bold text-white shadow-purple-sm hover:from-[#5E4391] hover:to-[#3F2B75] transition-all cursor-pointer"
+            title="Download Standalone 1-Click Windows Executable (.exe)"
           >
-            <Download className="h-4 w-4 text-purple-600" />
-            <span>Download Windows Agent (.zip)</span>
-          </a>
+            <Download className="h-4 w-4" />
+            <span>Download DeviceAgent.exe</span>
+          </button>
 
           <button
             onClick={openAddMachine}
-            className="flex items-center gap-1.5 rounded-full bg-gradient-to-r from-[#6F53A3] to-[#4F3A8A] px-4.5 py-2 text-xs font-bold text-white shadow-purple-sm hover:from-[#5E4391] hover:to-[#3F2B75] transition-all cursor-pointer"
+            className="flex items-center gap-1.5 rounded-full border border-purple-200 bg-white px-4 py-2 text-xs font-bold text-slate-700 hover:bg-purple-50 shadow-2xs transition-all cursor-pointer"
           >
-            <Plus className="h-4 w-4" />
-            <span>+ Connect New Machine</span>
+            <Plus className="h-4 w-4 text-purple-600" />
+            <span>+ Connect / Guide</span>
           </button>
         </div>
       </div>
@@ -141,23 +157,23 @@ export const Machines: React.FC = () => {
               No Device Agents Connected Yet
             </h3>
             <p className="text-xs text-slate-500 leading-relaxed font-medium">
-              Download the <strong>AI Anveshana Windows Bot Agent</strong> to pair your laptop or server. Once installed, it will automatically connect 24/7 in the background.
+              Download the <strong>AI Anveshana DeviceAgent.exe</strong> (Windows Standalone Installer). Double-click to install and your machine will auto-connect 24/7 in the background like Automation Anywhere.
             </p>
           </div>
-          <div className="flex justify-center gap-3">
-            <a
-              href="./downloads/AIAnveshana_DeviceAgent_Setup.zip"
-              download="AIAnveshana_DeviceAgent_Setup.zip"
+          <div className="flex flex-wrap justify-center gap-3">
+            <button
+              onClick={() => handleDownload('AIAnveshana_DeviceAgent_Setup.exe')}
               className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#6F53A3] to-[#4F3A8A] px-6 py-2.5 text-xs font-bold text-white shadow-purple-md hover:from-[#5E4391] hover:to-[#3F2B75] transition-all cursor-pointer"
             >
               <Download className="h-4 w-4" />
-              <span>Download Windows Agent (.zip)</span>
-            </a>
+              <span>Download DeviceAgent.exe (10 MB)</span>
+            </button>
+
             <button
               onClick={openAddMachine}
               className="inline-flex items-center gap-2 rounded-full border border-purple-200 bg-white px-5 py-2.5 text-xs font-bold text-slate-700 hover:bg-purple-50 transition-all cursor-pointer"
             >
-              <span>+ Provision Manually</span>
+              <span>+ Setup Guide</span>
             </button>
           </div>
         </div>
@@ -240,12 +256,12 @@ export const Machines: React.FC = () => {
                       <span className="font-semibold text-slate-700">{machine.operating_system || 'Windows 11 (x64)'}</span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span>Python Runtime:</span>
-                      <span className="font-mono text-purple-700 font-semibold">{machine.python_version || 'Python 3.12+'}</span>
+                      <span>Agent Architecture:</span>
+                      <span className="font-mono text-purple-700 font-semibold">{machine.python_version || 'Standalone EXE (x64)'}</span>
                     </div>
                     <div className="flex items-center justify-between">
                       <span>Agent Version:</span>
-                      <span className="font-mono text-slate-700 font-bold">v{machine.agent_version || '2.0.0'}</span>
+                      <span className="font-mono text-slate-700 font-bold">v{machine.agent_version || '2.5.0'}</span>
                     </div>
                   </div>
                 </div>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Download, Check, Server, Key, Terminal, ArrowRight, ShieldCheck, Sparkles, AlertCircle, Laptop } from 'lucide-react';
+import { Download, Check, Server, Key, Terminal, ArrowRight, ShieldCheck, Sparkles, AlertCircle, Laptop, Package } from 'lucide-react';
 import { Modal } from './Modal';
 import { supabaseService, getActiveUsername } from '../services/supabase';
 
@@ -20,6 +20,21 @@ export const AddMachineModal: React.FC<AddMachineModalProps> = ({
   const [copiedToken, setCopiedToken] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
+  const handleDownload = (filename: string) => {
+    const isProdDocs = window.location.pathname.includes('/products/docs');
+    const isDocs = window.location.pathname.includes('/docs');
+    let prefix = '.';
+    if (isProdDocs) prefix = '/products/docs';
+    else if (isDocs) prefix = '/docs';
+
+    const link = document.createElement('a');
+    link.href = `${prefix}/downloads/${filename}`;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const handleGenerate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!machineName.trim()) return;
@@ -36,11 +51,11 @@ export const AddMachineModal: React.FC<AddMachineModalProps> = ({
         hostname: machineName.trim(),
         status: 'ONLINE',
         operating_system: 'Windows 11 (x64)',
-        python_version: 'Python 3.12+',
-        agent_version: '2.0.0',
-        cpu_usage: 14.5,
-        memory_usage: 38.2,
-        disk_usage: 42.0,
+        python_version: 'Standalone EXE (x64)',
+        agent_version: '2.5.0',
+        cpu_usage: 12.5,
+        memory_usage: 36.2,
+        disk_usage: 41.0,
         registration_token: token,
         created_by: getActiveUsername(),
         created_at: new Date().toISOString(),
@@ -72,7 +87,7 @@ export const AddMachineModal: React.FC<AddMachineModalProps> = ({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="Connect Windows Device Agent"
+      title="Connect Windows Device Agent (EXE)"
       subtitle="Download and install the 24/7 background Windows Bot Agent on your laptop or server"
       maxWidth="2xl"
     >
@@ -86,22 +101,23 @@ export const AddMachineModal: React.FC<AddMachineModalProps> = ({
               </div>
               <div>
                 <h4 className="text-sm font-extrabold text-slate-900">
-                  AI Anveshana Windows Bot Agent (DeviceAgent)
+                  AI Anveshana DeviceAgent.exe (Windows Standalone Setup)
                 </h4>
                 <p className="text-xs text-slate-500 font-medium mt-0.5">
-                  Automated background service • Zero configuration • 24/7 Auto-Start on Windows logon
+                  1-Click Windows Executable • Zero manual configuration • 24/7 Auto-Start on Windows logon
                 </p>
               </div>
             </div>
 
-            <a
-              href="./downloads/AIAnveshana_DeviceAgent_Setup.zip"
-              download="AIAnveshana_DeviceAgent_Setup.zip"
-              className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#6F53A3] to-[#4F3A8A] px-5 py-2.5 text-xs font-bold text-white shadow-purple-sm hover:from-[#5E4391] hover:to-[#3F2B75] transition-all cursor-pointer whitespace-nowrap"
-            >
-              <Download className="h-4 w-4" />
-              <span>Download Agent (.zip)</span>
-            </a>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => handleDownload('AIAnveshana_DeviceAgent_Setup.exe')}
+                className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#6F53A3] to-[#4F3A8A] px-5 py-2.5 text-xs font-bold text-white shadow-purple-sm hover:from-[#5E4391] hover:to-[#3F2B75] transition-all cursor-pointer whitespace-nowrap"
+              >
+                <Download className="h-4 w-4" />
+                <span>Download .EXE (10 MB)</span>
+              </button>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 text-xs border-t border-purple-100/80">
@@ -110,7 +126,7 @@ export const AddMachineModal: React.FC<AddMachineModalProps> = ({
                 1
               </span>
               <span>
-                <strong className="text-slate-800">Download & Extract</strong> the ZIP package on your machine.
+                <strong className="text-slate-800">Download DeviceAgent.exe</strong> to your computer.
               </span>
             </div>
 
@@ -119,7 +135,7 @@ export const AddMachineModal: React.FC<AddMachineModalProps> = ({
                 2
               </span>
               <span>
-                <strong className="text-slate-800">Run Install_DeviceAgent.bat</strong> (Installs all prerequisites).
+                <strong className="text-slate-800">Double-Click to Run</strong> — It auto-installs & registers background service.
               </span>
             </div>
 
@@ -128,7 +144,7 @@ export const AddMachineModal: React.FC<AddMachineModalProps> = ({
                 3
               </span>
               <span>
-                <strong className="text-slate-800">Ready 24/7</strong> — Auto-connects with live telemetry & job execution!
+                <strong className="text-slate-800">Connected 24/7</strong> — Live telemetry & bot dispatch ready!
               </span>
             </div>
           </div>
@@ -139,7 +155,7 @@ export const AddMachineModal: React.FC<AddMachineModalProps> = ({
           <div className="flex items-center justify-between border-b border-purple-100 pb-2">
             <h4 className="text-xs font-extrabold uppercase tracking-wider text-slate-800 flex items-center gap-1.5">
               <Server className="h-4 w-4 text-purple-600" />
-              <span>Register / Provision New Worker Node</span>
+              <span>Register / Provision Specific Worker Node</span>
             </h4>
             <span className="text-[10.5px] text-purple-700 font-mono font-semibold">
               Fleet Registration
