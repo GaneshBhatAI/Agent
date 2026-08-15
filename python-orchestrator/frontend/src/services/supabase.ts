@@ -5,8 +5,8 @@ const SUPABASE_ANON_KEY = 'sb_publishable_E4XKAZgjI27EdpVNP6qC0w_UlcwlTpe';
 
 export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// Helper to get active session username for user isolation
-const getActiveUsername = (): string => {
+// Helper to get active session username for strict user isolation
+export const getActiveUsername = (): string => {
   try {
     const raw = localStorage.getItem('orchestrator_user');
     if (raw) {
@@ -17,7 +17,7 @@ const getActiveUsername = (): string => {
   return 'admin';
 };
 
-const getActiveUserId = (): number | undefined => {
+export const getActiveUserId = (): number | undefined => {
   try {
     const raw = localStorage.getItem('orchestrator_user');
     if (raw) {
@@ -28,16 +28,16 @@ const getActiveUserId = (): number | undefined => {
   return undefined;
 };
 
-// Supabase Multi-Tenant Database Service API
+// Supabase Multi-Tenant Database Service API (Strict Multi-User Isolation)
 export const supabaseService = {
-  // Machines (Filtered by user)
+  // Machines (Strictly filtered by logged in user)
   async getMachines(username?: string) {
     const user = username || getActiveUsername();
-    let query = supabase.from('machines').select('*').order('created_at', { ascending: false });
-    if (user && user !== 'admin') {
-      query = query.eq('created_by', user);
-    }
-    const { data, error } = await query;
+    const { data, error } = await supabase
+      .from('machines')
+      .select('*')
+      .eq('created_by', user)
+      .order('created_at', { ascending: false });
     if (error) throw error;
     return data || [];
   },
@@ -54,19 +54,26 @@ export const supabaseService = {
   },
 
   async updateMachine(machineId: string, updates: any) {
-    const { data, error } = await supabase.from('machines').update(updates).eq('machine_id', machineId).select().single();
+    const user = getActiveUsername();
+    const { data, error } = await supabase
+      .from('machines')
+      .update(updates)
+      .eq('machine_id', machineId)
+      .eq('created_by', user)
+      .select()
+      .single();
     if (error) throw error;
     return data;
   },
 
-  // Repositories (Filtered by user)
+  // Repositories (Strictly filtered by logged in user)
   async getRepositories(username?: string) {
     const user = username || getActiveUsername();
-    let query = supabase.from('repositories').select('*').order('created_at', { ascending: false });
-    if (user && user !== 'admin') {
-      query = query.eq('created_by', user);
-    }
-    const { data, error } = await query;
+    const { data, error } = await supabase
+      .from('repositories')
+      .select('*')
+      .eq('created_by', user)
+      .order('created_at', { ascending: false });
     if (error) throw error;
     return data || [];
   },
@@ -83,25 +90,36 @@ export const supabaseService = {
   },
 
   async deleteRepository(repoId: number) {
-    const { error } = await supabase.from('repositories').delete().eq('id', repoId);
+    const user = getActiveUsername();
+    const { error } = await supabase
+      .from('repositories')
+      .delete()
+      .eq('id', repoId)
+      .eq('created_by', user);
     if (error) throw error;
     return true;
   },
 
-  // Jobs (Filtered by user)
+  // Jobs (Strictly filtered by logged in user)
   async getJobs(username?: string) {
     const user = username || getActiveUsername();
-    let query = supabase.from('jobs').select('*').order('created_at', { ascending: false });
-    if (user && user !== 'admin') {
-      query = query.eq('created_by', user);
-    }
-    const { data, error } = await query;
+    const { data, error } = await supabase
+      .from('jobs')
+      .select('*')
+      .eq('created_by', user)
+      .order('created_at', { ascending: false });
     if (error) throw error;
     return data || [];
   },
 
   async getJob(jobId: string) {
-    const { data, error } = await supabase.from('jobs').select('*').eq('job_id', jobId).single();
+    const user = getActiveUsername();
+    const { data, error } = await supabase
+      .from('jobs')
+      .select('*')
+      .eq('job_id', jobId)
+      .eq('created_by', user)
+      .single();
     if (error) throw error;
     return data;
   },
@@ -118,14 +136,25 @@ export const supabaseService = {
   },
 
   async updateJob(jobId: string, updates: any) {
-    const { data, error } = await supabase.from('jobs').update(updates).eq('job_id', jobId).select().single();
+    const user = getActiveUsername();
+    const { data, error } = await supabase
+      .from('jobs')
+      .update(updates)
+      .eq('job_id', jobId)
+      .eq('created_by', user)
+      .select()
+      .single();
     if (error) throw error;
     return data;
   },
 
   // Job Logs
   async getJobLogs(jobId: string) {
-    const { data, error } = await supabase.from('job_logs').select('*').eq('job_id', jobId).order('timestamp', { ascending: true });
+    const { data, error } = await supabase
+      .from('job_logs')
+      .select('*')
+      .eq('job_id', jobId)
+      .order('timestamp', { ascending: true });
     if (error) throw error;
     return data || [];
   },
@@ -136,14 +165,14 @@ export const supabaseService = {
     return data;
   },
 
-  // Schedules (Filtered by user)
+  // Schedules (Strictly filtered by logged in user)
   async getSchedules(username?: string) {
     const user = username || getActiveUsername();
-    let query = supabase.from('schedules').select('*').order('created_at', { ascending: false });
-    if (user && user !== 'admin') {
-      query = query.eq('created_by', user);
-    }
-    const { data, error } = await query;
+    const { data, error } = await supabase
+      .from('schedules')
+      .select('*')
+      .eq('created_by', user)
+      .order('created_at', { ascending: false });
     if (error) throw error;
     return data || [];
   },
@@ -160,25 +189,37 @@ export const supabaseService = {
   },
 
   async toggleSchedule(id: number, currentEnabled: boolean) {
-    const { data, error } = await supabase.from('schedules').update({ enabled: !currentEnabled }).eq('id', id).select().single();
+    const user = getActiveUsername();
+    const { data, error } = await supabase
+      .from('schedules')
+      .update({ enabled: !currentEnabled })
+      .eq('id', id)
+      .eq('created_by', user)
+      .select()
+      .single();
     if (error) throw error;
     return data;
   },
 
   async deleteSchedule(id: number) {
-    const { error } = await supabase.from('schedules').delete().eq('id', id);
+    const user = getActiveUsername();
+    const { error } = await supabase
+      .from('schedules')
+      .delete()
+      .eq('id', id)
+      .eq('created_by', user);
     if (error) throw error;
     return true;
   },
 
-  // Credentials (Filtered by user)
+  // Credentials (Strictly filtered by logged in user)
   async getCredentials(username?: string) {
     const user = username || getActiveUsername();
-    let query = supabase.from('credentials').select('*').order('created_at', { ascending: false });
-    if (user && user !== 'admin') {
-      query = query.eq('created_by', user);
-    }
-    const { data, error } = await query;
+    const { data, error } = await supabase
+      .from('credentials')
+      .select('*')
+      .eq('created_by', user)
+      .order('created_at', { ascending: false });
     if (error) throw error;
     return data || [];
   },
@@ -195,19 +236,25 @@ export const supabaseService = {
   },
 
   async deleteCredential(id: number) {
-    const { error } = await supabase.from('credentials').delete().eq('id', id);
+    const user = getActiveUsername();
+    const { error } = await supabase
+      .from('credentials')
+      .delete()
+      .eq('id', id)
+      .eq('created_by', user);
     if (error) throw error;
     return true;
   },
 
-  // Audit Logs (Filtered by user)
+  // Audit Logs (Strictly filtered by logged in user)
   async getAuditLogs(username?: string) {
     const user = username || getActiveUsername();
-    let query = supabase.from('audit_logs').select('*').order('timestamp', { ascending: false }).limit(100);
-    if (user && user !== 'admin') {
-      query = query.eq('username', user);
-    }
-    const { data, error } = await query;
+    const { data, error } = await supabase
+      .from('audit_logs')
+      .select('*')
+      .eq('username', user)
+      .order('timestamp', { ascending: false })
+      .limit(100);
     if (error) throw error;
     return data || [];
   },

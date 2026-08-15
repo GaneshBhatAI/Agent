@@ -1,33 +1,38 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Lock, User, AlertCircle, ArrowRight, Sparkles, Shield } from 'lucide-react';
+import { Lock, User, Sparkles, ArrowRight, AlertCircle, ShieldCheck, Users } from 'lucide-react';
 import { authService } from '../services/auth';
 
 export const Login: React.FC = () => {
   const navigate = useNavigate();
-  const [username, setUsername] = useState<string>('admin');
-  const [password, setPassword] = useState<string>('Admin123!');
+  const [username, setUsername] = useState<string>('Ganesh');
+  const [password, setPassword] = useState<string>('Test@123');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
     setError(null);
+    setIsLoading(true);
 
     try {
       await authService.login(username, password);
       navigate('/');
     } catch (err: any) {
-      setError(err.response?.data?.detail || 'Invalid username or password');
+      setError(err.message || 'Invalid username or password.');
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleFillDemo = () => {
-    setUsername('admin');
-    setPassword('Admin123!');
+  const handleFillGanesh = () => {
+    setUsername('Ganesh');
+    setPassword('Test@123');
+  };
+
+  const handleFillAdmin = () => {
+    setUsername('Admin');
+    setPassword('Test@123');
   };
 
   return (
@@ -86,7 +91,7 @@ export const Login: React.FC = () => {
                 required
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                placeholder="admin"
+                placeholder="Ganesh or Admin"
                 className="w-full rounded-2xl border border-purple-200 bg-purple-50/40 px-4 py-2.5 text-sm text-slate-800 focus:border-purple-600 focus:bg-white focus:outline-none transition-all shadow-2xs font-medium"
               />
             </div>
@@ -114,7 +119,7 @@ export const Login: React.FC = () => {
               {isLoading ? (
                 <>
                   <span className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent" />
-                  <span>Authenticating...</span>
+                  <span>Authenticating via Supabase...</span>
                 </>
               ) : (
                 <>
@@ -125,20 +130,39 @@ export const Login: React.FC = () => {
             </button>
           </form>
 
-          {/* Quick Demo Fill Helper */}
-          <div className="rounded-2xl border border-purple-200/70 bg-purple-50/60 p-3.5 flex items-center justify-between text-xs">
-            <div className="text-slate-600">
-              <span className="font-bold text-slate-800">Default Admin:</span>
-              <div className="font-mono text-[11px] text-purple-700 font-semibold">admin / Admin123!</div>
+          {/* Multi-Tenant User Profiles Quick Fill */}
+          <div className="rounded-2xl border border-purple-200/70 bg-purple-50/60 p-3.5 space-y-2 text-xs">
+            <div className="flex items-center justify-between text-slate-700 font-bold">
+              <span className="flex items-center gap-1.5">
+                <Users className="h-3.5 w-3.5 text-purple-600" />
+                <span>Isolated User Accounts</span>
+              </span>
+              <span className="text-[10px] text-purple-700 font-mono">Multi-Tenant Ready</span>
             </div>
-            <button
-              type="button"
-              onClick={handleFillDemo}
-              className="flex items-center gap-1 text-xs text-purple-700 hover:text-purple-900 font-bold px-2.5 py-1 rounded-full bg-white border border-purple-200 shadow-2xs cursor-pointer"
-            >
-              <Sparkles className="h-3 w-3 text-purple-600" />
-              <span>Fill</span>
-            </button>
+
+            <div className="grid grid-cols-2 gap-2 pt-1">
+              <button
+                type="button"
+                onClick={handleFillGanesh}
+                className="flex flex-col items-start p-2 rounded-xl bg-white border border-purple-200/80 hover:bg-purple-50 hover:border-purple-300 transition-all cursor-pointer text-left shadow-2xs"
+              >
+                <span className="font-bold text-slate-900 text-xs">Ganesh</span>
+                <span className="font-mono text-[10px] text-purple-700 font-semibold">Test@123</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={handleFillAdmin}
+                className="flex flex-col items-start p-2 rounded-xl bg-white border border-purple-200/80 hover:bg-purple-50 hover:border-purple-300 transition-all cursor-pointer text-left shadow-2xs"
+              >
+                <span className="font-bold text-slate-900 text-xs">Admin</span>
+                <span className="font-mono text-[10px] text-purple-700 font-semibold">Test@123</span>
+              </button>
+            </div>
+
+            <p className="text-[10px] text-slate-500 pt-1 font-medium leading-tight">
+              🔒 Each user operates in a strictly isolated workspace. Any future user can also sign in to instantly get a dedicated private workspace.
+            </p>
           </div>
         </div>
       </div>
