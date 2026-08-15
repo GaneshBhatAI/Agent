@@ -6,17 +6,13 @@ import {
   AlertCircle,
   ExternalLink,
   Search,
-  Lock,
-  Globe,
   CheckSquare,
   Square,
-  Sparkles,
   ArrowRight,
-  Database,
   CheckCircle2,
 } from 'lucide-react';
 import { Modal } from './Modal';
-import api from '../services/api';
+import { supabaseService, getActiveUsername } from '../services/supabase';
 import { authService } from '../services/auth';
 
 interface ConnectRepoModalProps {
@@ -57,21 +53,21 @@ export const ConnectRepoModal: React.FC<ConnectRepoModalProps> = ({
     if (isOpen) {
       setError(null);
       setSuccess(null);
-      // Load user's already connected repos and saved PAT from Supabase
+      // Load user's already connected repos and saved PAT
       Promise.all([
-        api.get('/github/repositories'),
-        api.get('/credentials'),
-      ]).then(([repoRes, credRes]) => {
-        if (Array.isArray(repoRes.data)) {
+        supabaseService.getRepositories(),
+        supabaseService.getCredentials(),
+      ]).then(([repos, creds]) => {
+        if (Array.isArray(repos)) {
           const urls = new Set<string>(
-            repoRes.data.map((r: any) =>
-              (r.repository_url || `${r.github_owner}/${r.repository_name}`).toLowerCase()
+            repos.map((r: any) =>
+              (r.repository_url || `${r.github_owner}/${r.repository_name}`).toLowerCase().trim()
             )
           );
           setExistingRepoUrls(urls);
         }
 
-        const foundToken = credRes.data?.find((c: any) => c.credential_type === 'GITHUB_PAT');
+        const foundToken = creds?.find((c: any) => c.credential_type === 'GITHUB_PAT');
         if (foundToken && foundToken.encrypted_value && foundToken.encrypted_value.startsWith('ghp_')) {
           setPatToken(foundToken.encrypted_value);
         }
@@ -106,10 +102,12 @@ export const ConnectRepoModal: React.FC<ConnectRepoModalProps> = ({
           const repo = parts[1];
           const ghRes = await fetch(`https://api.github.com/repos/${owner}/${repo}`, { headers });
           if (!ghRes.ok) {
-            throw new Error(`Repository "${owner}/${repo}" not found or private. Check your PAT token.`);
+            throw new Error(`Repository "${owner}/${repo}" not found or is private. Check your PAT token.`);
           }
           const item = await ghRes.json();
-          const isConn = existingRepoUrls.has(item.html_url.toLowerCase()) || existingRepoUrls.has(`${owner}/${repo}`.toLowerCase());
+          const isConn =
+            existingRepoUrls.has(item.html_url?.toLowerCase()) ||
+            existingRepoUrls.has(`${owner}/${repo}`.toLowerCase());
           const repoItem: FetchedRepoItem = { ...item, alreadyConnected: isConn };
           setFetchedRepos([repoItem]);
           if (!isConn) setSelectedRepoIds(new Set([item.id]));
@@ -119,7 +117,7 @@ export const ConnectRepoModal: React.FC<ConnectRepoModalProps> = ({
         }
       }
 
-      // Otherwise fetch all repos accessible to this PAT
+      // Fetch all repos accessible to this PAT
       const res = await fetch('https://api.github.com/user/repos?per_page=100&sort=updated', { headers });
       if (!res.ok) {
         if (res.status === 401) {
@@ -134,8 +132,8 @@ export const ConnectRepoModal: React.FC<ConnectRepoModalProps> = ({
       }
 
       const mapped = repos.map((r) => {
-        const fullLower = r.full_name?.toLowerCase() || '';
-        const urlLower = r.html_url?.toLowerCase() || '';
+        const fullLower = (r.full_name || '').toLowerCase().trim();
+        const urlLower = (r.html_url || '').toLowerCase().trim();
         const isConn = existingRepoUrls.has(fullLower) || existingRepoUrls.has(urlLower);
         return { ...r, alreadyConnected: isConn };
       });
@@ -185,15 +183,14 @@ export const ConnectRepoModal: React.FC<ConnectRepoModalProps> = ({
     setIsLoading(true);
     setError(null);
 
-    const currentUser = authService.getCurrentUser();
-    const currentUsername = currentUser?.username || 'admin';
+    const currentUsername = getActiveUsername();
 
     try {
       const chosenRepos = fetchedRepos.filter((r) => selectedRepoIds.has(r.id));
 
-      // 1. Batch Save chosen repositories into Supabase database
+      // 1. Save chosen repositories directly with supabaseService
       for (const repo of chosenRepos) {
-        await api.post('/github/repositories', {
+        await supabaseService.insertRepository({
           github_owner: repo.owner?.login || currentUsername,
           repository_name: repo.name,
           repository_url: repo.html_url,
@@ -206,23 +203,26 @@ export const ConnectRepoModal: React.FC<ConnectRepoModalProps> = ({
 
       // 2. Save PAT in Credential Vault if provided
       if (patToken.trim()) {
-        await api.post('/credentials', {
+        await supabaseService.insertCredential({
           name: `GITHUB_PAT_${currentUsername.toUpperCase()}`,
           credential_type: 'GITHUB_PAT',
           value: patToken.trim(),
-          description: `GitHub Access Token for connected repositories`,
+          description: `GitHub Access Token for ${chosenRepos.map((r) => r.name).join(', ')}`,
+          created_by: currentUsername,
         });
       }
 
-      setSuccess(`Successfully connected ${chosenRepos.length} repository${chosenRepos.length > 1 ? 'ies' : ''} to Supabase!`);
+      setSuccess(`Successfully connected ${chosenRepos.length} repository${chosenRepos.length > 1 ? 'ies' : ''}!`);
+      
+      // Instantly notify parent component and close modal
+      onRepoConnected();
       setTimeout(() => {
-        onRepoConnected();
         onClose();
         setStep('token');
         setSuccess(null);
-      }, 1000);
+      }, 500);
     } catch (err: any) {
-      console.error('Failed to save repositories in Supabase', err);
+      console.error('Failed to save repositories', err);
       setError(err.message || 'Failed to save repository selections.');
     } finally {
       setIsLoading(false);
@@ -230,7 +230,7 @@ export const ConnectRepoModal: React.FC<ConnectRepoModalProps> = ({
   };
 
   const filteredRepos = fetchedRepos.filter((r) =>
-    r.full_name?.toLowerCase().includes(repoSearch.toLowerCase()) ||
+    (r.full_name || '').toLowerCase().includes(repoSearch.toLowerCase()) ||
     (r.description && r.description.toLowerCase().includes(repoSearch.toLowerCase()))
   );
 
@@ -450,7 +450,7 @@ export const ConnectRepoModal: React.FC<ConnectRepoModalProps> = ({
                   disabled={isLoading || selectedRepoIds.size === 0}
                   className="rounded-full bg-gradient-to-r from-[#6F53A3] to-[#4F3A8A] px-5 py-1.5 text-xs font-bold text-white shadow-purple-sm hover:from-[#5E4391] hover:to-[#3F2B75] disabled:opacity-50 transition-all cursor-pointer"
                 >
-                  {isLoading ? 'Saving in Database...' : 'Save Selected Repositories'}
+                  {isLoading ? 'Saving Repositories...' : 'Save Selected Repositories'}
                 </button>
               </div>
             </div>

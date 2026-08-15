@@ -25,18 +25,13 @@ import {
   Database,
   SlidersHorizontal,
   Settings2,
-  Edit3,
   RefreshCw,
-  Shield,
-  ArrowRight,
-  CheckCircle2,
 } from 'lucide-react';
-import api from '../services/api';
-import { GitHubBranchItem, GitHubRepoItem } from '../types';
+import { supabaseService } from '../services/supabase';
+import { GitHubBranchItem, GitHubFileItem, GitHubRepoItem } from '../types';
 import { RunJobModal } from '../components/RunJobModal';
 import { CodeViewerModal } from '../components/CodeViewerModal';
 import { ConnectRepoModal } from '../components/ConnectRepoModal';
-import { formatDistanceToNow } from 'date-fns';
 
 interface TreeNode {
   id: string;
@@ -82,25 +77,25 @@ export const Repositories: React.FC = () => {
   const fetchRepositories = async () => {
     setIsLoading(true);
     try {
-      const [repoRes, credRes] = await Promise.all([
-        api.get('/github/repositories'),
-        api.get('/credentials'),
+      const [fetchedRepos, creds] = await Promise.all([
+        supabaseService.getRepositories(),
+        supabaseService.getCredentials(),
       ]);
 
-      const fetchedRepos = Array.isArray(repoRes.data) ? repoRes.data : [];
-      setRepos(fetchedRepos);
+      const repoList = Array.isArray(fetchedRepos) ? fetchedRepos : [];
+      setRepos(repoList);
 
       // Check for user's saved GITHUB_PAT token in Credential Vault
-      const foundToken = credRes.data?.find((c: any) => c.credential_type === 'GITHUB_PAT');
+      const foundToken = creds?.find((c: any) => c.credential_type === 'GITHUB_PAT');
       if (foundToken && foundToken.encrypted_value) {
         setPatToken(foundToken.encrypted_value);
       }
 
-      if (fetchedRepos.length > 0) {
+      if (repoList.length > 0) {
         // If current selected repo is still valid, keep it; otherwise select first
-        if (!selectedRepo || !fetchedRepos.some((r: any) => r.id === selectedRepo.id)) {
-          setSelectedRepo(fetchedRepos[0]);
-          setSelectedBranch(fetchedRepos[0].default_branch || 'master');
+        if (!selectedRepo || !repoList.some((r: any) => r.id === selectedRepo.id || r.repository_name === selectedRepo.repository_name)) {
+          setSelectedRepo(repoList[0]);
+          setSelectedBranch(repoList[0].default_branch || 'master');
         }
       } else {
         setSelectedRepo(null);
@@ -157,7 +152,7 @@ export const Repositories: React.FC = () => {
           });
           setExpandedFolders(autoExpand);
         } else {
-          // Fallback to /contents if git/trees is restricted
+          // Fallback to /contents
           fetch(`https://api.github.com/repos/${owner}/${name}/contents`, { headers })
             .then((res) => (res.ok ? res.json() : []))
             .then((contents) => {
@@ -267,8 +262,8 @@ export const Repositories: React.FC = () => {
   const handleDeleteRepo = async (repoId?: number, repoName?: string) => {
     if (!repoId) return;
     if (!window.confirm(`Disconnect repository "${repoName || 'selected'}" from your workspace?`)) return;
-    await api.delete(`/github/repositories/${repoId}`);
-    fetchRepositories();
+    await supabaseService.deleteRepository(repoId);
+    await fetchRepositories();
   };
 
   const handleOpenInExplorer = (repo: GitHubRepoItem) => {

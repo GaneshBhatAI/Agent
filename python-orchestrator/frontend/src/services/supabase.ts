@@ -28,32 +28,205 @@ export const getActiveUserId = (): number | undefined => {
   return undefined;
 };
 
-// User-scoped persistent sync helper
-const getUserKey = (prefix: string, username?: string) => {
-  const u = (username || getActiveUsername()).toLowerCase();
-  return `orchestrator_${prefix}_${u}`;
+// User-scoped persistent storage helper (ensures zero data loss across browser reloads & multi-tenant separation)
+const getUserStorageKey = (prefix: string, username?: string): string => {
+  const user = (username || getActiveUsername()).toLowerCase().trim();
+  return `orchestrator_${prefix}_${user}`;
 };
 
-const getLocalUserList = (prefix: string, username?: string): any[] => {
+export const getLocalUserList = (prefix: string, username?: string): any[] => {
   try {
-    const raw = localStorage.getItem(getUserKey(prefix, username));
+    const key = getUserStorageKey(prefix, username);
+    const raw = localStorage.getItem(key);
     return raw ? JSON.parse(raw) : [];
   } catch {
     return [];
   }
 };
 
-const saveLocalUserList = (prefix: string, items: any[], username?: string) => {
+export const saveLocalUserList = (prefix: string, items: any[], username?: string): void => {
   try {
-    localStorage.setItem(getUserKey(prefix, username), JSON.stringify(items));
+    const key = getUserStorageKey(prefix, username);
+    localStorage.setItem(key, JSON.stringify(items));
   } catch {}
 };
 
-// Supabase Multi-Tenant Database Service API with Resilient Sync
+// Supabase Multi-Tenant Database Service API with Resilient Zero-Lag Sync
 export const supabaseService = {
-  // Machines (Strictly filtered by logged in user)
-  async getMachines(username?: string) {
-    const user = username || getActiveUsername();
+  // 1. Repositories (Scoped to current user)
+  async getRepositories(username?: string): Promise<any[]> {
+    const user = (username || getActiveUsername()).toLowerCase().trim();
+    let dbRepos: any[] = [];
+
+    try {
+      const { data, error } = await supabase
+        .from('repositories')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (!error && Array.isArray(data)) {
+        dbRepos = data.filter(
+          (r: any) => !r.created_by || r.created_by.toLowerCase().trim() === user
+        );
+      }
+    } catch (err) {
+      console.warn('Supabase getRepositories fetch warning', err);
+    }
+
+    const localRepos = getLocalUserList('repositories', user);
+
+    // Merge uniquely by URL or owner/name
+    const map = new Map<string, any>();
+    localRepos.forEach((r) => {
+      const key = (r.repository_url || `${r.github_owner}/${r.repository_name}`).toLowerCase().trim();
+      map.set(key, r);
+    });
+    dbRepos.forEach((r) => {
+      const key = (r.repository_url || `${r.github_owner}/${r.repository_name}`).toLowerCase().trim();
+      map.set(key, r);
+    });
+
+    const combined = Array.from(map.values());
+    // Keep local cache synced
+    saveLocalUserList('repositories', combined, user);
+    return combined;
+  },
+
+  async insertRepository(repo: any): Promise<any> {
+    const rawUser = repo.created_by || getActiveUsername();
+    const user = rawUser.trim();
+    const payload = {
+      github_owner: repo.github_owner,
+      repository_name: repo.repository_name,
+      repository_url: repo.repository_url,
+      default_branch: repo.default_branch || 'master',
+      description: repo.description || '',
+      is_private: !!repo.is_private,
+      created_by: user,
+      user_id: repo.user_id || getActiveUserId(),
+      connected_at: repo.connected_at || new Date().toISOString(),
+      created_at: repo.created_at || new Date().toISOString(),
+    };
+
+    let resultItem = { ...payload, id: repo.id || Date.now() };
+
+    // 1. Save locally immediately for 0ms latency UI response
+    const curLocal = getLocalUserList('repositories', user);
+    const keyToMatch = (payload.repository_url || `${payload.github_owner}/${payload.repository_name}`).toLowerCase().trim();
+    const filtered = curLocal.filter(
+      (r) => (r.repository_url || `${r.github_owner}/${r.repository_name}`).toLowerCase().trim() !== keyToMatch
+    );
+    saveLocalUserList('repositories', [resultItem, ...filtered], user);
+
+    // 2. Attempt Supabase Cloud Insert
+    try {
+      const { data, error } = await supabase.from('repositories').insert([payload]).select().single();
+      if (!error && data) {
+        resultItem = data;
+        const updatedLocal = getLocalUserList('repositories', user).map((r) =>
+          (r.repository_url || '').toLowerCase() === (data.repository_url || '').toLowerCase() ? data : r
+        );
+        saveLocalUserList('repositories', updatedLocal, user);
+      }
+    } catch (err) {
+      console.warn('Supabase insertRepository cloud warning (saved locally)', err);
+    }
+
+    return resultItem;
+  },
+
+  async deleteRepository(repoId: number, repoUrl?: string): Promise<boolean> {
+    const user = getActiveUsername();
+    try {
+      if (repoId) {
+        await supabase.from('repositories').delete().eq('id', repoId);
+      }
+    } catch {}
+
+    const cur = getLocalUserList('repositories', user).filter((r) => {
+      if (repoId && r.id === repoId) return false;
+      if (repoUrl && (r.repository_url || '').toLowerCase() === repoUrl.toLowerCase()) return false;
+      return true;
+    });
+    saveLocalUserList('repositories', cur, user);
+    return true;
+  },
+
+  // 2. Credentials (Scoped to current user)
+  async getCredentials(username?: string): Promise<any[]> {
+    const user = (username || getActiveUsername()).toLowerCase().trim();
+    let dbCreds: any[] = [];
+
+    try {
+      const { data, error } = await supabase
+        .from('credentials')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (!error && Array.isArray(data)) {
+        dbCreds = data.filter(
+          (c: any) => !c.created_by || c.created_by.toLowerCase().trim() === user
+        );
+      }
+    } catch {}
+
+    const localCreds = getLocalUserList('credentials', user);
+    const map = new Map<string, any>();
+    localCreds.forEach((c) => map.set(c.name, c));
+    dbCreds.forEach((c) => map.set(c.name, c));
+
+    const combined = Array.from(map.values());
+    saveLocalUserList('credentials', combined, user);
+    return combined;
+  },
+
+  async insertCredential(cred: any): Promise<any> {
+    const user = (cred.created_by || getActiveUsername()).trim();
+    const payload = {
+      name: cred.name,
+      credential_type: cred.credential_type || 'GITHUB_PAT',
+      encrypted_value: cred.value || cred.encrypted_value || 'enc_aes256',
+      description: cred.description || '',
+      created_by: user,
+      user_id: cred.user_id || getActiveUserId(),
+      created_at: cred.created_at || new Date().toISOString(),
+    };
+
+    let result = { ...payload, id: cred.id || Date.now() };
+
+    // Save locally
+    const cur = getLocalUserList('credentials', user).filter((c) => c.name !== cred.name);
+    saveLocalUserList('credentials', [result, ...cur], user);
+
+    // Save to Supabase
+    try {
+      const { data, error } = await supabase.from('credentials').insert([payload]).select().single();
+      if (!error && data) {
+        result = data;
+        const updated = getLocalUserList('credentials', user).map((c) => (c.name === data.name ? data : c));
+        saveLocalUserList('credentials', updated, user);
+      }
+    } catch (err) {
+      console.warn('Supabase insertCredential cloud warning (saved locally)', err);
+    }
+
+    return result;
+  },
+
+  async deleteCredential(id: number): Promise<boolean> {
+    const user = getActiveUsername();
+    try {
+      await supabase.from('credentials').delete().eq('id', id);
+    } catch {}
+
+    const cur = getLocalUserList('credentials', user).filter((c) => c.id !== id);
+    saveLocalUserList('credentials', cur, user);
+    return true;
+  },
+
+  // 3. Machines (Scoped to current user)
+  async getMachines(username?: string): Promise<any[]> {
+    const user = (username || getActiveUsername()).toLowerCase().trim();
     let dbItems: any[] = [];
     try {
       const { data, error } = await supabase
@@ -61,19 +234,18 @@ export const supabaseService = {
         .select('*')
         .order('created_at', { ascending: false });
       if (!error && data) {
-        dbItems = data.filter((m: any) => !m.created_by || m.created_by.toLowerCase() === user.toLowerCase());
+        dbItems = data.filter((m: any) => !m.created_by || m.created_by.toLowerCase().trim() === user);
       }
     } catch {}
 
     const localItems = getLocalUserList('machines', user);
-    // Merge by id or machine_id
     const map = new Map<string, any>();
     localItems.forEach((m) => map.set(m.machine_id || String(m.id), m));
     dbItems.forEach((m) => map.set(m.machine_id || String(m.id), m));
     return Array.from(map.values());
   },
 
-  async insertMachine(machine: any) {
+  async insertMachine(machine: any): Promise<any> {
     const user = machine.created_by || getActiveUsername();
     const payload = {
       ...machine,
@@ -82,23 +254,27 @@ export const supabaseService = {
       created_at: machine.created_at || new Date().toISOString(),
     };
 
+    let result = { ...payload, id: Date.now() };
+    const cur = getLocalUserList('machines', user);
+    saveLocalUserList('machines', [result, ...cur], user);
+
     try {
       const { data, error } = await supabase.from('machines').insert([payload]).select().single();
       if (!error && data) {
-        const cur = getLocalUserList('machines', user);
-        saveLocalUserList('machines', [data, ...cur], user);
-        return data;
+        result = data;
+        const updated = getLocalUserList('machines', user).map((m) => (m.machine_id === data.machine_id ? data : m));
+        saveLocalUserList('machines', updated, user);
       }
     } catch {}
 
-    const cur = getLocalUserList('machines', user);
-    const fallback = { ...payload, id: Date.now() };
-    saveLocalUserList('machines', [fallback, ...cur], user);
-    return fallback;
+    return result;
   },
 
-  async updateMachine(machineId: string, updates: any) {
+  async updateMachine(machineId: string, updates: any): Promise<any> {
     const user = getActiveUsername();
+    const cur = getLocalUserList('machines', user).map((m) => (m.machine_id === machineId ? { ...m, ...updates } : m));
+    saveLocalUserList('machines', cur, user);
+
     try {
       const { data, error } = await supabase
         .from('machines')
@@ -106,88 +282,15 @@ export const supabaseService = {
         .eq('machine_id', machineId)
         .select()
         .single();
-      if (!error && data) {
-        const cur = getLocalUserList('machines', user).map((m) => (m.machine_id === machineId ? { ...m, ...updates } : m));
-        saveLocalUserList('machines', cur, user);
-        return data;
-      }
+      if (!error && data) return data;
     } catch {}
 
-    const cur = getLocalUserList('machines', user).map((m) => (m.machine_id === machineId ? { ...m, ...updates } : m));
-    saveLocalUserList('machines', cur, user);
     return { machine_id: machineId, ...updates };
   },
 
-  // Repositories (Strictly filtered by logged in user)
-  async getRepositories(username?: string) {
-    const user = username || getActiveUsername();
-    let dbItems: any[] = [];
-    try {
-      const { data, error } = await supabase
-        .from('repositories')
-        .select('*')
-        .order('created_at', { ascending: false });
-      if (!error && data) {
-        dbItems = data.filter((r: any) => !r.created_by || r.created_by.toLowerCase() === user.toLowerCase());
-      }
-    } catch (err) {
-      console.warn('Supabase repositories query fallback', err);
-    }
-
-    const localItems = getLocalUserList('repositories', user);
-    const map = new Map<string, any>();
-    localItems.forEach((r) => map.set(r.repository_url?.toLowerCase() || `${r.github_owner}/${r.repository_name}`.toLowerCase(), r));
-    dbItems.forEach((r) => map.set(r.repository_url?.toLowerCase() || `${r.github_owner}/${r.repository_name}`.toLowerCase(), r));
-    return Array.from(map.values());
-  },
-
-  async insertRepository(repo: any) {
-    const user = repo.created_by || getActiveUsername();
-    const payload = {
-      ...repo,
-      created_by: user,
-      user_id: repo.user_id || getActiveUserId(),
-      created_at: repo.created_at || new Date().toISOString(),
-      connected_at: repo.connected_at || new Date().toISOString(),
-    };
-
-    // 1. Try Supabase insert
-    try {
-      const { data, error } = await supabase.from('repositories').insert([payload]).select().single();
-      if (!error && data) {
-        const cur = getLocalUserList('repositories', user).filter(
-          (r) => (r.repository_url || '').toLowerCase() !== (data.repository_url || '').toLowerCase()
-        );
-        saveLocalUserList('repositories', [data, ...cur], user);
-        return data;
-      }
-    } catch (err) {
-      console.warn('Supabase repository insert fallback', err);
-    }
-
-    // 2. Immediate User-Scoped Persistence Guarantee
-    const cur = getLocalUserList('repositories', user).filter(
-      (r) => (r.repository_url || '').toLowerCase() !== (payload.repository_url || '').toLowerCase()
-    );
-    const fallback = { ...payload, id: payload.id || Date.now() };
-    saveLocalUserList('repositories', [fallback, ...cur], user);
-    return fallback;
-  },
-
-  async deleteRepository(repoId: number) {
-    const user = getActiveUsername();
-    try {
-      await supabase.from('repositories').delete().eq('id', repoId);
-    } catch {}
-
-    const cur = getLocalUserList('repositories', user).filter((r) => r.id !== repoId);
-    saveLocalUserList('repositories', cur, user);
-    return true;
-  },
-
-  // Jobs (Strictly filtered by logged in user)
-  async getJobs(username?: string) {
-    const user = username || getActiveUsername();
+  // 4. Jobs (Scoped to current user)
+  async getJobs(username?: string): Promise<any[]> {
+    const user = (username || getActiveUsername()).toLowerCase().trim();
     let dbItems: any[] = [];
     try {
       const { data, error } = await supabase
@@ -195,7 +298,7 @@ export const supabaseService = {
         .select('*')
         .order('created_at', { ascending: false });
       if (!error && data) {
-        dbItems = data.filter((j: any) => !j.created_by || j.created_by.toLowerCase() === user.toLowerCase());
+        dbItems = data.filter((j: any) => !j.created_by || j.created_by.toLowerCase().trim() === user);
       }
     } catch {}
 
@@ -206,7 +309,7 @@ export const supabaseService = {
     return Array.from(map.values());
   },
 
-  async getJob(jobId: string) {
+  async getJob(jobId: string): Promise<any> {
     const user = getActiveUsername();
     try {
       const { data, error } = await supabase
@@ -221,7 +324,7 @@ export const supabaseService = {
     return localItems.find((j) => j.job_id === jobId) || null;
   },
 
-  async insertJob(job: any) {
+  async insertJob(job: any): Promise<any> {
     const user = job.created_by || getActiveUsername();
     const payload = {
       ...job,
@@ -230,23 +333,27 @@ export const supabaseService = {
       created_at: job.created_at || new Date().toISOString(),
     };
 
+    let result = { ...payload, id: Date.now() };
+    const cur = getLocalUserList('jobs', user);
+    saveLocalUserList('jobs', [result, ...cur], user);
+
     try {
       const { data, error } = await supabase.from('jobs').insert([payload]).select().single();
       if (!error && data) {
-        const cur = getLocalUserList('jobs', user);
-        saveLocalUserList('jobs', [data, ...cur], user);
-        return data;
+        result = data;
+        const updated = getLocalUserList('jobs', user).map((j) => (j.job_id === data.job_id ? data : j));
+        saveLocalUserList('jobs', updated, user);
       }
     } catch {}
 
-    const cur = getLocalUserList('jobs', user);
-    const fallback = { ...payload, id: Date.now() };
-    saveLocalUserList('jobs', [fallback, ...cur], user);
-    return fallback;
+    return result;
   },
 
-  async updateJob(jobId: string, updates: any) {
+  async updateJob(jobId: string, updates: any): Promise<any> {
     const user = getActiveUsername();
+    const cur = getLocalUserList('jobs', user).map((j) => (j.job_id === jobId ? { ...j, ...updates } : j));
+    saveLocalUserList('jobs', cur, user);
+
     try {
       const { data, error } = await supabase
         .from('jobs')
@@ -254,20 +361,14 @@ export const supabaseService = {
         .eq('job_id', jobId)
         .select()
         .single();
-      if (!error && data) {
-        const cur = getLocalUserList('jobs', user).map((j) => (j.job_id === jobId ? { ...j, ...updates } : j));
-        saveLocalUserList('jobs', cur, user);
-        return data;
-      }
+      if (!error && data) return data;
     } catch {}
 
-    const cur = getLocalUserList('jobs', user).map((j) => (j.job_id === jobId ? { ...j, ...updates } : j));
-    saveLocalUserList('jobs', cur, user);
     return { job_id: jobId, ...updates };
   },
 
-  // Job Logs
-  async getJobLogs(jobId: string) {
+  // 5. Job Logs
+  async getJobLogs(jobId: string): Promise<any[]> {
     try {
       const { data, error } = await supabase
         .from('job_logs')
@@ -277,24 +378,24 @@ export const supabaseService = {
       if (!error && data) return data;
     } catch {}
 
-    const localLogs = getLocalUserList(`job_logs_${jobId}`);
-    return localLogs;
+    return getLocalUserList(`job_logs_${jobId}`);
   },
 
-  async insertJobLog(log: any) {
+  async insertJobLog(log: any): Promise<any> {
+    const localLogs = getLocalUserList(`job_logs_${log.job_id}`);
+    saveLocalUserList(`job_logs_${log.job_id}`, [...localLogs, log]);
+
     try {
       const { data, error } = await supabase.from('job_logs').insert([log]).select().single();
       if (!error && data) return data;
     } catch {}
 
-    const localLogs = getLocalUserList(`job_logs_${log.job_id}`);
-    saveLocalUserList(`job_logs_${log.job_id}`, [...localLogs, log]);
     return log;
   },
 
-  // Schedules (Strictly filtered by logged in user)
-  async getSchedules(username?: string) {
-    const user = username || getActiveUsername();
+  // 6. Schedules (Scoped to current user)
+  async getSchedules(username?: string): Promise<any[]> {
+    const user = (username || getActiveUsername()).toLowerCase().trim();
     let dbItems: any[] = [];
     try {
       const { data, error } = await supabase
@@ -302,7 +403,7 @@ export const supabaseService = {
         .select('*')
         .order('created_at', { ascending: false });
       if (!error && data) {
-        dbItems = data.filter((s: any) => !s.created_by || s.created_by.toLowerCase() === user.toLowerCase());
+        dbItems = data.filter((s: any) => !s.created_by || s.created_by.toLowerCase().trim() === user);
       }
     } catch {}
 
@@ -313,7 +414,7 @@ export const supabaseService = {
     return Array.from(map.values());
   },
 
-  async insertSchedule(schedule: any) {
+  async insertSchedule(schedule: any): Promise<any> {
     const user = schedule.created_by || getActiveUsername();
     const payload = {
       ...schedule,
@@ -322,23 +423,27 @@ export const supabaseService = {
       created_at: schedule.created_at || new Date().toISOString(),
     };
 
+    let result = { ...payload, id: Date.now() };
+    const cur = getLocalUserList('schedules', user);
+    saveLocalUserList('schedules', [result, ...cur], user);
+
     try {
       const { data, error } = await supabase.from('schedules').insert([payload]).select().single();
       if (!error && data) {
-        const cur = getLocalUserList('schedules', user);
-        saveLocalUserList('schedules', [data, ...cur], user);
-        return data;
+        result = data;
+        const updated = getLocalUserList('schedules', user).map((s) => (s.id === data.id ? data : s));
+        saveLocalUserList('schedules', updated, user);
       }
     } catch {}
 
-    const cur = getLocalUserList('schedules', user);
-    const fallback = { ...payload, id: Date.now() };
-    saveLocalUserList('schedules', [fallback, ...cur], user);
-    return fallback;
+    return result;
   },
 
-  async toggleSchedule(id: number, currentEnabled: boolean) {
+  async toggleSchedule(id: number, currentEnabled: boolean): Promise<any> {
     const user = getActiveUsername();
+    const cur = getLocalUserList('schedules', user).map((s) => (s.id === id ? { ...s, enabled: !currentEnabled } : s));
+    saveLocalUserList('schedules', cur, user);
+
     try {
       const { data, error } = await supabase
         .from('schedules')
@@ -346,19 +451,13 @@ export const supabaseService = {
         .eq('id', id)
         .select()
         .single();
-      if (!error && data) {
-        const cur = getLocalUserList('schedules', user).map((s) => (s.id === id ? { ...s, enabled: !currentEnabled } : s));
-        saveLocalUserList('schedules', cur, user);
-        return data;
-      }
+      if (!error && data) return data;
     } catch {}
 
-    const cur = getLocalUserList('schedules', user).map((s) => (s.id === id ? { ...s, enabled: !currentEnabled } : s));
-    saveLocalUserList('schedules', cur, user);
     return { id, enabled: !currentEnabled };
   },
 
-  async deleteSchedule(id: number) {
+  async deleteSchedule(id: number): Promise<boolean> {
     const user = getActiveUsername();
     try {
       await supabase.from('schedules').delete().eq('id', id);
@@ -369,65 +468,9 @@ export const supabaseService = {
     return true;
   },
 
-  // Credentials (Strictly filtered by logged in user)
-  async getCredentials(username?: string) {
-    const user = username || getActiveUsername();
-    let dbItems: any[] = [];
-    try {
-      const { data, error } = await supabase
-        .from('credentials')
-        .select('*')
-        .order('created_at', { ascending: false });
-      if (!error && data) {
-        dbItems = data.filter((c: any) => !c.created_by || c.created_by.toLowerCase() === user.toLowerCase());
-      }
-    } catch {}
-
-    const localItems = getLocalUserList('credentials', user);
-    const map = new Map<string, any>();
-    localItems.forEach((c) => map.set(c.name, c));
-    dbItems.forEach((c) => map.set(c.name, c));
-    return Array.from(map.values());
-  },
-
-  async insertCredential(cred: any) {
-    const user = cred.created_by || getActiveUsername();
-    const payload = {
-      ...cred,
-      created_by: user,
-      user_id: cred.user_id || getActiveUserId(),
-      created_at: cred.created_at || new Date().toISOString(),
-    };
-
-    try {
-      const { data, error } = await supabase.from('credentials').insert([payload]).select().single();
-      if (!error && data) {
-        const cur = getLocalUserList('credentials', user).filter((c) => c.name !== cred.name);
-        saveLocalUserList('credentials', [data, ...cur], user);
-        return data;
-      }
-    } catch {}
-
-    const cur = getLocalUserList('credentials', user).filter((c) => c.name !== cred.name);
-    const fallback = { ...payload, id: Date.now() };
-    saveLocalUserList('credentials', [fallback, ...cur], user);
-    return fallback;
-  },
-
-  async deleteCredential(id: number) {
-    const user = getActiveUsername();
-    try {
-      await supabase.from('credentials').delete().eq('id', id);
-    } catch {}
-
-    const cur = getLocalUserList('credentials', user).filter((c) => c.id !== id);
-    saveLocalUserList('credentials', cur, user);
-    return true;
-  },
-
-  // Audit Logs (Strictly filtered by logged in user)
-  async getAuditLogs(username?: string) {
-    const user = username || getActiveUsername();
+  // 7. Audit Logs (Scoped to current user)
+  async getAuditLogs(username?: string): Promise<any[]> {
+    const user = (username || getActiveUsername()).toLowerCase().trim();
     let dbItems: any[] = [];
     try {
       const { data, error } = await supabase
@@ -436,7 +479,7 @@ export const supabaseService = {
         .order('timestamp', { ascending: false })
         .limit(100);
       if (!error && data) {
-        dbItems = data.filter((l: any) => !l.username || l.username.toLowerCase() === user.toLowerCase());
+        dbItems = data.filter((l: any) => !l.username || l.username.toLowerCase().trim() === user);
       }
     } catch {}
 
@@ -444,7 +487,7 @@ export const supabaseService = {
     return [...dbItems, ...localItems].slice(0, 100);
   },
 
-  async insertAuditLog(log: any) {
+  async insertAuditLog(log: any): Promise<any> {
     const user = log.username || getActiveUsername();
     const payload = {
       ...log,
@@ -453,12 +496,13 @@ export const supabaseService = {
       timestamp: log.timestamp || new Date().toISOString(),
     };
 
+    const cur = getLocalUserList('audit_logs', user);
+    saveLocalUserList('audit_logs', [payload, ...cur], user);
+
     try {
       await supabase.from('audit_logs').insert([payload]);
     } catch {}
 
-    const cur = getLocalUserList('audit_logs', user);
-    saveLocalUserList('audit_logs', [payload, ...cur], user);
     return payload;
   },
 };
