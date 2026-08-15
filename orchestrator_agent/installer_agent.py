@@ -25,11 +25,14 @@ from tkinter import ttk, messagebox
 DEFAULT_SUPABASE_URL = "https://qwutrfmmcorktztefrja.supabase.co"
 DEFAULT_SUPABASE_KEY = "sb_publishable_E4XKAZgjI27EdpVNP6qC0w_UlcwlTpe"
 
-def get_config_path():
+def get_install_dir():
     appdata = os.getenv("LOCALAPPDATA", os.path.expanduser("~"))
     install_dir = os.path.join(appdata, "AIAnveshana", "DeviceAgent")
     os.makedirs(install_dir, exist_ok=True)
-    return os.path.join(install_dir, "agent_config.json")
+    return install_dir
+
+def get_config_path():
+    return os.path.join(get_install_dir(), "agent_config.json")
 
 def load_saved_config():
     path = get_config_path()
@@ -101,67 +104,69 @@ class DesktopHUD:
         self.is_running = True
 
         def run_gui():
-            self.root = tk.Tk()
-            self.root.title("AI Anveshana Bot HUD")
-            self.root.overrideredirect(True)
-            self.root.attributes("-topmost", True)
-            self.root.attributes("-alpha", 0.94)
+            try:
+                self.root = tk.Tk()
+                self.root.title("AI Anveshana Bot HUD")
+                self.root.overrideredirect(True)
+                self.root.attributes("-topmost", True)
+                self.root.attributes("-alpha", 0.94)
 
-            # Position in bottom-right corner
-            hud_w = 340
-            hud_h = 130
-            screen_w = self.root.winfo_screenwidth()
-            screen_h = self.root.winfo_screenheight()
-            x = screen_w - hud_w - 20
-            y = screen_h - hud_h - 60
-            self.root.geometry(f"{hud_w}x{hud_h}+{x}+{y}")
-            self.root.configure(bg="#130D24")
+                # Position in bottom-right corner
+                hud_w = 340
+                hud_h = 130
+                screen_w = self.root.winfo_screenwidth()
+                screen_h = self.root.winfo_screenheight()
+                x = screen_w - hud_w - 20
+                y = screen_h - hud_h - 60
+                self.root.geometry(f"{hud_w}x{hud_h}+{x}+{y}")
+                self.root.configure(bg="#130D24")
 
-            # Main container frame
-            main_frame = tk.Frame(self.root, bg="#130D24", padx=14, pady=12, highlightbackground="#6F53A3", highlightthickness=1)
-            main_frame.pack(fill="both", expand=True)
+                # Main container frame
+                main_frame = tk.Frame(self.root, bg="#130D24", padx=14, pady=12, highlightbackground="#6F53A3", highlightthickness=1)
+                main_frame.pack(fill="both", expand=True)
 
-            # Header Row
-            hdr = tk.Frame(main_frame, bg="#130D24")
-            hdr.pack(fill="x", pady=(0, 4))
+                # Header Row
+                hdr = tk.Frame(main_frame, bg="#130D24")
+                hdr.pack(fill="x", pady=(0, 4))
 
-            lbl_brand = tk.Label(hdr, text="⚡ AI ANVESHANA BOT RUNNER", font=("Segoe UI", 8, "bold"), fg="#BA8BBF", bg="#130D24")
-            lbl_brand.pack(side="left")
+                lbl_brand = tk.Label(hdr, text="⚡ AI ANVESHANA BOT RUNNER", font=("Segoe UI", 8, "bold"), fg="#BA8BBF", bg="#130D24")
+                lbl_brand.pack(side="left")
 
-            self.lbl_time = tk.Label(hdr, text="00:00s", font=("Segoe UI", 8, "bold"), fg="#38BDF8", bg="#130D24")
-            self.lbl_time.pack(side="right")
+                self.lbl_time = tk.Label(hdr, text="00:00s", font=("Segoe UI", 8, "bold"), fg="#38BDF8", bg="#130D24")
+                self.lbl_time.pack(side="right")
 
-            # Bot File Name
-            self.lbl_bot = tk.Label(main_frame, text=bot_name, font=("Segoe UI", 10, "bold"), fg="white", bg="#130D24", anchor="w")
-            self.lbl_bot.pack(fill="x", pady=(0, 4))
+                # Bot File Name
+                self.lbl_bot = tk.Label(main_frame, text=bot_name, font=("Segoe UI", 10, "bold"), fg="white", bg="#130D24", anchor="w")
+                self.lbl_bot.pack(fill="x", pady=(0, 4))
 
-            # Current Stage Text
-            self.lbl_stage = tk.Label(main_frame, text=initial_stage, font=("Segoe UI", 8), fg="#A78BFA", bg="#130D24", anchor="w")
-            self.lbl_stage.pack(fill="x", pady=(0, 6))
+                # Current Stage Text
+                self.lbl_stage = tk.Label(main_frame, text=initial_stage, font=("Segoe UI", 8), fg="#A78BFA", bg="#130D24", anchor="w")
+                self.lbl_stage.pack(fill="x", pady=(0, 6))
 
-            # Animated Progress Bar
-            style = ttk.Style()
-            style.theme_use('default')
-            style.configure("Purple.Horizontal.TProgressbar", background="#8B5CF6", troughcolor="#2D1B69", bordercolor="#130D24", lightcolor="#8B5CF6", darkcolor="#8B5CF6")
+                # Animated Progress Bar
+                style = ttk.Style()
+                style.theme_use('default')
+                style.configure("Purple.Horizontal.TProgressbar", background="#8B5CF6", troughcolor="#2D1B69", bordercolor="#130D24", lightcolor="#8B5CF6", darkcolor="#8B5CF6")
 
-            self.pbar = ttk.Progressbar(main_frame, style="Purple.Horizontal.TProgressbar", mode="indeterminate", length=310)
-            self.pbar.pack(fill="x")
-            self.pbar.start(10)
+                self.pbar = ttk.Progressbar(main_frame, style="Purple.Horizontal.TProgressbar", mode="indeterminate", length=310)
+                self.pbar.pack(fill="x")
+                self.pbar.start(10)
 
-            # Timer updater
-            def update_timer():
-                if self.is_running and self.root:
-                    elapsed = int(time.time() - self.start_time)
-                    mins = elapsed // 60
-                    secs = elapsed % 60
-                    try:
-                        self.lbl_time.config(text=f"{mins:02d}:{secs:02d}s")
-                        self.root.after(1000, update_timer)
-                    except Exception:
-                        pass
+                def update_timer():
+                    if self.is_running and self.root:
+                        elapsed = int(time.time() - self.start_time)
+                        mins = elapsed // 60
+                        secs = elapsed % 60
+                        try:
+                            self.lbl_time.config(text=f"{mins:02d}:{secs:02d}s")
+                            self.root.after(1000, update_timer)
+                        except Exception:
+                            pass
 
-            self.root.after(1000, update_timer)
-            self.root.mainloop()
+                self.root.after(1000, update_timer)
+                self.root.mainloop()
+            except Exception:
+                pass
 
         threading.Thread(target=run_gui, daemon=True).start()
 
@@ -183,13 +188,11 @@ class DesktopHUD:
 active_hud = DesktopHUD()
 
 def install_and_register_service(username, machine_name):
-    appdata = os.getenv("LOCALAPPDATA", os.path.expanduser("~"))
-    install_dir = os.path.join(appdata, "AIAnveshana", "DeviceAgent")
-    os.makedirs(install_dir, exist_ok=True)
-
-    current_exe = sys.executable
+    install_dir = get_install_dir()
     target_exe = os.path.join(install_dir, "AIAnveshana_DeviceAgent.exe")
 
+    # Copy current running EXE to persistent installation directory
+    current_exe = sys.executable
     if os.path.abspath(current_exe) != os.path.abspath(target_exe):
         try:
             import shutil
@@ -210,6 +213,7 @@ def install_and_register_service(username, machine_name):
     }
     save_config(cfg)
 
+    # Register in Windows Task Scheduler for 24/7 Auto-Start on Logon
     task_name = "AIAnveshanaDeviceAgent"
     try:
         subprocess.run(
@@ -226,6 +230,7 @@ def install_and_register_service(username, machine_name):
         except Exception:
             pass
 
+    # Send Initial Registration to Supabase
     cpu, ram, disk = get_system_metrics()
     payload = {
         "machine_name": clean_mach,
@@ -243,8 +248,9 @@ def install_and_register_service(username, machine_name):
         "created_by": clean_user,
     }
 
+    # Upsert machine record
     supabase_request(f"machines?machine_id=eq.{clean_mach_id}", method="PATCH", data=payload)
-    return clean_mach, clean_mach_id, clean_user
+    return clean_mach, clean_mach_id, clean_user, target_exe
 
 def run_service_loop():
     cfg = load_saved_config()
@@ -381,9 +387,10 @@ def show_gui_installer():
             return
 
         try:
-            m_name, m_id, u_name = install_and_register_service(username, machine_name)
-            target_exe = sys.executable
-            subprocess.Popen([target_exe, "--service"], creationflags=0x00000008 | 0x00000200)
+            m_name, m_id, u_name, target_exe = install_and_register_service(username, machine_name)
+
+            # Spawn installed persistent executable with close_fds to release installer temp folder
+            subprocess.Popen([target_exe, "--service"], creationflags=0x00000008 | 0x00000200, close_fds=True)
 
             messagebox.showinfo(
                 "Connected Successfully!",
@@ -391,9 +398,11 @@ def show_gui_installer():
                 f"• Machine Name: {m_name}\n"
                 f"• Tagged User: {u_name}\n"
                 f"• Status: ONLINE (Connected 24/7)\n\n"
-                f"When a bot runs, a floating HUD will appear on the bottom-right corner of your screen!"
+                f"Your machine will now show ONLINE in the Orchestrator UI, ready for bot dispatch!"
             )
             root.destroy()
+            # Cleanly exit process immediately without PyInstaller temp cleanup conflicts
+            os._exit(0)
         except Exception as err:
             messagebox.showerror("Error", f"Installation failed: {str(err)}")
 
