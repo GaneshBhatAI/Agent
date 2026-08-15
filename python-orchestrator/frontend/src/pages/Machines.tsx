@@ -51,15 +51,14 @@ export const Machines: React.FC = () => {
   }, []);
 
   const handleDownload = (filename: string) => {
-    const isProdDocs = window.location.pathname.includes('/products/docs');
-    const isDocs = window.location.pathname.includes('/docs');
-    let prefix = '.';
-    if (isProdDocs) prefix = '/products/docs';
-    else if (isDocs) prefix = '/docs';
-
+    // Guaranteed direct download URL from GitHub Raw Repository
+    const githubRawUrl = `https://github.com/GaneshBhatAI/Agent/raw/master/docs/downloads/${filename}`;
+    
     const link = document.createElement('a');
-    link.href = `${prefix}/downloads/${filename}`;
+    link.href = githubRawUrl;
     link.download = filename;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -100,7 +99,7 @@ export const Machines: React.FC = () => {
             title="Download Standalone 1-Click Windows Executable (.exe)"
           >
             <Download className="h-4 w-4" />
-            <span>Download DeviceAgent.exe</span>
+            <span>Download DeviceAgent.exe (10 MB)</span>
           </button>
 
           <button

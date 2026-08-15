@@ -21,15 +21,14 @@ export const AddMachineModal: React.FC<AddMachineModalProps> = ({
   const [error, setError] = useState<string | null>(null);
 
   const handleDownload = (filename: string) => {
-    const isProdDocs = window.location.pathname.includes('/products/docs');
-    const isDocs = window.location.pathname.includes('/docs');
-    let prefix = '.';
-    if (isProdDocs) prefix = '/products/docs';
-    else if (isDocs) prefix = '/docs';
-
+    // Guaranteed direct download URL from GitHub Raw Repository
+    const githubRawUrl = `https://github.com/GaneshBhatAI/Agent/raw/master/docs/downloads/${filename}`;
+    
     const link = document.createElement('a');
-    link.href = `${prefix}/downloads/${filename}`;
+    link.href = githubRawUrl;
     link.download = filename;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
