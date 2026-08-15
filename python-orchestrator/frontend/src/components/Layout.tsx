@@ -10,12 +10,16 @@ export const Layout: React.FC = () => {
   const [isAddMachineOpen, setIsAddMachineOpen] = useState<boolean>(false);
 
   return (
-    <div className="flex h-screen overflow-hidden bg-slate-950 text-slate-100">
+    <div className="flex h-screen overflow-hidden bg-[#F8F5FB] text-slate-800 font-sans">
+      {/* Ambient background glow */}
+      <div className="fixed top-0 left-64 w-96 h-96 bg-purple-200/20 rounded-full blur-[120px] pointer-events-none" />
+      <div className="fixed bottom-0 right-0 w-96 h-96 bg-indigo-200/20 rounded-full blur-[120px] pointer-events-none" />
+
       {/* Left Sidebar */}
       <Sidebar />
 
       {/* Main Content Area */}
-      <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
+      <div className="flex flex-col flex-1 min-w-0 overflow-hidden relative z-10">
         {/* Top Navbar */}
         <Navbar
           onOpenRunJob={() => setIsRunJobOpen(true)}

@@ -47,23 +47,23 @@ export const Modal: React.FC<ModalProps> = ({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm transition-opacity animate-fadeIn"
+        className="fixed inset-0 bg-slate-900/30 backdrop-blur-md transition-opacity animate-fadeIn"
         onClick={onClose}
       />
 
       {/* Dialog Container */}
       <div
-        className={`relative w-full ${maxWidthClass} rounded-2xl border border-slate-800 bg-slate-900 shadow-2xl overflow-hidden z-10 animate-scaleUp`}
+        className={`relative w-full ${maxWidthClass} rounded-3xl border border-purple-200 bg-white shadow-2xl shadow-purple-950/15 overflow-hidden z-10 animate-scaleUp`}
       >
         {/* Header */}
-        <div className="flex items-start justify-between border-b border-slate-800 p-6 bg-slate-900/90">
+        <div className="flex items-start justify-between border-b border-purple-100 p-6 bg-purple-50/50">
           <div>
-            <h3 className="text-lg font-bold text-white tracking-tight">{title}</h3>
-            {subtitle && <p className="mt-1 text-xs text-slate-400">{subtitle}</p>}
+            <h3 className="text-lg font-bold text-slate-900 tracking-tight">{title}</h3>
+            {subtitle && <p className="mt-1 text-xs text-purple-700 font-medium">{subtitle}</p>}
           </div>
           <button
             onClick={onClose}
-            className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-800 hover:text-white transition-colors"
+            className="rounded-full p-2 text-slate-400 hover:bg-purple-100 hover:text-purple-900 transition-colors cursor-pointer"
           >
             <X className="h-5 w-5" />
           </button>

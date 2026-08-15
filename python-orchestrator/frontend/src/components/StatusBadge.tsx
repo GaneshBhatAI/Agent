@@ -17,51 +17,51 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
       case 'ONLINE':
       case 'SUCCESS':
         return {
-          bg: 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400',
-          dot: 'bg-emerald-400',
-          glow: 'shadow-[0_0_8px_rgba(52,211,153,0.4)]',
+          bg: 'bg-emerald-50 border-emerald-200 text-emerald-700',
+          dot: 'bg-emerald-500',
+          glow: '',
         };
       case 'RUNNING':
       case 'PREPARING':
       case 'INSTALLING_DEPENDENCIES':
       case 'ASSIGNED':
         return {
-          bg: 'bg-teal-500/10 border-teal-500/30 text-teal-300',
-          dot: 'bg-teal-400',
-          glow: 'shadow-[0_0_8px_rgba(45,212,191,0.5)]',
+          bg: 'bg-purple-50 border-purple-200 text-purple-700',
+          dot: 'bg-purple-500',
+          glow: '',
         };
       case 'BUSY':
         return {
-          bg: 'bg-indigo-500/10 border-indigo-500/30 text-indigo-300',
-          dot: 'bg-indigo-400',
-          glow: 'shadow-[0_0_8px_rgba(129,140,248,0.5)]',
+          bg: 'bg-indigo-50 border-indigo-200 text-indigo-700',
+          dot: 'bg-indigo-500',
+          glow: '',
         };
       case 'QUEUED':
         return {
-          bg: 'bg-amber-500/10 border-amber-500/30 text-amber-300',
-          dot: 'bg-amber-400',
-          glow: 'shadow-[0_0_8px_rgba(251,191,36,0.4)]',
+          bg: 'bg-amber-50 border-amber-200 text-amber-700',
+          dot: 'bg-amber-500',
+          glow: '',
         };
       case 'FAILED':
       case 'TIMEOUT':
         return {
-          bg: 'bg-rose-500/10 border-rose-500/30 text-rose-400',
-          dot: 'bg-rose-400',
-          glow: 'shadow-[0_0_8px_rgba(244,63,94,0.4)]',
+          bg: 'bg-rose-50 border-rose-200 text-rose-700',
+          dot: 'bg-rose-500',
+          glow: '',
         };
       case 'CANCELLED':
       case 'DISABLED':
       case 'OFFLINE':
       default:
         return {
-          bg: 'bg-slate-800/80 border-slate-700 text-slate-400',
-          dot: 'bg-slate-500',
+          bg: 'bg-slate-100 border-slate-200 text-slate-600',
+          dot: 'bg-slate-400',
           glow: '',
         };
     }
   };
 
-  const { bg, dot, glow } = getStyles();
+  const { bg, dot } = getStyles();
   const isAnimated =
     showPulse &&
     ['RUNNING', 'PREPARING', 'INSTALLING_DEPENDENCIES', 'ASSIGNED', 'ONLINE', 'BUSY'].includes(
@@ -69,14 +69,14 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
     );
 
   const sizeClasses = {
-    sm: 'text-xs px-2 py-0.5 gap-1.5',
-    md: 'text-xs px-2.5 py-1 gap-2 font-medium',
-    lg: 'text-sm px-3 py-1.5 gap-2.5 font-semibold',
+    sm: 'text-[11px] px-2 py-0.5 gap-1.5 font-medium',
+    md: 'text-xs px-2.5 py-1 gap-2 font-semibold',
+    lg: 'text-sm px-3 py-1.5 gap-2.5 font-bold',
   }[size];
 
   return (
     <span
-      className={`inline-flex items-center rounded-full border ${bg} ${sizeClasses} tracking-wide transition-all`}
+      className={`inline-flex items-center rounded-full border ${bg} ${sizeClasses} tracking-wide transition-all shadow-xs`}
     >
       <span className="relative flex h-2 w-2">
         {isAnimated && (
@@ -84,7 +84,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
             className={`animate-ping absolute inline-flex h-full w-full rounded-full ${dot} opacity-75`}
           />
         )}
-        <span className={`relative inline-flex rounded-full h-2 w-2 ${dot} ${glow}`} />
+        <span className={`relative inline-flex rounded-full h-2 w-2 ${dot}`} />
       </span>
       <span>{status.replace(/_/g, ' ')}</span>
     </span>

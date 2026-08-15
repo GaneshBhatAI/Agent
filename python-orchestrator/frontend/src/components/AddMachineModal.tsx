@@ -63,154 +63,150 @@ export const AddMachineModal: React.FC<AddMachineModalProps> = ({
 
   const handleReset = () => {
     setTokenData(null);
-    setMachineName('Machine-A');
+    setMachineName('');
     setError(null);
   };
 
   return (
     <Modal
       isOpen={isOpen}
-      onClose={onClose}
-      title="Add Execution Machine"
-      subtitle="Generate registration token and configure worker agent"
+      onClose={() => {
+        handleReset();
+        onClose();
+      }}
+      title="Register Worker Machine"
+      subtitle="Generate a 1-time secure registration token to connect a Windows bot runner"
       maxWidth="2xl"
     >
-      {!tokenData ? (
-        <form onSubmit={handleGenerate} className="space-y-4">
-          {error && (
-            <div className="rounded-xl border border-rose-500/30 bg-rose-500/10 p-3 text-xs text-rose-400">
-              {error}
-            </div>
-          )}
+      <div className="space-y-6">
+        {!tokenData ? (
+          <form onSubmit={handleGenerate} className="space-y-4">
+            {error && (
+              <div className="rounded-xl border border-rose-200 bg-rose-50 p-3 text-xs text-rose-700 font-semibold">
+                {error}
+              </div>
+            )}
 
-          <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1.5 flex items-center gap-1.5">
-              <Server className="h-3.5 w-3.5 text-teal-400" />
-              <span>Machine Identifier / Name</span>
-            </label>
-            <input
-              type="text"
-              required
-              placeholder="e.g. Machine-A, Worker-Windows-01"
-              value={machineName}
-              onChange={(e) => setMachineName(e.target.value)}
-              className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3.5 py-2.5 text-sm text-slate-200 focus:border-teal-500 focus:outline-none"
-            />
-            <p className="mt-1.5 text-xs text-slate-400">
-              Give this execution machine a unique name (e.g. Machine-A, Finance-Bot-Runner).
-            </p>
-          </div>
-
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-800">
-            <button
-              type="button"
-              onClick={onClose}
-              className="rounded-xl border border-slate-700 px-4 py-2.5 text-sm font-semibold text-slate-300 hover:bg-slate-800 transition-colors"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              disabled={isGenerating || !machineName.trim()}
-              className="flex items-center gap-2 rounded-xl bg-teal-500 px-6 py-2.5 text-sm font-bold text-slate-950 shadow-lg shadow-teal-500/20 hover:bg-teal-400 focus:outline-none disabled:opacity-50 transition-all cursor-pointer"
-            >
-              {isGenerating ? (
-                <>
-                  <span className="animate-spin rounded-full h-4 w-4 border-2 border-slate-950 border-t-transparent" />
-                  <span>Generating Token...</span>
-                </>
-              ) : (
-                <>
-                  <Key className="h-4 w-4" />
-                  <span>Generate Registration Token</span>
-                </>
-              )}
-            </button>
-          </div>
-        </form>
-      ) : (
-        <div className="space-y-5 animate-fadeIn">
-          <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4">
-            <div className="flex items-center gap-2 text-emerald-400 font-semibold text-sm mb-1">
-              <Check className="h-4 w-4" />
-              <span>Token Generated for {tokenData.machine_name}</span>
-            </div>
-            <p className="text-xs text-slate-300">
-              Use this registration token to connect your Windows Machine Agent to this Control Room.
-            </p>
-          </div>
-
-          {/* Registration Token Display */}
-          <div>
-            <label className="block text-xs font-semibold text-slate-400 mb-1.5">
-              Registration Token (Single Use)
-            </label>
-            <div className="flex items-center gap-2">
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center gap-1.5">
+                <Server className="h-3.5 w-3.5 text-purple-600" />
+                <span>Machine Friendly Name</span>
+              </label>
               <input
                 type="text"
-                readOnly
-                value={tokenData.token}
-                className="flex-1 rounded-xl border border-slate-700 bg-slate-950 px-3.5 py-2 text-xs font-mono text-teal-300 select-all"
+                required
+                value={machineName}
+                onChange={(e) => setMachineName(e.target.value)}
+                placeholder="e.g. Machine-A, Finance-Bot-01, VM-Prod-Worker"
+                className="w-full rounded-2xl border border-purple-200 bg-purple-50/40 px-4 py-2.5 text-sm text-slate-800 focus:border-purple-600 focus:bg-white focus:outline-none transition-all"
               />
+              <p className="mt-1 text-[11px] text-slate-500 font-medium">
+                Unique identifier to assign jobs and monitor hardware usage.
+              </p>
+            </div>
+
+            <div className="pt-2 flex justify-end gap-3">
               <button
                 type="button"
-                onClick={() => copyToClipboard(tokenData.token, setCopiedToken)}
-                className="flex items-center gap-1.5 rounded-xl border border-slate-700 bg-slate-800 px-3 py-2 text-xs font-medium text-slate-200 hover:bg-slate-700 transition-colors"
+                onClick={onClose}
+                className="rounded-full border border-purple-200 bg-white px-4 py-2 text-xs font-bold text-slate-700 hover:bg-purple-50 cursor-pointer"
               >
-                {copiedToken ? <Check className="h-3.5 w-3.5 text-emerald-400" /> : <Copy className="h-3.5 w-3.5" />}
-                <span>{copiedToken ? 'Copied' : 'Copy'}</span>
+                Cancel
+              </button>
+              <button
+                type="submit"
+                disabled={isGenerating || !machineName.trim()}
+                className="flex items-center gap-2 rounded-full bg-gradient-to-r from-[#6F53A3] to-[#4F3A8A] px-5 py-2 text-xs font-bold text-white shadow-purple-sm hover:from-[#5E4391] hover:to-[#3F2B75] disabled:opacity-50 transition-all cursor-pointer"
+              >
+                {isGenerating ? 'Generating...' : 'Generate Registration Token'}
+              </button>
+            </div>
+          </form>
+        ) : (
+          <div className="space-y-5 animate-fadeIn">
+            {/* Success Token Alert */}
+            <div className="rounded-2xl border border-purple-200 bg-purple-50 p-4 space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-purple-900 flex items-center gap-1.5">
+                  <Key className="h-4 w-4 text-purple-600" />
+                  1-Time Registration Token: {tokenData.machine_name}
+                </span>
+                <span className="text-[10px] font-semibold text-purple-700 bg-purple-100 px-2 py-0.5 rounded-full">
+                  Expires in 24h
+                </span>
+              </div>
+              <div className="flex items-center justify-between rounded-xl bg-white border border-purple-200 p-2.5">
+                <code className="font-mono text-xs text-purple-800 break-all select-all font-semibold">
+                  {tokenData.token}
+                </code>
+                <button
+                  onClick={() => copyToClipboard(tokenData.token, setCopiedToken)}
+                  className="rounded-lg p-1.5 text-purple-700 hover:bg-purple-100 cursor-pointer"
+                  title="Copy Token"
+                >
+                  {copiedToken ? (
+                    <Check className="h-4 w-4 text-emerald-600" />
+                  ) : (
+                    <Copy className="h-4 w-4" />
+                  )}
+                </button>
+              </div>
+            </div>
+
+            {/* PowerShell 1-Click Installer */}
+            <div className="space-y-2">
+              <label className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                <Terminal className="h-4 w-4 text-purple-600" />
+                <span>Option A: Run PowerShell Automated Installer</span>
+              </label>
+              <div className="relative rounded-2xl bg-slate-950 p-3.5 border border-slate-800 shadow-inner">
+                <pre className="font-mono text-xs text-emerald-400 overflow-x-auto whitespace-pre-wrap">
+                  {powershellCommand}
+                </pre>
+                <button
+                  onClick={() => copyToClipboard(powershellCommand, setCopiedScript)}
+                  className="absolute top-2.5 right-2.5 rounded-lg bg-slate-800 p-1.5 text-slate-300 hover:bg-slate-700 hover:text-white cursor-pointer"
+                >
+                  {copiedScript ? (
+                    <Check className="h-4 w-4 text-emerald-400" />
+                  ) : (
+                    <Copy className="h-4 w-4" />
+                  )}
+                </button>
+              </div>
+            </div>
+
+            {/* Manual Run Command */}
+            <div className="space-y-2">
+              <label className="text-xs font-bold text-slate-800">
+                Option B: Manual Python CLI
+              </label>
+              <div className="rounded-2xl bg-slate-950 p-3 border border-slate-800">
+                <pre className="font-mono text-xs text-slate-300 overflow-x-auto whitespace-pre-wrap">
+                  {manualCliCommand}
+                </pre>
+              </div>
+            </div>
+
+            <div className="pt-2 flex justify-end gap-3">
+              <button
+                type="button"
+                onClick={handleReset}
+                className="rounded-full border border-purple-200 bg-white px-4 py-2 text-xs font-bold text-slate-700 hover:bg-purple-50 cursor-pointer"
+              >
+                Register Another
+              </button>
+              <button
+                type="button"
+                onClick={onClose}
+                className="rounded-full bg-gradient-to-r from-[#6F53A3] to-[#4F3A8A] px-5 py-2 text-xs font-bold text-white shadow-purple-sm hover:from-[#5E4391] hover:to-[#3F2B75] cursor-pointer"
+              >
+                Done
               </button>
             </div>
           </div>
-
-          {/* Quick Install Command */}
-          <div>
-            <label className="block text-xs font-semibold text-slate-400 mb-1.5 flex items-center gap-1.5">
-              <Terminal className="h-3.5 w-3.5 text-teal-400" />
-              <span>Option 1: Windows PowerShell Automated Setup</span>
-            </label>
-            <div className="relative rounded-xl border border-slate-800 bg-slate-950 p-3 text-xs font-mono text-slate-300 overflow-x-auto">
-              <pre className="whitespace-pre-wrap">{powershellCommand}</pre>
-              <button
-                type="button"
-                onClick={() => copyToClipboard(powershellCommand, setCopiedScript)}
-                className="absolute right-2.5 top-2.5 rounded-lg border border-slate-700 bg-slate-900 px-2 py-1 text-[11px] text-slate-300 hover:bg-slate-800 flex items-center gap-1"
-              >
-                {copiedScript ? <Check className="h-3 w-3 text-emerald-400" /> : <Copy className="h-3 w-3" />}
-                <span>{copiedScript ? 'Copied' : 'Copy'}</span>
-              </button>
-            </div>
-          </div>
-
-          {/* Option 2: Direct CLI */}
-          <div>
-            <label className="block text-xs font-semibold text-slate-400 mb-1.5 flex items-center gap-1.5">
-              <Terminal className="h-3.5 w-3.5 text-indigo-400" />
-              <span>Option 2: Direct Python Execution</span>
-            </label>
-            <div className="rounded-xl border border-slate-800 bg-slate-950 p-3 text-xs font-mono text-slate-300 overflow-x-auto">
-              <pre className="whitespace-pre-wrap">{manualCliCommand}</pre>
-            </div>
-          </div>
-
-          <div className="flex items-center justify-between pt-4 border-t border-slate-800">
-            <button
-              type="button"
-              onClick={handleReset}
-              className="text-xs text-slate-400 hover:text-slate-200"
-            >
-              Add Another Machine
-            </button>
-            <button
-              type="button"
-              onClick={onClose}
-              className="rounded-xl bg-teal-500 px-5 py-2 text-xs font-bold text-slate-950 hover:bg-teal-400 transition-colors"
-            >
-              Done
-            </button>
-          </div>
-        </div>
-      )}
+        )}
+      </div>
     </Modal>
   );
 };

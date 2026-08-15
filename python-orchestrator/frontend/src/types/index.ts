@@ -44,21 +44,28 @@ export interface MachineRegistrationTokenResponse {
 }
 
 export interface GitHubRepoItem {
-  name: string;
-  full_name: string;
-  owner: string;
-  html_url: string;
+  id?: number;
+  name?: string;
+  repository_name?: string;
+  full_name?: string;
+  owner?: string;
+  github_owner?: string;
+  html_url?: string;
+  url?: string;
+  repository_url?: string;
   description?: string;
-  default_branch: string;
-  private: boolean;
+  default_branch?: string;
+  private?: boolean;
+  is_private?: boolean;
   language?: string;
   updated_at?: string;
 }
 
 export interface GitHubBranchItem {
   name: string;
-  commit_sha: string;
-  protected: boolean;
+  commit_sha?: string;
+  protected?: boolean;
+  is_default?: boolean;
 }
 
 export interface GitHubFileItem {
@@ -66,7 +73,8 @@ export interface GitHubFileItem {
   path: string;
   type: 'file' | 'dir';
   size?: number;
-  is_python: boolean;
+  is_python?: boolean;
+  is_python_file?: boolean;
   is_dependency_file?: boolean;
 }
 
@@ -157,7 +165,7 @@ export interface Schedule {
 export interface Credential {
   id: number;
   name: string;
-  credential_type: 'GITHUB_PAT' | 'GITHUB_APP' | 'API_KEY' | 'GENERIC_SECRET';
+  credential_type: 'GITHUB_PAT' | 'GITHUB_APP' | 'API_KEY' | 'GENERIC_SECRET' | string;
   description?: string;
   created_by: string;
   created_at: string;
@@ -175,14 +183,21 @@ export interface AuditLog {
 }
 
 export interface DashboardStats {
-  machines: {
+  total_machines?: number;
+  online_machines?: number;
+  busy_machines?: number;
+  total_jobs?: number;
+  successful_jobs?: number;
+  failed_jobs?: number;
+  active_schedules?: number;
+  machines?: Machine[] | {
     total: number;
     online: number;
     busy: number;
     offline: number;
     disabled: number;
   };
-  jobs: {
+  jobs?: {
     total_today: number;
     running: number;
     queued: number;
@@ -192,6 +207,6 @@ export interface DashboardStats {
     success_rate_percent: number;
   };
   recent_jobs: Job[];
-  active_schedules_count: number;
-  connected_repos_count: number;
+  active_schedules_count?: number;
+  connected_repos_count?: number;
 }

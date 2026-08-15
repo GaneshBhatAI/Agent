@@ -1,5 +1,5 @@
 import React from 'react';
-import { Play, Plus, LogOut, User as UserIcon } from 'lucide-react';
+import { Play, Plus, LogOut, User as UserIcon, Shield } from 'lucide-react';
 import { authService } from '../services/auth';
 
 interface NavbarProps {
@@ -15,45 +15,48 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenRunJob, onOpenAddMachine }
   };
 
   return (
-    <header className="h-16 border-b border-slate-800 bg-slate-950/80 backdrop-blur-md flex items-center justify-between px-6 shrink-0 z-20">
+    <header className="h-16 border-b border-purple-100 bg-white/80 backdrop-blur-xl flex items-center justify-between px-6 shrink-0 z-20 shadow-[0_4px_20px_rgba(111,83,163,0.02)]">
       <div className="flex items-center gap-3">
-        <h2 className="text-sm font-semibold text-slate-300">
-          Control Room Portal
-        </h2>
+        <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-purple-50 border border-purple-200/80">
+          <Shield className="h-3.5 w-3.5 text-purple-600" />
+          <span className="text-xs font-semibold text-purple-900">
+            Enterprise Control Room
+          </span>
+        </div>
       </div>
 
       <div className="flex items-center gap-3">
         {/* Quick Action: Add Machine */}
         <button
           onClick={onOpenAddMachine}
-          className="flex items-center gap-1.5 rounded-xl border border-slate-700 bg-slate-900 px-3.5 py-2 text-xs font-semibold text-slate-200 hover:border-slate-600 hover:bg-slate-850 transition-colors shadow-sm cursor-pointer"
+          className="flex items-center gap-1.5 rounded-full border border-purple-200 bg-white px-4 py-2 text-xs font-semibold text-slate-700 hover:border-purple-300 hover:bg-purple-50 transition-all shadow-xs cursor-pointer"
         >
-          <Plus className="h-3.5 w-3.5 text-teal-400" />
+          <Plus className="h-3.5 w-3.5 text-purple-600" />
           <span>Add Machine</span>
         </button>
 
         {/* Quick Action: Run Job */}
         <button
           onClick={onOpenRunJob}
-          className="flex items-center gap-1.5 rounded-xl bg-teal-500 px-4 py-2 text-xs font-bold text-slate-950 shadow-lg shadow-teal-500/20 hover:bg-teal-400 transition-all cursor-pointer"
+          className="flex items-center gap-1.5 rounded-full bg-gradient-to-r from-[#6F53A3] to-[#4F3A8A] px-4.5 py-2 text-xs font-bold text-white shadow-purple-sm shadow-purple-500/25 hover:from-[#5E4391] hover:to-[#3F2B75] transition-all cursor-pointer"
         >
-          <Play className="h-3.5 w-3.5 fill-slate-950" />
+          <Play className="h-3.5 w-3.5 fill-white" />
           <span>Run Job</span>
         </button>
 
-        <div className="h-4 w-[1px] bg-slate-800 mx-1" />
+        <div className="h-4 w-[1px] bg-purple-100 mx-1" />
 
         {/* User Info & Logout */}
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 rounded-xl border border-slate-800 bg-slate-900/60 px-3 py-1.5">
-            <div className="rounded-lg bg-slate-800 p-1">
-              <UserIcon className="h-3.5 w-3.5 text-teal-400" />
+        <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2.5 rounded-full border border-purple-200/80 bg-purple-50/70 px-3 py-1.5">
+            <div className="rounded-full bg-gradient-to-r from-purple-500 to-indigo-500 p-1 text-white">
+              <UserIcon className="h-3 w-3" />
             </div>
             <div className="text-left">
-              <p className="text-xs font-semibold text-white leading-tight">
+              <p className="text-xs font-bold text-slate-800 leading-tight">
                 {user?.username || 'Admin'}
               </p>
-              <p className="text-[10px] text-slate-400 font-mono leading-tight">
+              <p className="text-[9.5px] text-purple-600 font-semibold leading-tight">
                 {user?.role || 'ADMIN'}
               </p>
             </div>
@@ -62,7 +65,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenRunJob, onOpenAddMachine }
           <button
             onClick={handleLogout}
             title="Logout"
-            className="rounded-xl border border-slate-800 bg-slate-900 p-2 text-slate-400 hover:bg-slate-850 hover:text-rose-400 transition-colors cursor-pointer"
+            className="rounded-full border border-purple-200 bg-white p-2 text-slate-500 hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200 transition-colors cursor-pointer"
           >
             <LogOut className="h-4 w-4" />
           </button>

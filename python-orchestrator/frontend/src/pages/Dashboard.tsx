@@ -12,9 +12,10 @@ import {
   Clock,
   RefreshCw,
   FolderGit2,
+  Plus,
 } from 'lucide-react';
 import api from '../services/api';
-import { DashboardStats, Job } from '../types';
+import { DashboardStats, Job, Machine } from '../types';
 import { MetricCard } from '../components/MetricCard';
 import { StatusBadge } from '../components/StatusBadge';
 import { WebSocketClient } from '../services/websocket';
@@ -32,7 +33,7 @@ export const Dashboard: React.FC = () => {
 
   const fetchStats = async () => {
     try {
-      const res = await api.get('/dashboard/stats');
+      const res = await api.get('/dashboard');
       setStats(res.data);
     } catch (err) {
       console.error('Failed to fetch dashboard stats', err);
@@ -45,7 +46,6 @@ export const Dashboard: React.FC = () => {
     fetchStats();
     const interval = setInterval(fetchStats, 10000);
 
-    // Subscribe to live machine updates via WebSocket
     const unsubscribe = WebSocketClient.subscribeToMachines(() => {
       fetchStats();
     });
@@ -59,162 +59,227 @@ export const Dashboard: React.FC = () => {
   return (
     <div className="space-y-8 animate-fadeIn">
       {/* Top Banner */}
-      <div className="relative overflow-hidden rounded-3xl border border-slate-800 bg-gradient-to-r from-slate-900 via-slate-900 to-teal-950/40 p-8 shadow-2xl">
+      <div className="relative overflow-hidden rounded-3xl border border-purple-200/80 bg-gradient-to-r from-white via-[#FAF5FC] to-[#F3EEF8] p-8 shadow-[0_4px_25px_rgba(111,83,163,0.06)]">
         <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div className="max-w-xl space-y-2">
-            <div className="inline-flex items-center gap-2 rounded-full border border-teal-500/30 bg-teal-500/10 px-3 py-1 text-xs font-semibold text-teal-300">
-              <Cpu className="h-3.5 w-3.5" />
-              <span>Self-Hosted Python Orchestrator v1.0</span>
+            <div className="inline-flex items-center gap-2 rounded-full border border-purple-200 bg-purple-100/70 px-3 py-1 text-xs font-bold text-purple-800">
+              <Cpu className="h-3.5 w-3.5 text-purple-600" />
+              <span>Ai Anveshana • Agentic Orchestrator</span>
             </div>
-            <h2 className="text-2xl md:text-3xl font-extrabold text-white tracking-tight">
+            <h2 className="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight">
               Enterprise Control Room
             </h2>
-            <p className="text-sm text-slate-300 leading-relaxed">
-              Execute, isolate, and monitor Python scripts & workflows from GitHub across registered Windows worker machines with zero reliance on GitHub Actions.
+            <p className="text-xs md:text-sm text-slate-600 leading-relaxed font-medium">
+              Centrally coordinate and trigger remote Python automation bots across your registered Windows machines directly from GitHub repositories.
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3">
+          {/* Quick Actions */}
+          <div className="flex flex-wrap items-center gap-3 shrink-0">
             <button
               onClick={openAddMachine}
-              className="flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-900/90 px-4 py-2.5 text-xs font-semibold text-slate-200 hover:bg-slate-800 hover:text-white transition-all shadow-sm"
+              className="flex items-center gap-2 rounded-full border border-purple-200 bg-white px-4 py-2.5 text-xs font-bold text-slate-800 shadow-xs hover:border-purple-300 hover:bg-purple-50 transition-all cursor-pointer"
             >
-              <Server className="h-4 w-4 text-teal-400" />
-              <span>Register Worker</span>
+              <Plus className="h-4 w-4 text-purple-600" />
+              <span>Register Machine</span>
             </button>
             <button
               onClick={openRunJob}
-              className="flex items-center gap-2 rounded-xl bg-teal-500 px-5 py-2.5 text-xs font-bold text-slate-950 shadow-lg shadow-teal-500/25 hover:bg-teal-400 transition-all cursor-pointer"
+              className="flex items-center gap-2 rounded-full bg-gradient-to-r from-[#6F53A3] to-[#4F3A8A] px-5 py-2.5 text-xs font-bold text-white shadow-purple-sm hover:from-[#5E4391] hover:to-[#3F2B75] transition-all cursor-pointer"
             >
-              <Play className="h-4 w-4 fill-slate-950" />
+              <Play className="h-4 w-4 fill-white" />
               <span>Dispatch Job</span>
             </button>
           </div>
         </div>
 
-        {/* Ambient background glow */}
-        <div className="absolute -right-12 -top-12 h-64 w-64 rounded-full bg-teal-500/10 blur-3xl pointer-events-none" />
+        {/* Ambient Glow in Banner */}
+        <div className="absolute top-0 right-0 h-64 w-64 rounded-full bg-purple-300/20 blur-[90px] pointer-events-none" />
       </div>
 
-      {/* Machine & Job Overview Stats */}
+      {/* Metrics Row */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <MetricCard
-          title="Online Workers"
-          value={stats?.machines.online ?? 0}
-          subtitle={`${stats?.machines.total ?? 0} total registered`}
+          title="Online Machines"
+          value={`${stats?.online_machines ?? 0} / ${stats?.total_machines ?? 0}`}
+          subtitle={`${stats?.busy_machines ?? 0} currently executing`}
           icon={Server}
-          color="emerald"
-          badge={stats?.machines.busy ? `${stats.machines.busy} BUSY` : undefined}
+          color="purple"
+          badge={stats?.online_machines ? 'Healthy' : 'Standby'}
         />
+
         <MetricCard
-          title="Active Executions"
-          value={stats?.jobs.running ?? 0}
-          subtitle={`${stats?.jobs.queued ?? 0} queued`}
+          title="Total Executions"
+          value={stats?.total_jobs ?? 0}
+          subtitle="Lifetime dispatched runs"
           icon={PlaySquare}
-          color="teal"
-        />
-        <MetricCard
-          title="Jobs Today"
-          value={stats?.jobs.total_today ?? 0}
-          subtitle={`${stats?.jobs.success ?? 0} completed successfully`}
-          icon={CheckCircle2}
           color="indigo"
         />
+
         <MetricCard
-          title="Success Rate"
-          value={`${stats?.jobs.success_rate_percent ?? 100}%`}
-          subtitle={`${stats?.jobs.failed ?? 0} failures today`}
-          icon={TrendingUp}
-          color={stats && stats.jobs.failed > 0 ? 'rose' : 'emerald'}
+          title="Successful Jobs"
+          value={stats?.successful_jobs ?? 0}
+          subtitle={`${
+            stats?.total_jobs
+              ? Math.round(((stats.successful_jobs || 0) / stats.total_jobs) * 100)
+              : 100
+          }% success rate`}
+          icon={CheckCircle2}
+          color="emerald"
+        />
+
+        <MetricCard
+          title="Failed / Timed Out"
+          value={stats?.failed_jobs ?? 0}
+          subtitle="Requiring operator review"
+          icon={AlertTriangle}
+          color="rose"
         />
       </div>
 
-      {/* Recent Jobs Table */}
-      <div className="rounded-2xl border border-slate-800 bg-slate-900/70 backdrop-blur-xl overflow-hidden shadow-xl">
-        <div className="flex items-center justify-between border-b border-slate-800 px-6 py-4">
-          <div>
-            <h3 className="text-base font-bold text-white tracking-tight">
-              Recent Executions
-            </h3>
-            <p className="text-xs text-slate-400">Live stream of latest job runs across worker fleet</p>
+      {/* Recent Dispatches & Machine Telemetry Grid */}
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+        {/* Recent Jobs Table */}
+        <div className="rounded-3xl border border-purple-100 bg-white/85 p-6 shadow-[0_4px_20px_rgba(111,83,163,0.03)] backdrop-blur-xl lg:col-span-2 space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="font-extrabold text-base text-slate-900 flex items-center gap-2">
+                <PlaySquare className="h-4 w-4 text-purple-600" />
+                Recent Executions
+              </h3>
+              <p className="text-xs text-slate-500 font-medium">Real-time status of latest automation jobs</p>
+            </div>
+            <button
+              onClick={() => navigate('/jobs')}
+              className="flex items-center gap-1 text-xs font-bold text-purple-700 hover:text-purple-900"
+            >
+              <span>View all</span>
+              <ArrowRight className="h-3.5 w-3.5" />
+            </button>
           </div>
-          <button
-            onClick={() => navigate('/jobs')}
-            className="flex items-center gap-1.5 text-xs font-semibold text-teal-400 hover:text-teal-300 transition-colors"
-          >
-            <span>View All</span>
-            <ArrowRight className="h-3.5 w-3.5" />
-          </button>
-        </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-950/60 text-slate-400 uppercase tracking-wider font-semibold border-b border-slate-800 text-[11px]">
-              <tr>
-                <th className="px-6 py-3.5">Job ID</th>
-                <th className="px-6 py-3.5">Application</th>
-                <th className="px-6 py-3.5">Machine</th>
-                <th className="px-6 py-3.5">Status</th>
-                <th className="px-6 py-3.5">Duration</th>
-                <th className="px-6 py-3.5">Created</th>
-                <th className="px-6 py-3.5 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-800/60 text-slate-300">
-              {stats?.recent_jobs && stats.recent_jobs.length > 0 ? (
-                stats.recent_jobs.map((job) => (
-                  <tr
-                    key={job.job_id}
-                    onClick={() => navigate(`/jobs/${job.job_id}`)}
-                    className="hover:bg-slate-800/40 cursor-pointer transition-colors"
-                  >
-                    <td className="px-6 py-4 font-mono font-bold text-teal-300">
-                      {job.job_id}
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="font-semibold text-white">{job.repository_name}</div>
-                      <div className="text-[11px] text-slate-400 font-mono">
-                        {job.entry_point} • branch: {job.branch}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 font-mono text-slate-300">
-                      {job.machine_id}
-                    </td>
-                    <td className="px-6 py-4">
-                      <StatusBadge status={job.status} size="sm" />
-                    </td>
-                    <td className="px-6 py-4 font-mono text-slate-400">
-                      {job.duration_seconds !== null && job.duration_seconds !== undefined
-                        ? `${job.duration_seconds}s`
-                        : job.status === 'RUNNING'
-                        ? 'running...'
-                        : '-'}
-                    </td>
-                    <td className="px-6 py-4 text-slate-400">
-                      {formatDistanceToNow(new Date(job.created_at), { addSuffix: true })}
-                    </td>
-                    <td className="px-6 py-4 text-right">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          navigate(`/jobs/${job.job_id}`);
-                        }}
-                        className="rounded-lg border border-slate-700 bg-slate-800 px-3 py-1 text-xs font-medium text-slate-200 hover:bg-slate-700 hover:text-white"
-                      >
-                        Inspect
-                      </button>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs">
+              <thead>
+                <tr className="border-b border-purple-100 text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                  <th className="py-3 px-3">Job ID</th>
+                  <th className="py-3 px-3">Repository & Entry</th>
+                  <th className="py-3 px-3">Machine</th>
+                  <th className="py-3 px-3">Status</th>
+                  <th className="py-3 px-3 text-right">Started</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-purple-50">
+                {isLoading ? (
+                  <tr>
+                    <td colSpan={5} className="py-8 text-center text-slate-400">
+                      Loading execution history...
                     </td>
                   </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan={7} className="px-6 py-12 text-center text-slate-500">
-                    No jobs executed yet. Click <strong>"Dispatch Job"</strong> above to launch your first Python task.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+                ) : !stats?.recent_jobs || stats.recent_jobs.length === 0 ? (
+                  <tr>
+                    <td colSpan={5} className="py-8 text-center text-slate-500 font-medium">
+                      No jobs have been executed yet. Click <strong>Dispatch Job</strong> to start.
+                    </td>
+                  </tr>
+                ) : (
+                  stats.recent_jobs.map((job: Job) => (
+                    <tr
+                      key={job.id}
+                      onClick={() => navigate(`/jobs/${job.job_id}`)}
+                      className="group cursor-pointer transition-colors hover:bg-purple-50/60"
+                    >
+                      <td className="py-3 px-3 font-mono font-bold text-purple-700">
+                        {job.job_id}
+                      </td>
+                      <td className="py-3 px-3">
+                        <div className="font-semibold text-slate-800 flex items-center gap-1.5">
+                          <FolderGit2 className="h-3.5 w-3.5 text-purple-500" />
+                          {job.repository_name}
+                        </div>
+                        <div className="text-[10.5px] font-mono text-slate-500">
+                          {job.entry_point}
+                        </div>
+                      </td>
+                      <td className="py-3 px-3 font-mono text-slate-700 font-medium">{job.machine_id}</td>
+                      <td className="py-3 px-3">
+                        <StatusBadge status={job.status} size="sm" />
+                      </td>
+                      <td className="py-3 px-3 text-right text-slate-500">
+                        {job.started_at
+                          ? formatDistanceToNow(new Date(job.started_at), { addSuffix: true })
+                          : 'Pending'}
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Machine Telemetry Summary */}
+        <div className="rounded-3xl border border-purple-100 bg-white/85 p-6 shadow-[0_4px_20px_rgba(111,83,163,0.03)] backdrop-blur-xl space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="font-extrabold text-base text-slate-900 flex items-center gap-2">
+                <Server className="h-4 w-4 text-purple-600" />
+                Fleet Health
+              </h3>
+              <p className="text-xs text-slate-500 font-medium">Active worker nodes</p>
+            </div>
+            <button
+              onClick={() => navigate('/machines')}
+              className="text-xs font-bold text-purple-700 hover:text-purple-900"
+            >
+              Manage
+            </button>
+          </div>
+
+          <div className="space-y-3">
+            {Array.isArray(stats?.machines) && stats.machines.length > 0 ? (
+              (stats.machines as Machine[]).map((m) => (
+                <div
+                  key={m.id}
+                  onClick={() => navigate(`/machines/${m.machine_id}`)}
+                  className="group flex flex-col gap-2 rounded-2xl border border-purple-100/80 bg-purple-50/40 p-3.5 transition-all hover:bg-purple-50 hover:border-purple-200 cursor-pointer"
+                >
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <span className="font-bold text-xs text-slate-800 group-hover:text-purple-800">
+                        {m.machine_name}
+                      </span>
+                      <p className="font-mono text-[10px] text-slate-500">
+                        {m.hostname || m.machine_id}
+                      </p>
+                    </div>
+                    <StatusBadge status={m.status} size="sm" />
+                  </div>
+
+                  {m.status === 'ONLINE' || m.status === 'BUSY' ? (
+                    <div className="grid grid-cols-3 gap-2 pt-1 border-t border-purple-100/60 text-[10px]">
+                      <div>
+                        <span className="text-slate-500">CPU</span>
+                        <div className="font-mono font-bold text-slate-800">{m.cpu_usage || 0}%</div>
+                      </div>
+                      <div>
+                        <span className="text-slate-500">RAM</span>
+                        <div className="font-mono font-bold text-slate-800">{m.memory_usage || 0}%</div>
+                      </div>
+                      <div>
+                        <span className="text-slate-500">Disk</span>
+                        <div className="font-mono font-bold text-slate-800">{m.disk_usage || 0}%</div>
+                      </div>
+                    </div>
+                  ) : null}
+                </div>
+              ))
+            ) : (
+              <div className="py-8 text-center text-xs text-slate-500">
+                No machines registered yet. Click <strong>Register Machine</strong> to connect.
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

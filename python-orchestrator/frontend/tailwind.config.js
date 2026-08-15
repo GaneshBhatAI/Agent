@@ -9,25 +9,39 @@ export default {
     extend: {
       colors: {
         brand: {
-          50: '#f0fdfa',
-          100: '#ccfbf1',
-          500: '#14b8a6',
-          600: '#0d9488',
-          700: '#0f766e',
+          50: '#FBF8FD',
+          100: '#F5EEF9',
+          200: '#EADCF2',
+          300: '#D9BFE7',
+          400: '#BA8BBF',
+          500: '#8B5CF6',
+          600: '#6F53A3',
+          700: '#4F3A8A',
+          800: '#2D1B69',
+          900: '#1E143C',
         },
-        slate: {
-          850: '#151e2e',
-          900: '#0f172a',
-          950: '#070d19',
+        purple: {
+          50: '#F7F3FB',
+          100: '#EDE5F6',
+          200: '#DACCEE',
+          300: '#C1ABE3',
+          400: '#A482D4',
+          500: '#8B5CF6',
+          600: '#6F53A3',
+          700: '#4F3A8A',
+          800: '#2D1B69',
+          900: '#1E143C',
         }
       },
       fontFamily: {
-        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+        sans: ['Plus Jakarta Sans', 'Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
         mono: ['JetBrains Mono', 'Fira Code', 'Consolas', 'monospace'],
       },
       boxShadow: {
-        'glow': '0 0 20px -5px rgba(20, 184, 166, 0.4)',
-        'glow-indigo': '0 0 20px -5px rgba(99, 102, 241, 0.4)',
+        'purple-sm': '0 2px 10px rgba(111, 83, 163, 0.08)',
+        'purple-md': '0 6px 24px rgba(111, 83, 163, 0.12)',
+        'purple-lg': '0 12px 36px rgba(111, 83, 163, 0.18)',
+        'purple-glow': '0 0 25px rgba(139, 92, 246, 0.35)',
       }
     },
   },

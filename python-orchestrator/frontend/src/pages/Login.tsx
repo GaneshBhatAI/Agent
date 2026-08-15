@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Cpu, Lock, User, AlertCircle, ArrowRight, Sparkles } from 'lucide-react';
+import { Lock, User, AlertCircle, ArrowRight, Sparkles, Shield } from 'lucide-react';
 import { authService } from '../services/auth';
 
 export const Login: React.FC = () => {
@@ -31,38 +31,54 @@ export const Login: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden bg-slate-950">
+    <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden bg-[#F8F5FB]">
       {/* Glow Orbs */}
-      <div className="absolute top-1/4 left-1/4 h-96 w-96 rounded-full bg-teal-500/10 blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/4 h-96 w-96 rounded-full bg-indigo-500/10 blur-[120px] pointer-events-none" />
+      <div className="absolute top-1/4 left-1/4 h-96 w-96 rounded-full bg-purple-400/20 blur-[130px] pointer-events-none" />
+      <div className="absolute bottom-1/4 right-1/4 h-96 w-96 rounded-full bg-indigo-400/20 blur-[130px] pointer-events-none" />
 
       <div className="w-full max-w-md space-y-6 relative z-10">
         {/* Brand Header */}
         <div className="text-center space-y-3">
-          <div className="inline-flex rounded-2xl bg-gradient-to-tr from-teal-600 to-teal-400 p-3.5 shadow-2xl shadow-teal-500/30">
-            <Cpu className="h-8 w-8 text-slate-950 stroke-[2.5]" />
+          <div className="inline-flex rounded-3xl bg-white p-3.5 shadow-purple-md border border-purple-200/80">
+            <svg className="w-10 h-10 shrink-0" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="login_lg1" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#BA8BBF" />
+                  <stop offset="100%" stopColor="#6F53A3" />
+                </linearGradient>
+                <linearGradient id="login_lg2" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#4F3A8A" />
+                  <stop offset="100%" stopColor="#2D1B69" />
+                </linearGradient>
+              </defs>
+              <rect x="0" y="35" width="100" height="30" rx="15" fill="url(#login_lg1)" transform="rotate(45 50 50)" />
+              <circle cx="22" cy="78" r="20" fill="url(#login_lg2)" />
+              <circle cx="78" cy="22" r="20" fill="url(#login_lg2)" />
+            </svg>
           </div>
-          <h1 className="text-2xl font-extrabold text-white tracking-tight">
-            Python GitHub Orchestrator
-          </h1>
-          <p className="text-xs text-slate-400">
-            Enterprise RPA Control Room for Python Automation
-          </p>
+          <div>
+            <h1 className="text-2xl font-black text-slate-900 tracking-tight font-sans">
+              AI <span className="bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">ANVESHANA</span>
+            </h1>
+            <p className="text-xs text-purple-700 font-semibold mt-0.5">
+              Agentic Orchestrator • Enterprise Control Room
+            </p>
+          </div>
         </div>
 
         {/* Login Form Card */}
-        <div className="rounded-3xl border border-slate-800 bg-slate-900/80 p-8 shadow-2xl backdrop-blur-2xl space-y-6">
+        <div className="rounded-3xl border border-purple-200/80 bg-white/90 p-8 shadow-purple-lg backdrop-blur-2xl space-y-6">
           {error && (
-            <div className="flex items-center gap-2.5 rounded-xl border border-rose-500/30 bg-rose-500/10 p-3 text-xs text-rose-400 animate-fadeIn">
-              <AlertCircle className="h-4 w-4 shrink-0" />
-              <span>{error}</span>
+            <div className="flex items-center gap-2.5 rounded-2xl border border-rose-200 bg-rose-50 p-3.5 text-xs text-rose-700">
+              <AlertCircle className="h-4 w-4 shrink-0 text-rose-600" />
+              <span className="font-semibold">{error}</span>
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5 flex items-center gap-1.5">
-                <User className="h-3.5 w-3.5 text-teal-400" />
+              <label className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center gap-1.5">
+                <User className="h-3.5 w-3.5 text-purple-600" />
                 <span>Username</span>
               </label>
               <input
@@ -71,13 +87,13 @@ export const Login: React.FC = () => {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 placeholder="admin"
-                className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-2.5 text-sm text-slate-200 focus:border-teal-500 focus:outline-none"
+                className="w-full rounded-2xl border border-purple-200 bg-purple-50/40 px-4 py-2.5 text-sm text-slate-800 focus:border-purple-600 focus:bg-white focus:outline-none transition-all shadow-2xs font-medium"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5 flex items-center gap-1.5">
-                <Lock className="h-3.5 w-3.5 text-teal-400" />
+              <label className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center gap-1.5">
+                <Lock className="h-3.5 w-3.5 text-purple-600" />
                 <span>Password</span>
               </label>
               <input
@@ -86,18 +102,18 @@ export const Login: React.FC = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-2.5 text-sm text-slate-200 focus:border-teal-500 focus:outline-none font-mono"
+                className="w-full rounded-2xl border border-purple-200 bg-purple-50/40 px-4 py-2.5 text-sm text-slate-800 focus:border-purple-600 focus:bg-white focus:outline-none transition-all font-mono shadow-2xs"
               />
             </div>
 
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full flex items-center justify-center gap-2 rounded-xl bg-teal-500 py-3 text-sm font-bold text-slate-950 shadow-lg shadow-teal-500/25 hover:bg-teal-400 focus:outline-none disabled:opacity-50 transition-all cursor-pointer mt-2"
+              className="w-full flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#6F53A3] to-[#4F3A8A] py-3 text-sm font-bold text-white shadow-purple-md hover:from-[#5E4391] hover:to-[#3F2B75] focus:outline-none disabled:opacity-50 transition-all cursor-pointer mt-3"
             >
               {isLoading ? (
                 <>
-                  <span className="animate-spin rounded-full h-4 w-4 border-2 border-slate-950 border-t-transparent" />
+                  <span className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent" />
                   <span>Authenticating...</span>
                 </>
               ) : (
@@ -110,17 +126,17 @@ export const Login: React.FC = () => {
           </form>
 
           {/* Quick Demo Fill Helper */}
-          <div className="rounded-xl border border-slate-800 bg-slate-950/60 p-3.5 flex items-center justify-between text-xs">
-            <div className="text-slate-400">
-              <span className="font-semibold text-slate-300">Default Admin:</span>
-              <div className="font-mono text-[11px] text-teal-300">admin / Admin123!</div>
+          <div className="rounded-2xl border border-purple-200/70 bg-purple-50/60 p-3.5 flex items-center justify-between text-xs">
+            <div className="text-slate-600">
+              <span className="font-bold text-slate-800">Default Admin:</span>
+              <div className="font-mono text-[11px] text-purple-700 font-semibold">admin / Admin123!</div>
             </div>
             <button
               type="button"
               onClick={handleFillDemo}
-              className="flex items-center gap-1 text-xs text-teal-400 hover:text-teal-300 font-semibold"
+              className="flex items-center gap-1 text-xs text-purple-700 hover:text-purple-900 font-bold px-2.5 py-1 rounded-full bg-white border border-purple-200 shadow-2xs cursor-pointer"
             >
-              <Sparkles className="h-3 w-3" />
+              <Sparkles className="h-3 w-3 text-purple-600" />
               <span>Fill</span>
             </button>
           </div>

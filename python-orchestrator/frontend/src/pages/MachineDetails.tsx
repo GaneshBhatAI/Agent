@@ -59,22 +59,22 @@ export const MachineDetails: React.FC = () => {
       }
       fetchMachineDetails();
     } catch (err) {
-      console.error('Failed to toggle status', err);
+      console.error('Failed to toggle machine', err);
     }
   };
 
   if (isLoading && !machine) {
     return (
-      <div className="flex h-64 items-center justify-center text-slate-500">
-        <span className="animate-spin rounded-full h-6 w-6 border-2 border-teal-500 border-t-transparent mr-3" />
-        Loading machine telemetry...
+      <div className="flex h-96 items-center justify-center text-slate-400">
+        <div className="animate-spin rounded-full h-8 w-8 border-2 border-purple-600 border-t-transparent mr-3" />
+        <span>Loading machine telemetry...</span>
       </div>
     );
   }
 
   if (!machine) {
     return (
-      <div className="rounded-2xl border border-slate-800 bg-slate-900 p-12 text-center text-slate-400">
+      <div className="rounded-3xl border border-purple-100 bg-white p-12 text-center text-slate-500 font-medium">
         Machine not found.
       </div>
     );
@@ -82,172 +82,175 @@ export const MachineDetails: React.FC = () => {
 
   return (
     <div className="space-y-6 animate-fadeIn">
-      {/* Back button & Title */}
-      <div className="flex items-center justify-between">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate('/machines')}
-            className="rounded-xl border border-slate-800 bg-slate-900 p-2 text-slate-400 hover:bg-slate-800 hover:text-white transition-colors"
+            className="rounded-full border border-purple-200 bg-white p-2 text-slate-600 hover:bg-purple-50 hover:text-purple-900 transition-colors cursor-pointer"
           >
             <ArrowLeft className="h-4 w-4" />
           </button>
           <div>
-            <h2 className="text-xl font-bold text-white tracking-tight flex items-center gap-2">
-              <span>{machine.machine_name}</span>
+            <div className="flex items-center gap-2.5">
+              <h2 className="text-2xl font-black text-slate-900 tracking-tight font-sans">
+                {machine.machine_name}
+              </h2>
               <StatusBadge status={machine.status} size="sm" />
-            </h2>
-            <p className="text-xs font-mono text-teal-400">{machine.machine_id}</p>
+            </div>
+            <p className="text-xs text-purple-700 font-mono font-medium">
+              ID: {machine.machine_id} • {machine.operating_system || 'Windows'}
+            </p>
           </div>
         </div>
 
         <div className="flex items-center gap-3">
           <button
             onClick={handleToggleStatus}
-            className="flex items-center gap-1.5 rounded-xl border border-slate-700 bg-slate-900 px-3.5 py-2 text-xs font-semibold text-slate-300 hover:bg-slate-800 transition-colors"
+            className={`flex items-center gap-1.5 rounded-full border px-4 py-2 text-xs font-bold transition-all cursor-pointer ${
+              machine.status === 'DISABLED'
+                ? 'border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100'
+                : 'border-slate-200 bg-white text-slate-700 hover:bg-purple-50'
+            }`}
           >
             <Power className="h-3.5 w-3.5" />
-            <span>{machine.status === 'DISABLED' ? 'Enable' : 'Disable'}</span>
+            <span>{machine.status === 'DISABLED' ? 'Enable Node' : 'Disable Node'}</span>
           </button>
+
           <button
             onClick={() => setIsRunModalOpen(true)}
-            className="flex items-center gap-1.5 rounded-xl bg-teal-500 px-4 py-2 text-xs font-bold text-slate-950 hover:bg-teal-400 transition-all cursor-pointer"
+            className="flex items-center gap-1.5 rounded-full bg-gradient-to-r from-[#6F53A3] to-[#4F3A8A] px-4.5 py-2 text-xs font-bold text-white shadow-purple-sm hover:from-[#5E4391] hover:to-[#3F2B75] transition-all cursor-pointer"
           >
-            <Play className="h-3.5 w-3.5 fill-slate-950" />
-            <span>Run on this Machine</span>
+            <Play className="h-3.5 w-3.5 fill-white" />
+            <span>Run on this Node</span>
           </button>
         </div>
       </div>
 
-      {/* Hardware Telemetry Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      {/* Hardware Telemetry Gauges */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {/* CPU */}
-        <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-5 backdrop-blur-xl">
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
-              CPU Utilization
+        <div className="rounded-3xl border border-purple-100 bg-white/90 p-5 shadow-2xs">
+          <div className="flex items-center justify-between text-xs font-bold text-slate-500 mb-2">
+            <span className="flex items-center gap-1.5 text-slate-800">
+              <Cpu className="h-4 w-4 text-purple-600" />
+              Processor (CPU)
             </span>
-            <Cpu className="h-5 w-5 text-teal-400" />
+            <span className="font-mono text-purple-800 font-extrabold text-sm">{machine.cpu_usage || 0}%</span>
           </div>
-          <div className="text-3xl font-extrabold font-mono text-white mb-2">
-            {machine.cpu_usage ?? 0}%
-          </div>
-          <div className="h-2 w-full bg-slate-800 rounded-full overflow-hidden">
+          <div className="h-2 w-full bg-purple-100 rounded-full overflow-hidden">
             <div
-              className="h-full bg-teal-500 rounded-full transition-all duration-500"
+              className="h-full bg-purple-600 rounded-full transition-all duration-500"
               style={{ width: `${Math.min(machine.cpu_usage || 0, 100)}%` }}
             />
           </div>
         </div>
 
         {/* RAM */}
-        <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-5 backdrop-blur-xl">
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
-              Memory Utilization
+        <div className="rounded-3xl border border-purple-100 bg-white/90 p-5 shadow-2xs">
+          <div className="flex items-center justify-between text-xs font-bold text-slate-500 mb-2">
+            <span className="flex items-center gap-1.5 text-slate-800">
+              <HardDrive className="h-4 w-4 text-indigo-600" />
+              Memory (RAM)
             </span>
-            <HardDrive className="h-5 w-5 text-indigo-400" />
+            <span className="font-mono text-indigo-800 font-extrabold text-sm">{machine.memory_usage || 0}%</span>
           </div>
-          <div className="text-3xl font-extrabold font-mono text-white mb-2">
-            {machine.memory_usage ?? 0}%
-          </div>
-          <div className="h-2 w-full bg-slate-800 rounded-full overflow-hidden">
+          <div className="h-2 w-full bg-indigo-100 rounded-full overflow-hidden">
             <div
-              className="h-full bg-indigo-500 rounded-full transition-all duration-500"
+              className="h-full bg-indigo-600 rounded-full transition-all duration-500"
               style={{ width: `${Math.min(machine.memory_usage || 0, 100)}%` }}
             />
           </div>
         </div>
 
         {/* Disk */}
-        <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-5 backdrop-blur-xl">
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
-              Disk Usage
+        <div className="rounded-3xl border border-purple-100 bg-white/90 p-5 shadow-2xs">
+          <div className="flex items-center justify-between text-xs font-bold text-slate-500 mb-2">
+            <span className="flex items-center gap-1.5 text-slate-800">
+              <Activity className="h-4 w-4 text-emerald-600" />
+              Primary Disk
             </span>
-            <Activity className="h-5 w-5 text-emerald-400" />
+            <span className="font-mono text-emerald-800 font-extrabold text-sm">{machine.disk_usage || 0}%</span>
           </div>
-          <div className="text-3xl font-extrabold font-mono text-white mb-2">
-            {machine.disk_usage ?? 0}%
-          </div>
-          <div className="h-2 w-full bg-slate-800 rounded-full overflow-hidden">
+          <div className="h-2 w-full bg-emerald-100 rounded-full overflow-hidden">
             <div
-              className="h-full bg-emerald-500 rounded-full transition-all duration-500"
+              className="h-full bg-emerald-600 rounded-full transition-all duration-500"
               style={{ width: `${Math.min(machine.disk_usage || 0, 100)}%` }}
             />
           </div>
         </div>
       </div>
 
-      {/* Specifications & Metadata */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="rounded-2xl border border-slate-800 bg-slate-900/70 p-6 space-y-3 font-mono text-xs">
-          <h4 className="font-bold text-sm font-sans text-white border-b border-slate-800 pb-2">
-            System & Runtime Specifications
+      {/* Specifications & Heartbeat Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="rounded-3xl border border-purple-100 bg-white/90 p-6 space-y-3 font-mono text-xs shadow-2xs">
+          <h4 className="font-bold text-xs font-sans text-slate-900 border-b border-purple-100 pb-2">
+            System Environment & Specs
           </h4>
           <div className="flex justify-between py-1">
-            <span className="text-slate-400">Operating System:</span>
-            <span className="text-white">{machine.operating_system || 'Windows'}</span>
+            <span className="text-slate-500 font-sans">Operating System:</span>
+            <span className="text-slate-900 font-bold">{machine.operating_system || 'Windows'}</span>
           </div>
           <div className="flex justify-between py-1">
-            <span className="text-slate-400">Python Version:</span>
-            <span className="text-teal-300 font-semibold">{machine.python_version || '3.12'}</span>
+            <span className="text-slate-500 font-sans">Python Runtime:</span>
+            <span className="text-purple-700 font-bold">{machine.python_version || '3.12'}</span>
           </div>
           <div className="flex justify-between py-1">
-            <span className="text-slate-400">Agent Version:</span>
-            <span className="text-white">v{machine.agent_version || '1.0.0'}</span>
+            <span className="text-slate-500 font-sans">Machine Agent Version:</span>
+            <span className="text-slate-900 font-bold">v{machine.agent_version || '1.0.0'}</span>
           </div>
           <div className="flex justify-between py-1">
-            <span className="text-slate-400">Hostname:</span>
-            <span className="text-white">{machine.hostname || '-'}</span>
+            <span className="text-slate-500 font-sans">Hostname:</span>
+            <span className="text-slate-900 font-bold">{machine.hostname || '-'}</span>
           </div>
           <div className="flex justify-between py-1">
-            <span className="text-slate-400">IP Address:</span>
-            <span className="text-white">{machine.ip_address || '127.0.0.1'}</span>
+            <span className="text-slate-500 font-sans">IP Address:</span>
+            <span className="text-slate-900 font-bold">{machine.ip_address || '127.0.0.1'}</span>
           </div>
         </div>
 
-        <div className="rounded-2xl border border-slate-800 bg-slate-900/70 p-6 space-y-3 font-mono text-xs">
-          <h4 className="font-bold text-sm font-sans text-white border-b border-slate-800 pb-2">
+        <div className="rounded-3xl border border-purple-100 bg-white/90 p-6 space-y-3 font-mono text-xs shadow-2xs">
+          <h4 className="font-bold text-xs font-sans text-slate-900 border-b border-purple-100 pb-2">
             Status & Heartbeat History
           </h4>
           <div className="flex justify-between py-1">
-            <span className="text-slate-400">Current Status:</span>
+            <span className="text-slate-500 font-sans">Current Status:</span>
             <StatusBadge status={machine.status} size="sm" />
           </div>
           <div className="flex justify-between py-1">
-            <span className="text-slate-400">Last Beacon:</span>
-            <span className="text-slate-200">
+            <span className="text-slate-500 font-sans">Last Beacon:</span>
+            <span className="text-slate-800 font-bold">
               {machine.last_heartbeat
                 ? format(new Date(machine.last_heartbeat), 'yyyy-MM-dd HH:mm:ss')
                 : 'Never'}
             </span>
           </div>
           <div className="flex justify-between py-1">
-            <span className="text-slate-400">Registered At:</span>
-            <span className="text-slate-200">
+            <span className="text-slate-500 font-sans">Registered At:</span>
+            <span className="text-slate-800 font-bold">
               {machine.registered_at
                 ? format(new Date(machine.registered_at), 'yyyy-MM-dd HH:mm:ss')
                 : '-'}
             </span>
           </div>
           <div className="flex justify-between py-1">
-            <span className="text-slate-400">Current Running Job:</span>
-            <span className="text-teal-300 font-bold">{machine.current_job_id || 'None (Idle)'}</span>
+            <span className="text-slate-500 font-sans">Current Running Job:</span>
+            <span className="text-purple-700 font-bold">{machine.current_job_id || 'None (Idle)'}</span>
           </div>
         </div>
       </div>
 
       {/* Machine Execution History */}
-      <div className="rounded-2xl border border-slate-800 bg-slate-900/70 overflow-hidden shadow-xl">
-        <div className="border-b border-slate-800 px-6 py-4">
-          <h3 className="text-base font-bold text-white tracking-tight">
+      <div className="rounded-3xl border border-purple-100 bg-white/90 overflow-hidden shadow-2xs">
+        <div className="border-b border-purple-100 bg-purple-50/50 px-6 py-4">
+          <h3 className="text-sm font-bold text-slate-900 tracking-tight font-sans">
             Execution History on {machine.machine_name}
           </h3>
         </div>
 
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-slate-950/60 text-slate-400 uppercase tracking-wider font-semibold border-b border-slate-800 text-[11px]">
+            <thead className="bg-purple-50/30 text-slate-600 uppercase tracking-wider font-bold border-b border-purple-100 text-[11px]">
               <tr>
                 <th className="px-6 py-3.5">Job ID</th>
                 <th className="px-6 py-3.5">Application</th>
@@ -257,40 +260,40 @@ export const MachineDetails: React.FC = () => {
                 <th className="px-6 py-3.5">Executed At</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800/60 text-slate-300">
+            <tbody className="divide-y divide-purple-50 text-slate-700">
               {jobs.length > 0 ? (
                 jobs.map((j) => (
                   <tr
                     key={j.job_id}
                     onClick={() => navigate(`/jobs/${j.job_id}`)}
-                    className="hover:bg-slate-800/40 cursor-pointer transition-colors"
+                    className="hover:bg-purple-50/60 cursor-pointer transition-colors"
                   >
-                    <td className="px-6 py-4 font-mono font-bold text-teal-300">
+                    <td className="px-6 py-4 font-mono font-bold text-purple-700">
                       {j.job_id}
                     </td>
                     <td className="px-6 py-4">
-                      <div className="font-semibold text-white">{j.repository_name}</div>
-                      <div className="text-[11px] text-slate-400 font-mono">
+                      <div className="font-bold text-slate-900">{j.repository_name}</div>
+                      <div className="text-[11px] text-slate-500 font-mono">
                         {j.entry_point}
                       </div>
                     </td>
                     <td className="px-6 py-4">
                       <StatusBadge status={j.status} size="sm" />
                     </td>
-                    <td className="px-6 py-4 font-mono text-slate-400">
+                    <td className="px-6 py-4 font-mono text-slate-500">
                       {j.duration_seconds !== null ? `${j.duration_seconds}s` : '-'}
                     </td>
-                    <td className="px-6 py-4 font-mono">
+                    <td className="px-6 py-4 font-mono font-bold">
                       {j.exit_code !== null ? j.exit_code : '-'}
                     </td>
-                    <td className="px-6 py-4 text-slate-400">
+                    <td className="px-6 py-4 text-slate-500 font-medium">
                       {formatDistanceToNow(new Date(j.created_at), { addSuffix: true })}
                     </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan={6} className="px-6 py-8 text-center text-slate-500">
+                  <td colSpan={6} className="px-6 py-8 text-center text-slate-500 font-medium">
                     No jobs executed on this machine yet.
                   </td>
                 </tr>

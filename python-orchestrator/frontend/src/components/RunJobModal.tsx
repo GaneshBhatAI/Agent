@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Play, GitBranch, Terminal, Server, Plus, Trash2, Cpu, HardDrive, AlertCircle } from 'lucide-react';
+import { Play, GitBranch, Terminal, Server, Plus, Trash2, Cpu, HardDrive, AlertCircle, FolderGit2 } from 'lucide-react';
 import api from '../services/api';
 import { GitHubBranchItem, GitHubFileItem, GitHubRepoItem, Machine } from '../types';
 import { Modal } from './Modal';
@@ -66,34 +66,35 @@ export const RunJobModal: React.FC<RunJobModalProps> = ({
   // Load branches when repo changes
   useEffect(() => {
     if (selectedRepo) {
+      const owner = selectedRepo.github_owner || selectedRepo.owner || 'orchestrator-demo';
+      const name = selectedRepo.repository_name || selectedRepo.name || 'hello-bot';
       api
-        .get(`/github/repositories/${selectedRepo.owner}/${selectedRepo.name}/branches`)
+        .get(`/github/repositories/${owner}/${name}/branches`)
         .then((res) => {
           setBranches(res.data);
-          const defaultB = res.data.find((b: GitHubBranchItem) => b.name === selectedRepo.default_branch);
-          setSelectedBranch(defaultB ? defaultB.name : res.data[0]?.name || 'main');
+          if (res.data.length > 0) {
+            setSelectedBranch(res.data[0].name);
+          }
         })
-        .catch(() => setBranches([{ name: 'main', commit_sha: '', protected: false }]));
-    }
-  }, [selectedRepo]);
+        .catch(() => {
+          setBranches([{ name: 'main', commit_sha: 'a1b2c3d4e5f6', is_default: true }]);
+          setSelectedBranch('main');
+        });
 
-  // Load files to find Python entry points
-  useEffect(() => {
-    if (selectedRepo && selectedBranch) {
       api
-        .get(`/github/repositories/${selectedRepo.owner}/${selectedRepo.name}/files`, {
-          params: { branch: selectedBranch },
-        })
+        .get(`/github/repositories/${owner}/${name}/files?branch=${selectedBranch}`)
         .then((res) => {
           const pyFiles = res.data
-            .filter((f: GitHubFileItem) => f.is_python || f.name.endsWith('.py'))
+            .filter((f: GitHubFileItem) => f.is_python_file || f.name.endsWith('.py'))
             .map((f: GitHubFileItem) => f.path);
           setEntryPoints(pyFiles.length > 0 ? pyFiles : ['main.py']);
           if (!pyFiles.includes(selectedEntryPoint)) {
             setSelectedEntryPoint(pyFiles[0] || 'main.py');
           }
         })
-        .catch(() => setEntryPoints(['main.py']));
+        .catch(() => {
+          setEntryPoints(['main.py', 'app.py', 'bot.py']);
+        });
     }
   }, [selectedRepo, selectedBranch]);
 
@@ -113,41 +114,37 @@ export const RunJobModal: React.FC<RunJobModalProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedRepo) {
-      setError('Please select a repository');
-      return;
-    }
-    if (!selectedMachineId) {
-      setError('Please select a target machine');
+    if (!selectedRepo || !selectedMachineId) {
+      setError('Please select both a repository and a target machine.');
       return;
     }
 
     setIsSubmitting(true);
     setError(null);
 
-    // Format parameters
-    const paramList = parameters
-      .trim()
-      .split(/\s+/)
+    const envMap: Record<string, string> = {};
+    envVars.forEach(({ key, value }) => {
+      if (key.trim()) envMap[key.trim()] = value;
+    });
+
+    const parsedParams = parameters
+      .split(' ')
+      .map((p) => p.trim())
       .filter((p) => p.length > 0);
 
-    // Format environment variables
-    const envDict: Record<string, string> = {};
-    envVars.forEach((ev) => {
-      if (ev.key.trim()) {
-        envDict[ev.key.trim()] = ev.value;
-      }
-    });
+    const repoName = selectedRepo.repository_name || selectedRepo.name;
+    const repoUrl = selectedRepo.repository_url || selectedRepo.url;
 
     try {
       const payload = {
-        repository_name: selectedRepo.name,
-        repository_url: selectedRepo.html_url,
+        repository_id: selectedRepo.id,
+        repository_name: repoName,
+        repository_url: repoUrl,
         branch: selectedBranch,
         entry_point: selectedEntryPoint,
         machine_id: selectedMachineId,
-        parameters: paramList,
-        environment_variables: envDict,
+        parameters: parsedParams,
+        environment_variables: envMap,
         timeout_seconds: timeoutSeconds,
         max_retries: maxRetries,
       };
@@ -156,68 +153,72 @@ export const RunJobModal: React.FC<RunJobModalProps> = ({
       onClose();
       navigate(`/jobs/${res.data.job_id}`);
     } catch (err: any) {
-      setError(err.response?.data?.detail || 'Failed to dispatch job');
+      setError(err.response?.data?.detail || 'Failed to dispatch automation job.');
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const selectedMachine = machines.find((m) => m.machine_id === selectedMachineId);
-
   return (
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="Dispatch Python Application"
-      subtitle="Select repository, entry point, and execution machine"
+      title="Dispatch Python Automation Job"
+      subtitle="Select a repository script to execute remotely on a Windows machine node"
       maxWidth="2xl"
     >
       <form onSubmit={handleSubmit} className="space-y-5">
         {error && (
-          <div className="flex items-center gap-2.5 rounded-xl border border-rose-500/30 bg-rose-500/10 p-3 text-xs text-rose-400">
-            <AlertCircle className="h-4 w-4 shrink-0" />
+          <div className="flex items-center gap-2 rounded-2xl border border-rose-200 bg-rose-50 p-3.5 text-xs text-rose-700 font-semibold">
+            <AlertCircle className="h-4 w-4 shrink-0 text-rose-600" />
             <span>{error}</span>
           </div>
         )}
 
         {/* Repository & Branch Grid */}
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          {/* Repository Selector */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {/* Repo Selector */}
           <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-              GitHub Repository
+            <label className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center gap-1.5">
+              <FolderGit2 className="h-3.5 w-3.5 text-purple-600" />
+              <span>GitHub Repository</span>
             </label>
             <select
-              value={selectedRepo?.name || ''}
+              value={selectedRepo?.repository_name || selectedRepo?.name || ''}
               onChange={(e) => {
-                const found = repos.find((r) => r.name === e.target.value);
+                const found = repos.find(
+                  (r) => (r.repository_name || r.name) === e.target.value
+                );
                 if (found) setSelectedRepo(found);
               }}
-              className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3.5 py-2.5 text-sm text-slate-200 focus:border-teal-500 focus:outline-none"
-              required
+              className="w-full rounded-2xl border border-purple-200 bg-purple-50/40 px-3.5 py-2.5 text-xs text-slate-800 focus:border-purple-600 focus:bg-white focus:outline-none font-medium"
             >
-              {repos.map((r) => (
-                <option key={r.name} value={r.name}>
-                  {r.owner}/{r.name} {r.private ? '🔒' : ''}
-                </option>
-              ))}
+              {repos.map((r) => {
+                const name = r.repository_name || r.name;
+                const owner = r.github_owner || r.owner;
+                return (
+                  <option key={name} value={name}>
+                    {owner}/{name}
+                  </option>
+                );
+              })}
             </select>
           </div>
 
           {/* Branch Selector */}
           <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1.5 flex items-center gap-1.5">
-              <GitBranch className="h-3.5 w-3.5 text-teal-400" />
+            <label className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center gap-1.5">
+              <GitBranch className="h-3.5 w-3.5 text-purple-600" />
               <span>Git Branch</span>
             </label>
             <select
               value={selectedBranch}
               onChange={(e) => setSelectedBranch(e.target.value)}
-              className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3.5 py-2.5 text-sm text-slate-200 focus:border-teal-500 focus:outline-none font-mono"
+              className="w-full rounded-2xl border border-purple-200 bg-purple-50/40 px-3.5 py-2.5 text-xs text-slate-800 focus:border-purple-600 focus:bg-white focus:outline-none font-mono"
             >
               {branches.map((b) => (
                 <option key={b.name} value={b.name}>
-                  {b.name} {b.protected ? '(protected)' : ''}
+                  {b.name}
                 </option>
               ))}
             </select>
@@ -226,34 +227,32 @@ export const RunJobModal: React.FC<RunJobModalProps> = ({
 
         {/* Python Entry Point */}
         <div>
-          <label className="block text-xs font-semibold text-slate-300 mb-1.5 flex items-center gap-1.5">
-            <Terminal className="h-3.5 w-3.5 text-teal-400" />
+          <label className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center gap-1.5">
+            <Terminal className="h-3.5 w-3.5 text-purple-600" />
             <span>Python Entry Point</span>
           </label>
-          <div className="relative">
-            <select
-              value={selectedEntryPoint}
-              onChange={(e) => setSelectedEntryPoint(e.target.value)}
-              className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3.5 py-2.5 text-sm text-slate-200 focus:border-teal-500 focus:outline-none font-mono"
-            >
-              {entryPoints.map((ep) => (
-                <option key={ep} value={ep}>
-                  {ep} (Python script)
-                </option>
-              ))}
-            </select>
-          </div>
+          <select
+            value={selectedEntryPoint}
+            onChange={(e) => setSelectedEntryPoint(e.target.value)}
+            className="w-full rounded-2xl border border-purple-200 bg-purple-50/40 px-3.5 py-2.5 text-xs text-slate-800 focus:border-purple-600 focus:bg-white focus:outline-none font-mono"
+          >
+            {entryPoints.map((ep) => (
+              <option key={ep} value={ep}>
+                {ep} (Python script)
+              </option>
+            ))}
+          </select>
         </div>
 
         {/* Target Execution Machine */}
         <div>
-          <label className="block text-xs font-semibold text-slate-300 mb-1.5 flex items-center gap-1.5">
-            <Server className="h-3.5 w-3.5 text-teal-400" />
+          <label className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center gap-1.5">
+            <Server className="h-3.5 w-3.5 text-purple-600" />
             <span>Target Machine</span>
           </label>
           <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
             {machines.length === 0 ? (
-              <div className="rounded-xl border border-slate-800 bg-slate-950/60 p-4 text-center text-xs text-slate-400">
+              <div className="rounded-2xl border border-purple-100 bg-purple-50/40 p-4 text-center text-xs text-slate-500 font-medium">
                 No machines registered yet. Please register a Machine Agent first.
               </div>
             ) : (
@@ -264,11 +263,11 @@ export const RunJobModal: React.FC<RunJobModalProps> = ({
                   <div
                     key={m.machine_id}
                     onClick={() => setSelectedMachineId(m.machine_id)}
-                    className={`flex items-center justify-between p-3 rounded-xl border cursor-pointer transition-all ${
+                    className={`flex items-center justify-between p-3 rounded-2xl border cursor-pointer transition-all ${
                       isSelected
-                        ? 'border-teal-500 bg-teal-500/10 shadow-[0_0_12px_rgba(20,184,166,0.15)]'
-                        : 'border-slate-800 bg-slate-950 hover:border-slate-700'
-                    } ${m.status === 'DISABLED' ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        ? 'border-purple-500 bg-purple-50/80 shadow-purple-sm'
+                        : 'border-purple-100 bg-white hover:border-purple-200'
+                    }`}
                   >
                     <div className="flex items-center gap-3">
                       <input
@@ -276,26 +275,25 @@ export const RunJobModal: React.FC<RunJobModalProps> = ({
                         name="machine_selection"
                         checked={isSelected}
                         onChange={() => setSelectedMachineId(m.machine_id)}
-                        className="text-teal-500 focus:ring-teal-500"
-                        disabled={m.status === 'DISABLED'}
+                        className="text-purple-600 focus:ring-purple-500 cursor-pointer"
                       />
                       <div>
-                        <p className="text-sm font-semibold text-white">{m.machine_name}</p>
-                        <p className="text-xs text-slate-400 font-mono">
-                          {m.machine_id} • {m.operating_system || 'Windows'} • Python {m.python_version || '3.12'}
+                        <p className="text-xs font-bold text-slate-900">{m.machine_name}</p>
+                        <p className="text-[11px] text-slate-500 font-mono">
+                          {m.machine_id} • {m.operating_system || 'Windows'}
                         </p>
                       </div>
                     </div>
 
                     <div className="flex items-center gap-3">
                       {isOnline && (
-                        <div className="hidden sm:flex items-center gap-3 text-xs text-slate-400 font-mono">
+                        <div className="hidden sm:flex items-center gap-3 text-xs text-slate-600 font-mono">
                           <span className="flex items-center gap-1">
-                            <Cpu className="h-3.5 w-3.5 text-teal-400" />
+                            <Cpu className="h-3.5 w-3.5 text-purple-600" />
                             {m.cpu_usage || 0}%
                           </span>
                           <span className="flex items-center gap-1">
-                            <HardDrive className="h-3.5 w-3.5 text-indigo-400" />
+                            <HardDrive className="h-3.5 w-3.5 text-indigo-600" />
                             {m.memory_usage || 0}%
                           </span>
                         </div>
@@ -311,124 +309,34 @@ export const RunJobModal: React.FC<RunJobModalProps> = ({
 
         {/* Command-Line Arguments */}
         <div>
-          <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+          <label className="block text-xs font-bold text-slate-700 mb-1.5">
             Command-Line Arguments
           </label>
           <input
             type="text"
-            placeholder="e.g. --environment production --date 2026-08-14"
+            placeholder="e.g. --environment production --date 2026-08-15"
             value={parameters}
             onChange={(e) => setParameters(e.target.value)}
-            className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3.5 py-2.5 text-sm text-slate-200 placeholder-slate-500 focus:border-teal-500 focus:outline-none font-mono"
+            className="w-full rounded-2xl border border-purple-200 bg-purple-50/40 px-3.5 py-2.5 text-xs text-slate-800 placeholder-slate-400 focus:border-purple-600 focus:bg-white focus:outline-none font-mono"
           />
         </div>
 
-        {/* Environment Variables */}
-        <div>
-          <div className="flex items-center justify-between mb-1.5">
-            <label className="text-xs font-semibold text-slate-300">
-              Environment Variables
-            </label>
-            <button
-              type="button"
-              onClick={handleAddEnvVar}
-              className="flex items-center gap-1 text-xs text-teal-400 hover:text-teal-300 transition-colors"
-            >
-              <Plus className="h-3.5 w-3.5" />
-              <span>Add Variable</span>
-            </button>
-          </div>
-
-          {envVars.length > 0 ? (
-            <div className="space-y-2">
-              {envVars.map((ev, index) => (
-                <div key={index} className="flex items-center gap-2">
-                  <input
-                    type="text"
-                    placeholder="KEY (e.g. API_ENV)"
-                    value={ev.key}
-                    onChange={(e) => handleUpdateEnvVar(index, 'key', e.target.value)}
-                    className="flex-1 rounded-lg border border-slate-700 bg-slate-950 px-3 py-1.5 text-xs text-slate-200 focus:border-teal-500 focus:outline-none font-mono uppercase"
-                  />
-                  <input
-                    type="text"
-                    placeholder="VALUE"
-                    value={ev.value}
-                    onChange={(e) => handleUpdateEnvVar(index, 'value', e.target.value)}
-                    className="flex-1 rounded-lg border border-slate-700 bg-slate-950 px-3 py-1.5 text-xs text-slate-200 focus:border-teal-500 focus:outline-none font-mono"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveEnvVar(index)}
-                    className="rounded-lg p-1.5 text-slate-500 hover:bg-slate-800 hover:text-rose-400"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </button>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p className="text-xs text-slate-500 italic">No environment variables defined.</p>
-          )}
-        </div>
-
-        {/* Advanced Options Grid */}
-        <div className="grid grid-cols-2 gap-4 border-t border-slate-800 pt-4">
-          <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1">
-              Timeout (Seconds)
-            </label>
-            <input
-              type="number"
-              min="30"
-              max="86400"
-              value={timeoutSeconds}
-              onChange={(e) => setTimeoutSeconds(parseInt(e.target.value) || 1800)}
-              className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-xs text-slate-200 focus:border-teal-500 focus:outline-none font-mono"
-            />
-          </div>
-          <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1">
-              Max Auto-Retries
-            </label>
-            <select
-              value={maxRetries}
-              onChange={(e) => setMaxRetries(parseInt(e.target.value))}
-              className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-xs text-slate-200 focus:border-teal-500 focus:outline-none"
-            >
-              <option value="0">0 (No retries)</option>
-              <option value="1">1 Retry</option>
-              <option value="2">2 Retries</option>
-              <option value="3">3 Retries</option>
-            </select>
-          </div>
-        </div>
-
-        {/* Footer Actions */}
-        <div className="flex items-center justify-end gap-3 border-t border-slate-800 pt-5">
+        {/* Action Buttons */}
+        <div className="pt-2 flex justify-end gap-3 border-t border-purple-100">
           <button
             type="button"
             onClick={onClose}
-            className="rounded-xl border border-slate-700 px-4 py-2.5 text-sm font-semibold text-slate-300 hover:bg-slate-800 transition-colors"
+            className="rounded-full border border-purple-200 bg-white px-4 py-2 text-xs font-bold text-slate-700 hover:bg-purple-50 cursor-pointer"
           >
             Cancel
           </button>
           <button
             type="submit"
             disabled={isSubmitting || !selectedMachineId}
-            className="flex items-center gap-2 rounded-xl bg-teal-500 px-6 py-2.5 text-sm font-bold text-slate-950 shadow-lg shadow-teal-500/20 hover:bg-teal-400 focus:outline-none disabled:opacity-50 transition-all cursor-pointer"
+            className="flex items-center gap-2 rounded-full bg-gradient-to-r from-[#6F53A3] to-[#4F3A8A] px-5 py-2 text-xs font-bold text-white shadow-purple-sm hover:from-[#5E4391] hover:to-[#3F2B75] disabled:opacity-50 transition-all cursor-pointer"
           >
-            {isSubmitting ? (
-              <>
-                <span className="animate-spin rounded-full h-4 w-4 border-2 border-slate-950 border-t-transparent" />
-                <span>Dispatching...</span>
-              </>
-            ) : (
-              <>
-                <Play className="h-4 w-4 fill-slate-950" />
-                <span>Run Application</span>
-              </>
-            )}
+            <Play className="h-3.5 w-3.5 fill-white" />
+            <span>{isSubmitting ? 'Dispatching...' : 'Dispatch Job Now'}</span>
           </button>
         </div>
       </form>

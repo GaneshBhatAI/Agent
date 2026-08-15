@@ -61,56 +61,17 @@ export const JobDetails: React.FC = () => {
     fetchJob();
 
     if (!jobId) return;
+    const unsubscribe = WebSocketClient.subscribeToJobLogs(jobId, (logEntry) => {
+      setLogs((prev) => [...prev, logEntry]);
+    });
 
-    // Connect real-time WebSocket for live logs and status
-    const unsubscribe = WebSocketClient.subscribeToJob(
-      jobId,
-      (newLog: JobLog) => {
-        setLogs((prev) => {
-          // Avoid duplicate log lines if already present
-          if (prev.some((l) => l.id === newLog.id && l.id !== undefined)) {
-            return prev;
-          }
-          return [...prev, newLog];
-        });
-      },
-      (statusData: any) => {
-        setJob((prev) => {
-          if (!prev) return null;
-          const isActive = [
-            'QUEUED',
-            'ASSIGNED',
-            'PREPARING',
-            'INSTALLING_DEPENDENCIES',
-            'RUNNING',
-          ].includes(statusData.status);
-          setIsLive(isActive);
-
-          return {
-            ...prev,
-            status: statusData.status,
-            started_at: statusData.started_at || prev.started_at,
-            completed_at: statusData.completed_at || prev.completed_at,
-            duration_seconds: statusData.duration_seconds || prev.duration_seconds,
-            exit_code: statusData.exit_code !== undefined ? statusData.exit_code : prev.exit_code,
-            error_message: statusData.error_message || prev.error_message,
-          };
-        });
-      }
-    );
-
-    // Poll periodically while active
-    const interval = setInterval(() => {
-      if (isLive) {
-        fetchJob();
-      }
-    }, 4000);
+    const interval = setInterval(fetchJob, 4000);
 
     return () => {
-      unsubscribe();
       clearInterval(interval);
+      unsubscribe();
     };
-  }, [jobId, isLive]);
+  }, [jobId]);
 
   const handleCancelJob = async () => {
     if (!jobId) return;
@@ -133,9 +94,18 @@ export const JobDetails: React.FC = () => {
   };
 
   const handleRunLatest = async () => {
-    if (!jobId) return;
+    if (!job) return;
     try {
-      const res = await api.post(`/jobs/${jobId}/run-latest`);
+      const res = await api.post('/jobs', {
+        repository_id: job.repository_id,
+        repository_name: job.repository_name,
+        repository_url: job.repository_url,
+        branch: job.branch,
+        entry_point: job.entry_point,
+        machine_id: job.machine_id,
+        parameters: job.parameters,
+        environment_variables: job.environment_variables,
+      });
       navigate(`/jobs/${res.data.job_id}`);
     } catch (err) {
       console.error('Failed to run latest job', err);
@@ -144,16 +114,16 @@ export const JobDetails: React.FC = () => {
 
   if (isLoading && !job) {
     return (
-      <div className="flex h-64 items-center justify-center text-slate-500">
-        <span className="animate-spin rounded-full h-6 w-6 border-2 border-teal-500 border-t-transparent mr-3" />
-        Loading execution telemetry...
+      <div className="flex h-96 items-center justify-center text-slate-400">
+        <div className="animate-spin rounded-full h-8 w-8 border-2 border-purple-600 border-t-transparent mr-3" />
+        <span>Loading execution details...</span>
       </div>
     );
   }
 
   if (!job) {
     return (
-      <div className="rounded-2xl border border-slate-800 bg-slate-900 p-12 text-center text-slate-400">
+      <div className="rounded-3xl border border-purple-100 bg-white p-12 text-center text-slate-500 font-medium">
         Job not found.
       </div>
     );
@@ -170,35 +140,35 @@ export const JobDetails: React.FC = () => {
   return (
     <div className="space-y-6 animate-fadeIn">
       {/* Header Bar */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-slate-800 pb-5">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate('/jobs')}
-            className="rounded-xl border border-slate-800 bg-slate-900 p-2 text-slate-400 hover:bg-slate-800 hover:text-white transition-colors"
+            className="rounded-full border border-purple-200 bg-white p-2 text-slate-600 hover:bg-purple-50 hover:text-purple-900 transition-colors cursor-pointer"
           >
             <ArrowLeft className="h-4 w-4" />
           </button>
           <div>
-            <div className="flex items-center gap-3">
-              <h2 className="text-2xl font-extrabold text-white font-mono tracking-tight">
+            <div className="flex items-center gap-2.5">
+              <h2 className="text-xl font-black text-slate-900 font-mono tracking-tight">
                 {job.job_id}
               </h2>
-              <StatusBadge status={job.status} size="lg" />
+              <StatusBadge status={job.status} size="sm" />
             </div>
-            <p className="text-xs text-slate-400 font-mono mt-0.5">
-              {job.repository_name} • {job.entry_point} • Machine: {job.machine_id}
+            <p className="text-xs text-slate-500 font-mono mt-0.5">
+              {job.repository_name} • {job.entry_point}
             </p>
           </div>
         </div>
 
         {/* Action Controls */}
-        <div className="flex flex-wrap items-center gap-2.5">
+        <div className="flex items-center gap-3">
           {isActive ? (
             <button
               onClick={handleCancelJob}
-              className="flex items-center gap-1.5 rounded-xl border border-rose-500/40 bg-rose-500/10 px-4 py-2 text-xs font-bold text-rose-400 hover:bg-rose-500/20 transition-all cursor-pointer"
+              className="flex items-center gap-1.5 rounded-full border border-rose-200 bg-rose-50 px-4 py-2 text-xs font-bold text-rose-700 hover:bg-rose-100 cursor-pointer"
             >
-              <Square className="h-3.5 w-3.5 fill-rose-400" />
+              <Square className="h-3.5 w-3.5 fill-rose-700" />
               <span>Stop Job</span>
             </button>
           ) : (
@@ -206,15 +176,15 @@ export const JobDetails: React.FC = () => {
               <button
                 onClick={handleRetryJob}
                 title="Run again using exact same commit SHA"
-                className="flex items-center gap-1.5 rounded-xl border border-slate-700 bg-slate-900 px-4 py-2 text-xs font-semibold text-slate-200 hover:bg-slate-800 hover:text-white transition-all cursor-pointer"
+                className="flex items-center gap-1.5 rounded-full border border-purple-200 bg-white px-4 py-2 text-xs font-bold text-slate-700 hover:bg-purple-50 transition-all cursor-pointer"
               >
-                <Repeat className="h-3.5 w-3.5 text-teal-400" />
+                <Repeat className="h-3.5 w-3.5 text-purple-600" />
                 <span>Run Again (Same Commit)</span>
               </button>
               <button
                 onClick={handleRunLatest}
                 title="Pull latest commit on branch and execute"
-                className="flex items-center gap-1.5 rounded-xl bg-teal-500 px-4 py-2 text-xs font-bold text-slate-950 hover:bg-teal-400 shadow-lg shadow-teal-500/20 transition-all cursor-pointer"
+                className="flex items-center gap-1.5 rounded-full bg-gradient-to-r from-[#6F53A3] to-[#4F3A8A] px-4.5 py-2 text-xs font-bold text-white shadow-purple-sm hover:from-[#5E4391] hover:to-[#3F2B75] transition-all cursor-pointer"
               >
                 <Sparkles className="h-3.5 w-3.5" />
                 <span>Run Latest</span>
@@ -224,19 +194,19 @@ export const JobDetails: React.FC = () => {
 
           <button
             onClick={fetchJob}
-            className="rounded-xl border border-slate-800 bg-slate-900 p-2 text-slate-400 hover:bg-slate-800 hover:text-white transition-colors"
+            className="rounded-full border border-purple-200 bg-white p-2 text-slate-600 hover:bg-purple-50 cursor-pointer"
           >
-            <RotateCw className="h-4 w-4" />
+            <RotateCw className="h-4 w-4 text-purple-600" />
           </button>
         </div>
       </div>
 
       {/* Error alert banner if failed */}
       {job.error_message && (
-        <div className="flex items-start gap-3 rounded-2xl border border-rose-500/30 bg-rose-500/10 p-4 text-xs text-rose-300 animate-fadeIn">
-          <AlertCircle className="h-5 w-5 text-rose-400 shrink-0 mt-0.5" />
+        <div className="flex items-start gap-3 rounded-2xl border border-rose-200 bg-rose-50 p-4 text-xs text-rose-800 animate-fadeIn">
+          <AlertCircle className="h-5 w-5 text-rose-600 shrink-0 mt-0.5" />
           <div className="space-y-1">
-            <div className="font-bold uppercase tracking-wider text-rose-400">
+            <div className="font-bold uppercase tracking-wider text-rose-700">
               Execution Error [{job.error_type}]
             </div>
             <div className="font-mono">{job.error_message}</div>
@@ -257,118 +227,106 @@ export const JobDetails: React.FC = () => {
         </div>
 
         {/* Right 4 Cols: Detailed Execution Metadata */}
-        <div className="lg:col-span-4 space-y-5">
+        <div className="lg:col-span-4 space-y-4">
           {/* Runtime Stats Card */}
-          <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-5 space-y-3 font-mono text-xs backdrop-blur-xl">
-            <h4 className="font-bold text-sm font-sans text-white border-b border-slate-800 pb-2">
+          <div className="rounded-3xl border border-purple-100 bg-white/90 p-5 space-y-3 font-mono text-xs shadow-2xs">
+            <h4 className="font-bold text-xs font-sans text-slate-900 border-b border-purple-100 pb-2">
               Execution Metrics
             </h4>
             <div className="flex justify-between py-1">
-              <span className="text-slate-400">Status:</span>
+              <span className="text-slate-500 font-sans">Status:</span>
               <StatusBadge status={job.status} size="sm" />
             </div>
             <div className="flex justify-between py-1">
-              <span className="text-slate-400">Exit Code:</span>
+              <span className="text-slate-500 font-sans">Exit Code:</span>
               <span
                 className={`font-bold ${
                   job.exit_code === 0
-                    ? 'text-emerald-400'
+                    ? 'text-emerald-700'
                     : job.exit_code !== null
-                    ? 'text-rose-400'
-                    : 'text-slate-500'
+                    ? 'text-rose-700'
+                    : 'text-slate-400'
                 }`}
               >
                 {job.exit_code !== null && job.exit_code !== undefined ? job.exit_code : 'Running'}
               </span>
             </div>
             <div className="flex justify-between py-1">
-              <span className="text-slate-400">Duration:</span>
-              <span className="text-slate-200">
+              <span className="text-slate-500 font-sans">Duration:</span>
+              <span className="text-slate-800 font-bold">
                 {job.duration_seconds !== null ? `${job.duration_seconds}s` : isActive ? 'running...' : '-'}
               </span>
             </div>
             <div className="flex justify-between py-1">
-              <span className="text-slate-400">Started:</span>
-              <span className="text-slate-200">
+              <span className="text-slate-500 font-sans">Started:</span>
+              <span className="text-slate-800 font-bold">
                 {job.started_at ? format(new Date(job.started_at), 'HH:mm:ss') : '-'}
               </span>
             </div>
             <div className="flex justify-between py-1">
-              <span className="text-slate-400">Completed:</span>
-              <span className="text-slate-200">
+              <span className="text-slate-500 font-sans">Completed:</span>
+              <span className="text-slate-800 font-bold">
                 {job.completed_at ? format(new Date(job.completed_at), 'HH:mm:ss') : '-'}
               </span>
             </div>
             <div className="flex justify-between py-1">
-              <span className="text-slate-400">Created By:</span>
-              <span className="text-slate-200">{job.created_by}</span>
+              <span className="text-slate-500 font-sans">Created By:</span>
+              <span className="text-slate-800 font-bold">{job.created_by}</span>
             </div>
           </div>
 
           {/* Git & Source Code Card */}
-          <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-5 space-y-3 font-mono text-xs backdrop-blur-xl">
-            <h4 className="font-bold text-sm font-sans text-white border-b border-slate-800 pb-2 flex items-center justify-between">
+          <div className="rounded-3xl border border-purple-100 bg-white/90 p-5 space-y-3 font-mono text-xs shadow-2xs">
+            <h4 className="font-bold text-xs font-sans text-slate-900 border-b border-purple-100 pb-2 flex items-center justify-between">
               <span>Source Versioning</span>
               <a
                 href={job.repository_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-slate-400 hover:text-white"
+                className="text-purple-600 hover:text-purple-900"
               >
                 <ExternalLink className="h-3.5 w-3.5" />
               </a>
             </h4>
             <div className="flex justify-between py-1">
-              <span className="text-slate-400">Repository:</span>
-              <span className="text-white font-semibold">{job.repository_name}</span>
+              <span className="text-slate-500 font-sans">Repository:</span>
+              <span className="text-slate-900 font-bold">{job.repository_name}</span>
             </div>
             <div className="flex justify-between py-1">
-              <span className="text-slate-400">Branch:</span>
-              <span className="text-teal-300 font-semibold">{job.branch}</span>
+              <span className="text-slate-500 font-sans">Branch:</span>
+              <span className="text-purple-700 font-bold">{job.branch}</span>
             </div>
             <div className="flex justify-between py-1">
-              <span className="text-slate-400">Commit SHA:</span>
-              <span className="text-indigo-400 font-mono text-[11px] truncate max-w-[140px]">
+              <span className="text-slate-500 font-sans">Commit SHA:</span>
+              <span className="text-indigo-700 font-bold truncate max-w-[140px]">
                 {job.commit_sha ? job.commit_sha.substring(0, 10) : 'resolving...'}
               </span>
             </div>
             <div className="flex justify-between py-1">
-              <span className="text-slate-400">Entry Point:</span>
-              <span className="text-white font-bold">{job.entry_point}</span>
+              <span className="text-slate-500 font-sans">Entry Point:</span>
+              <span className="text-slate-900 font-bold">{job.entry_point}</span>
             </div>
           </div>
 
           {/* Target Machine */}
-          <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-5 space-y-3 font-mono text-xs backdrop-blur-xl">
-            <h4 className="font-bold text-sm font-sans text-white border-b border-slate-800 pb-2">
+          <div className="rounded-3xl border border-purple-100 bg-white/90 p-5 space-y-3 font-mono text-xs shadow-2xs">
+            <h4 className="font-bold text-xs font-sans text-slate-900 border-b border-purple-100 pb-2">
               Assigned Worker Machine
             </h4>
             <div className="flex items-center justify-between py-1">
-              <span className="text-slate-400">Machine ID:</span>
+              <span className="text-slate-500 font-sans">Machine ID:</span>
               <button
                 onClick={() => navigate(`/machines/${job.machine_id}`)}
-                className="text-teal-400 hover:underline font-bold"
+                className="text-purple-700 hover:underline font-bold"
               >
                 {job.machine_id}
               </button>
             </div>
             <div className="flex justify-between py-1">
-              <span className="text-slate-400">Environment:</span>
-              <span className="text-slate-200">Isolated Virtualenv</span>
+              <span className="text-slate-500 font-sans">Environment:</span>
+              <span className="text-slate-800 font-bold">Isolated Virtualenv</span>
             </div>
           </div>
-
-          {/* Command Line Parameters */}
-          {job.parameters && job.parameters.length > 0 && (
-            <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-5 space-y-2 font-mono text-xs">
-              <h4 className="font-bold text-sm font-sans text-white border-b border-slate-800 pb-2">
-                CLI Arguments
-              </h4>
-              <div className="rounded-lg bg-slate-950 p-2 text-slate-300 text-[11px] break-all">
-                {job.parameters.join(' ')}
-              </div>
-            </div>
-          )}
         </div>
       </div>
     </div>

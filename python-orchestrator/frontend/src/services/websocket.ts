@@ -54,6 +54,10 @@ export class WebSocketClient {
     };
   }
 
+  static subscribeToJobLogs(jobId: string, onLog: (log: JobLog) => void): () => void {
+    return this.subscribeToJob(jobId, onLog);
+  }
+
   static subscribeToMachines(onUpdate: (machine: Partial<Machine>) => void): () => void {
     const url = this.getWsUrl('/ws/machines');
     let ws: WebSocket | null = null;
