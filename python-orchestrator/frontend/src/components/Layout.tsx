@@ -19,7 +19,7 @@ export const Layout: React.FC = () => {
       <Sidebar />
 
       {/* Main Content Area */}
-      <div className="flex flex-col flex-1 min-w-0 overflow-hidden relative z-10">
+      <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
         {/* Top Navbar */}
         <Navbar
           onOpenRunJob={() => setIsRunJobOpen(true)}

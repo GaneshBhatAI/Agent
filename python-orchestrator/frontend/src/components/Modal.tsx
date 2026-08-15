@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 
 interface ModalProps {
@@ -43,35 +44,38 @@ export const Modal: React.FC<ModalProps> = ({
     '3xl': 'max-w-3xl',
   }[maxWidth];
 
-  return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
-      {/* Backdrop */}
+  const modalNode = (
+    <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+      {/* Backdrop covering entire screen */}
       <div
-        className="fixed inset-0 bg-slate-950/50 backdrop-blur-md transition-opacity animate-fadeIn"
+        className="fixed inset-0 bg-slate-950/60 backdrop-blur-md transition-opacity animate-fadeIn z-[99998]"
         onClick={onClose}
       />
 
       {/* Dialog Container */}
       <div
-        className={`relative w-full ${maxWidthClass} rounded-3xl border border-purple-200 bg-white shadow-2xl shadow-purple-950/20 overflow-hidden z-10 animate-scaleUp`}
+        className={`relative w-full ${maxWidthClass} rounded-3xl border border-purple-200 bg-white shadow-2xl shadow-purple-950/30 overflow-hidden z-[99999] animate-scaleUp my-8`}
       >
         {/* Header */}
         <div className="flex items-start justify-between border-b border-purple-100 p-6 bg-purple-50/60">
           <div>
-            <h3 className="text-lg font-bold text-slate-900 tracking-tight">{title}</h3>
-            {subtitle && <p className="mt-1 text-xs text-purple-700 font-medium">{subtitle}</p>}
+            <h3 className="text-base font-bold text-slate-900 tracking-tight">{title}</h3>
+            {subtitle && <p className="text-xs text-slate-500 mt-1 leading-relaxed">{subtitle}</p>}
           </div>
           <button
             onClick={onClose}
-            className="rounded-full p-2 text-slate-400 hover:bg-purple-100 hover:text-purple-900 transition-colors cursor-pointer shadow-2xs"
+            className="rounded-full border border-purple-200 bg-white p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 hover:border-rose-200 transition-colors cursor-pointer shadow-2xs"
+            title="Close"
           >
-            <X className="h-5 w-5" />
+            <X className="h-4 w-4" />
           </button>
         </div>
 
-        {/* Content */}
+        {/* Content Body */}
         <div className="p-6">{children}</div>
       </div>
     </div>
   );
+
+  return createPortal(modalNode, document.body);
 };
