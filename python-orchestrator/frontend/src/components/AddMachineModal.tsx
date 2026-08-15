@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { Download, Check, Server, Key, Terminal, ArrowRight, ShieldCheck, Sparkles, AlertCircle, Laptop, Package } from 'lucide-react';
+import { Download, Check, Server, Key, Terminal, ArrowRight, ShieldCheck, Sparkles, AlertCircle, Laptop, Package, Info, ShieldAlert } from 'lucide-react';
 import { Modal } from './Modal';
 import { supabaseService, getActiveUsername } from '../services/supabase';
+
+const EXE_DOWNLOAD_URL = 'https://github.com/GaneshBhatAI/Agent/raw/master/docs/downloads/AIAnveshana_DeviceAgent_Setup.exe';
 
 interface AddMachineModalProps {
   isOpen: boolean;
@@ -19,20 +21,6 @@ export const AddMachineModal: React.FC<AddMachineModalProps> = ({
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
   const [copiedToken, setCopiedToken] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-
-  const handleDownload = (filename: string) => {
-    // Guaranteed direct download URL from GitHub Raw Repository
-    const githubRawUrl = `https://github.com/GaneshBhatAI/Agent/raw/master/docs/downloads/${filename}`;
-    
-    const link = document.createElement('a');
-    link.href = githubRawUrl;
-    link.download = filename;
-    link.target = '_blank';
-    link.rel = 'noopener noreferrer';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
 
   const handleGenerate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -108,15 +96,16 @@ export const AddMachineModal: React.FC<AddMachineModalProps> = ({
               </div>
             </div>
 
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => handleDownload('AIAnveshana_DeviceAgent_Setup.exe')}
-                className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#6F53A3] to-[#4F3A8A] px-5 py-2.5 text-xs font-bold text-white shadow-purple-sm hover:from-[#5E4391] hover:to-[#3F2B75] transition-all cursor-pointer whitespace-nowrap"
-              >
-                <Download className="h-4 w-4" />
-                <span>Download .EXE (10 MB)</span>
-              </button>
-            </div>
+            <a
+              href={EXE_DOWNLOAD_URL}
+              download="AIAnveshana_DeviceAgent_Setup.exe"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#6F53A3] to-[#4F3A8A] px-5 py-2.5 text-xs font-bold text-white shadow-purple-sm hover:from-[#5E4391] hover:to-[#3F2B75] transition-all cursor-pointer whitespace-nowrap"
+            >
+              <Download className="h-4 w-4" />
+              <span>Download .EXE (10 MB)</span>
+            </a>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 text-xs border-t border-purple-100/80">
@@ -134,7 +123,7 @@ export const AddMachineModal: React.FC<AddMachineModalProps> = ({
                 2
               </span>
               <span>
-                <strong className="text-slate-800">Double-Click to Run</strong> — It auto-installs & registers background service.
+                <strong className="text-slate-800">Double-Click to Run</strong> — Click "More info $\rightarrow$ Run anyway" if prompted.
               </span>
             </div>
 
@@ -145,6 +134,14 @@ export const AddMachineModal: React.FC<AddMachineModalProps> = ({
               <span>
                 <strong className="text-slate-800">Connected 24/7</strong> — Live telemetry & bot dispatch ready!
               </span>
+            </div>
+          </div>
+
+          {/* SmartScreen Guidance Note */}
+          <div className="flex items-start gap-2 rounded-2xl bg-purple-100/50 p-3 text-[11px] text-purple-900 border border-purple-200/60 font-medium">
+            <ShieldAlert className="h-4 w-4 text-purple-700 shrink-0 mt-0.5" />
+            <div>
+              <strong>Browser / Windows SmartScreen Tip:</strong> When downloading, click <em>"Keep anyway"</em> in Chrome/Edge, and on Windows SmartScreen click <em>"More info" $\rightarrow$ "Run anyway"</em> to complete installation.
             </div>
           </div>
         </div>

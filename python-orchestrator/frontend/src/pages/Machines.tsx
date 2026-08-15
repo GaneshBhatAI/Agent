@@ -17,11 +17,15 @@ import {
   Clock,
   Sparkles,
   Package,
+  Info,
 } from 'lucide-react';
 import { supabaseService } from '../services/supabase';
 import { Machine } from '../types';
 import { StatusBadge } from '../components/StatusBadge';
 import { formatDistanceToNow } from 'date-fns';
+
+const EXE_DOWNLOAD_URL = 'https://github.com/GaneshBhatAI/Agent/raw/master/docs/downloads/AIAnveshana_DeviceAgent_Setup.exe';
+const ZIP_DOWNLOAD_URL = 'https://github.com/GaneshBhatAI/Agent/raw/master/docs/downloads/AIAnveshana_DeviceAgent_Setup.zip';
 
 export const Machines: React.FC = () => {
   const navigate = useNavigate();
@@ -49,20 +53,6 @@ export const Machines: React.FC = () => {
     const interval = setInterval(fetchMachines, 8000);
     return () => clearInterval(interval);
   }, []);
-
-  const handleDownload = (filename: string) => {
-    // Guaranteed direct download URL from GitHub Raw Repository
-    const githubRawUrl = `https://github.com/GaneshBhatAI/Agent/raw/master/docs/downloads/${filename}`;
-    
-    const link = document.createElement('a');
-    link.href = githubRawUrl;
-    link.download = filename;
-    link.target = '_blank';
-    link.rel = 'noopener noreferrer';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
 
   const handleToggleStatus = async (machine: Machine, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -93,14 +83,17 @@ export const Machines: React.FC = () => {
         </div>
 
         <div className="flex flex-wrap items-center gap-3">
-          <button
-            onClick={() => handleDownload('AIAnveshana_DeviceAgent_Setup.exe')}
+          <a
+            href={EXE_DOWNLOAD_URL}
+            download="AIAnveshana_DeviceAgent_Setup.exe"
+            target="_blank"
+            rel="noopener noreferrer"
             className="flex items-center gap-1.5 rounded-full bg-gradient-to-r from-[#6F53A3] to-[#4F3A8A] px-4.5 py-2 text-xs font-bold text-white shadow-purple-sm hover:from-[#5E4391] hover:to-[#3F2B75] transition-all cursor-pointer"
             title="Download Standalone 1-Click Windows Executable (.exe)"
           >
             <Download className="h-4 w-4" />
             <span>Download DeviceAgent.exe (10 MB)</span>
-          </button>
+          </a>
 
           <button
             onClick={openAddMachine}
@@ -160,13 +153,16 @@ export const Machines: React.FC = () => {
             </p>
           </div>
           <div className="flex flex-wrap justify-center gap-3">
-            <button
-              onClick={() => handleDownload('AIAnveshana_DeviceAgent_Setup.exe')}
+            <a
+              href={EXE_DOWNLOAD_URL}
+              download="AIAnveshana_DeviceAgent_Setup.exe"
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#6F53A3] to-[#4F3A8A] px-6 py-2.5 text-xs font-bold text-white shadow-purple-md hover:from-[#5E4391] hover:to-[#3F2B75] transition-all cursor-pointer"
             >
               <Download className="h-4 w-4" />
               <span>Download DeviceAgent.exe (10 MB)</span>
-            </button>
+            </a>
 
             <button
               onClick={openAddMachine}
