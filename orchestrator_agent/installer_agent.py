@@ -22,6 +22,9 @@ from datetime import datetime, timezone
 import tkinter as tk
 from tkinter import ttk, messagebox
 
+# Clean PyInstaller environment inheritance to prevent _MEI temporary directory locking
+os.environ.pop("_MEIPASS2", None)
+
 DEFAULT_SUPABASE_URL = "https://qwutrfmmcorktztefrja.supabase.co"
 DEFAULT_SUPABASE_KEY = "sb_publishable_E4XKAZgjI27EdpVNP6qC0w_UlcwlTpe"
 
@@ -87,7 +90,6 @@ def supabase_request(endpoint, method="GET", data=None, extra_headers=None):
             body = resp.read().decode("utf-8")
             return json.loads(body) if body else {}
     except urllib.error.HTTPError as e:
-        # If error is about missing created_by column, try stripping created_by
         if data and isinstance(data, dict) and "created_by" in data:
             data_copy = dict(data)
             data_copy.pop("created_by", None)
@@ -97,11 +99,9 @@ def supabase_request(endpoint, method="GET", data=None, extra_headers=None):
         return {}
 
 def upsert_machine(payload):
-    """Upserts machine record to Supabase using POST with resolution=merge-duplicates."""
     headers = {"Prefer": "resolution=merge-duplicates,return=representation"}
     res = supabase_request("machines", method="POST", data=payload, extra_headers=headers)
     if not res:
-        # Fallback to PATCH if already exists
         mach_id = payload.get("machine_id")
         if mach_id:
             supabase_request(f"machines?machine_id=eq.{mach_id}", method="PATCH", data=payload)
@@ -259,11 +259,13 @@ def install_and_register_service(username, machine_name):
         "created_by": clean_user,
     }
 
-    # Upsert machine to Supabase
     upsert_machine(payload)
     return clean_mach, clean_mach_id, clean_user, target_exe
 
 def run_service_loop():
+    # Remove MEIPASS environment variable in background worker
+    os.environ.pop("_MEIPASS2", None)
+
     cfg = load_saved_config()
     username = cfg.get("created_by", "Ganesh")
     machine_name = cfg.get("machine_name", socket.gethostname())
@@ -289,7 +291,6 @@ def run_service_loop():
                 upsert_machine(payload)
                 last_heartbeat = now
 
-            # Check for queued jobs
             jobs = supabase_request("jobs?status=eq.QUEUED&limit=1", method="GET")
             if isinstance(jobs, list) and len(jobs) > 0:
                 job = jobs[0]
@@ -392,7 +393,23 @@ def show_gui_installer():
 
         try:
             m_name, m_id, u_name, target_exe = install_and_register_service(username, machine_name)
-            subprocess.Popen([target_exe, "--service"], creationflags=0x00000008 | 0x00000200, close_fds=True)
+
+            # Prepare completely clean child environment without _MEIPASS2 to avoid temp lock
+            clean_env = dict(os.environ)
+            clean_env.pop("_MEIPASS2", None)
+            clean_env.pop("_MEIPASS", None)
+
+            install_dir = get_install_dir()
+            subprocess.Popen(
+                [target_exe, "--service"],
+                cwd=install_dir,
+                env=clean_env,
+                stdin=subprocess.DEVNULL,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                creationflags=0x08000000 | 0x00000008 | 0x00000200,
+                close_fds=True
+            )
 
             messagebox.showinfo(
                 "Connected Successfully!",
@@ -403,7 +420,6 @@ def show_gui_installer():
                 f"Your machine will now show ONLINE in the Orchestrator UI, ready for bot dispatch!"
             )
             root.destroy()
-            os._exit(0)
         except Exception as err:
             messagebox.showerror("Error", f"Installation failed: {str(err)}")
 
