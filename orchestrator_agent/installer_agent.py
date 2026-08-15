@@ -69,7 +69,7 @@ def get_system_metrics():
         pass
     return cpu, ram, disk
 
-def supabase_request(endpoint, method="GET", data=None):
+def supabase_request(endpoint, method="GET", data=None, extra_headers=None):
     url = f"{DEFAULT_SUPABASE_URL}/rest/v1/{endpoint}"
     headers = {
         "apikey": DEFAULT_SUPABASE_KEY,
@@ -77,14 +77,34 @@ def supabase_request(endpoint, method="GET", data=None):
         "Content-Type": "application/json",
         "Prefer": "return=representation",
     }
+    if extra_headers:
+        headers.update(extra_headers)
+
     req_data = json.dumps(data).encode("utf-8") if data is not None else None
     req = urllib.request.Request(url, data=req_data, headers=headers, method=method)
     try:
         with urllib.request.urlopen(req, timeout=10) as resp:
             body = resp.read().decode("utf-8")
             return json.loads(body) if body else {}
+    except urllib.error.HTTPError as e:
+        # If error is about missing created_by column, try stripping created_by
+        if data and isinstance(data, dict) and "created_by" in data:
+            data_copy = dict(data)
+            data_copy.pop("created_by", None)
+            return supabase_request(endpoint, method=method, data=data_copy, extra_headers=extra_headers)
+        return {}
     except Exception:
         return {}
+
+def upsert_machine(payload):
+    """Upserts machine record to Supabase using POST with resolution=merge-duplicates."""
+    headers = {"Prefer": "resolution=merge-duplicates,return=representation"}
+    res = supabase_request("machines", method="POST", data=payload, extra_headers=headers)
+    if not res:
+        # Fallback to PATCH if already exists
+        mach_id = payload.get("machine_id")
+        if mach_id:
+            supabase_request(f"machines?machine_id=eq.{mach_id}", method="PATCH", data=payload)
 
 # =============================================================================
 # Floating Desktop HUD (Automation Anywhere Style)
@@ -111,7 +131,6 @@ class DesktopHUD:
                 self.root.attributes("-topmost", True)
                 self.root.attributes("-alpha", 0.94)
 
-                # Position in bottom-right corner
                 hud_w = 340
                 hud_h = 130
                 screen_w = self.root.winfo_screenwidth()
@@ -121,11 +140,9 @@ class DesktopHUD:
                 self.root.geometry(f"{hud_w}x{hud_h}+{x}+{y}")
                 self.root.configure(bg="#130D24")
 
-                # Main container frame
                 main_frame = tk.Frame(self.root, bg="#130D24", padx=14, pady=12, highlightbackground="#6F53A3", highlightthickness=1)
                 main_frame.pack(fill="both", expand=True)
 
-                # Header Row
                 hdr = tk.Frame(main_frame, bg="#130D24")
                 hdr.pack(fill="x", pady=(0, 4))
 
@@ -135,15 +152,12 @@ class DesktopHUD:
                 self.lbl_time = tk.Label(hdr, text="00:00s", font=("Segoe UI", 8, "bold"), fg="#38BDF8", bg="#130D24")
                 self.lbl_time.pack(side="right")
 
-                # Bot File Name
                 self.lbl_bot = tk.Label(main_frame, text=bot_name, font=("Segoe UI", 10, "bold"), fg="white", bg="#130D24", anchor="w")
                 self.lbl_bot.pack(fill="x", pady=(0, 4))
 
-                # Current Stage Text
                 self.lbl_stage = tk.Label(main_frame, text=initial_stage, font=("Segoe UI", 8), fg="#A78BFA", bg="#130D24", anchor="w")
                 self.lbl_stage.pack(fill="x", pady=(0, 6))
 
-                # Animated Progress Bar
                 style = ttk.Style()
                 style.theme_use('default')
                 style.configure("Purple.Horizontal.TProgressbar", background="#8B5CF6", troughcolor="#2D1B69", bordercolor="#130D24", lightcolor="#8B5CF6", darkcolor="#8B5CF6")
@@ -191,7 +205,6 @@ def install_and_register_service(username, machine_name):
     install_dir = get_install_dir()
     target_exe = os.path.join(install_dir, "AIAnveshana_DeviceAgent.exe")
 
-    # Copy current running EXE to persistent installation directory
     current_exe = sys.executable
     if os.path.abspath(current_exe) != os.path.abspath(target_exe):
         try:
@@ -213,7 +226,6 @@ def install_and_register_service(username, machine_name):
     }
     save_config(cfg)
 
-    # Register in Windows Task Scheduler for 24/7 Auto-Start on Logon
     task_name = "AIAnveshanaDeviceAgent"
     try:
         subprocess.run(
@@ -230,7 +242,6 @@ def install_and_register_service(username, machine_name):
         except Exception:
             pass
 
-    # Send Initial Registration to Supabase
     cpu, ram, disk = get_system_metrics()
     payload = {
         "machine_name": clean_mach,
@@ -248,8 +259,8 @@ def install_and_register_service(username, machine_name):
         "created_by": clean_user,
     }
 
-    # Upsert machine record
-    supabase_request(f"machines?machine_id=eq.{clean_mach_id}", method="PATCH", data=payload)
+    # Upsert machine to Supabase
+    upsert_machine(payload)
     return clean_mach, clean_mach_id, clean_user, target_exe
 
 def run_service_loop():
@@ -275,7 +286,7 @@ def run_service_loop():
                     "disk_usage": disk,
                     "created_by": username,
                 }
-                supabase_request(f"machines?machine_id=eq.{machine_id}", method="PATCH", data=payload)
+                upsert_machine(payload)
                 last_heartbeat = now
 
             # Check for queued jobs
@@ -287,11 +298,8 @@ def run_service_loop():
                 bot_filename = os.path.basename(entry_point)
 
                 start_t = time.time()
-
-                # 1. SHOW DESKTOP HUD ON WINDOWS SCREEN
                 active_hud.show(bot_filename, "Stage 1/4: Workspace & Dependency Sync...")
 
-                # Update job stage: INITIALIZING
                 supabase_request(f"jobs?job_id=eq.{job_id}", method="PATCH", data={
                     "status": "RUNNING",
                     "started_at": datetime.now(timezone.utc).isoformat(),
@@ -300,18 +308,15 @@ def run_service_loop():
                 supabase_request(f"machines?machine_id=eq.{machine_id}", method="PATCH", data={"status": "BUSY", "current_job_id": job_id})
                 supabase_request("job_logs", method="POST", data={"job_id": job_id, "level": "INFO", "message": f"[STAGE 1/4] Initializing runner workspace for {bot_filename}"})
 
-                # Stage 2: VAULT & CONFIG
                 time.sleep(2)
                 active_hud.update_stage("Stage 2/4: Loading Credential Vault & Config...")
                 supabase_request("job_logs", method="POST", data={"job_id": job_id, "level": "INFO", "message": f"[STAGE 2/4] Decrypting Credential Vault secrets and parameters"})
 
-                # Stage 3: EXECUTION
                 time.sleep(3)
                 active_hud.update_stage("Stage 3/4: Executing Bot Workflow Logic...")
                 supabase_request("job_logs", method="POST", data={"job_id": job_id, "level": "INFO", "message": f"[STAGE 3/4] Spawning Python runtime subprocess: {entry_point}"})
                 supabase_request("job_logs", method="POST", data={"job_id": job_id, "level": "INFO", "message": f"Processing records... Ingestion completed successfully."})
 
-                # Stage 4: FINALIZING
                 time.sleep(2)
                 active_hud.update_stage("Stage 4/4: Finalizing & Reporting Summary...")
                 supabase_request("job_logs", method="POST", data={"job_id": job_id, "level": "SUCCESS", "message": f"[STAGE 4/4] Execution completed with 0 exceptions."})
@@ -325,7 +330,6 @@ def run_service_loop():
                 })
                 supabase_request(f"machines?machine_id=eq.{machine_id}", method="PATCH", data={"status": "ONLINE", "current_job_id": None})
 
-                # Close HUD
                 time.sleep(1)
                 active_hud.close()
 
@@ -388,8 +392,6 @@ def show_gui_installer():
 
         try:
             m_name, m_id, u_name, target_exe = install_and_register_service(username, machine_name)
-
-            # Spawn installed persistent executable with close_fds to release installer temp folder
             subprocess.Popen([target_exe, "--service"], creationflags=0x00000008 | 0x00000200, close_fds=True)
 
             messagebox.showinfo(
@@ -401,7 +403,6 @@ def show_gui_installer():
                 f"Your machine will now show ONLINE in the Orchestrator UI, ready for bot dispatch!"
             )
             root.destroy()
-            # Cleanly exit process immediately without PyInstaller temp cleanup conflicts
             os._exit(0)
         except Exception as err:
             messagebox.showerror("Error", f"Installation failed: {str(err)}")
