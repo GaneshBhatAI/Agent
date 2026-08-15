@@ -287,7 +287,7 @@ export const ConnectRepoModal: React.FC<ConnectRepoModalProps> = ({
                 className="w-full rounded-2xl border border-purple-200 bg-purple-50/40 px-3.5 py-2.5 text-xs text-slate-800 focus:border-purple-600 focus:bg-white focus:outline-none font-mono"
               />
               <p className="text-[10.5px] text-slate-500 mt-1">
-                Your PAT token is stored AES-256 encrypted in your private Credential Vault.
+                Your PAT token is securely stored in your private Credential Vault.
               </p>
             </div>
 

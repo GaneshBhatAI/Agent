@@ -291,11 +291,8 @@ export const Repositories: React.FC = () => {
         <div>
           <h2 className="text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2">
             <FolderGit2 className="h-6 w-6 text-purple-600" />
-            Automation Repository & Bot Explorer
+            Automation Repositories
           </h2>
-          <p className="text-xs text-slate-500 font-medium">
-            Multi-tenant bot workspace • Connect multiple repositories via GitHub PAT • Inspect live code & dispatch bots
-          </p>
         </div>
 
         {/* Tab Switcher & Quick Add Button */}

@@ -69,9 +69,6 @@ export const Dashboard: React.FC = () => {
             <h2 className="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight">
               Enterprise Orchestrator
             </h2>
-            <p className="text-xs md:text-sm text-slate-600 leading-relaxed font-medium">
-              Centrally coordinate and trigger remote Python automation bots across your registered Windows machines directly from GitHub repositories.
-            </p>
           </div>
 
           {/* Quick Actions */}

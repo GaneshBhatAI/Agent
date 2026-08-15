@@ -75,7 +75,7 @@ export const Credentials: React.FC = () => {
         <div>
           <h2 className="text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2">
             <KeyRound className="h-6 w-6 text-purple-600" />
-            AES-256 Encrypted Credential Vault
+            Credential Vault
           </h2>
           <p className="text-xs text-slate-500 font-medium">
             Securely manage GitHub tokens, API keys, database connection strings, and bot secrets
@@ -98,7 +98,7 @@ export const Credentials: React.FC = () => {
         </div>
         <div className="text-xs text-slate-600">
           <span className="font-bold text-slate-800">Credential Vault:</span> All
-          credentials are encrypted at rest using AES-256 (Fernet) keys. Plain-text secrets are
+          credentials are encrypted at rest. Plain-text secrets are
           never exposed in logs or network responses.
         </div>
       </div>
@@ -150,7 +150,7 @@ export const Credentials: React.FC = () => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         title="Store Encrypted Credential"
-        subtitle="Safely store secrets in the AES-256 Vault"
+        subtitle="Safely store secrets in the Credential Vault"
       >
         <form onSubmit={handleCreate} className="space-y-4">
           {error && (
