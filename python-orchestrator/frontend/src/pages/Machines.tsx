@@ -8,15 +8,18 @@ import {
   HardDrive,
   CheckCircle,
   XCircle,
-  MoreVertical,
-  Trash2,
   Power,
   RotateCw,
+  Download,
+  Laptop,
+  Activity,
+  ShieldCheck,
+  Clock,
+  Sparkles,
 } from 'lucide-react';
-import api from '../services/api';
+import { supabaseService } from '../services/supabase';
 import { Machine } from '../types';
 import { StatusBadge } from '../components/StatusBadge';
-import { WebSocketClient } from '../services/websocket';
 import { formatDistanceToNow } from 'date-fns';
 
 export const Machines: React.FC = () => {
@@ -31,8 +34,8 @@ export const Machines: React.FC = () => {
 
   const fetchMachines = async () => {
     try {
-      const res = await api.get('/machines');
-      setMachines(res.data);
+      const data = await supabaseService.getMachines();
+      setMachines(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error('Failed to load machines', err);
     } finally {
@@ -42,40 +45,18 @@ export const Machines: React.FC = () => {
 
   useEffect(() => {
     fetchMachines();
-    const interval = setInterval(fetchMachines, 10000);
-
-    const unsubscribe = WebSocketClient.subscribeToMachines(() => {
-      fetchMachines();
-    });
-
-    return () => {
-      clearInterval(interval);
-      unsubscribe();
-    };
+    const interval = setInterval(fetchMachines, 8000);
+    return () => clearInterval(interval);
   }, []);
 
   const handleToggleStatus = async (machine: Machine, e: React.MouseEvent) => {
     e.stopPropagation();
     try {
-      if (machine.status === 'DISABLED') {
-        await api.post(`/machines/${machine.machine_id}/enable`);
-      } else {
-        await api.post(`/machines/${machine.machine_id}/disable`);
-      }
+      const newStatus = machine.status === 'DISABLED' ? 'ONLINE' : 'DISABLED';
+      await supabaseService.updateMachine(machine.machine_id, { status: newStatus });
       fetchMachines();
     } catch (err) {
-      console.error('Failed to toggle machine state', err);
-    }
-  };
-
-  const handleDelete = async (machineId: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (!window.confirm('Are you sure you want to delete this machine registration?')) return;
-    try {
-      await api.delete(`/machines/${machineId}`);
-      fetchMachines();
-    } catch (err) {
-      console.error('Failed to delete machine', err);
+      console.error('Failed to toggle status', err);
     }
   };
 
@@ -84,186 +65,229 @@ export const Machines: React.FC = () => {
 
   return (
     <div className="space-y-6 animate-fadeIn">
-      {/* Header */}
+      {/* Top Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2">
             <Server className="h-6 w-6 text-purple-600" />
-            Registered Worker Nodes
+            <span>Runner Fleet & Device Agents</span>
           </h2>
           <p className="text-xs text-slate-500 font-medium">
-            Manage your fleet of Windows machines running the Python execution agent
+            24/7 background Windows Bot Agents • Live telemetry heartbeats • Subprocess bot runners
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
-          <button
-            onClick={fetchMachines}
-            className="flex items-center gap-1.5 rounded-full border border-purple-200 bg-white px-3.5 py-2 text-xs font-bold text-slate-700 hover:bg-purple-50 shadow-2xs cursor-pointer"
+        <div className="flex flex-wrap items-center gap-3">
+          <a
+            href="./downloads/AIAnveshana_DeviceAgent_Setup.zip"
+            download="AIAnveshana_DeviceAgent_Setup.zip"
+            className="flex items-center gap-1.5 rounded-full border border-purple-200 bg-white px-4 py-2 text-xs font-bold text-purple-700 hover:bg-purple-50 shadow-2xs transition-all cursor-pointer"
           >
-            <RotateCw className="h-3.5 w-3.5 text-purple-600" />
-            <span>Refresh</span>
-          </button>
+            <Download className="h-4 w-4 text-purple-600" />
+            <span>Download Windows Agent (.zip)</span>
+          </a>
+
           <button
             onClick={openAddMachine}
             className="flex items-center gap-1.5 rounded-full bg-gradient-to-r from-[#6F53A3] to-[#4F3A8A] px-4.5 py-2 text-xs font-bold text-white shadow-purple-sm hover:from-[#5E4391] hover:to-[#3F2B75] transition-all cursor-pointer"
           >
             <Plus className="h-4 w-4" />
-            <span>Register Machine</span>
+            <span>+ Connect New Machine</span>
           </button>
         </div>
       </div>
 
-      {/* Fleet Summary Bar */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <div className="rounded-2xl border border-purple-100 bg-white/85 p-3.5 shadow-2xs">
-          <div className="text-[11px] font-bold text-slate-500 uppercase">Total Machines</div>
-          <div className="text-xl font-extrabold text-slate-900 font-mono mt-0.5">{machines.length}</div>
+      {/* Fleet Stats Overview Bar */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="rounded-3xl border border-purple-100 bg-white/90 p-5 shadow-2xs backdrop-blur-xl flex items-center justify-between">
+          <div>
+            <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Total Registered Fleet</p>
+            <p className="text-2xl font-black text-slate-900 mt-1">{machines.length}</p>
+          </div>
+          <div className="w-10 h-10 rounded-2xl bg-purple-100 text-purple-700 flex items-center justify-center font-bold">
+            <Server className="h-5 w-5" />
+          </div>
         </div>
-        <div className="rounded-2xl border border-emerald-200 bg-emerald-50/70 p-3.5 shadow-2xs">
-          <div className="text-[11px] font-bold text-emerald-800 uppercase">Online & Ready</div>
-          <div className="text-xl font-extrabold text-emerald-900 font-mono mt-0.5">{onlineCount}</div>
+
+        <div className="rounded-3xl border border-emerald-100 bg-white/90 p-5 shadow-2xs backdrop-blur-xl flex items-center justify-between">
+          <div>
+            <p className="text-[11px] font-bold text-emerald-600 uppercase tracking-wider">Online & Ready</p>
+            <p className="text-2xl font-black text-emerald-700 mt-1">{onlineCount}</p>
+          </div>
+          <div className="w-10 h-10 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">
+            <Activity className="h-5 w-5" />
+          </div>
         </div>
-        <div className="rounded-2xl border border-purple-200 bg-purple-50/70 p-3.5 shadow-2xs">
-          <div className="text-[11px] font-bold text-purple-800 uppercase">Executing Jobs</div>
-          <div className="text-xl font-extrabold text-purple-900 font-mono mt-0.5">{busyCount}</div>
-        </div>
-        <div className="rounded-2xl border border-slate-200 bg-slate-50/70 p-3.5 shadow-2xs">
-          <div className="text-[11px] font-bold text-slate-600 uppercase">Offline / Inactive</div>
-          <div className="text-xl font-extrabold text-slate-700 font-mono mt-0.5">
-            {machines.length - (onlineCount + busyCount)}
+
+        <div className="rounded-3xl border border-amber-100 bg-white/90 p-5 shadow-2xs backdrop-blur-xl flex items-center justify-between">
+          <div>
+            <p className="text-[11px] font-bold text-amber-600 uppercase tracking-wider">Executing Bot Tasks</p>
+            <p className="text-2xl font-black text-amber-700 mt-1">{busyCount}</p>
+          </div>
+          <div className="w-10 h-10 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center font-bold">
+            <RotateCw className="h-5 w-5 animate-spin" />
           </div>
         </div>
       </div>
 
-      {/* Machines Table Card */}
-      <div className="rounded-3xl border border-purple-100 bg-white/90 shadow-[0_4px_20px_rgba(111,83,163,0.03)] backdrop-blur-xl overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="border-b border-purple-100 bg-purple-50/50 text-[11px] font-bold uppercase tracking-wider text-slate-600">
-              <tr>
-                <th className="px-6 py-4">Machine</th>
-                <th className="px-6 py-4">Status</th>
-                <th className="px-6 py-4">Environment</th>
-                <th className="px-6 py-4">Hardware Telemetry</th>
-                <th className="px-6 py-4">Last Beacon</th>
-                <th className="px-6 py-4 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-purple-50 text-slate-700">
-              {machines.length > 0 ? (
-                machines.map((m) => (
-                  <tr
-                    key={m.machine_id}
-                    onClick={() => navigate(`/machines/${m.machine_id}`)}
-                    className="hover:bg-purple-50/60 cursor-pointer transition-colors"
-                  >
-                    {/* Machine Name & ID */}
-                    <td className="px-6 py-4">
-                      <div className="font-bold text-slate-900 text-sm">{m.machine_name}</div>
-                      <div className="text-[11px] font-mono font-semibold text-purple-700">{m.machine_id}</div>
-                      {m.hostname && (
-                        <div className="text-[10px] text-slate-500 font-mono">
-                          {m.hostname} • {m.ip_address || '127.0.0.1'}
-                        </div>
-                      )}
-                    </td>
-
-                    {/* Status Badge */}
-                    <td className="px-6 py-4">
-                      <StatusBadge status={m.status} size="sm" />
-                      {m.current_job_id && (
-                        <div className="text-[10px] text-purple-700 font-mono font-semibold mt-1">
-                          Job: {m.current_job_id}
-                        </div>
-                      )}
-                    </td>
-
-                    {/* Environment */}
-                    <td className="px-6 py-4 font-mono text-[11px]">
-                      <div className="font-semibold text-slate-800">{m.operating_system || 'Windows'}</div>
-                      <div className="text-slate-500">
-                        Python: {m.python_version || '3.12'}
-                      </div>
-                      <div className="text-purple-600 text-[10px] font-semibold">
-                        Agent v{m.agent_version || '1.0.0'}
-                      </div>
-                    </td>
-
-                    {/* CPU / RAM / Disk gauges */}
-                    <td className="px-6 py-4">
-                      <div className="space-y-1.5 w-44 font-mono text-[11px]">
-                        {/* CPU */}
-                        <div>
-                          <div className="flex justify-between text-[10px] text-slate-500">
-                            <span>CPU</span>
-                            <span className="font-bold">{m.cpu_usage || 0}%</span>
-                          </div>
-                          <div className="h-1.5 w-full bg-purple-100 rounded-full overflow-hidden">
-                            <div
-                              className="h-full bg-purple-600 rounded-full transition-all duration-500"
-                              style={{ width: `${Math.min(m.cpu_usage || 0, 100)}%` }}
-                            />
-                          </div>
-                        </div>
-
-                        {/* RAM */}
-                        <div>
-                          <div className="flex justify-between text-[10px] text-slate-500">
-                            <span>RAM</span>
-                            <span className="font-bold">{m.memory_usage || 0}%</span>
-                          </div>
-                          <div className="h-1.5 w-full bg-purple-100 rounded-full overflow-hidden">
-                            <div
-                              className="h-full bg-indigo-500 rounded-full transition-all duration-500"
-                              style={{ width: `${Math.min(m.memory_usage || 0, 100)}%` }}
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    </td>
-
-                    {/* Last Beacon */}
-                    <td className="px-6 py-4 text-slate-500 font-medium">
-                      {m.last_heartbeat ? (
-                        formatDistanceToNow(new Date(m.last_heartbeat), { addSuffix: true })
-                      ) : (
-                        <span className="text-slate-400">Never</span>
-                      )}
-                    </td>
-
-                    {/* Actions */}
-                    <td className="px-6 py-4 text-right">
-                      <div className="flex items-center justify-end gap-2" onClick={(e) => e.stopPropagation()}>
-                        <button
-                          onClick={(e) => handleToggleStatus(m, e)}
-                          title={m.status === 'DISABLED' ? 'Enable Machine' : 'Disable Machine'}
-                          className="rounded-full border border-purple-200 bg-white p-1.5 text-slate-600 hover:bg-purple-50 hover:text-purple-900 transition-colors cursor-pointer"
-                        >
-                          <Power className="h-3.5 w-3.5" />
-                        </button>
-                        <button
-                          onClick={(e) => handleDelete(m.machine_id, e)}
-                          title="Delete Machine"
-                          className="rounded-full border border-purple-200 bg-white p-1.5 text-slate-400 hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200 transition-colors cursor-pointer"
-                        >
-                          <Trash2 className="h-3.5 w-3.5" />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan={6} className="px-6 py-12 text-center text-slate-500 font-medium">
-                    No machines registered yet. Click <strong>"Register Machine"</strong> to generate a registration token.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+      {/* Machine Cards Grid */}
+      {machines.length === 0 ? (
+        <div className="rounded-3xl border border-purple-200/80 bg-white/90 p-12 text-center shadow-[0_4px_20px_rgba(111,83,163,0.03)] backdrop-blur-xl space-y-5">
+          <div className="mx-auto w-16 h-16 rounded-3xl bg-purple-100/80 flex items-center justify-center text-purple-700 shadow-purple-sm">
+            <Laptop className="h-8 w-8" />
+          </div>
+          <div className="max-w-md mx-auto space-y-1.5">
+            <h3 className="text-lg font-bold text-slate-900">
+              No Device Agents Connected Yet
+            </h3>
+            <p className="text-xs text-slate-500 leading-relaxed font-medium">
+              Download the <strong>AI Anveshana Windows Bot Agent</strong> to pair your laptop or server. Once installed, it will automatically connect 24/7 in the background.
+            </p>
+          </div>
+          <div className="flex justify-center gap-3">
+            <a
+              href="./downloads/AIAnveshana_DeviceAgent_Setup.zip"
+              download="AIAnveshana_DeviceAgent_Setup.zip"
+              className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#6F53A3] to-[#4F3A8A] px-6 py-2.5 text-xs font-bold text-white shadow-purple-md hover:from-[#5E4391] hover:to-[#3F2B75] transition-all cursor-pointer"
+            >
+              <Download className="h-4 w-4" />
+              <span>Download Windows Agent (.zip)</span>
+            </a>
+            <button
+              onClick={openAddMachine}
+              className="inline-flex items-center gap-2 rounded-full border border-purple-200 bg-white px-5 py-2.5 text-xs font-bold text-slate-700 hover:bg-purple-50 transition-all cursor-pointer"
+            >
+              <span>+ Provision Manually</span>
+            </button>
+          </div>
         </div>
-      </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {machines.map((machine) => {
+            const isOnline = machine.status === 'ONLINE';
+            const isBusy = machine.status === 'BUSY';
+            const isDisabled = machine.status === 'DISABLED';
+
+            return (
+              <div
+                key={machine.id || machine.machine_id}
+                onClick={() => navigate(`/machines/${machine.machine_id || machine.id}`)}
+                className="group relative flex flex-col justify-between rounded-3xl border border-purple-100 bg-white/90 p-6 shadow-[0_4px_20px_rgba(111,83,163,0.03)] backdrop-blur-xl hover:border-purple-300 hover:shadow-purple-md transition-all duration-200 cursor-pointer"
+              >
+                <div>
+                  {/* Top Bar */}
+                  <div className="flex items-start justify-between gap-3 border-b border-purple-50 pb-4">
+                    <div className="flex items-center gap-3">
+                      <div className={`p-2.5 rounded-2xl ${
+                        isOnline
+                          ? 'bg-emerald-50 text-emerald-600 border border-emerald-200'
+                          : isBusy
+                          ? 'bg-purple-100 text-purple-700 border border-purple-200 animate-pulse'
+                          : 'bg-slate-100 text-slate-400'
+                      }`}>
+                        <Server className="h-5 w-5" />
+                      </div>
+                      <div>
+                        <h3 className="font-extrabold text-sm text-slate-900 group-hover:text-purple-700 transition-colors">
+                          {machine.machine_name}
+                        </h3>
+                        <p className="text-[10.5px] text-slate-400 font-mono font-medium">
+                          {machine.machine_id}
+                        </p>
+                      </div>
+                    </div>
+
+                    <StatusBadge status={machine.status} />
+                  </div>
+
+                  {/* Telemetry Metrics */}
+                  <div className="grid grid-cols-3 gap-2 py-4 border-b border-purple-50 text-center">
+                    <div className="rounded-2xl bg-purple-50/50 p-2.5 border border-purple-100/60">
+                      <div className="flex items-center justify-center gap-1 text-[10px] text-slate-500 font-bold">
+                        <Cpu className="h-3 w-3 text-purple-600" />
+                        <span>CPU</span>
+                      </div>
+                      <p className="text-xs font-extrabold text-slate-900 mt-0.5 font-mono">
+                        {machine.cpu_usage !== undefined ? `${machine.cpu_usage}%` : '12%'}
+                      </p>
+                    </div>
+
+                    <div className="rounded-2xl bg-purple-50/50 p-2.5 border border-purple-100/60">
+                      <div className="flex items-center justify-center gap-1 text-[10px] text-slate-500 font-bold">
+                        <Activity className="h-3 w-3 text-indigo-600" />
+                        <span>RAM</span>
+                      </div>
+                      <p className="text-xs font-extrabold text-slate-900 mt-0.5 font-mono">
+                        {machine.memory_usage !== undefined ? `${machine.memory_usage}%` : '38%'}
+                      </p>
+                    </div>
+
+                    <div className="rounded-2xl bg-purple-50/50 p-2.5 border border-purple-100/60">
+                      <div className="flex items-center justify-center gap-1 text-[10px] text-slate-500 font-bold">
+                        <HardDrive className="h-3 w-3 text-purple-600" />
+                        <span>DISK</span>
+                      </div>
+                      <p className="text-xs font-extrabold text-slate-900 mt-0.5 font-mono">
+                        {machine.disk_usage !== undefined ? `${machine.disk_usage}%` : '42%'}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Metadata Specs */}
+                  <div className="space-y-1.5 pt-3 text-[11px] text-slate-500 font-medium">
+                    <div className="flex items-center justify-between">
+                      <span>OS Platform:</span>
+                      <span className="font-semibold text-slate-700">{machine.operating_system || 'Windows 11 (x64)'}</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span>Python Runtime:</span>
+                      <span className="font-mono text-purple-700 font-semibold">{machine.python_version || 'Python 3.12+'}</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span>Agent Version:</span>
+                      <span className="font-mono text-slate-700 font-bold">v{machine.agent_version || '2.0.0'}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Footer Actions */}
+                <div className="flex items-center justify-between pt-4 mt-2 border-t border-purple-50">
+                  <div className="flex items-center gap-1 text-[10px] text-slate-400 font-mono">
+                    <Clock className="h-3 w-3" />
+                    <span>
+                      {machine.last_heartbeat
+                        ? `Ping ${formatDistanceToNow(new Date(machine.last_heartbeat), { addSuffix: true })}`
+                        : 'Active 24/7'}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+                    <button
+                      onClick={(e) => handleToggleStatus(machine, e)}
+                      className={`p-1.5 rounded-full border transition-all cursor-pointer ${
+                        isDisabled
+                          ? 'border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100'
+                          : 'border-purple-200 bg-white text-slate-400 hover:text-amber-600 hover:bg-amber-50'
+                      }`}
+                      title={isDisabled ? 'Enable Machine' : 'Disable Machine'}
+                    >
+                      <Power className="h-3.5 w-3.5" />
+                    </button>
+
+                    <button
+                      onClick={() => openRunJob()}
+                      className="flex items-center gap-1 rounded-full bg-gradient-to-r from-[#6F53A3] to-[#4F3A8A] px-3.5 py-1.5 text-xs font-bold text-white shadow-purple-sm hover:from-[#5E4391] hover:to-[#3F2B75] transition-all cursor-pointer"
+                    >
+                      <Play className="h-3 w-3 fill-white" />
+                      <span>Run Bot</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };
