@@ -13,6 +13,7 @@ import {
   Sparkles,
   ArrowRight,
   Database,
+  CheckCircle2,
 } from 'lucide-react';
 import { Modal } from './Modal';
 import api from '../services/api';
@@ -33,6 +34,7 @@ interface FetchedRepoItem {
   description?: string;
   default_branch: string;
   private: boolean;
+  alreadyConnected?: boolean;
 }
 
 export const ConnectRepoModal: React.FC<ConnectRepoModalProps> = ({
@@ -43,6 +45,7 @@ export const ConnectRepoModal: React.FC<ConnectRepoModalProps> = ({
   const [step, setStep] = useState<'token' | 'select'>('token');
   const [patToken, setPatToken] = useState<string>('');
   const [singleRepoInput, setSingleRepoInput] = useState<string>('');
+  const [existingRepoUrls, setExistingRepoUrls] = useState<Set<string>>(new Set());
   const [fetchedRepos, setFetchedRepos] = useState<FetchedRepoItem[]>([]);
   const [selectedRepoIds, setSelectedRepoIds] = useState<Set<number>>(new Set());
   const [repoSearch, setRepoSearch] = useState<string>('');
@@ -54,11 +57,23 @@ export const ConnectRepoModal: React.FC<ConnectRepoModalProps> = ({
     if (isOpen) {
       setError(null);
       setSuccess(null);
-      // Check if user already has a saved GITHUB_PAT credential in Supabase
-      api.get('/credentials').then((res) => {
-        const found = res.data.find((c: any) => c.credential_type === 'GITHUB_PAT');
-        if (found && found.encrypted_value && found.encrypted_value.startsWith('ghp_')) {
-          setPatToken(found.encrypted_value);
+      // Load user's already connected repos and saved PAT from Supabase
+      Promise.all([
+        api.get('/github/repositories'),
+        api.get('/credentials'),
+      ]).then(([repoRes, credRes]) => {
+        if (Array.isArray(repoRes.data)) {
+          const urls = new Set<string>(
+            repoRes.data.map((r: any) =>
+              (r.repository_url || `${r.github_owner}/${r.repository_name}`).toLowerCase()
+            )
+          );
+          setExistingRepoUrls(urls);
+        }
+
+        const foundToken = credRes.data?.find((c: any) => c.credential_type === 'GITHUB_PAT');
+        if (foundToken && foundToken.encrypted_value && foundToken.encrypted_value.startsWith('ghp_')) {
+          setPatToken(foundToken.encrypted_value);
         }
       }).catch(() => {});
     }
@@ -67,7 +82,7 @@ export const ConnectRepoModal: React.FC<ConnectRepoModalProps> = ({
   const handleFetchReposWithToken = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!patToken.trim() && !singleRepoInput.trim()) {
-      setError('Please provide a GitHub Personal Access Token (PAT) or a specific repository URL.');
+      setError('Please provide a GitHub Personal Access Token (PAT) or target a specific repository URL.');
       return;
     }
 
@@ -82,7 +97,7 @@ export const ConnectRepoModal: React.FC<ConnectRepoModalProps> = ({
         headers.Authorization = `Bearer ${patToken.trim()}`;
       }
 
-      // If user provided a single repo path directly (e.g. GaneshBhatAI/Agent)
+      // If user provided a single repo path directly (e.g. owner/repo)
       if (singleRepoInput.trim()) {
         let clean = singleRepoInput.trim().replace(/^https?:\/\/github\.com\//, '').replace(/\.git$/, '');
         const parts = clean.split('/');
@@ -94,8 +109,10 @@ export const ConnectRepoModal: React.FC<ConnectRepoModalProps> = ({
             throw new Error(`Repository "${owner}/${repo}" not found or private. Check your PAT token.`);
           }
           const item = await ghRes.json();
-          setFetchedRepos([item]);
-          setSelectedRepoIds(new Set([item.id]));
+          const isConn = existingRepoUrls.has(item.html_url.toLowerCase()) || existingRepoUrls.has(`${owner}/${repo}`.toLowerCase());
+          const repoItem: FetchedRepoItem = { ...item, alreadyConnected: isConn };
+          setFetchedRepos([repoItem]);
+          if (!isConn) setSelectedRepoIds(new Set([item.id]));
           setStep('select');
           setIsLoading(false);
           return;
@@ -116,10 +133,18 @@ export const ConnectRepoModal: React.FC<ConnectRepoModalProps> = ({
         throw new Error('No repositories found for this GitHub account.');
       }
 
-      setFetchedRepos(repos);
-      // Pre-select first repo or Agent repo if present
-      const match = repos.find((r) => r.name.toLowerCase() === 'agent') || repos[0];
-      setSelectedRepoIds(new Set(match ? [match.id] : []));
+      const mapped = repos.map((r) => {
+        const fullLower = r.full_name?.toLowerCase() || '';
+        const urlLower = r.html_url?.toLowerCase() || '';
+        const isConn = existingRepoUrls.has(fullLower) || existingRepoUrls.has(urlLower);
+        return { ...r, alreadyConnected: isConn };
+      });
+
+      setFetchedRepos(mapped);
+
+      // Pre-select first un-connected repo
+      const firstAvailable = mapped.find((r) => !r.alreadyConnected);
+      setSelectedRepoIds(new Set(firstAvailable ? [firstAvailable.id] : []));
       setStep('select');
     } catch (err: any) {
       console.error('Failed to fetch repositories from GitHub', err);
@@ -129,23 +154,25 @@ export const ConnectRepoModal: React.FC<ConnectRepoModalProps> = ({
     }
   };
 
-  const toggleSelectRepo = (id: number) => {
+  const toggleSelectRepo = (repo: FetchedRepoItem) => {
+    if (repo.alreadyConnected) return;
     setSelectedRepoIds((prev) => {
       const next = new Set(prev);
-      if (next.has(id)) {
-        next.delete(id);
+      if (next.has(repo.id)) {
+        next.delete(repo.id);
       } else {
-        next.add(id);
+        next.add(repo.id);
       }
       return next;
     });
   };
 
   const handleSelectAll = () => {
-    if (selectedRepoIds.size === filteredRepos.length) {
+    const available = filteredRepos.filter((r) => !r.alreadyConnected);
+    if (selectedRepoIds.size === available.length) {
       setSelectedRepoIds(new Set());
     } else {
-      setSelectedRepoIds(new Set(filteredRepos.map((r) => r.id)));
+      setSelectedRepoIds(new Set(available.map((r) => r.id)));
     }
   };
 
@@ -164,7 +191,7 @@ export const ConnectRepoModal: React.FC<ConnectRepoModalProps> = ({
     try {
       const chosenRepos = fetchedRepos.filter((r) => selectedRepoIds.has(r.id));
 
-      // 1. Save chosen repositories in Supabase database
+      // 1. Batch Save chosen repositories into Supabase database
       for (const repo of chosenRepos) {
         await api.post('/github/repositories', {
           github_owner: repo.owner?.login || currentUsername,
@@ -183,11 +210,11 @@ export const ConnectRepoModal: React.FC<ConnectRepoModalProps> = ({
           name: `GITHUB_PAT_${currentUsername.toUpperCase()}`,
           credential_type: 'GITHUB_PAT',
           value: patToken.trim(),
-          description: `GitHub Access Token for ${chosenRepos.map((r) => r.name).join(', ')}`,
+          description: `GitHub Access Token for connected repositories`,
         });
       }
 
-      setSuccess(`Connected ${chosenRepos.length} repository${chosenRepos.length > 1 ? 'ies' : ''} to your workspace!`);
+      setSuccess(`Successfully connected ${chosenRepos.length} repository${chosenRepos.length > 1 ? 'ies' : ''} to Supabase!`);
       setTimeout(() => {
         onRepoConnected();
         onClose();
@@ -203,7 +230,7 @@ export const ConnectRepoModal: React.FC<ConnectRepoModalProps> = ({
   };
 
   const filteredRepos = fetchedRepos.filter((r) =>
-    r.full_name.toLowerCase().includes(repoSearch.toLowerCase()) ||
+    r.full_name?.toLowerCase().includes(repoSearch.toLowerCase()) ||
     (r.description && r.description.toLowerCase().includes(repoSearch.toLowerCase()))
   );
 
@@ -276,7 +303,7 @@ export const ConnectRepoModal: React.FC<ConnectRepoModalProps> = ({
               </label>
               <input
                 type="text"
-                placeholder="e.g. GaneshBhatAI/Agent or https://github.com/GaneshBhatAI/Agent"
+                placeholder="e.g. owner/repo or https://github.com/owner/repo"
                 value={singleRepoInput}
                 onChange={(e) => setSingleRepoInput(e.target.value)}
                 className="w-full rounded-2xl border border-purple-200 bg-purple-50/40 px-3.5 py-2.5 text-xs text-slate-800 focus:border-purple-600 focus:bg-white focus:outline-none font-mono"
@@ -330,7 +357,7 @@ export const ConnectRepoModal: React.FC<ConnectRepoModalProps> = ({
                 onClick={handleSelectAll}
                 className="text-xs font-bold text-purple-700 hover:text-purple-900 cursor-pointer whitespace-nowrap"
               >
-                {selectedRepoIds.size === filteredRepos.length ? 'Deselect All' : 'Select All'}
+                Select All
               </button>
             </div>
 
@@ -339,18 +366,24 @@ export const ConnectRepoModal: React.FC<ConnectRepoModalProps> = ({
               {filteredRepos.length > 0 ? (
                 filteredRepos.map((r) => {
                   const isSelected = selectedRepoIds.has(r.id);
+                  const isConn = !!r.alreadyConnected;
+
                   return (
                     <div
                       key={r.id}
-                      onClick={() => toggleSelectRepo(r.id)}
-                      className={`flex items-start gap-3 p-3 rounded-2xl border transition-all cursor-pointer ${
-                        isSelected
-                          ? 'border-purple-300 bg-purple-50/90 shadow-2xs'
-                          : 'border-purple-100/70 bg-white hover:bg-purple-50/40'
+                      onClick={() => toggleSelectRepo(r)}
+                      className={`flex items-start gap-3 p-3 rounded-2xl border transition-all ${
+                        isConn
+                          ? 'border-purple-200 bg-purple-100/40 opacity-75 cursor-default'
+                          : isSelected
+                          ? 'border-purple-400 bg-purple-50 shadow-2xs cursor-pointer'
+                          : 'border-purple-100/70 bg-white hover:bg-purple-50/40 cursor-pointer'
                       }`}
                     >
                       <div className="pt-0.5 text-purple-600">
-                        {isSelected ? (
+                        {isConn ? (
+                          <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                        ) : isSelected ? (
                           <CheckSquare className="h-4 w-4 text-purple-600" />
                         ) : (
                           <Square className="h-4 w-4 text-slate-300" />
@@ -358,7 +391,7 @@ export const ConnectRepoModal: React.FC<ConnectRepoModalProps> = ({
                       </div>
 
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 flex-wrap">
                           <span className="font-bold text-xs text-slate-900 font-mono truncate">
                             {r.full_name}
                           </span>
@@ -371,6 +404,12 @@ export const ConnectRepoModal: React.FC<ConnectRepoModalProps> = ({
                           >
                             {r.private ? 'Private' : 'Public'}
                           </span>
+
+                          {isConn && (
+                            <span className="rounded-full bg-emerald-100 text-emerald-800 px-2 py-0.2 text-[9.5px] font-bold border border-emerald-200">
+                              Already Connected
+                            </span>
+                          )}
                         </div>
 
                         {r.description && (
@@ -394,7 +433,7 @@ export const ConnectRepoModal: React.FC<ConnectRepoModalProps> = ({
 
             <div className="flex items-center justify-between text-xs text-slate-600 pt-2 border-t border-purple-100">
               <span className="font-bold">
-                {selectedRepoIds.size} of {fetchedRepos.length} repositories selected
+                {selectedRepoIds.size} new repositories selected
               </span>
 
               <div className="flex items-center gap-2">
