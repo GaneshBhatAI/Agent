@@ -31,21 +31,42 @@ logger = logging.getLogger("orchestrator")
 
 
 async def create_initial_admin():
-    """Seed initial administrator account if no users exist"""
+    """Seed initial administrator and Ganesh accounts if they don't exist"""
     async with AsyncSessionLocal() as db:
-        query = select(User).where(User.username == settings.INITIAL_ADMIN_USERNAME)
-        result = await db.execute(query)
-        if not result.scalar_one_or_none():
-            admin_user = User(
-                username=settings.INITIAL_ADMIN_USERNAME,
-                email=settings.INITIAL_ADMIN_EMAIL,
-                password_hash=auth_service.get_password_hash(settings.INITIAL_ADMIN_PASSWORD),
-                role=UserRole.ADMIN,
-                is_active=True,
-            )
-            db.add(admin_user)
-            await db.commit()
-            logger.info(f"Initialized default admin account: '{settings.INITIAL_ADMIN_USERNAME}'")
+        users_to_seed = [
+            {
+                "username": "Ganesh",
+                "email": "ganesh@aianveshana.com",
+                "password": "Test@123",
+                "role": UserRole.ADMIN,
+            },
+            {
+                "username": "Admin",
+                "email": "admin@aianveshana.com",
+                "password": "Test@123",
+                "role": UserRole.ADMIN,
+            },
+            {
+                "username": settings.INITIAL_ADMIN_USERNAME,
+                "email": settings.INITIAL_ADMIN_EMAIL,
+                "password": settings.INITIAL_ADMIN_PASSWORD,
+                "role": UserRole.ADMIN,
+            }
+        ]
+        for u in users_to_seed:
+            query = select(User).where(User.username == u["username"])
+            result = await db.execute(query)
+            if not result.scalar_one_or_none():
+                user_obj = User(
+                    username=u["username"],
+                    email=u["email"],
+                    password_hash=auth_service.get_password_hash(u["password"]),
+                    role=u["role"],
+                    is_active=True,
+                )
+                db.add(user_obj)
+                logger.info(f"Initialized user account: '{u['username']}'")
+        await db.commit()
 
 
 @asynccontextmanager
