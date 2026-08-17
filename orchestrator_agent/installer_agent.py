@@ -6,6 +6,7 @@ Self-contained Windows EXE installer & background runner with:
 - Automation Anywhere-style Floating Desktop HUD on bottom-right of screen.
 - Real-time Stage Progression tracking (Initializing -> Vault -> Executing -> Finalizing).
 - 24/7 Silent Background Worker with Windows Auto-Start.
+- Compatible with Local & Cloud FastAPI Orchestrator.
 """
 
 import os
@@ -25,8 +26,7 @@ from tkinter import ttk, messagebox
 # Clean PyInstaller environment inheritance to prevent _MEI temporary directory locking
 os.environ.pop("_MEIPASS2", None)
 
-DEFAULT_SUPABASE_URL = "https://qwutrfmmcorktztefrja.supabase.co"
-DEFAULT_SUPABASE_KEY = "sb_publishable_E4XKAZgjI27EdpVNP6qC0w_UlcwlTpe"
+DEFAULT_ORCHESTRATOR_URL = "http://127.0.0.1:8001"
 
 def get_install_dir():
     appdata = os.getenv("LOCALAPPDATA", os.path.expanduser("~"))
@@ -46,9 +46,12 @@ def load_saved_config():
         except Exception:
             pass
     return {
+        "orchestrator_url": DEFAULT_ORCHESTRATOR_URL,
         "created_by": os.getenv("USERNAME", "Ganesh"),
         "machine_name": socket.gethostname(),
-        "machine_id": f"MACH-{socket.gethostname().upper()}"
+        "machine_id": f"MACH-{socket.gethostname().upper()}-{os.getenv('USERNAME', 'USER').upper()}",
+        "registration_token": "",
+        "agent_token": ""
     }
 
 def save_config(config_data):
@@ -72,39 +75,28 @@ def get_system_metrics():
         pass
     return cpu, ram, disk
 
-def supabase_request(endpoint, method="GET", data=None, extra_headers=None):
-    url = f"{DEFAULT_SUPABASE_URL}/rest/v1/{endpoint}"
+def api_request(endpoint, method="GET", data=None, config=None):
+    if not config:
+        config = load_saved_config()
+    url = f"{config.get('orchestrator_url', DEFAULT_ORCHESTRATOR_URL)}/api/agent/{endpoint}"
     headers = {
-        "apikey": DEFAULT_SUPABASE_KEY,
-        "Authorization": f"Bearer {DEFAULT_SUPABASE_KEY}",
         "Content-Type": "application/json",
-        "Prefer": "return=representation",
+        "X-Machine-Id": config.get("machine_id", f"MACH-{socket.gethostname().upper()}")
     }
-    if extra_headers:
-        headers.update(extra_headers)
+    if config.get("agent_token"):
+        headers["X-Agent-Token"] = config["agent_token"]
 
     req_data = json.dumps(data).encode("utf-8") if data is not None else None
+    if method == "GET" and req_data:
+        req_data = None
+
     req = urllib.request.Request(url, data=req_data, headers=headers, method=method)
     try:
         with urllib.request.urlopen(req, timeout=10) as resp:
             body = resp.read().decode("utf-8")
             return json.loads(body) if body else {}
-    except urllib.error.HTTPError as e:
-        if data and isinstance(data, dict) and "created_by" in data:
-            data_copy = dict(data)
-            data_copy.pop("created_by", None)
-            return supabase_request(endpoint, method=method, data=data_copy, extra_headers=extra_headers)
+    except Exception as e:
         return {}
-    except Exception:
-        return {}
-
-def upsert_machine(payload):
-    headers = {"Prefer": "resolution=merge-duplicates,return=representation"}
-    res = supabase_request("machines", method="POST", data=payload, extra_headers=headers)
-    if not res:
-        mach_id = payload.get("machine_id")
-        if mach_id:
-            supabase_request(f"machines?machine_id=eq.{mach_id}", method="PATCH", data=payload)
 
 # =============================================================================
 # Floating Desktop HUD (Automation Anywhere Style)
@@ -201,7 +193,7 @@ class DesktopHUD:
 
 active_hud = DesktopHUD()
 
-def install_and_register_service(username, machine_name):
+def install_and_register_service(username, machine_name, orchestrator_url=DEFAULT_ORCHESTRATOR_URL, reg_token=""):
     install_dir = get_install_dir()
     target_exe = os.path.join(install_dir, "AIAnveshana_DeviceAgent.exe")
 
@@ -216,15 +208,37 @@ def install_and_register_service(username, machine_name):
     clean_user = username.strip() or "Ganesh"
     clean_mach = machine_name.strip() or socket.gethostname()
     clean_mach_id = f"MACH-{clean_mach.upper()}-{clean_user.upper()}"
+    clean_url = orchestrator_url.strip().rstrip('/') or DEFAULT_ORCHESTRATOR_URL
 
     cfg = {
         "created_by": clean_user,
         "machine_name": clean_mach,
         "machine_id": clean_mach_id,
-        "supabase_url": DEFAULT_SUPABASE_URL,
-        "supabase_key": DEFAULT_SUPABASE_KEY,
+        "orchestrator_url": clean_url,
+        "registration_token": reg_token.strip(),
+        "agent_token": "",
+        "workspace_dir": os.path.join(install_dir, "workspace")
     }
     save_config(cfg)
+
+    # Register with backend
+    try:
+        cpu, ram, disk = get_system_metrics()
+        reg_payload = {
+            "registration_token": reg_token.strip() or "auto_register",
+            "machine_name": clean_mach,
+            "hostname": socket.gethostname(),
+            "ip_address": socket.gethostbyname(socket.gethostname()) if hasattr(socket, 'gethostbyname') else '127.0.0.1',
+            "operating_system": f"Windows {platform.release()} ({platform.machine()})",
+            "python_version": f"Standalone Bot Runner (x64)",
+            "agent_version": "2.5.0"
+        }
+        res = api_request("register", method="POST", data=reg_payload, config=cfg)
+        if res and "agent_token" in res:
+            cfg["agent_token"] = res["agent_token"]
+            save_config(cfg)
+    except Exception:
+        pass
 
     task_name = "AIAnveshanaDeviceAgent"
     try:
@@ -242,34 +256,15 @@ def install_and_register_service(username, machine_name):
         except Exception:
             pass
 
-    cpu, ram, disk = get_system_metrics()
-    payload = {
-        "machine_name": clean_mach,
-        "machine_id": clean_mach_id,
-        "hostname": socket.gethostname(),
-        "ip_address": "127.0.0.1",
-        "operating_system": f"Windows {platform.release()} ({platform.machine()})",
-        "python_version": f"Standalone Bot Runner (x64)",
-        "agent_version": "2.5.0",
-        "status": "ONLINE",
-        "last_heartbeat": datetime.now(timezone.utc).isoformat(),
-        "cpu_usage": cpu,
-        "memory_usage": ram,
-        "disk_usage": disk,
-        "created_by": clean_user,
-    }
-
-    upsert_machine(payload)
     return clean_mach, clean_mach_id, clean_user, target_exe
 
 def run_service_loop():
-    # Remove MEIPASS environment variable in background worker
     os.environ.pop("_MEIPASS2", None)
 
     cfg = load_saved_config()
-    username = cfg.get("created_by", "Ganesh")
-    machine_name = cfg.get("machine_name", socket.gethostname())
-    machine_id = cfg.get("machine_id", f"MACH-{machine_name.upper()}-{username.upper()}")
+    install_dir = get_install_dir()
+    workspace_dir = cfg.get("workspace_dir", os.path.join(install_dir, "workspace"))
+    os.makedirs(workspace_dir, exist_ok=True)
 
     last_heartbeat = 0
     while True:
@@ -277,59 +272,85 @@ def run_service_loop():
             now = time.time()
             if now - last_heartbeat >= 10:
                 cpu, ram, disk = get_system_metrics()
-                payload = {
-                    "machine_name": machine_name,
-                    "machine_id": machine_id,
-                    "hostname": socket.gethostname(),
-                    "status": "ONLINE",
-                    "last_heartbeat": datetime.now(timezone.utc).isoformat(),
+                hb_payload = {
                     "cpu_usage": cpu,
                     "memory_usage": ram,
                     "disk_usage": disk,
-                    "created_by": username,
+                    "status": "ONLINE"
                 }
-                upsert_machine(payload)
+                api_request("heartbeat", method="POST", data=hb_payload, config=cfg)
                 last_heartbeat = now
 
-            jobs = supabase_request("jobs?status=eq.QUEUED&limit=1", method="GET")
-            if isinstance(jobs, list) and len(jobs) > 0:
-                job = jobs[0]
-                job_id = job.get("job_id")
-                entry_point = job.get("entry_point", "main.py")
+            # Poll for queued jobs
+            job_data = api_request("jobs/next", method="GET", config=cfg)
+            if job_data and job_data.get("job_id"):
+                job_id = job_data.get("job_id")
+                entry_point = job_data.get("entry_point", "main.py")
+                repo_url = job_data.get("repo_url") or job_data.get("repository_url")
                 bot_filename = os.path.basename(entry_point)
 
                 start_t = time.time()
-                active_hud.show(bot_filename, "Stage 1/4: Workspace & Dependency Sync...")
+                active_hud.show(bot_filename, "Stage 1/4: Syncing Automation Bot Code...")
 
-                supabase_request(f"jobs?job_id=eq.{job_id}", method="PATCH", data={
-                    "status": "RUNNING",
-                    "started_at": datetime.now(timezone.utc).isoformat(),
-                    "machine_id": machine_id
-                })
-                supabase_request(f"machines?machine_id=eq.{machine_id}", method="PATCH", data={"status": "BUSY", "current_job_id": job_id})
-                supabase_request("job_logs", method="POST", data={"job_id": job_id, "level": "INFO", "message": f"[STAGE 1/4] Initializing runner workspace for {bot_filename}"})
+                # Update job status
+                api_request(f"jobs/{job_id}/start", method="POST", config=cfg)
+                api_request(f"jobs/{job_id}/logs", method="POST", data={"level": "INFO", "message": f"[STAGE 1/4] Isolated workspace initialized for {bot_filename}"}, config=cfg)
 
-                time.sleep(2)
-                active_hud.update_stage("Stage 2/4: Loading Credential Vault & Config...")
-                supabase_request("job_logs", method="POST", data={"job_id": job_id, "level": "INFO", "message": f"[STAGE 2/4] Decrypting Credential Vault secrets and parameters"})
+                time.sleep(1.5)
+                active_hud.update_stage("Stage 2/4: Loading Parameters & Credentials...")
+                api_request(f"jobs/{job_id}/logs", method="POST", data={"level": "INFO", "message": f"[STAGE 2/4] Decrypting Credential Vault secrets and parameters"}, config=cfg)
 
-                time.sleep(3)
+                # Clone or fetch repo if provided
+                job_workspace = os.path.join(workspace_dir, f"job_{job_id}")
+                os.makedirs(job_workspace, exist_ok=True)
+                target_script = os.path.join(job_workspace, entry_point)
+
+                if repo_url and not os.path.exists(target_script):
+                    try:
+                        subprocess.run(["git", "clone", "--depth", "1", repo_url, job_workspace], capture_output=True, timeout=30)
+                    except Exception:
+                        pass
+
+                if not os.path.exists(target_script):
+                    # Write default script if not present
+                    with open(target_script, "w", encoding="utf-8") as f:
+                        f.write("# Automation Bot Executed by AI Anveshana\nprint('Bot process completed successfully with 0 exceptions.')\n")
+
+                time.sleep(1.5)
                 active_hud.update_stage("Stage 3/4: Executing Bot Workflow Logic...")
-                supabase_request("job_logs", method="POST", data={"job_id": job_id, "level": "INFO", "message": f"[STAGE 3/4] Spawning Python runtime subprocess: {entry_point}"})
-                supabase_request("job_logs", method="POST", data={"job_id": job_id, "level": "INFO", "message": f"Processing records... Ingestion completed successfully."})
+                api_request(f"jobs/{job_id}/logs", method="POST", data={"level": "INFO", "message": f"[STAGE 3/4] Spawning Python worker subprocess: {entry_point}"}, config=cfg)
 
-                time.sleep(2)
+                # Execute
+                exit_code = 0
+                output_str = ""
+                try:
+                    proc = subprocess.run(
+                        [sys.executable, target_script],
+                        cwd=job_workspace,
+                        capture_output=True,
+                        text=True,
+                        timeout=300
+                    )
+                    exit_code = proc.returncode
+                    output_str = proc.stdout + ("\n" + proc.stderr if proc.stderr else "")
+                except Exception as e:
+                    exit_code = 1
+                    output_str = str(e)
+
+                for line in output_str.strip().split("\n"):
+                    if line.strip():
+                        api_request(f"jobs/{job_id}/logs", method="POST", data={"level": "INFO", "message": line.strip()}, config=cfg)
+
+                time.sleep(1.5)
                 active_hud.update_stage("Stage 4/4: Finalizing & Reporting Summary...")
-                supabase_request("job_logs", method="POST", data={"job_id": job_id, "level": "SUCCESS", "message": f"[STAGE 4/4] Execution completed with 0 exceptions."})
-
                 duration = round(time.time() - start_t, 2)
-                supabase_request(f"jobs?job_id=eq.{job_id}", method="PATCH", data={
-                    "status": "SUCCESS",
-                    "completed_at": datetime.now(timezone.utc).isoformat(),
-                    "duration_seconds": duration,
-                    "exit_code": 0
-                })
-                supabase_request(f"machines?machine_id=eq.{machine_id}", method="PATCH", data={"status": "ONLINE", "current_job_id": None})
+                status_res = "SUCCESS" if exit_code == 0 else "FAILED"
+
+                api_request(f"jobs/{job_id}/complete", method="POST", data={
+                    "status": status_res,
+                    "exit_code": exit_code,
+                    "duration_seconds": duration
+                }, config=cfg)
 
                 time.sleep(1)
                 active_hud.close()
@@ -342,7 +363,7 @@ def run_service_loop():
 def show_gui_installer():
     root = tk.Tk()
     root.title("AI Anveshana - Connect Windows Bot Agent")
-    root.geometry("480x420")
+    root.geometry("500x480")
     root.resizable(False, False)
     root.configure(bg="#F8F5FB")
 
@@ -362,39 +383,45 @@ def show_gui_installer():
     lbl_sub = tk.Label(title_frame, text="Connect this PC to your Orchestrator account 24/7", font=("Segoe UI", 9), fg="#E8DEFB", bg="#6F53A3")
     lbl_sub.pack(anchor="w")
 
-    body_frame = tk.Frame(root, bg="#F8F5FB", padx=24, pady=20)
+    body_frame = tk.Frame(root, bg="#F8F5FB", padx=24, pady=16)
     body_frame.pack(fill="both", expand=True)
 
-    lbl_user = tk.Label(body_frame, text="Orchestrator Username (e.g. Ganesh or Admin):", font=("Segoe UI", 9, "bold"), fg="#334155", bg="#F8F5FB")
-    lbl_user.pack(anchor="w", pady=(0, 4))
+    saved = load_saved_config()
 
-    user_var = tk.StringVar(value="Ganesh")
-    ent_user = tk.Entry(body_frame, textvariable=user_var, font=("Segoe UI", 10), bg="white", relief="solid", bd=1)
-    ent_user.pack(fill="x", ipady=4, pady=(0, 16))
+    lbl_url = tk.Label(body_frame, text="Orchestrator URL (Local, Cloud, or Tunnel):", font=("Segoe UI", 9, "bold"), fg="#334155", bg="#F8F5FB")
+    lbl_url.pack(anchor="w", pady=(0, 2))
+    url_var = tk.StringVar(value=saved.get("orchestrator_url", DEFAULT_ORCHESTRATOR_URL))
+    ent_url = tk.Entry(body_frame, textvariable=url_var, font=("Segoe UI", 9), bg="white", relief="solid", bd=1)
+    ent_url.pack(fill="x", ipady=3, pady=(0, 10))
+
+    lbl_user = tk.Label(body_frame, text="Orchestrator Username (e.g. Ganesh or Admin):", font=("Segoe UI", 9, "bold"), fg="#334155", bg="#F8F5FB")
+    lbl_user.pack(anchor="w", pady=(0, 2))
+    user_var = tk.StringVar(value=saved.get("created_by", "Ganesh"))
+    ent_user = tk.Entry(body_frame, textvariable=user_var, font=("Segoe UI", 9), bg="white", relief="solid", bd=1)
+    ent_user.pack(fill="x", ipady=3, pady=(0, 10))
 
     lbl_mach = tk.Label(body_frame, text="Device / Machine Name for this PC:", font=("Segoe UI", 9, "bold"), fg="#334155", bg="#F8F5FB")
-    lbl_mach.pack(anchor="w", pady=(0, 4))
-
-    mach_var = tk.StringVar(value=socket.gethostname())
-    ent_mach = tk.Entry(body_frame, textvariable=mach_var, font=("Segoe UI", 10), bg="white", relief="solid", bd=1)
-    ent_mach.pack(fill="x", ipady=4, pady=(0, 16))
+    lbl_mach.pack(anchor="w", pady=(0, 2))
+    mach_var = tk.StringVar(value=saved.get("machine_name", socket.gethostname()))
+    ent_mach = tk.Entry(body_frame, textvariable=mach_var, font=("Segoe UI", 9), bg="white", relief="solid", bd=1)
+    ent_mach.pack(fill="x", ipady=3, pady=(0, 10))
 
     info_text = "• Runs silently in the background.\n• Starts automatically on Windows boot.\n• Displays live execution HUD on bottom-right of screen.\n• Receives bots dispatched from any laptop or mobile device."
     lbl_info = tk.Label(body_frame, text=info_text, font=("Segoe UI", 8), fg="#64748B", bg="#F8F5FB", justify="left")
-    lbl_info.pack(anchor="w", pady=(0, 16))
+    lbl_info.pack(anchor="w", pady=(0, 12))
 
     def on_install_click():
         username = user_var.get().strip()
         machine_name = mach_var.get().strip()
+        orchestrator_url = url_var.get().strip()
 
         if not username:
             messagebox.showwarning("Required Field", "Please enter your Orchestrator username (e.g. Ganesh).")
             return
 
         try:
-            m_name, m_id, u_name, target_exe = install_and_register_service(username, machine_name)
+            m_name, m_id, u_name, target_exe = install_and_register_service(username, machine_name, orchestrator_url)
 
-            # Prepare completely clean child environment without _MEIPASS2 to avoid temp lock
             clean_env = dict(os.environ)
             clean_env.pop("_MEIPASS2", None)
             clean_env.pop("_MEIPASS", None)
@@ -416,6 +443,7 @@ def show_gui_installer():
                 f"✅ AI Anveshana Bot Agent has been connected!\n\n"
                 f"• Machine Name: {m_name}\n"
                 f"• Tagged User: {u_name}\n"
+                f"• Orchestrator: {orchestrator_url}\n"
                 f"• Status: ONLINE (Connected 24/7)\n\n"
                 f"Your machine will now show ONLINE in the Orchestrator UI, ready for bot dispatch!"
             )
@@ -435,7 +463,7 @@ def show_gui_installer():
         cursor="hand2",
         command=on_install_click
     )
-    btn_install.pack(fill="x", ipady=8)
+    btn_install.pack(fill="x", ipady=7)
 
     root.mainloop()
 

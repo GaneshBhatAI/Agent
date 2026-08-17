@@ -5,6 +5,7 @@ import api from '../services/api';
 import { authService } from '../services/auth';
 
 const EXE_DOWNLOAD_URL = 'https://github.com/GaneshBhatAI/Agent/raw/master/docs/downloads/AIAnveshana_DeviceAgent_Setup.exe';
+const ZIP_DOWNLOAD_URL = 'https://github.com/GaneshBhatAI/Agent/raw/master/docs/downloads/AIAnveshana_DeviceAgent_Setup.zip';
 
 interface AddMachineModalProps {
   isOpen: boolean;
@@ -77,16 +78,28 @@ export const AddMachineModal: React.FC<AddMachineModalProps> = ({
               </div>
             </div>
 
-            <a
-              href={EXE_DOWNLOAD_URL}
-              download="AIAnveshana_DeviceAgent_Setup.exe"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#6F53A3] to-[#4F3A8A] px-5 py-2.5 text-xs font-bold text-white shadow-purple-sm hover:from-[#5E4391] hover:to-[#3F2B75] transition-all cursor-pointer whitespace-nowrap"
-            >
-              <Download className="h-4 w-4" />
-              <span>Download .EXE (10 MB)</span>
-            </a>
+            <div className="flex flex-wrap items-center gap-2">
+              <a
+                href={EXE_DOWNLOAD_URL}
+                download="AIAnveshana_DeviceAgent_Setup.exe"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#6F53A3] to-[#4F3A8A] px-4.5 py-2 text-xs font-bold text-white shadow-purple-sm hover:from-[#5E4391] hover:to-[#3F2B75] transition-all cursor-pointer whitespace-nowrap"
+              >
+                <Download className="h-4 w-4" />
+                <span>Download .EXE</span>
+              </a>
+              <a
+                href={ZIP_DOWNLOAD_URL}
+                download="AIAnveshana_DeviceAgent_Setup.zip"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-full border border-purple-200 bg-white px-4 py-2 text-xs font-bold text-slate-800 shadow-2xs hover:bg-purple-50 transition-all cursor-pointer whitespace-nowrap"
+              >
+                <Package className="h-4 w-4 text-purple-600" />
+                <span>Download .ZIP</span>
+              </a>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 text-xs border-t border-purple-100/80">
