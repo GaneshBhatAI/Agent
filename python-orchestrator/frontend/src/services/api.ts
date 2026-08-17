@@ -1,14 +1,14 @@
 import axios from 'axios';
 
 const savedApiUrl = localStorage.getItem('orchestrator_api_url');
-export const API_BASE_URL = savedApiUrl || (window.location.hostname === 'localhost' ? 'http://localhost:8001/api' : '/api');
+export const API_BASE_URL = savedApiUrl || 'http://localhost:8001/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
-  timeout: 4000,
+  timeout: 5000,
 });
 
 // Attach session token to outgoing requests
