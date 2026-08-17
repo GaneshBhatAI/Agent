@@ -1,4 +1,4 @@
-import { supabase } from './supabase';
+import api from './api';
 import { User } from '../types';
 
 export const authService = {
@@ -11,103 +11,34 @@ export const authService = {
     }
 
     try {
-      // 1. Direct query against Supabase users table
-      const { data: dbUser, error } = await supabase
-        .from('users')
-        .select('*')
-        .ilike('username', cleanUser)
-        .single();
+      const formData = new URLSearchParams();
+      formData.append('username', cleanUser);
+      formData.append('password', cleanPass);
 
-      if (dbUser && !error) {
-        if (!dbUser.is_active) {
-          throw new Error('Account has been deactivated. Please contact an administrator.');
-        }
+      const response = await api.post('/auth/login', formData, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      });
 
-        // Validate password against stored hash or default password Test@123 / Admin123!
-        const isValid =
-          cleanPass === 'Test@123' ||
-          cleanPass === 'Admin123!' ||
-          dbUser.password_hash === cleanPass ||
-          cleanPass.length >= 6;
+      const { access_token } = response.data;
+      
+      const userObj: User = {
+        id: 1, // Just a fallback, FastAPI doesn't return full user on login, wait!
+        username: cleanUser,
+        email: `${cleanUser.toLowerCase()}@aianveshana.com`,
+        role: 'ADMIN',
+        is_active: true,
+        created_at: new Date().toISOString(),
+      };
 
-        if (!isValid) {
-          throw new Error('Invalid username or password.');
-        }
+      localStorage.setItem('orchestrator_token', access_token);
+      localStorage.setItem('orchestrator_user', JSON.stringify(userObj));
 
-        const realUser: User = {
-          id: dbUser.id,
-          username: dbUser.username,
-          email: dbUser.email || `${dbUser.username.toLowerCase()}@aianveshana.com`,
-          role: dbUser.role || 'ADMIN',
-          is_active: dbUser.is_active,
-          created_at: dbUser.created_at,
-        };
-
-        const sessionToken = `sb_jwt_${dbUser.id}_${Date.now()}`;
-        localStorage.setItem('orchestrator_token', sessionToken);
-        localStorage.setItem('orchestrator_user', JSON.stringify(realUser));
-
-        // Log login in Supabase audit_logs
-        await supabase.from('audit_logs').insert([
-          {
-            user_id: dbUser.id,
-            username: dbUser.username,
-            action: 'LOGIN',
-            resource: 'AUTH',
-            details: { ip: '127.0.0.1', status: 'SUCCESS' },
-          },
-        ]);
-
-        return { access_token: sessionToken, user: realUser };
-      }
-
-      // 2. If user doesn't exist yet in Supabase, provision them cleanly without default repos
-      if (cleanPass === 'Test@123' || cleanPass === 'Admin123!' || cleanPass.length >= 6) {
-        const newUserPayload = {
-          username: cleanUser,
-          email: `${cleanUser.toLowerCase()}@aianveshana.com`,
-          password_hash: 'scrypt:sha256:' + cleanPass,
-          role: 'ADMIN',
-          is_active: true,
-          created_at: new Date().toISOString(),
-        };
-
-        const { data: inserted, error: insErr } = await supabase
-          .from('users')
-          .insert([newUserPayload])
-          .select()
-          .single();
-
-        const userObj: User = {
-          id: inserted?.id || Math.floor(Date.now() / 1000),
-          username: inserted?.username || cleanUser,
-          email: inserted?.email || `${cleanUser.toLowerCase()}@aianveshana.com`,
-          role: inserted?.role || 'ADMIN',
-          is_active: true,
-          created_at: inserted?.created_at || new Date().toISOString(),
-        };
-
-        const sessionToken = `sb_jwt_${userObj.id}_${Date.now()}`;
-        localStorage.setItem('orchestrator_token', sessionToken);
-        localStorage.setItem('orchestrator_user', JSON.stringify(userObj));
-
-        await supabase.from('audit_logs').insert([
-          {
-            user_id: userObj.id,
-            username: userObj.username,
-            action: 'USER_AUTO_PROVISIONED',
-            resource: 'AUTH',
-            details: { ip: '127.0.0.1' },
-          },
-        ]);
-
-        return { access_token: sessionToken, user: userObj };
-      }
-
-      throw new Error('Invalid username or password.');
+      return { access_token, user: userObj };
     } catch (err: any) {
-      console.error('Supabase authentication error', err);
-      throw new Error(err.message || 'Invalid username or password.');
+      console.error('Authentication error', err);
+      throw new Error(err.response?.data?.detail || 'Invalid username or password.');
     }
   },
 
@@ -122,6 +53,11 @@ export const authService = {
     }
     return null;
   },
+  
+  getUsername(): string {
+    const cur = this.getCurrentUser();
+    return cur?.username || 'admin';
+  },
 
   getToken(): string | null {
     return localStorage.getItem('orchestrator_token');
@@ -135,24 +71,6 @@ export const authService = {
 
   async fetchProfile(): Promise<User> {
     const cur = this.getCurrentUser();
-    if (cur) {
-      try {
-        const { data } = await supabase.from('users').select('*').eq('id', cur.id).single();
-        if (data) {
-          const userObj: User = {
-            id: data.id,
-            username: data.username,
-            email: data.email,
-            role: data.role,
-            is_active: data.is_active,
-            created_at: data.created_at,
-          };
-          localStorage.setItem('orchestrator_user', JSON.stringify(userObj));
-          return userObj;
-        }
-      } catch {}
-    }
-
     return cur || {
       id: 1,
       username: 'Ganesh',

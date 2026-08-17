@@ -16,11 +16,11 @@ import {
   Terminal,
   RotateCw,
   Layers,
-  Key,
   FileCode,
   FileCheck,
 } from 'lucide-react';
-import { supabaseService } from '../services/supabase';
+import api from '../services/api';
+
 import { Job, JobLog } from '../types';
 import { StatusBadge } from '../components/StatusBadge';
 import { TerminalViewer } from '../components/TerminalViewer';
@@ -38,8 +38,8 @@ export const JobDetails: React.FC = () => {
     if (!jobId) return;
     try {
       const [fetchedJob, fetchedLogs] = await Promise.all([
-        supabaseService.getJobById(jobId),
-        supabaseService.getJobLogs(jobId),
+        api.get(`/jobs/${jobId}`).then(res => res.data),
+        api.get(`/jobs/${jobId}/logs`).then(res => res.data),
       ]);
       setJob(fetchedJob);
       setLogs(Array.isArray(fetchedLogs) ? fetchedLogs : []);
@@ -59,7 +59,7 @@ export const JobDetails: React.FC = () => {
   const handleCancelJob = async () => {
     if (!jobId) return;
     try {
-      await supabaseService.updateJob(jobId, { status: 'CANCELLED' });
+      await api.post(`/jobs/${jobId}/cancel`);
       fetchJob();
     } catch (err) {
       console.error('Failed to cancel job', err);

@@ -12,7 +12,7 @@ import {
   CheckCircle2,
 } from 'lucide-react';
 import { Modal } from './Modal';
-import { supabaseService, getActiveUsername } from '../services/supabase';
+import api from '../services/api';
 import { authService } from '../services/auth';
 
 interface ConnectRepoModalProps {
@@ -55,8 +55,8 @@ export const ConnectRepoModal: React.FC<ConnectRepoModalProps> = ({
       setSuccess(null);
       // Load user's already connected repos and saved PAT
       Promise.all([
-        supabaseService.getRepositories(),
-        supabaseService.getCredentials(),
+        api.get('/github/repositories').then(res => res.data),
+        api.get('/credentials').then(res => res.data),
       ]).then(([repos, creds]) => {
         if (Array.isArray(repos)) {
           const urls = new Set<string>(
@@ -183,14 +183,14 @@ export const ConnectRepoModal: React.FC<ConnectRepoModalProps> = ({
     setIsLoading(true);
     setError(null);
 
-    const currentUsername = getActiveUsername();
+    const currentUsername = authService.getCurrentUser()?.username || 'admin';
 
     try {
       const chosenRepos = fetchedRepos.filter((r) => selectedRepoIds.has(r.id));
 
-      // 1. Save chosen repositories directly with supabaseService
+      // 1. Save chosen repositories
       for (const repo of chosenRepos) {
-        await supabaseService.insertRepository({
+        await api.post('/github/repositories', {
           github_owner: repo.owner?.login || currentUsername,
           repository_name: repo.name,
           repository_url: repo.html_url,
@@ -203,7 +203,7 @@ export const ConnectRepoModal: React.FC<ConnectRepoModalProps> = ({
 
       // 2. Save PAT in Credential Vault if provided
       if (patToken.trim()) {
-        await supabaseService.insertCredential({
+        await api.post('/credentials', {
           name: `GITHUB_PAT_${currentUsername.toUpperCase()}`,
           credential_type: 'GITHUB_PAT',
           value: patToken.trim(),

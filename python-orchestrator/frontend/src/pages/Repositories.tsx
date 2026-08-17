@@ -27,7 +27,7 @@ import {
   Settings2,
   RefreshCw,
 } from 'lucide-react';
-import { supabaseService } from '../services/supabase';
+import api from '../services/api';
 import { GitHubBranchItem, GitHubFileItem, GitHubRepoItem } from '../types';
 import { RunJobModal } from '../components/RunJobModal';
 import { CodeViewerModal } from '../components/CodeViewerModal';
@@ -78,8 +78,8 @@ export const Repositories: React.FC = () => {
     setIsLoading(true);
     try {
       const [fetchedRepos, creds] = await Promise.all([
-        supabaseService.getRepositories(),
-        supabaseService.getCredentials(),
+        api.get('/github/repositories').then(res => res.data),
+        api.get('/credentials').then(res => res.data),
       ]);
 
       const repoList = Array.isArray(fetchedRepos) ? fetchedRepos : [];
@@ -262,7 +262,7 @@ export const Repositories: React.FC = () => {
   const handleDeleteRepo = async (repoId?: number, repoName?: string) => {
     if (!repoId) return;
     if (!window.confirm(`Disconnect repository "${repoName || 'selected'}" from your workspace?`)) return;
-    await supabaseService.deleteRepository(repoId);
+    await api.delete(`/github/repositories/${repoId}`);
     await fetchRepositories();
   };
 

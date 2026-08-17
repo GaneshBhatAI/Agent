@@ -19,7 +19,7 @@ import {
   Package,
   Info,
 } from 'lucide-react';
-import { supabaseService } from '../services/supabase';
+import api from '../services/api';
 import { Machine } from '../types';
 import { StatusBadge } from '../components/StatusBadge';
 import { formatDistanceToNow } from 'date-fns';
@@ -39,7 +39,8 @@ export const Machines: React.FC = () => {
 
   const fetchMachines = async () => {
     try {
-      const data = await supabaseService.getMachines();
+      const res = await api.get('/machines');
+      const data = res.data;
       setMachines(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error('Failed to load machines', err);
@@ -58,7 +59,7 @@ export const Machines: React.FC = () => {
     e.stopPropagation();
     try {
       const newStatus = machine.status === 'DISABLED' ? 'ONLINE' : 'DISABLED';
-      await supabaseService.updateMachine(machine.machine_id, { status: newStatus });
+      await api.post(`/machines/${machine.machine_id}/${newStatus === 'ONLINE' ? 'enable' : 'disable'}`);
       fetchMachines();
     } catch (err) {
       console.error('Failed to toggle status', err);

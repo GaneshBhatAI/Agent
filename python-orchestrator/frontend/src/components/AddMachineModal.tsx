@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Download, Check, Server, Key, Terminal, ArrowRight, ShieldCheck, Sparkles, AlertCircle, Laptop, Package, Info, ShieldAlert } from 'lucide-react';
 import { Modal } from './Modal';
-import { supabaseService, getActiveUsername } from '../services/supabase';
+import api from '../services/api';
+import { authService } from '../services/auth';
 
 const EXE_DOWNLOAD_URL = 'https://github.com/GaneshBhatAI/Agent/raw/master/docs/downloads/AIAnveshana_DeviceAgent_Setup.exe';
 
@@ -29,31 +30,11 @@ export const AddMachineModal: React.FC<AddMachineModalProps> = ({
     setIsGenerating(true);
     setError(null);
     try {
-      const token = 'reg_' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-      const machineId = `MACH-${machineName.trim().toUpperCase()}`;
-
-      const newMachine = {
-        machine_name: machineName.trim(),
-        machine_id: machineId,
-        hostname: machineName.trim(),
-        status: 'ONLINE',
-        operating_system: 'Windows 11 (x64)',
-        python_version: 'Standalone EXE (x64)',
-        agent_version: '2.5.0',
-        cpu_usage: 12.5,
-        memory_usage: 36.2,
-        disk_usage: 41.0,
-        registration_token: token,
-        created_by: getActiveUsername(),
-        created_at: new Date().toISOString(),
-      };
-
-      await supabaseService.insertMachine(newMachine);
-
+      const res = await api.post('/machines/generate-token', { machine_name: machineName.trim() });
       setTokenData({
-        token: token,
-        machine_name: newMachine.machine_name,
-        machine_id: machineId,
+        token: res.data.token,
+        machine_name: res.data.machine.machine_name,
+        machine_id: res.data.machine.machine_id,
       });
 
       if (onMachineAdded) onMachineAdded();

@@ -14,7 +14,7 @@ import {
   Layers,
   ArrowRight,
 } from 'lucide-react';
-import { supabaseService } from '../services/supabase';
+import api from '../services/api';
 import { Job, JobStatus } from '../types';
 import { StatusBadge } from '../components/StatusBadge';
 import { formatDistanceToNow, format } from 'date-fns';
@@ -30,7 +30,8 @@ export const Jobs: React.FC = () => {
 
   const fetchJobs = async () => {
     try {
-      const data = await supabaseService.getJobs();
+      const res = await api.get('/jobs');
+      const data = res.data;
       setJobs(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error('Failed to fetch jobs', err);
@@ -48,7 +49,7 @@ export const Jobs: React.FC = () => {
   const handleCancelJob = async (jobId: string, e: React.MouseEvent) => {
     e.stopPropagation();
     try {
-      await supabaseService.updateJob(jobId, { status: 'CANCELLED' });
+      await api.post(`/jobs/${jobId}/cancel`);
       fetchJobs();
     } catch (err) {
       console.error('Failed to cancel job', err);
