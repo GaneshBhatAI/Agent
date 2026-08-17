@@ -392,7 +392,7 @@ async function fetchGitHubRunners() {
         <td>${(r.labels || []).map(l => `<span class="label-chip">${l}</span>`).join('')}</td>
         <td><span style="color:var(--status-green); font-weight:600;">✓ ${r.dependencies_status}</span></td>
         <td style="text-align:center;">
-          <button class="btn btn-secondary" onclick="alert('Device ${r.name} pinged successfully! Latency: 4ms')">⚡ Test Ping</button>
+          <button class="btn btn-secondary" onclick="openMachinePingModal('${r.id}', '${r.name}')">📈 View Pings</button>
         </td>
       </tr>
     `).join("");
@@ -1903,5 +1903,53 @@ function logoutGitHub() {
   if (overlay) {
     overlay.style.opacity = "1";
     overlay.classList.add("login-overlay-active");
+  }
+}
+
+// PING HISTORY MODAL
+async function openMachinePingModal(machineId, machineName) {
+  // If modal doesn't exist, create it on the fly
+  let modal = document.getElementById("ping-modal");
+  if (!modal) {
+    modal = document.createElement("div");
+    modal.id = "ping-modal";
+    modal.className = "modal";
+    modal.innerHTML = `
+      <div class="modal-content" style="max-width: 600px;">
+        <button class="modal-close" onclick="document.getElementById('ping-modal').classList.remove('active')">&times;</button>
+        <h2 id="ping-modal-title" style="margin-bottom: 15px; font-family: var(--heading); color: var(--purple-dark);">Ping History</h2>
+        <div id="ping-modal-body" style="max-height: 400px; overflow-y: auto; background: #1e293b; padding: 15px; border-radius: 8px; color: #fff; font-family: 'JetBrains Mono', monospace; font-size: 13px;">
+          Loading ping history...
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+  }
+
+  document.getElementById("ping-modal-title").innerText = \`Ping History: \${machineName}\`;
+  const body = document.getElementById("ping-modal-body");
+  body.innerHTML = "Loading ping history...";
+  modal.classList.add("active");
+
+  try {
+    const res = await fetch(\`\${activeAgentUrl}/api/machines/\${machineId}/pings\`);
+    if (res.ok) {
+      const pings = await res.json();
+      if (pings.length === 0) {
+        body.innerHTML = "<div style='color: #94a3b8;'>No ping data available for the last hour.</div>";
+        return;
+      }
+      body.innerHTML = pings.map(p => {
+        const timeStr = new Date(p.timestamp).toLocaleTimeString();
+        let color = "#10b981"; // green
+        if (p.status === "OFFLINE") color = "#ef4444"; // red
+        if (p.status === "BUSY") color = "#f59e0b"; // yellow
+        return \`<div><span style="color: #94a3b8;">[\${timeStr}]</span> <strong style="color: \${color}; width: 70px; display: inline-block;">\${p.status}</strong> CPU: \${p.cpu_usage || 0}% | RAM: \${p.memory_usage || 0}%</div>\`;
+      }).join("");
+    } else {
+      body.innerHTML = \`<div style="color: #ef4444;">Failed to load ping history.</div>\`;
+    }
+  } catch (err) {
+    body.innerHTML = \`<div style="color: #ef4444;">Error: \${err.message}</div>\`;
   }
 }

@@ -6,6 +6,7 @@ from app.models.job_log import JobLog, LogLevel
 from app.models.schedule import Schedule, ScheduleType
 from app.models.credential import Credential, CredentialType
 from app.models.audit_log import AuditLog
+from app.models.machine_ping import MachinePingLog
 
 __all__ = [
     "User",
@@ -18,6 +19,7 @@ __all__ = [
     "ErrorType",
     "JobLog",
     "LogLevel",
+    "MachinePingLog",
     "Schedule",
     "ScheduleType",
     "Credential",

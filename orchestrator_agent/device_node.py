@@ -7,6 +7,41 @@ import asyncio
 import subprocess
 import websockets
 
+POPUP_CODE = """
+import sys
+import tkinter as tk
+
+bot_name = sys.argv[1] if len(sys.argv) > 1 else "Automation Bot"
+
+root = tk.Tk()
+root.overrideredirect(True)
+root.attributes("-topmost", True)
+root.configure(bg="#2d1b69")
+
+w = 320
+h = 80
+ws = root.winfo_screenwidth()
+hs = root.winfo_screenheight()
+x = ws - w - 20
+y = hs - h - 60
+root.geometry(f"{w}x{h}+{x}+{y}")
+
+title_lbl = tk.Label(root, text="Ai Anveshana Bot Runner", font=("Segoe UI", 10, "bold"), fg="#BA8BBF", bg="#2d1b69", anchor="w")
+title_lbl.pack(fill="x", padx=15, pady=(12, 0))
+
+bot_lbl = tk.Label(root, text=f"Running: {bot_name}", font=("Segoe UI", 10), fg="white", bg="#2d1b69", anchor="w")
+bot_lbl.pack(fill="x", padx=15, pady=(2, 12))
+
+def pulse():
+    current_color = title_lbl.cget("fg")
+    next_color = "#ffffff" if current_color == "#BA8BBF" else "#BA8BBF"
+    title_lbl.config(fg=next_color)
+    root.after(800, pulse)
+
+pulse()
+root.mainloop()
+"""
+
 # Configuration settings
 WS_SERVER_URL = "ws://localhost:8002"
 GIT_WORKSPACE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "ws_runner_workspace"))
@@ -75,6 +110,7 @@ async def run_bot_script_local(bot_id, bot_path, git_url, ws):
     }))
 
     start_time = time.time()
+    popup_proc = subprocess.Popen([sys.executable, "-c", POPUP_CODE, bot_path])
     try:
         proc = await asyncio.create_subprocess_exec(
             sys.executable, full_script_path,
@@ -84,6 +120,12 @@ async def run_bot_script_local(bot_id, bot_path, git_url, ws):
         
         # Read logs output asynchronously
         stdout_data, stderr_data = await proc.communicate()
+        
+        try:
+            popup_proc.terminate()
+        except:
+            pass
+            
         return_code = proc.returncode
         elapsed = round(time.time() - start_time, 2)
 

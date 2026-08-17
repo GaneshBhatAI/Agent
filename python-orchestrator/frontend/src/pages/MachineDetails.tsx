@@ -11,9 +11,10 @@ import {
   RotateCw,
   Clock,
   Terminal,
+  Radio,
 } from 'lucide-react';
 import api from '../services/api';
-import { Job, Machine } from '../types';
+import { Job, Machine, MachinePingLogResponse } from '../types';
 import { StatusBadge } from '../components/StatusBadge';
 import { RunJobModal } from '../components/RunJobModal';
 import { format, formatDistanceToNow } from 'date-fns';
@@ -24,18 +25,21 @@ export const MachineDetails: React.FC = () => {
 
   const [machine, setMachine] = useState<Machine | null>(null);
   const [jobs, setJobs] = useState<Job[]>([]);
+  const [pings, setPings] = useState<MachinePingLogResponse[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isRunModalOpen, setIsRunModalOpen] = useState<boolean>(false);
 
   const fetchMachineDetails = async () => {
     if (!machineId) return;
     try {
-      const [mRes, jRes] = await Promise.all([
+      const [mRes, jRes, pRes] = await Promise.all([
         api.get(`/machines/${machineId}`),
         api.get(`/machines/${machineId}/jobs`),
+        api.get(`/machines/${machineId}/pings`).catch(() => ({ data: [] })),
       ]);
       setMachine(mRes.data);
       setJobs(jRes.data);
+      setPings(pRes.data);
     } catch (err) {
       console.error('Failed to fetch machine details', err);
     } finally {
@@ -237,6 +241,44 @@ export const MachineDetails: React.FC = () => {
             <span className="text-slate-500 font-sans">Current Running Job:</span>
             <span className="text-purple-700 font-bold">{machine.current_job_id || 'None (Idle)'}</span>
           </div>
+        </div>
+      </div>
+
+      {/* Ping History Terminal */}
+      <div className="rounded-3xl border border-purple-100 bg-[#1e1b2e] overflow-hidden shadow-2xs">
+        <div className="border-b border-[#2d2a4a] bg-[#1a1728] px-6 py-4 flex items-center justify-between">
+          <h3 className="text-sm font-bold text-slate-200 tracking-tight flex items-center gap-2">
+            <Radio className="h-4 w-4 text-emerald-400 animate-pulse" />
+            Machine Telemetry Logs (Last 1 Hour)
+          </h3>
+          <span className="text-[10px] uppercase font-bold text-slate-500 tracking-wider">
+            Live Stream
+          </span>
+        </div>
+        <div className="p-4 font-mono text-xs max-h-64 overflow-y-auto space-y-1">
+          {pings.length > 0 ? (
+            pings.map((ping) => (
+              <div key={ping.id} className="flex items-center gap-3 text-slate-300">
+                <span className="text-slate-500 shrink-0">
+                  [{format(new Date(ping.timestamp), 'HH:mm:ss')}]
+                </span>
+                <span className={`shrink-0 font-bold ${
+                  ping.status === 'ONLINE' ? 'text-emerald-400' :
+                  ping.status === 'BUSY' ? 'text-amber-400' :
+                  ping.status === 'DISABLED' ? 'text-slate-500' : 'text-red-400'
+                }`}>
+                  [{ping.status}]
+                </span>
+                <span className="truncate">
+                  CPU: {ping.cpu_usage || 0}% | RAM: {ping.memory_usage || 0}% | DISK: {ping.disk_usage || 0}%
+                </span>
+              </div>
+            ))
+          ) : (
+            <div className="text-slate-500 py-4 text-center">
+              No ping telemetry data available for this machine yet.
+            </div>
+          )}
         </div>
       </div>
 

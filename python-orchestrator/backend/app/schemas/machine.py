@@ -73,3 +73,16 @@ class MachineResponse(MachineBase):
 
     class Config:
         from_attributes = True
+
+class MachinePingLogResponse(BaseModel):
+    id: int
+    machine_id: str
+    status: str
+    cpu_usage: Optional[float] = None
+    memory_usage: Optional[float] = None
+    disk_usage: Optional[float] = None
+    timestamp: datetime
+
+    class Config:
+        from_attributes = True
+

@@ -6,12 +6,14 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.database import get_db
 from app.models.job import Job
 from app.models.machine import Machine, MachineStatus
+from app.models.machine_ping import MachinePingLog
 from app.models.user import User, UserRole
 from app.schemas.job import JobResponse
 from app.schemas.machine import (
     MachineCreate,
     MachineRegistrationTokenResponse,
     MachineResponse,
+    MachinePingLogResponse,
 )
 from app.services.audit_service import audit_service
 from app.services.auth_service import auth_service
@@ -170,3 +172,20 @@ async def delete_machine(
     )
 
     return {"status": "success", "message": f"Machine {machine_id} removed"}
+
+@router.get("/{machine_id}/pings", response_model=List[MachinePingLogResponse])
+async def get_machine_pings(
+    machine_id: str,
+    limit: int = 60,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(auth_service.get_current_user),
+):
+    query = (
+        select(MachinePingLog)
+        .where(MachinePingLog.machine_id == machine_id)
+        .order_by(desc(MachinePingLog.timestamp))
+        .limit(limit)
+    )
+    result = await db.execute(query)
+    pings = result.scalars().all()
+    return [MachinePingLogResponse.model_validate(p) for p in pings]

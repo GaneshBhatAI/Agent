@@ -21,6 +21,15 @@ class SchedulerService:
         if not self.scheduler.running:
             self.scheduler.start()
             logger.info("APScheduler service started successfully")
+            
+            # Register built-in background tasks
+            self.scheduler.add_job(
+                self._execute_ping_cleanup,
+                trigger=IntervalTrigger(minutes=5),
+                id="system_ping_cleanup",
+                name="System_Ping_Cleanup",
+                replace_existing=True,
+            )
 
     def shutdown(self):
         if self.scheduler.running:
@@ -113,5 +122,16 @@ class SchedulerService:
             except Exception as e:
                 logger.error(f"Error executing scheduled task {schedule_id}: {e}")
 
+
+    @staticmethod
+    async def _execute_ping_cleanup():
+        from app.services.machine_service import machine_service
+        async with AsyncSessionLocal() as db:
+            try:
+                deleted = await machine_service.cleanup_old_pings(db)
+                if deleted > 0:
+                    logger.info(f"Cleaned up {deleted} old machine ping logs")
+            except Exception as e:
+                logger.error(f"Error cleaning up old machine pings: {e}")
 
 scheduler_service = SchedulerService()

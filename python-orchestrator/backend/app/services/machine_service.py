@@ -8,7 +8,9 @@ from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.config import settings
+from app.models.job import Job, JobStatus, ErrorType
 from app.models.machine import Machine, MachineStatus
+from app.models.machine_ping import MachinePingLog
 from app.schemas.machine import (
     MachineHeartbeatRequest,
     MachineHeartbeatResponse,
@@ -165,6 +167,16 @@ class MachineService:
         elif machine.status != MachineStatus.DISABLED:
             machine.status = MachineStatus.ONLINE
 
+        ping_log = MachinePingLog(
+            machine_id=machine.machine_id,
+            status=machine.status.value,
+            cpu_usage=req.cpu_usage,
+            memory_usage=req.memory_usage,
+            disk_usage=req.disk_usage,
+            timestamp=machine.last_heartbeat
+        )
+        db.add(ping_log)
+
         await db.commit()
 
         # Broadcast update to web UI
@@ -213,6 +225,42 @@ class MachineService:
             if is_stale:
                 m.status = MachineStatus.OFFLINE
                 count += 1
+                
+                # If machine was running a job, mark it as FAILED due to crash
+                if m.current_job_id:
+                    job_query = select(Job).where(Job.job_id == m.current_job_id)
+                    job_res = await db.execute(job_query)
+                    job = job_res.scalar_one_or_none()
+                    if job and job.status in [JobStatus.ASSIGNED, JobStatus.PREPARING, JobStatus.INSTALLING_DEPENDENCIES, JobStatus.RUNNING]:
+                        job.status = JobStatus.FAILED
+                        job.error_type = ErrorType.INFRASTRUCTURE_ERROR
+                        job.error_message = "Agent disconnected unexpectedly (heartbeat timeout)."
+                        job.completed_at = datetime.now(timezone.utc)
+                        if job.started_at:
+                            s_at = job.started_at
+                            if s_at.tzinfo is None:
+                                s_at = s_at.replace(tzinfo=timezone.utc)
+                            job.duration_seconds = round((datetime.now(timezone.utc) - s_at).total_seconds(), 2)
+                        
+                        await ws_manager.broadcast_job_status(job.job_id, {
+                            "job_id": job.job_id,
+                            "status": job.status.value,
+                            "machine_id": job.machine_id,
+                            "error_message": job.error_message,
+                            "error_type": job.error_type.value,
+                        })
+                    m.current_job_id = None
+
+                ping_log = MachinePingLog(
+                    machine_id=m.machine_id,
+                    status=MachineStatus.OFFLINE.value,
+                    cpu_usage=0.0,
+                    memory_usage=0.0,
+                    disk_usage=0.0,
+                    timestamp=datetime.now(timezone.utc)
+                )
+                db.add(ping_log)
+
                 await ws_manager.broadcast_machine_update({
                     "machine_id": m.machine_id,
                     "machine_name": m.machine_name,
@@ -227,5 +275,12 @@ class MachineService:
             await db.commit()
         return count
 
+    async def cleanup_old_pings(self, db: AsyncSession) -> int:
+        from sqlalchemy import delete
+        threshold = datetime.now(timezone.utc) - timedelta(hours=1)
+        query = delete(MachinePingLog).where(MachinePingLog.timestamp < threshold)
+        result = await db.execute(query)
+        await db.commit()
+        return result.rowcount
 
 machine_service = MachineService()

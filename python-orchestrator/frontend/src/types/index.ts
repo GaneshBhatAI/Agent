@@ -43,6 +43,16 @@ export interface MachineRegistrationTokenResponse {
   expires_in_hours: number;
 }
 
+export interface MachinePingLogResponse {
+  id: number;
+  machine_id: string;
+  timestamp: string;
+  status: MachineStatus;
+  cpu_usage?: number;
+  memory_usage?: number;
+  disk_usage?: number;
+}
+
 export interface GitHubRepoItem {
   id?: number;
   name?: string;
