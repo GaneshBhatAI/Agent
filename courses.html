@@ -71,9 +71,9 @@
       padding: 8px 12px 8px 20px; display: flex; align-items: center; justify-content: space-between;
       box-shadow: 0 4px 30px rgba(0,0,0,0.04), inset 0 1px 3px rgba(255,255,255,0.6), 0 10px 40px rgba(186,139,191,0.18);
     }
-    .logo-wrap { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-    .logo-svg { width: 32px; height: 32px; }
-    .logo-name { font-family: 'Nunito', sans-serif; font-size: 28px; font-weight: 900; color: var(--text-dark); letter-spacing: -0.5px; }
+    .logo-wrap { display: flex; align-items: center; gap: 8px; text-decoration: none; white-space: nowrap; flex-shrink: 0; }
+    .logo-svg { width: 30px; height: 30px; flex-shrink: 0; }
+    .logo-name { font-family: 'Nunito', sans-serif; font-size: 26px; font-weight: 900; color: var(--text-dark); letter-spacing: -0.5px; white-space: nowrap; display: inline-flex; align-items: center; }
     .logo-name span { background: linear-gradient(135deg,var(--purple-light),var(--purple-dark)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     nav ul { display: flex; align-items: center; list-style: none; gap: 0; }
     nav ul li a { font-size: 13.5px; font-weight: 500; color: #4b5563; text-decoration: none; padding: 9px 15px; border-radius: 50px; display: inline-block; transition: all 0.3s ease; }
@@ -251,8 +251,11 @@
     }
     @media (max-width: 768px) {
       nav ul { display: none !important; }
-      .btn-nav { display: none; }
+      .btn-nav { display: none !important; }
       .hamburger { display: flex !important; }
+      .logo-wrap { gap: 6px; }
+      .logo-svg { width: 26px; height: 26px; }
+      .logo-name { font-size: 20px; }
       .hero-title { font-size: 34px; }
       .sec-title { font-size: 28px; }
       .hero-stats-row { grid-template-columns: 1fr; }
@@ -261,9 +264,14 @@
       .pillars-grid { grid-template-columns: 1fr; }
       .cf-row { grid-template-columns: 1fr; }
       .contact-box { padding: 36px 20px; }
-      #top-banner { overflow: hidden; white-space: nowrap; flex-wrap: nowrap; justify-content: space-between; gap: 8px; padding: 8px 38px 8px 12px; }
-      .b-text { white-space: nowrap; flex-wrap: nowrap; display: inline-flex; animation: bannerMarquee 15s linear infinite; }
-      @keyframes bannerMarquee { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+    }
+    @media (max-width: 480px) {
+      .logo-name { font-size: 18px; }
+      .logo-svg { width: 24px; height: 24px; }
+    }
+    @media (max-width: 360px) {
+      .logo-name { font-size: 16px; }
+      .logo-svg { width: 22px; height: 22px; }
     }
   </style>
 </head>
