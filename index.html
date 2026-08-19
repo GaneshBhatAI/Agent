@@ -32,25 +32,34 @@
     html { scroll-behavior: smooth; }
     body { font-family: var(--body); background: var(--bg); color: var(--text-mid); line-height: 1.7; overflow-x: hidden; }
 
-    /* ─── TOP ANNOUNCEMENT BANNER ─── */
+    /* ─── TOP ANNOUNCEMENT BANNER (1-ROW MARQUEE ON MOBILE) ─── */
     #top-banner {
       position: relative; z-index: 9999; display: flex; align-items: center;
-      justify-content: center; gap: 10px; flex-wrap: wrap;
-      padding: 9px 46px 9px 14px; font-family: var(--body); font-size: 13px; color: #4b5563;
+      justify-content: center; height: 38px; padding: 0 38px 0 12px;
+      font-family: var(--body); font-size: 13px; color: #4b5563;
       background: linear-gradient(-45deg,rgba(123,97,201,.12),rgba(255,255,255,.94),rgba(139,92,246,.10),rgba(255,255,255,.94));
       background-size: 300% 300%; animation: gradBg 8s ease infinite;
       backdrop-filter: blur(14px); border-bottom: 1px solid rgba(123,97,201,.12);
+      overflow: hidden; white-space: nowrap; flex-wrap: nowrap;
     }
     @keyframes gradBg { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
-    .b-text { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; text-align: center; }
+    .b-text { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; flex-shrink: 0; }
     .b-text strong { color: #111827; }
     .b-hi { background: linear-gradient(90deg,#8B5CF6,#6D4FD6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 700; }
-    .b-badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 999px; background: rgba(123,97,201,.08); border: 1px solid rgba(123,97,201,.18); color: #7B61C9; font-size: 12px; font-weight: 600; animation: softPulse 2.5s ease-in-out infinite; }
-    @keyframes softPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.04)} }
-    .b-cta { display: inline-flex; align-items: center; padding: 6px 16px; border-radius: 999px; font-size: 12px; font-weight: 600; color: #fff; background: linear-gradient(135deg,#8B5CF6,#6D4FD6); text-decoration: none; animation: bPulse 1.8s infinite; }
-    @keyframes bPulse { 0%{transform:scale(1);box-shadow:0 0 0 0 rgba(123,97,201,.45)} 70%{transform:scale(1.04);box-shadow:0 0 0 10px rgba(123,97,201,0)} 100%{transform:scale(1);box-shadow:0 0 0 0 rgba(123,97,201,0)} }
-    .b-close { position: absolute; top: 50%; right: 14px; transform: translateY(-50%); background: none; border: none; font-size: 15px; color: #999; cursor: pointer; transition: .3s; }
+    .b-badge { display: inline-flex; align-items: center; gap: 5px; padding: 2px 10px; border-radius: 999px; background: rgba(123,97,201,.08); border: 1px solid rgba(123,97,201,.18); color: #7B61C9; font-size: 12px; font-weight: 600; }
+    .b-cta { display: inline-flex; align-items: center; padding: 4px 14px; border-radius: 999px; font-size: 12px; font-weight: 600; color: #fff; background: linear-gradient(135deg,#8B5CF6,#6D4FD6); text-decoration: none; margin-left: 4px; white-space: nowrap; }
+    .b-close { position: absolute; top: 50%; right: 12px; transform: translateY(-50%); background: none; border: none; font-size: 15px; color: #888; cursor: pointer; transition: .3s; z-index: 10; }
     .b-close:hover { color: #7B61C9; }
+
+    @media (max-width: 768px) {
+      #top-banner { justify-content: flex-start; }
+      .b-text { animation: bannerMarquee 15s linear infinite; padding-left: 100%; }
+      .b-text:hover { animation-play-state: paused; }
+    }
+    @keyframes bannerMarquee {
+      0% { transform: translateX(0%); }
+      100% { transform: translateX(-100%); }
+    }
 
     /* ─── FLOATING NAVBAR ─── */
     .nav-wrap { width: 100%; display: flex; justify-content: center; padding: 18px 20px; position: sticky; top: 0; z-index: 900; }
