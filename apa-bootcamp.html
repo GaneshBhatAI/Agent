@@ -304,6 +304,214 @@
       .contact-box{padding:36px 20px;}
       .chat-popup{width:290px;}
     }
+
+    /* ── AUTOMATION ANYWHERE AI + AGENTIC AI TRAINING PROGRAM STYLES ── */
+    .cert-hero-box {
+      background: linear-gradient(135deg, rgba(30,20,60,0.95), rgba(45,27,105,0.95));
+      border: 1px solid rgba(186,139,191,0.35);
+      border-radius: 24px;
+      padding: 32px;
+      margin-top: 32px;
+      color: #fff;
+      box-shadow: 0 12px 40px rgba(79,58,138,0.25);
+    }
+    .cert-badge-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 16px;
+    }
+    .cert-badge-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.25);
+      padding: 8px 16px;
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #f3e8ff;
+      backdrop-filter: blur(8px);
+    }
+    .cert-badge-item i { color: #fbbf24; }
+
+    /* 12-Topic Curriculum Grid */
+    .curr-progression-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      margin-top: 30px;
+    }
+    @media (max-width: 992px) {
+      .curr-progression-grid { grid-template-columns: 1fr; }
+    }
+    .curr-topic-card {
+      background: rgba(255,255,255,0.88);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.95);
+      border-radius: 24px;
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 16px;
+      box-shadow: 0 8px 30px rgba(111,83,163,0.07);
+      transition: all 0.35s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .curr-topic-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 6px; height: 100%;
+      background: linear-gradient(180deg, var(--purple-light), var(--purple-dark));
+    }
+    .curr-topic-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 16px 45px rgba(111,83,163,0.18);
+      border-color: rgba(186,139,191,0.6);
+    }
+    .topic-step-num {
+      font-family: var(--heading);
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--purple-dark);
+      background: rgba(186,139,191,0.16);
+      padding: 4px 12px;
+      border-radius: 99px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .topic-title {
+      font-family: var(--heading);
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--text-dark);
+      margin-top: 6px;
+    }
+    .topic-section-label {
+      font-size: 11.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--purple-deep);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .topic-coverage-list {
+      list-style: none;
+      padding: 0; margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .topic-coverage-list li {
+      font-size: 13.5px;
+      color: var(--text-mid);
+      line-height: 1.5;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .topic-coverage-list li::before {
+      content: '▸';
+      color: var(--purple-dark);
+      font-weight: bold;
+    }
+    .topic-hands-on-box {
+      background: linear-gradient(135deg, rgba(245,238,255,0.85), rgba(237,226,255,0.95));
+      border: 1px solid rgba(186,139,191,0.35);
+      border-radius: 16px;
+      padding: 14px 18px;
+      margin-top: 8px;
+    }
+    .topic-hands-on-title {
+      font-size: 12px;
+      font-weight: 800;
+      color: #4c1d95;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .topic-hands-on-desc {
+      font-size: 13px;
+      font-weight: 600;
+      color: #3b0764;
+      margin-top: 4px;
+    }
+
+    /* Enterprise Use Case Highlight Section */
+    .usecase-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 30px;
+    }
+    @media (max-width: 992px) {
+      .usecase-grid { grid-template-columns: 1fr; }
+    }
+    .usecase-card {
+      background: linear-gradient(135deg, #ffffff 0%, #f9f5ff 100%);
+      border: 1.5px solid rgba(186,139,191,0.35);
+      border-radius: 24px;
+      padding: 30px 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 10px 35px rgba(111,83,163,0.08);
+      transition: all 0.35s ease;
+    }
+    .usecase-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 50px rgba(111,83,163,0.18);
+      border-color: var(--purple-dark);
+    }
+    .usecase-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(111,83,163,0.12);
+      color: var(--purple-dark);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 99px;
+      text-transform: uppercase;
+    }
+    .usecase-title {
+      font-family: var(--heading);
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--text-dark);
+      margin: 12px 0 8px;
+    }
+    .usecase-desc {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+    .usecase-tech-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 12px;
+    }
+    .usecase-pill {
+      background: #fff;
+      border: 1px solid rgba(186,139,191,0.3);
+      color: #4b5563;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 50px;
+    }
   </style>
 <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -668,37 +876,49 @@
             </div> 
         
             <div class="hero-content course-content" style="margin-bottom: 0;">
-                <div class="hero-text" style="max-width: 800px;">
+                <div class="hero-text" style="max-width: 850px;">
                     <div class="cta-group" style="margin-bottom: 2rem;">
                         <a href="badge-generator.html" class="btn-badge-flashy">
                             <i class="fas fa-id-badge" style="margin-right: 8px;"></i> Get your Free badge
                         </a>
                         <a href="https://wa.me/919113548342" class="btn btn-primary">Secure Your Spot</a>
-                        <a href="/#curriculum" class="btn btn-secondary">View Syllabus</a>
-                        <a href="https://wa.me/919113548342?text=Hi%20Need%20a%20coupon%20code%20for%20Master%20Agentic%20Process%20Automation%20(APA)" class="btn btn-flashy"><i class="fab fa-whatsapp" style="margin-right: 8px;"></i> Get Discount Code</a>
+                        <a href="#curriculum" class="btn btn-secondary">View 12-Topic Syllabus</a>
+                        <a href="https://wa.me/919113548342?text=Hi%20Need%20a%20coupon%20code%20for%20Automation%20Anywhere%20AI%20Training" class="btn btn-flashy"><i class="fab fa-whatsapp" style="margin-right: 8px;"></i> Get Discount Code</a>
                     </div>
-                    <h4 style="color: var(--accent-color); margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 2px;">Next-Gen Automation</h4>
-                    <h1 style="color: var(--primary-color);">Master <span class="gradient-text">Agentic Process Automation</span> (APA)</h1>
+                    <h4 style="color: var(--accent-color); margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 2px;">Official Certification & Enterprise Training</h4>
+                    <h1 style="color: var(--primary-color);">Automation Anywhere <span class="gradient-text">AI + Agentic AI Program</span></h1>
                     <p class="subtitle" style="margin-left: 0; color: var(--secondary-color); opacity: 0.9; line-height: 1.6;">
-                        The APA Bootcamp is a comprehensive, hands-on program designed to help professionals master the next evolution of automation by combining AI, intelligent agents, and modern workflow platforms. Moving beyond traditional RPA, this bootcamp introduces you to agentic systems that can think, decide, and act autonomously.
+                        A professional training program designed to prepare learners for official <strong>Automation Anywhere Automation Engineer and AI Certifications</strong>. Master the end-to-end curriculum progression—from AI Fundamentals, Prompt Engineering, LLMs, RAG, AI Agents, Mozart Orchestrator, AI Skills, API Tasks, Task Bots, Forms, and Error Handling—through hands-on enterprise projects.
                     </p>
 
-                    <div class="course-stats">
+                    <!-- Certification Readiness Box -->
+                    <div class="cert-hero-box">
+                        <div style="font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; color:#ba8bbf;">
+                            <i class="fas fa-award" style="margin-right:6px; color:#fbbf24;"></i> Certification Preparation Included
+                        </div>
+                        <h3 style="font-size:20px; font-weight:800; margin:6px 0 10px; color:#fff;">Prepare for Industry-Leading Automation Anywhere Credentials</h3>
+                        <div class="cert-badge-group">
+                            <span class="cert-badge-item"><i class="fas fa-certificate"></i> Automation Anywhere Certified Automation Engineer</span>
+                            <span class="cert-badge-item"><i class="fas fa-microchip"></i> Automation Anywhere Certified AI Specialist / Agentic Architect</span>
+                        </div>
+                    </div>
+
+                    <div class="course-stats" style="margin-top:2rem;">
                         <div class="stat-item">
-                            <h4 style="color: var(--accent-color);">2 Months</h4>
-                            <p style="color: var(--secondary-color); opacity: 0.7;">Duration</p>
+                            <h4 style="color: var(--accent-color);">12 Topics</h4>
+                            <p style="color: var(--secondary-color); opacity: 0.7;">Structured Progression</p>
                         </div>
                         <div class="stat-item">
-                            <h4 style="color: var(--accent-color);">~6 Hrs/Week</h4>
-                            <p style="color: var(--secondary-color); opacity: 0.7;">Effort</p>
+                            <h4 style="color: var(--accent-color);">3 Projects</h4>
+                            <p style="color: var(--secondary-color); opacity: 0.7;">Enterprise Capstones</p>
                         </div>
                         <div class="stat-item">
-                            <h4 style="color: var(--accent-color);">Intermediate</h4>
-                            <p style="color: var(--secondary-color); opacity: 0.7;">Skill Level</p>
+                            <h4 style="color: var(--accent-color);">AA + Agentic</h4>
+                            <p style="color: var(--secondary-color); opacity: 0.7;">Mozart &amp; AI Skills</p>
                         </div>
                         <div class="stat-item">
-                            <h4 style="color: var(--accent-color);">14 Modules</h4>
-                            <p style="color: var(--secondary-color); opacity: 0.7;">Comprehensive</p>
+                            <h4 style="color: var(--accent-color);">2 Certs</h4>
+                            <p style="color: var(--secondary-color); opacity: 0.7;">Exam Preparation</p>
                         </div>
                     </div>
                 </div>
@@ -716,185 +936,360 @@
     </section>
 
 
-    <!-- Curriculum -->
+    <!-- Curriculum Progression -->
     <section id="curriculum" class="section fade-in visible" style="background: var(--bg-dark);">
         <div class="container">
-            <div style="text-align: center; margin-bottom: 4rem;">
-                <h4 style="color: var(--accent-color); text-transform: uppercase; letter-spacing: 2px; font-size: 0.8rem; margin-bottom: 1rem;">Complete Syllabus</h4>
-                <h2>A Masterclass <span class="highlight">Curriculum</span></h2>
-                <p>14 Modules designed to take you from foundational AI to advanced Agentic architectures.</p>
-                <div style="margin-top: 2.5rem;">
+            <div style="text-align: center; margin-bottom: 3.5rem;">
+                <h4 style="color: var(--accent-color); text-transform: uppercase; letter-spacing: 2px; font-size: 0.85rem; margin-bottom: 0.8rem;">Step-by-Step Learning Path</h4>
+                <h2 style="font-size:2.5rem; font-weight:800; color:var(--text-dark);">Curriculum <span class="highlight">Progression Roadmap</span></h2>
+                <p style="max-width:720px; margin:10px auto 0; color:var(--text-muted);">From AI &amp; GenAI fundamentals to Automation Anywhere Mozart Orchestrator, AI Skills, API Tasks, Task Bots, Forms, Error Handling, and 3 enterprise capstones.</p>
+                
+                <div style="margin-top: 2rem;">
                     <a href="https://drive.google.com/file/d/1me_dyGJZgnX61pwupOvAlCLWcf54RR-h/view?usp=sharing" target="_blank" class="btn-badge-flashy" style="padding: 0.8rem 2.2rem; font-size: 1rem; border-radius: 50px;">
-                        <i class="fas fa-file-pdf" style="margin-right: 10px;"></i> Download Detailed Syllabus (PDF)
+                        <i class="fas fa-file-pdf" style="margin-right: 10px;"></i> Download Detailed 12-Topic Syllabus (PDF)
                     </a>
                 </div>
             </div>
 
-            <div class="module-grid">
-                <!-- Module 1 -->
-                <div class="module-card">
-                    <span class="module-number">Module 01</span>
-                    <h3>Introduction to AI & Automation</h3>
-                    <ul>
-                        <li>Gen AI Concepts: LLM, Tokens, Prompting</li>
-                        <li>Embeddings, Vector DB & RAG Fundamentals</li>
-                        <li>Evolution: From VBA & RPA to APA</li>
-                        <li>Market Demand & Global Opportunities</li>
-                    </ul>
+            <!-- 12-Topic Curriculum Grid -->
+            <div class="curr-progression-grid">
+                
+                <!-- Topic 1 -->
+                <div class="curr-topic-card">
+                    <div>
+                        <div class="topic-header">
+                            <span class="topic-step-num">Topic 01</span>
+                            <span style="font-size:11px; font-weight:700; color:var(--purple-dark);"><i class="fas fa-brain"></i> Foundations</span>
+                        </div>
+                        <h3 class="topic-title">AI Fundamentals</h3>
+                        <div style="margin-top:12px;">
+                            <div class="topic-section-label"><i class="fas fa-book-open"></i> Coverage &amp; Learning Areas</div>
+                            <ul class="topic-coverage-list">
+                                <li>Introduction to AI, AI vs ML vs GenAI</li>
+                                <li>Generative AI &amp; LLM core concepts</li>
+                                <li>Traditional Automation vs AI-powered Automation</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="topic-hands-on-box">
+                        <div class="topic-hands-on-title"><i class="fas fa-laptop-code"></i> Hands-on / Demonstration</div>
+                        <div class="topic-hands-on-desc">Understand where AI fits into Automation Anywhere architecture</div>
+                    </div>
                 </div>
 
-                <!-- Module 2 -->
-                <div class="module-card">
-                    <span class="module-number">Module 02</span>
-                    <h3>Automation Anywhere Platform</h3>
-                    <ul>
-                        <li>Community Edition Setup & Overview</li>
-                        <li>AI Agent Studio & PRE Engine</li>
-                        <li>AA Copilot & AI Governance Guardrails</li>
-                        <li>HITL: Process Composer Forms & Approvals</li>
-                    </ul>
+                <!-- Topic 2 -->
+                <div class="curr-topic-card">
+                    <div>
+                        <div class="topic-header">
+                            <span class="topic-step-num">Topic 02</span>
+                            <span style="font-size:11px; font-weight:700; color:var(--purple-dark);"><i class="fas fa-microchip"></i> Core LLM</span>
+                        </div>
+                        <h3 class="topic-title">GenAI &amp; LLM Fundamentals</h3>
+                        <div style="margin-top:12px;">
+                            <div class="topic-section-label"><i class="fas fa-book-open"></i> Coverage &amp; Learning Areas</div>
+                            <ul class="topic-coverage-list">
+                                <li>LLMs &amp; how LLMs work at a high level</li>
+                                <li>Context window, tokens, input/output tokens</li>
+                                <li>Token calculation, hallucination &amp; model limitations</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="topic-hands-on-box">
+                        <div class="topic-hands-on-title"><i class="fas fa-laptop-code"></i> Hands-on / Demonstration</div>
+                        <div class="topic-hands-on-desc">Token calculation exercise &amp; LLM interaction demo</div>
+                    </div>
                 </div>
 
-                <!-- Module 3 -->
-                <div class="module-card">
-                    <span class="module-number">Module 03</span>
-                    <h3>AA Agent Builder Platform</h3>
-                    <ul>
-                        <li>Chatbot Workflows & Knowledge Base</li>
-                        <li>Custom Agents, Templates & MCP Toolkits</li>
-                        <li>Building flows from scratch</li>
-                        <li>Integrating Public Chatbots</li>
-                    </ul>
+                <!-- Topic 3 -->
+                <div class="curr-topic-card">
+                    <div>
+                        <div class="topic-header">
+                            <span class="topic-step-num">Topic 03</span>
+                            <span style="font-size:11px; font-weight:700; color:var(--purple-dark);"><i class="fas fa-terminal"></i> Optimization</span>
+                        </div>
+                        <h3 class="topic-title">Prompt Engineering</h3>
+                        <div style="margin-top:12px;">
+                            <div class="topic-section-label"><i class="fas fa-book-open"></i> Coverage &amp; Learning Areas</div>
+                            <ul class="topic-coverage-list">
+                                <li>Prompt structure, instructions, context, constraints &amp; output formats</li>
+                                <li>Zero-shot, Few-shot, Role-based &amp; Structured prompting</li>
+                                <li>Extraction &amp; Classification prompt strategies</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="topic-hands-on-box">
+                        <div class="topic-hands-on-title"><i class="fas fa-laptop-code"></i> Hands-on / Demonstration</div>
+                        <div class="topic-hands-on-desc">Build &amp; test prompts for business automation scenarios</div>
+                    </div>
                 </div>
 
-                <!-- Module 4 -->
-                <div class="module-card">
-                    <span class="module-number">Module 04</span>
-                    <h3>AA Agent Builder - Projects</h3>
-                    <ul>
-                        <li><strong>Project 1:</strong> Web App Integrated Agent</li>
-                        <li><strong>Project 2:</strong> Personal Assistant (Telegram/Slack)</li>
-                        <li><strong>Project 3:</strong> Retrieval Augmented Generation</li>
-                        <li>Platform Analytics & Workflow Insights</li>
-                    </ul>
+                <!-- Topic 4 -->
+                <div class="curr-topic-card">
+                    <div>
+                        <div class="topic-header">
+                            <span class="topic-step-num">Topic 04</span>
+                            <span style="font-size:11px; font-weight:700; color:var(--purple-dark);"><i class="fas fa-robot"></i> Agentic Systems</span>
+                        </div>
+                        <h3 class="topic-title">Agentic AI &amp; AI Agents</h3>
+                        <div style="margin-top:12px;">
+                            <div class="topic-section-label"><i class="fas fa-book-open"></i> Coverage &amp; Learning Areas</div>
+                            <ul class="topic-coverage-list">
+                                <li>What is Agentic AI, AI Agent vs Chatbot vs RPA Bot</li>
+                                <li>Agent architecture, reasoning, planning &amp; decision-making</li>
+                                <li>Autonomous execution, tools &amp; tool selection</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="topic-hands-on-box">
+                        <div class="topic-hands-on-title"><i class="fas fa-laptop-code"></i> Hands-on / Demonstration</div>
+                        <div class="topic-hands-on-desc">Design an AI Agent &amp; demonstrate autonomous tool selection</div>
+                    </div>
                 </div>
 
-                <!-- Module 5 -->
-                <div class="module-card">
-                    <span class="module-number">Module 05</span>
-                    <h3>AA Developer Stack</h3>
-                    <ul>
-                        <li>Variables, Actions & Global Values</li>
-                        <li>Conditional Flows (If/Elseif/Else)</li>
-                        <li>Advanced Looping (For/While/Do)</li>
-                        <li>Best Practices & Error Handling</li>
-                    </ul>
+                <!-- Topic 5 -->
+                <div class="curr-topic-card">
+                    <div>
+                        <div class="topic-header">
+                            <span class="topic-step-num">Topic 05</span>
+                            <span style="font-size:11px; font-weight:700; color:var(--purple-dark);"><i class="fas fa-database"></i> Knowledge Base</span>
+                        </div>
+                        <h3 class="topic-title">RAG &amp; Enterprise Knowledge</h3>
+                        <div style="margin-top:12px;">
+                            <div class="topic-section-label"><i class="fas fa-book-open"></i> Coverage &amp; Learning Areas</div>
+                            <ul class="topic-coverage-list">
+                                <li>Embeddings, Vector Databases &amp; semantic search</li>
+                                <li>Document ingestion, chunking strategies &amp; metadata retrieval</li>
+                                <li>RAG architecture vs Fine-tuning trade-offs</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="topic-hands-on-box">
+                        <div class="topic-hands-on-title"><i class="fas fa-laptop-code"></i> Hands-on / Demonstration</div>
+                        <div class="topic-hands-on-desc">Build a basic RAG flow using enterprise business documents</div>
+                    </div>
                 </div>
 
-                <!-- Module 6 -->
-                <div class="module-card">
-                    <span class="module-number">Module 06</span>
-                    <h3>E2E Project: Customer Resolver</h3>
-                    <ul>
-                        <li>Problem Statement & PDD/BRD walkthrough</li>
-                        <li>As-Is and To-Be Solution Architecture</li>
-                        <li>Building with Agent Builder & ServiceNow</li>
-                        <li>Email Integration & Automated Routing</li>
-                    </ul>
+                <!-- Topic 6 -->
+                <div class="curr-topic-card">
+                    <div>
+                        <div class="topic-header">
+                            <span class="topic-step-num">Topic 06</span>
+                            <span style="font-size:11px; font-weight:700; color:var(--purple-dark);"><i class="fas fa-cogs"></i> AA Platform</span>
+                        </div>
+                        <h3 class="topic-title">Automation Anywhere + Agentic AI Architecture</h3>
+                        <div style="margin-top:12px;">
+                            <div class="topic-section-label"><i class="fas fa-book-open"></i> Coverage &amp; Learning Areas</div>
+                            <ul class="topic-coverage-list">
+                                <li>Automation Anywhere architecture &amp; Mozart Orchestrator</li>
+                                <li>Processes, AI Agents, AI Skills &amp; Agent Tools</li>
+                                <li>API Tasks, Task Bots, Forms, HITL &amp; Error Handling</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="topic-hands-on-box">
+                        <div class="topic-hands-on-title"><i class="fas fa-laptop-code"></i> Hands-on / Demonstration</div>
+                        <div class="topic-hands-on-desc">Design an enterprise Agentic Automation architecture</div>
+                    </div>
                 </div>
 
-                <!-- Module 7 -->
-                <div class="module-card">
-                    <span class="module-number">Module 07</span>
-                    <h3>Testing & Production Readiness</h3>
-                    <ul>
-                        <li>Why test AI? Parameters for Success</li>
-                        <li>F1 Scoring & Determining Readiness</li>
-                        <li>Confusion Matrix: Understanding Accuracy</li>
-                    </ul>
+                <!-- Topic 7 -->
+                <div class="curr-topic-card" style="border-color: rgba(186,139,191,0.6);">
+                    <div>
+                        <div class="topic-header">
+                            <span class="topic-step-num" style="background:#4c1d95; color:#fff;">Topic 07</span>
+                            <span style="font-size:11px; font-weight:700; color:#059669;"><i class="fas fa-headset"></i> Project 1</span>
+                        </div>
+                        <h3 class="topic-title">Use Case 1 — Customer Issue Resolver Agent</h3>
+                        <div style="margin-top:12px;">
+                            <div class="topic-section-label"><i class="fas fa-book-open"></i> Coverage &amp; Learning Areas</div>
+                            <ul class="topic-coverage-list">
+                                <li>ServiceNow integration &amp; customer issue understanding</li>
+                                <li>ServiceNow API, RAG-based knowledge retrieval</li>
+                                <li>AI Skill, Task Bot, tool selection, resolution &amp; human escalation</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="topic-hands-on-box" style="background:linear-gradient(135deg,#ecfdf5,#d1fae5); border-color:#a7f3d0;">
+                        <div class="topic-hands-on-title" style="color:#065f46;"><i class="fas fa-project-diagram"></i> Hands-on / Demonstration</div>
+                        <div class="topic-hands-on-desc" style="color:#047857;">Build an AI-powered Customer Issue Resolver using ServiceNow + RAG + Automation Anywhere</div>
+                    </div>
                 </div>
 
-                <!-- Module 8 -->
-                <div class="module-card">
-                    <span class="module-number">Module 08</span>
-                    <h3>E2E Project: Lead Creation Agent</h3>
-                    <ul>
-                        <li>Problem Statement & Requirement Analysis</li>
-                        <li>Solution Design for Enterprise Sales</li>
-                        <li>Live Build: AA Copilot & Salesforce</li>
-                        <li>Full PDD/BRD step-by-step Explanation</li>
-                    </ul>
+                <!-- Topic 8 -->
+                <div class="curr-topic-card" style="border-color: rgba(186,139,191,0.6);">
+                    <div>
+                        <div class="topic-header">
+                            <span class="topic-step-num" style="background:#4c1d95; color:#fff;">Topic 08</span>
+                            <span style="font-size:11px; font-weight:700; color:#2563eb;"><i class="fas fa-chart-line"></i> Project 2</span>
+                        </div>
+                        <h3 class="topic-title">Use Case 2 — Lead Generation &amp; Qualification Agent</h3>
+                        <div style="margin-top:12px;">
+                            <div class="topic-section-label"><i class="fas fa-book-open"></i> Coverage &amp; Learning Areas</div>
+                            <ul class="topic-coverage-list">
+                                <li>Salesforce integration, lead retrieval &amp; lead enrichment</li>
+                                <li>AI Agent, Salesforce API &amp; qualification criteria</li>
+                                <li>RAG, AI Skill, lead scoring, autonomous decisions &amp; human review</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="topic-hands-on-box" style="background:linear-gradient(135deg,#eff6ff,#dbeafe); border-color:#bfdbfe;">
+                        <div class="topic-hands-on-title" style="color:#1e40af;"><i class="fas fa-project-diagram"></i> Hands-on / Demonstration</div>
+                        <div class="topic-hands-on-desc" style="color:#1d4ed8;">Build an AI Lead Generation/Qualification Agent using Salesforce + Automation Anywhere</div>
+                    </div>
                 </div>
 
-                <!-- Module 9 -->
-                <div class="module-card">
-                    <span class="module-number">Module 09</span>
-                    <h3>UiPath APA Developer Stack</h3>
-                    <ul>
-                        <li>Introduction to UiPath’s APA Ecosystem</li>
-                        <li>UiPath Maestro: Modeling & Monitoring</li>
-                        <li>Agent Builder, Autopilot & Tools</li>
-                        <li>UiPath Apps for Human-in-the-Loop</li>
-                    </ul>
+                <!-- Topic 9 -->
+                <div class="curr-topic-card" style="border-color: rgba(186,139,191,0.6);">
+                    <div>
+                        <div class="topic-header">
+                            <span class="topic-step-num" style="background:#4c1d95; color:#fff;">Topic 09</span>
+                            <span style="font-size:11px; font-weight:700; color:#7c3aed;"><i class="fas fa-microphone"></i> Project 3</span>
+                        </div>
+                        <h3 class="topic-title">Use Case 3 — Voice Agent</h3>
+                        <div style="margin-top:12px;">
+                            <div class="topic-section-label"><i class="fas fa-book-open"></i> Coverage &amp; Learning Areas</div>
+                            <ul class="topic-coverage-list">
+                                <li>Voice AI concepts, Speech-to-Text &amp; Text-to-Speech</li>
+                                <li>Twilio / ElevenLabs integration &amp; AI Agent intent identification</li>
+                                <li>Tool selection, AA process execution, RAG &amp; voice response</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="topic-hands-on-box" style="background:linear-gradient(135deg,#f5f3ff,#ede9fe); border-color:#ddd6fe;">
+                        <div class="topic-hands-on-title" style="color:#5b21b6;"><i class="fas fa-project-diagram"></i> Hands-on / Demonstration</div>
+                        <div class="topic-hands-on-desc" style="color:#6d28d9;">Build a Voice Agent that invokes Automation Anywhere processes based on customer requests</div>
+                    </div>
                 </div>
 
-                <!-- Module 10 -->
-                <div class="module-card">
-                    <span class="module-number">Module 10</span>
-                    <h3>APA Project using UiPath</h3>
-                    <ul>
-                        <li>Detailed Use Case Analysis</li>
-                        <li>Live Build: Evaluating & Tuning Agents</li>
-                        <li>Integrating Tools & KB Indexing</li>
-                        <li>Autopilot Deployment & Publishing</li>
-                    </ul>
+                <!-- Topic 10 -->
+                <div class="curr-topic-card">
+                    <div>
+                        <div class="topic-header">
+                            <span class="topic-step-num">Topic 10</span>
+                            <span style="font-size:11px; font-weight:700; color:var(--purple-dark);"><i class="fas fa-shield-alt"></i> Robustness</span>
+                        </div>
+                        <h3 class="topic-title">Enterprise Agentic Automation — Error Handling &amp; Human-in-the-Loop</h3>
+                        <div style="margin-top:12px;">
+                            <div class="topic-section-label"><i class="fas fa-book-open"></i> Coverage &amp; Learning Areas</div>
+                            <ul class="topic-coverage-list">
+                                <li>API failures, AI failures, tool failures &amp; RAG failures</li>
+                                <li>Low-confidence responses, retries, exception handling &amp; logging</li>
+                                <li>Process Composer Forms, human approval &amp; fallback mechanisms</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="topic-hands-on-box">
+                        <div class="topic-hands-on-title"><i class="fas fa-laptop-code"></i> Hands-on / Demonstration</div>
+                        <div class="topic-hands-on-desc">Implement failure scenarios &amp; human escalation mechanisms</div>
+                    </div>
                 </div>
 
-                <!-- Module 11 -->
-                <div class="module-card">
-                    <span class="module-number">Module 11</span>
-                    <h3>Introduction to n8n platform</h3>
-                    <ul>
-                        <li>Core Workflow Concepts: Nodes & Data</li>
-                        <li>APIs, Webhooks & Advanced Error Handling</li>
-                        <li>AI Agent Node & LLM Automations</li>
-                        <li>Debugging & Tracing Complex Pipelines</li>
-                    </ul>
+                <!-- Topic 11 -->
+                <div class="curr-topic-card">
+                    <div>
+                        <div class="topic-header">
+                            <span class="topic-step-num">Topic 11</span>
+                            <span style="font-size:11px; font-weight:700; color:var(--purple-dark);"><i class="fas fa-drafting-compass"></i> Engineering</span>
+                        </div>
+                        <h3 class="topic-title">Architecture &amp; Best Practices</h3>
+                        <div style="margin-top:12px;">
+                            <div class="topic-section-label"><i class="fas fa-book-open"></i> Coverage &amp; Learning Areas</div>
+                            <ul class="topic-coverage-list">
+                                <li>When to use AI Agent vs AI Skill, API Task vs Task Bot</li>
+                                <li>RAG vs direct LLM, deterministic vs AI-driven automation</li>
+                                <li>Tool design, security, guardrails, scalability &amp; maintainability</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="topic-hands-on-box">
+                        <div class="topic-hands-on-title"><i class="fas fa-laptop-code"></i> Hands-on / Demonstration</div>
+                        <div class="topic-hands-on-desc">Review &amp; improve the architecture of the three use cases</div>
+                    </div>
                 </div>
 
-                <!-- Module 12 -->
-                <div class="module-card">
-                    <span class="module-number">Module 12</span>
-                    <h3>Project using n8n platform</h3>
-                    <ul>
-                        <li>Problem Statement & Project Scoping</li>
-                        <li>Live Build: AI-Driven Workflow Orchestration</li>
-                        <li>Deploying Production-Grade n8n Agents</li>
-                    </ul>
+                <!-- Topic 12 -->
+                <div class="curr-topic-card">
+                    <div>
+                        <div class="topic-header">
+                            <span class="topic-step-num">Topic 12</span>
+                            <span style="font-size:11px; font-weight:700; color:var(--purple-dark);"><i class="fas fa-trophy"></i> Capstone</span>
+                        </div>
+                        <h3 class="topic-title">Final Solution &amp; Assessment</h3>
+                        <div style="margin-top:12px;">
+                            <div class="topic-section-label"><i class="fas fa-book-open"></i> Coverage &amp; Learning Areas</div>
+                            <ul class="topic-coverage-list">
+                                <li>End-to-end Agentic Automation architecture</li>
+                                <li>Business problem analysis, component &amp; tool selection</li>
+                                <li>Agent design, RAG, human-in-the-loop &amp; exception handling</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="topic-hands-on-box">
+                        <div class="topic-hands-on-title"><i class="fas fa-laptop-code"></i> Hands-on / Demonstration</div>
+                        <div class="topic-hands-on-desc">Participants design an Agentic Automation solution for a new business scenario</div>
+                    </div>
                 </div>
 
-                <!-- Module 13 -->
-                <div class="module-card">
-                    <span class="module-number">Module 13</span>
-                    <h3>Introduction to Google AI Studio</h3>
-                    <ul>
-                        <li>Gemini Ecosystem & API Key Management</li>
-                        <li>Studio Features: Chat, Stream & Media</li>
-                        <li>Media Models: Imagen, Veo & Nano</li>
-                        <li>Building Custom Apps with Gemini</li>
-                    </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Enterprise Capstone Use Cases Section -->
+    <section class="section fade-in visible" style="background: transparent;">
+        <div class="container">
+            <div style="text-align: center; margin-bottom: 3.5rem;">
+                <h4 style="color: var(--accent-color); text-transform: uppercase; letter-spacing: 2px; font-size: 0.85rem; margin-bottom: 0.8rem;">Hands-on Enterprise Projects</h4>
+                <h2 style="font-size:2.5rem; font-weight:800; color:var(--text-dark);">3 Enterprise <span class="gradient-text">Capstone Agents</span></h2>
+                <p style="max-width:680px; margin:10px auto 0; color:var(--text-muted);">Build end-to-end production agents combining Automation Anywhere Mozart, AI Skills, API Tasks, Task Bots, and external SaaS APIs.</p>
+            </div>
+
+            <div class="usecase-grid">
+                <!-- Use Case 1 -->
+                <div class="usecase-card">
+                    <div>
+                        <span class="usecase-tag"><i class="fas fa-headset"></i> Project 1</span>
+                        <h3 class="usecase-title">Customer Issue Resolver Agent</h3>
+                        <p class="usecase-desc">Autonomous support ticket triage agent integrating ServiceNow API, RAG-based KB retrieval, Automation Anywhere AI Skills, and Task Bots with human escalation.</p>
+                    </div>
+                    <div class="usecase-tech-pills">
+                        <span class="usecase-pill">ServiceNow API</span>
+                        <span class="usecase-pill">RAG KB Retrieval</span>
+                        <span class="usecase-pill">AA AI Skill</span>
+                        <span class="usecase-pill">Task Bot</span>
+                        <span class="usecase-pill">HITL Escalation</span>
+                    </div>
                 </div>
 
-                <!-- Module 14 -->
-                <div class="module-card">
-                    <span class="module-number">Module 14</span>
-                    <h3>Google AntiGravity</h3>
-                    <ul>
-                        <li><strong>Introduction to Google Anti-Gravity</strong></li>
-                        <li>Next-Gen Studio Features & Capabilities</li>
-                        <li>Building Autonomous Apps with AntiGravity</li>
-                        <li>The Future of Multi-Modal Agentic Systems</li>
-                    </ul>
+                <!-- Use Case 2 -->
+                <div class="usecase-card">
+                    <div>
+                        <span class="usecase-tag"><i class="fas fa-chart-line"></i> Project 2</span>
+                        <h3 class="usecase-title">Lead Generation &amp; Qualification Agent</h3>
+                        <p class="usecase-desc">Sales intelligence bot fetching incoming leads via Salesforce API, enriching company profiles, scoring intent using RAG, and making autonomous qualification decisions.</p>
+                    </div>
+                    <div class="usecase-tech-pills">
+                        <span class="usecase-pill">Salesforce API</span>
+                        <span class="usecase-pill">Lead Enrichment</span>
+                        <span class="usecase-pill">Lead Scoring</span>
+                        <span class="usecase-pill">AI Agent</span>
+                        <span class="usecase-pill">Human Review</span>
+                    </div>
+                </div>
+
+                <!-- Use Case 3 -->
+                <div class="usecase-card">
+                    <div>
+                        <span class="usecase-tag"><i class="fas fa-microphone"></i> Project 3</span>
+                        <h3 class="usecase-title">Voice Agent with AA Execution</h3>
+                        <p class="usecase-desc">Voice-driven AI assistant powered by Speech-to-Text &amp; Text-to-Speech (Twilio/ElevenLabs), executing backend Automation Anywhere workflows and providing real-time voice feedback.</p>
+                    </div>
+                    <div class="usecase-tech-pills">
+                        <span class="usecase-pill">Twilio Voice</span>
+                        <span class="usecase-pill">ElevenLabs TTS</span>
+                        <span class="usecase-pill">Intent Engine</span>
+                        <span class="usecase-pill">AA Process Execution</span>
+                        <span class="usecase-pill">RAG Voice Response</span>
+                    </div>
                 </div>
             </div>
         </div>

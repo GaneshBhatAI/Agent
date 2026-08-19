@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Automation Anywhere AI + Agentic AI Program | Ai Anveshana</title>
+  <meta name="description" content="Master Automation Anywhere AI + Agentic AI. Prepare for Automation Anywhere Engineer and AI certifications with 12 progressive topics and 3 enterprise capstone use cases.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Inter:wght@300;400;500;600;700&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --purple-light: #BA8BBF;
+      --purple-dark: #6F53A3;
+      --purple-deep: #4F3A8A;
+      --bg: #EAF4FC;
+      --text-dark: #111827;
+      --text-mid: #374151;
+      --text-muted: #6B7280;
+      --glass-bg: rgba(255, 255, 255, 0.75);
+      --glass-border: rgba(255, 255, 255, 0.9);
+      --heading: 'Outfit', sans-serif;
+      --body: 'Inter', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--body); background: var(--bg); color: var(--text-mid); line-height: 1.7; overflow-x: hidden; }
+
+    /* ─── TOP ANNOUNCEMENT BANNER ─── */
+    #top-banner {
+      position: relative; z-index: 9999; display: flex; align-items: center;
+      justify-content: center; gap: 10px; flex-wrap: wrap;
+      padding: 9px 46px 9px 14px; font-family: var(--body); font-size: 13px; color: #4b5563;
+      background: linear-gradient(-45deg,rgba(123,97,201,.12),rgba(255,255,255,.94),rgba(139,92,246,.10),rgba(255,255,255,.94));
+      background-size: 300% 300%; animation: gradBg 8s ease infinite;
+      backdrop-filter: blur(14px); border-bottom: 1px solid rgba(123,97,201,.12);
+    }
+    @keyframes gradBg { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+    .b-text { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; text-align: center; }
+    .b-text strong { color: #111827; }
+    .b-hi { background: linear-gradient(90deg,#8B5CF6,#6D4FD6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 700; }
+    .b-badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 999px; background: rgba(123,97,201,.08); border: 1px solid rgba(123,97,201,.18); color: #7B61C9; font-size: 12px; font-weight: 600; }
+    .b-cta { display: inline-flex; align-items: center; padding: 6px 16px; border-radius: 999px; font-size: 12px; font-weight: 600; color: #fff; background: linear-gradient(135deg,#8B5CF6,#6D4FD6); text-decoration: none; }
+    .b-close { position: absolute; top: 50%; right: 14px; transform: translateY(-50%); background: none; border: none; font-size: 15px; color: #999; cursor: pointer; transition: .3s; }
+    .b-close:hover { color: #7B61C9; }
+
+    /* ─── FLOATING NAVBAR ─── */
+    .nav-wrap { width: 100%; display: flex; justify-content: center; padding: 18px 20px; position: sticky; top: 0; z-index: 900; }
+    .header-bar {
+      width: 100%; max-width: 1250px;
+      background: rgba(241,232,245,0.65); backdrop-filter: blur(28px) saturate(200%);
+      border: 1px solid rgba(255,255,255,0.75); border-radius: 100px;
+      padding: 8px 12px 8px 20px; display: flex; align-items: center; justify-content: space-between;
+      box-shadow: 0 4px 30px rgba(0,0,0,0.04), inset 0 1px 3px rgba(255,255,255,0.6), 0 10px 40px rgba(186,139,191,0.18);
+    }
+    .logo-wrap { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .logo-svg { width: 32px; height: 32px; }
+    .logo-name { font-family: 'Nunito', sans-serif; font-size: 28px; font-weight: 900; color: var(--text-dark); letter-spacing: -0.5px; }
+    .logo-name span { background: linear-gradient(135deg,var(--purple-light),var(--purple-dark)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    nav ul { display: flex; align-items: center; list-style: none; gap: 4px; }
+    nav ul li a { font-size: 13.5px; font-weight: 500; color: #4b5563; text-decoration: none; padding: 9px 15px; border-radius: 50px; display: inline-block; transition: all 0.3s ease; }
+    nav ul li a:hover { color: var(--text-dark); background: rgba(255,255,255,0.4); }
+    nav ul li.active a { background: #fff; color: #1f2937; box-shadow: 0 3px 10px rgba(0,0,0,0.05); }
+    .btn-nav {
+      font-size: 14px; font-weight: 600; color: #fff;
+      background: linear-gradient(135deg,var(--purple-light),var(--purple-dark));
+      border: none; padding: 11px 22px; border-radius: 100px; cursor: pointer;
+      text-decoration: none; white-space: nowrap; transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(111,83,163,0.35);
+    }
+    .btn-nav:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(111,83,163,0.5); }
+    .hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; }
+    .hamburger span { width: 24px; height: 2.5px; background: #374151; border-radius: 10px; }
+
+    /* ── Mobile Nav Overlay ── */
+    #mobile-nav {
+      display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 9999;
+      background: rgba(247,240,249,0.98); backdrop-filter: blur(20px);
+      flex-direction: column; align-items: center; justify-content: center; gap: 12px;
+    }
+    #mobile-nav.open { display: flex; }
+    #mobile-nav a { font-family: var(--heading); font-size: 20px; font-weight: 700; color: var(--text-dark); text-decoration: none; padding: 10px 30px; border-radius: 14px; }
+
+    /* ── PRO UI HERO SECTION ── */
+    .hero-outer {
+      position: relative; overflow: hidden; padding: 40px 20px 60px;
+    }
+    .hero-outer::before {
+      content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(111,83,163,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(111,83,163,0.05) 1px, transparent 1px);
+      background-size: 48px 48px;
+    }
+    .hero-container {
+      position: relative; z-index: 2; max-width: 1250px; margin: 0 auto;
+      display: grid; grid-template-columns: 1.2fr 0.95fr; gap: 50px; align-items: center;
+    }
+    
+    /* Breadcrumb */
+    .crumb-bar {
+      display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600;
+      color: var(--purple-dark); margin-bottom: 18px;
+    }
+    .crumb-bar a { color: var(--text-muted); text-decoration: none; transition: color .2s; }
+    .crumb-bar a:hover { color: var(--purple-dark); }
+    .crumb-sep { color: #9ca3af; font-size: 11px; }
+
+    /* Hero Badges & Typography */
+    .tag-hero-pill {
+      display: inline-flex; align-items: center; gap: 7px;
+      background: linear-gradient(135deg, rgba(186,139,191,0.18), rgba(111,83,163,0.12));
+      border: 1px solid rgba(186,139,191,0.4); color: var(--purple-deep);
+      padding: 6px 16px; border-radius: 99px; font-size: 12px; font-weight: 700;
+      letter-spacing: .06em; text-transform: uppercase; margin-bottom: 18px;
+    }
+    .hero-h1 {
+      font-family: var(--heading); font-size: 50px; font-weight: 800; line-height: 1.1;
+      color: var(--text-dark); letter-spacing: -0.03em; margin-bottom: 20px;
+    }
+    .hero-h1 span {
+      background: linear-gradient(135deg, var(--purple-light), var(--purple-dark));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .hero-p {
+      font-size: 16.5px; line-height: 1.7; color: #4b5563; margin-bottom: 30px; max-width: 620px;
+    }
+
+    /* Clean Pro UI Action Row */
+    .hero-action-row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 36px; }
+    .btn-hero-primary {
+      font-size: 15px; font-weight: 700; color: #fff;
+      background: linear-gradient(135deg, var(--purple-light), var(--purple-dark));
+      border: none; padding: 15px 32px; border-radius: 100px; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 9px;
+      box-shadow: 0 6px 25px rgba(111,83,163,0.35); transition: all 0.3s ease;
+    }
+    .btn-hero-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(111,83,163,0.5); }
+    .btn-hero-outline {
+      font-size: 15px; font-weight: 600; color: var(--text-dark);
+      background: rgba(255,255,255,0.8); border: 1.5px solid rgba(186,139,191,0.45);
+      padding: 15px 28px; border-radius: 100px; text-decoration: none; transition: all 0.3s ease;
+    }
+    .btn-hero-outline:hover { background: #fff; border-color: var(--purple-dark); color: var(--purple-dark); transform: translateY(-2px); }
+    .btn-whatsapp-icon {
+      width: 52px; height: 52px; border-radius: 50%; background: #25D366; color: #fff;
+      display: flex; align-items: center; justify-content: center; font-size: 22px;
+      text-decoration: none; box-shadow: 0 4px 18px rgba(37,211,102,0.35); transition: all 0.3s;
+    }
+    .btn-whatsapp-icon:hover { transform: scale(1.08); }
+
+    /* Hero Right Certification Showcase Card */
+    .cert-hero-card {
+      background: linear-gradient(145deg, #1e143c 0%, #2D1B69 65%, #4F3A8A 100%);
+      border: 1px solid rgba(255,255,255,0.18); border-radius: 28px; padding: 36px 30px;
+      color: #fff; box-shadow: 0 20px 50px rgba(45,27,105,0.3); position: relative; overflow: hidden;
+    }
+    .cert-hero-card::before {
+      content: ''; position: absolute; top: -60px; right: -60px; width: 220px; height: 220px;
+      border-radius: 50%; background: radial-gradient(circle, rgba(186,139,191,0.25) 0%, transparent 70%); pointer-events: none;
+    }
+    .cert-card-tag { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: #ba8bbf; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+    .cert-card-title { font-family: var(--heading); font-size: 24px; font-weight: 800; color: #fff; line-height: 1.25; margin-bottom: 14px; }
+    .cert-list { list-style: none; display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+    .cert-item { display: flex; align-items: flex-start; gap: 12px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); padding: 12px 16px; border-radius: 16px; font-size: 13.5px; font-weight: 600; color: #f3e8ff; }
+    .cert-item i { color: #fbbf24; font-size: 16px; margin-top: 2px; }
+    
+    /* Stats Row inside Hero */
+    .hero-mini-stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; width: 100%; max-width: 620px; }
+    .mini-stat { background: rgba(255,255,255,0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.9); border-radius: 16px; padding: 14px 12px; text-align: center; }
+    .mini-num { font-family: var(--heading); font-size: 22px; font-weight: 800; color: var(--purple-deep); line-height: 1; }
+    .mini-lbl { font-size: 11px; font-weight: 600; color: var(--text-muted); margin-top: 2px; }
+
+    /* ── TECH STACK MATRIX STRIP ── */
+    .tech-strip-sec { background: rgba(255,255,255,0.65); border-y: 1px solid rgba(186,139,191,0.2); padding: 24px 20px; }
+    .tech-strip-inner { max-width: 1250px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+    .tech-strip-title { font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; color: var(--purple-dark); }
+    .tech-pills-row { display: flex; flex-wrap: wrap; gap: 8px; }
+    .t-pill { background: #fff; border: 1px solid rgba(186,139,191,0.35); color: var(--text-dark); padding: 6px 14px; border-radius: 50px; font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
+    .t-pill i { color: var(--purple-dark); }
+
+    /* ── SECTION COMMON ── */
+    .section { padding: 70px 20px; }
+    .sec-inner { max-width: 1250px; margin: 0 auto; }
+    .sec-tag { display: inline-flex; align-items: center; gap: 7px; background: rgba(186,139,191,.14); border: 1px solid rgba(186,139,191,.35); color: var(--purple-dark); padding: 6px 16px; border-radius: 99px; font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 14px; }
+    .sec-title { font-family: var(--heading); font-size: 40px; font-weight: 800; color: var(--text-dark); line-height: 1.18; letter-spacing: -0.025em; margin-bottom: 12px; }
+    .sec-title span { background: linear-gradient(135deg,var(--purple-light),var(--purple-dark)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .sec-desc { font-size: 16px; color: var(--text-muted); max-width: 650px; line-height: 1.7; margin-bottom: 40px; }
+
+    /* ── 12-TOPIC CURRICULUM PROGRESSION GRID ── */
+    .curr-progression-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+    @media (max-width: 992px) { .curr-progression-grid { grid-template-columns: 1fr; } }
+    
+    .topic-card {
+      background: rgba(255,255,255,0.85); backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.95); border-radius: 24px; padding: 28px;
+      display: flex; flex-direction: column; justify-content: space-between; gap: 16px;
+      box-shadow: 0 8px 30px rgba(111,83,163,0.06); transition: all 0.35s ease;
+      position: relative; overflow: hidden;
+    }
+    .topic-card::before {
+      content: ''; position: absolute; top: 0; left: 0; width: 6px; height: 100%;
+      background: linear-gradient(180deg, var(--purple-light), var(--purple-dark));
+    }
+    .topic-card:hover { transform: translateY(-5px); box-shadow: 0 16px 45px rgba(111,83,163,0.16); border-color: rgba(186,139,191,0.6); }
+    .topic-card.project-card { border: 1.5px solid rgba(186,139,191,0.5); background: linear-gradient(135deg, #ffffff 0%, #fcf8ff 100%); }
+    .topic-card.project-card::before { background: linear-gradient(180deg, #10b981, #059669); }
+    
+    .topic-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .topic-step {
+      font-family: var(--heading); font-size: 12px; font-weight: 800; color: var(--purple-dark);
+      background: rgba(186,139,191,0.16); padding: 4px 12px; border-radius: 99px;
+      text-transform: uppercase; letter-spacing: 0.05em;
+    }
+    .topic-step.project-step { background: #4c1d95; color: #fff; }
+    .topic-cat { font-size: 11px; font-weight: 700; color: var(--purple-dark); }
+    .topic-h3 { font-family: var(--heading); font-size: 20px; font-weight: 800; color: var(--text-dark); margin-top: 6px; }
+    
+    .topic-label { font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--purple-deep); margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+    .coverage-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 6px; }
+    .coverage-list li { font-size: 13.5px; color: var(--text-mid); line-height: 1.5; display: flex; align-items: flex-start; gap: 8px; }
+    .coverage-list li::before { content: '▸'; color: var(--purple-dark); font-weight: bold; }
+    
+    .hands-on-box {
+      background: linear-gradient(135deg, rgba(245,238,255,0.85), rgba(237,226,255,0.95));
+      border: 1px solid rgba(186,139,191,0.35); border-radius: 16px; padding: 14px 18px; margin-top: 8px;
+    }
+    .hands-on-box.project-box { background: linear-gradient(135deg, #ecfdf5, #d1fae5); border-color: #a7f3d0; }
+    .hands-on-title { font-size: 12px; font-weight: 800; color: #4c1d95; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 6px; }
+    .hands-on-box.project-box .hands-on-title { color: #065f46; }
+    .hands-on-desc { font-size: 13px; font-weight: 600; color: #3b0764; margin-top: 4px; }
+    .hands-on-box.project-box .hands-on-desc { color: #047857; }
+
+    /* ── 3 ENTERPRISE CAPSTONES SPOTLIGHT ── */
+    .usecase-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 30px; }
+    @media (max-width: 992px) { .usecase-grid { grid-template-columns: 1fr; } }
+    .usecase-card {
+      background: linear-gradient(135deg, #ffffff 0%, #f9f5ff 100%);
+      border: 1.5px solid rgba(186,139,191,0.35); border-radius: 24px; padding: 30px 24px;
+      display: flex; flex-direction: column; justify-content: space-between;
+      box-shadow: 0 10px 35px rgba(111,83,163,0.08); transition: all 0.35s ease;
+    }
+    .usecase-card:hover { transform: translateY(-6px); box-shadow: 0 20px 50px rgba(111,83,163,0.18); border-color: var(--purple-dark); }
+    .usecase-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(111,83,163,0.12); color: var(--purple-dark); font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 99px; text-transform: uppercase; }
+    .usecase-h3 { font-family: var(--heading); font-size: 22px; font-weight: 800; color: var(--text-dark); margin: 12px 0 8px; }
+    .usecase-p { font-size: 14px; color: var(--text-muted); line-height: 1.6; margin-bottom: 16px; }
+    .usecase-pills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+    .u-pill { background: #fff; border: 1px solid rgba(186,139,191,0.3); color: #4b5563; font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 50px; }
+
+    /* ── INQUIRY FORM ── */
+    .contact-wrap { max-width: 1250px; margin: 0 auto 70px; padding: 0 20px; }
+    .contact-box { background: linear-gradient(135deg,#1e143c 0%,#2D1B69 60%,#4F3A8A 100%); border-radius: 30px; padding: 58px 40px; overflow: hidden; position: relative; }
+    .contact-inner { position:relative; z-index:2; display:grid; grid-template-columns:1fr 1.3fr; gap:60px; align-items:center; }
+    .contact-left h2 { font-family:var(--heading); font-size:38px; font-weight:800; color:#fff; margin-bottom:14px; }
+    .contact-left p { font-size:15px; color:rgba(255,255,255,.72); line-height:1.75; }
+    .contact-form { display:flex; flex-direction:column; gap:14px; }
+    .cf-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+    .c-input { width:100%; padding:14px 18px; border-radius:12px; border:1px solid rgba(255,255,255,.16); background:rgba(255,255,255,.1); color:#fff; font-family:var(--body); font-size:14px; backdrop-filter:blur(8px); }
+    .c-input::placeholder { color:rgba(255,255,255,.42); }
+    .c-btn { width:100%; padding:15px; border-radius:12px; border:none; cursor:pointer; font-family:var(--heading); font-size:16px; font-weight:700; color:var(--purple-deep); background:linear-gradient(135deg,#fff 0%,#F0E8FF 100%); transition:all .3s; }
+    .c-btn:hover { transform:translateY(-2px); box-shadow:0 10px 30px rgba(0,0,0,.32); }
+
+    /* ── FOOTER ── */
+    footer { padding: 40px 20px 20px; border-top: 1px solid rgba(186,139,191,.15); }
+    .footer-inner { max-width:1250px; margin:0 auto; display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:28px; }
+    .f-brand h3 { font-family:var(--heading); font-size:20px; font-weight:700; color:var(--text-dark); margin-bottom:8px; display:flex; align-items:center; gap:10px; }
+    .f-brand h3 span { background:linear-gradient(135deg,var(--purple-light),var(--purple-dark)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+    .f-brand p { font-size:13.5px; color:var(--text-muted); max-width:280px; line-height:1.6; }
+    .footer-copy { max-width:1250px; margin:24px auto 0; padding-top:20px; border-top:1px solid rgba(186,139,191,.12); font-size:13px; color:var(--text-muted); text-align:center; }
+
+    @media(max-width:768px){
+      .hero-container { grid-template-columns: 1fr; }
+      .hero-h1 { font-size: 36px; }
+      .sec-title { font-size: 30px; }
+      .contact-inner { grid-template-columns: 1fr; }
+      .cf-row { grid-template-columns: 1fr; }
+      nav ul { display: none; }
+      .hamburger { display: flex; }
+      .hero-mini-stats { grid-template-columns: repeat(2,1fr); }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- TOP ANNOUNCEMENT BANNER -->
+  <div id="top-banner">
+    <div class="b-text">
+      🚀 <strong>Ai Anveshana Academy</strong> —
+      <span class="b-hi">Automation Anywhere AI + Agentic AI Certification Program</span>
+      <span style="color:#c5c6d3">|</span>
+      <span class="b-badge">🏅 Exam Prep Included</span>
+    </div>
+    <a href="#curriculum" class="b-cta">Explore Syllabus →</a>
+    <button class="b-close" onclick="document.getElementById('top-banner').style.display='none'">✕</button>
+  </div>
+
+  <!-- FLOATING NAVBAR -->
+  <div class="nav-wrap">
+    <header class="header-bar">
+      <a href="index.html" class="logo-wrap">
+        <svg class="logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="lg1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#BA8BBF"/><stop offset="100%" stop-color="#6F53A3"/></linearGradient>
+            <linearGradient id="lg2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#4F3A8A"/><stop offset="100%" stop-color="#2D1B69"/></linearGradient>
+          </defs>
+          <rect x="0" y="35" width="100" height="30" rx="15" fill="url(#lg1)" transform="rotate(45 50 50)"/>
+          <circle cx="22" cy="78" r="20" fill="url(#lg2)"/>
+          <circle cx="78" cy="22" r="20" fill="url(#lg2)"/>
+        </svg>
+        <span class="logo-name">Ai <span>Anveshana</span></span>
+      </a>
+
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li class="active"><a href="courses.html">Programs</a></li>
+          <li><a href="apa-bootcamp.html">APA Bootcamp</a></li>
+          <li><a href="about-mentor.html">Mentor</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div style="display:flex;align-items:center;gap:12px;">
+        <a href="#inquire-form" class="btn-nav">Enroll Now</a>
+        <button class="hamburger" id="ham-btn" onclick="document.getElementById('mobile-nav').classList.toggle('open')">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </header>
+  </div>
+
+  <!-- Mobile Menu Overlay -->
+  <div id="mobile-nav">
+    <a href="index.html">Home</a>
+    <a href="courses.html">Programs</a>
+    <a href="apa-bootcamp.html">APA Bootcamp</a>
+    <a href="about-mentor.html">Mentor</a>
+    <a href="#contact">Contact</a>
+  </div>
+
+  <!-- PRO UI HERO SECTION -->
+  <section class="hero-outer">
+    <div class="hero-container">
+      
+      <!-- Left Column: Content & Actions -->
+      <div>
+        <div class="crumb-bar">
+          <a href="index.html">Home</a>
+          <span class="crumb-sep">/</span>
+          <a href="courses.html">Courses</a>
+          <span class="crumb-sep">/</span>
+          <span>Automation Anywhere AI</span>
+        </div>
+
+        <div class="tag-hero-pill">
+          <i class="fas fa-microchip" style="color:var(--purple-dark);"></i> Official Enterprise Certification Track
+        </div>
+
+        <h1 class="hero-h1">
+          Automation Anywhere <span>AI + Agentic AI</span> Program
+        </h1>
+
+        <p class="hero-p">
+          A professional training program designed to prepare learners for official <strong>Automation Anywhere Automation Engineer and AI Certifications</strong>. Master the 12-stage progression from AI Fundamentals, Prompt Engineering, LLMs, RAG, AI Agents, Mozart Orchestrator, AI Skills, API Tasks, Task Bots, Forms, and Error Handling through 3 enterprise capstone use cases.
+        </p>
+
+        <!-- Clean Pro UI Action Row (No colliding buttons) -->
+        <div class="hero-action-row">
+          <a href="#inquire-form" class="btn-hero-primary">
+            <i class="fas fa-rocket"></i> Enroll Now →
+          </a>
+          <a href="https://drive.google.com/file/d/1me_dyGJZgnX61pwupOvAlCLWcf54RR-h/view?usp=sharing" target="_blank" class="btn-hero-outline">
+            <i class="fas fa-file-pdf" style="margin-right:6px; color:var(--purple-dark);"></i> Download Syllabus
+          </a>
+          <a href="https://wa.me/919113548342?text=Hi%20Need%20info%20for%20Automation%20Anywhere%20AI%20Course" target="_blank" class="btn-whatsapp-icon" title="Chat on WhatsApp">
+            <i class="fab fa-whatsapp"></i>
+          </a>
+        </div>
+
+        <!-- Quick Stat Cards Bar -->
+        <div class="hero-mini-stats">
+          <div class="mini-stat">
+            <div class="mini-num">12</div>
+            <div class="mini-lbl">Topics</div>
+          </div>
+          <div class="mini-stat">
+            <div class="mini-num">3</div>
+            <div class="mini-lbl">Capstones</div>
+          </div>
+          <div class="mini-stat">
+            <div class="mini-num">AA+AI</div>
+            <div class="mini-lbl">Mozart Stack</div>
+          </div>
+          <div class="mini-stat">
+            <div class="mini-num">2</div>
+            <div class="mini-lbl">Certs Prep</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Certification Target Card -->
+      <div class="cert-hero-card">
+        <div class="cert-card-tag"><i class="fas fa-award" style="color:#fbbf24;"></i> Certification Target</div>
+        <h3 class="cert-card-title">Automation Anywhere Official Certifications</h3>
+        <p style="font-size:14px; color:rgba(255,255,255,0.8); line-height:1.6; margin-bottom:20px;">
+          This program is engineered to build complete theoretical depth and practical deployment skills required to clear official Automation Anywhere certification exams.
+        </p>
+
+        <div class="cert-list">
+          <div class="cert-item">
+            <i class="fas fa-certificate"></i>
+            <div>
+              <strong>Automation Anywhere Certified Automation Engineer</strong>
+              <div style="font-size:12px; color:rgba(255,255,255,0.7); font-weight:400; margin-top:2px;">Task Bots, API Tasks, Process Composer Forms &amp; Exception Handling</div>
+            </div>
+          </div>
+          <div class="cert-item">
+            <i class="fas fa-robot"></i>
+            <div>
+              <strong>Automation Anywhere Certified AI Specialist / Agentic Architect</strong>
+              <div style="font-size:12px; color:rgba(255,255,255,0.7); font-weight:400; margin-top:2px;">Mozart Orchestrator, AI Agents, AI Skills, RAG &amp; Human-in-the-Loop</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="background:rgba(255,255,255,0.1); border-radius:16px; padding:14px; font-size:13px; color:#e9d5ff; display:flex; align-items:center; gap:10px;">
+          <i class="fas fa-user-shield" style="font-size:20px; color:#fbbf24;"></i>
+          <span>Guided directly by <strong>Ganesh Bhat</strong> (Automation Anywhere MVP)</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- TECH STACK STRIP -->
+  <section class="tech-strip-sec">
+    <div class="tech-strip-inner">
+      <div class="tech-strip-title">Mastered Ecosystem Components</div>
+      <div class="tech-pills-row">
+        <span class="t-pill"><i class="fas fa-sitemap"></i> Mozart Orchestrator</span>
+        <span class="t-pill"><i class="fas fa-robot"></i> AI Agents</span>
+        <span class="t-pill"><i class="fas fa-brain"></i> AI Skills</span>
+        <span class="t-pill"><i class="fas fa-tools"></i> Agent Tools</span>
+        <span class="t-pill"><i class="fas fa-plug"></i> API Tasks</span>
+        <span class="t-pill"><i class="fas fa-cog"></i> Task Bots</span>
+        <span class="t-pill"><i class="fas fa-wpforms"></i> Process Forms</span>
+        <span class="t-pill"><i class="fas fa-shield-alt"></i> Error Handling</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12-TOPIC CURRICULUM PROGRESSION -->
+  <section id="curriculum" class="section">
+    <div class="sec-inner">
+      <div class="sec-tag">📌 Step-by-Step Curriculum</div>
+      <h2 class="sec-title">Curriculum <span>Progression Roadmap</span></h2>
+      <p class="sec-desc">12 structured modules mapping every concept from AI &amp; Prompt Engineering to Automation Anywhere Mozart Orchestrator, AI Skills, API Tasks, Task Bots, Forms, and 3 enterprise capstone use cases.</p>
+
+      <div class="curr-progression-grid">
+
+        <!-- Topic 1 -->
+        <div class="topic-card">
+          <div>
+            <div class="topic-header">
+              <span class="topic-step">Topic 01</span>
+              <span class="topic-cat"><i class="fas fa-brain"></i> Foundations</span>
+            </div>
+            <h3 class="topic-h3">AI Fundamentals</h3>
+            <div style="margin-top:12px;">
+              <div class="topic-label"><i class="fas fa-book-open"></i> Coverage &amp; Learning Areas</div>
+              <ul class="coverage-list">
+                <li>Introduction to AI, AI vs ML vs GenAI</li>
+                <li>Generative AI &amp; LLM core concepts</li>
+                <li>Traditional Automation vs AI-powered Automation</li>
+              </ul>
+            </div>
+          </div>
+          <div class="hands-on-box">
+            <div class="hands-on-title"><i class="fas fa-laptop-code"></i> Hands-on / Demonstration</div>
+            <div class="hands-on-desc">Understand where AI fits into Automation Anywhere architecture</div>
+          </div>
+        </div>
+
+        <!-- Topic 2 -->
+        <div class="topic-card">
+          <div>
+            <div class="topic-header">
+              <span class="topic-step">Topic 02</span>
+              <span class="topic-cat"><i class="fas fa-microchip"></i> Core LLM</span>
+            </div>
+            <h3 class="topic-h3">GenAI &amp; LLM Fundamentals</h3>
+            <div style="margin-top:12px;">
+              <div class="topic-label"><i class="fas fa-book-open"></i> Coverage &amp; Learning Areas</div>
+              <ul class="coverage-list">
+                <li>LLMs &amp; how LLMs work at a high level</li>
+                <li>Context window, tokens, input/output tokens</li>
+                <li>Token calculation, hallucination &amp; model limitations</li>
+              </ul>
+            </div>
+          </div>
+          <div class="hands-on-box">
+            <div class="hands-on-title"><i class="fas fa-laptop-code"></i> Hands-on / Demonstration</div>
+            <div class="hands-on-desc">Token calculation exercise &amp; LLM interaction demo</div>
+          </div>
+        </div>
+
+        <!-- Topic 3 -->
+        <div class="topic-card">
+          <div>
+            <div class="topic-header">
+              <span class="topic-step">Topic 03</span>
+              <span class="topic-cat"><i class="fas fa-terminal"></i> Optimization</span>
+            </div>
+            <h3 class="topic-h3">Prompt Engineering</h3>
+            <div style="margin-top:12px;">
+              <div class="topic-label"><i class="fas fa-book-open"></i> Coverage &amp; Learning Areas</div>
+              <ul class="coverage-list">
+                <li>Prompt structure, instructions, context, constraints &amp; output formats</li>
+                <li>Zero-shot, Few-shot, Role-based &amp; Structured prompting</li>
+                <li>Extraction &amp; Classification prompt strategies</li>
+              </ul>
+            </div>
+          </div>
+          <div class="hands-on-box">
+            <div class="hands-on-title"><i class="fas fa-laptop-code"></i> Hands-on / Demonstration</div>
+            <div class="hands-on-desc">Build &amp; test prompts for business automation scenarios</div>
+          </div>
+        </div>
+
+        <!-- Topic 4 -->
+        <div class="topic-card">
+          <div>
+            <div class="topic-header">
+              <span class="topic-step">Topic 04</span>
+              <span class="topic-cat"><i class="fas fa-robot"></i> Agentic Systems</span>
+            </div>
+            <h3 class="topic-h3">Agentic AI &amp; AI Agents</h3>
+            <div style="margin-top:12px;">
+              <div class="topic-label"><i class="fas fa-book-open"></i> Coverage &amp; Learning Areas</div>
+              <ul class="coverage-list">
+                <li>What is Agentic AI, AI Agent vs Chatbot vs RPA Bot</li>
+                <li>Agent architecture, reasoning, planning &amp; decision-making</li>
+                <li>Autonomous execution, tools &amp; tool selection</li>
+              </ul>
+            </div>
+          </div>
+          <div class="hands-on-box">
+            <div class="hands-on-title"><i class="fas fa-laptop-code"></i> Hands-on / Demonstration</div>
+            <div class="hands-on-desc">Design an AI Agent &amp; demonstrate autonomous tool selection</div>
+          </div>
+        </div>
+
+        <!-- Topic 5 -->
+        <div class="topic-card">
+          <div>
+            <div class="topic-header">
+              <span class="topic-step">Topic 05</span>
+              <span class="topic-cat"><i class="fas fa-database"></i> Knowledge Base</span>
+            </div>
+            <h3 class="topic-h3">RAG &amp; Enterprise Knowledge</h3>
+            <div style="margin-top:12px;">
+              <div class="topic-label"><i class="fas fa-book-open"></i> Coverage &amp; Learning Areas</div>
+              <ul class="coverage-list">
+                <li>Embeddings, Vector Databases &amp; semantic search</li>
+                <li>Document ingestion, chunking strategies &amp; metadata retrieval</li>
+                <li>RAG architecture vs Fine-tuning trade-offs</li>
+              </ul>
+            </div>
+          </div>
+          <div class="hands-on-box">
+            <div class="hands-on-title"><i class="fas fa-laptop-code"></i> Hands-on / Demonstration</div>
+            <div class="hands-on-desc">Build a basic RAG flow using enterprise business documents</div>
+          </div>
+        </div>
+
+        <!-- Topic 6 -->
+        <div class="topic-card">
+          <div>
+            <div class="topic-header">
+              <span class="topic-step">Topic 06</span>
+              <span class="topic-cat"><i class="fas fa-cogs"></i> AA Platform</span>
+            </div>
+            <h3 class="topic-h3">Automation Anywhere + Agentic AI Architecture</h3>
+            <div style="margin-top:12px;">
+              <div class="topic-label"><i class="fas fa-book-open"></i> Coverage &amp; Learning Areas</div>
+              <ul class="coverage-list">
+                <li>Automation Anywhere architecture &amp; Mozart Orchestrator</li>
+                <li>Processes, AI Agents, AI Skills &amp; Agent Tools</li>
+                <li>API Tasks, Task Bots, Forms, HITL &amp; Error Handling</li>
+              </ul>
+            </div>
+          </div>
+          <div class="hands-on-box">
+            <div class="hands-on-title"><i class="fas fa-laptop-code"></i> Hands-on / Demonstration</div>
+            <div class="hands-on-desc">Design an enterprise Agentic Automation architecture</div>
+          </div>
+        </div>
+
+        <!-- Topic 7 (Project 1) -->
+        <div class="topic-card project-card">
+          <div>
+            <div class="topic-header">
+              <span class="topic-step project-step">Topic 07</span>
+              <span class="topic-cat" style="color:#059669;"><i class="fas fa-headset"></i> Project 1</span>
+            </div>
+            <h3 class="topic-h3">Use Case 1 — Customer Issue Resolver Agent</h3>
+            <div style="margin-top:12px;">
+              <div class="topic-label"><i class="fas fa-book-open"></i> Coverage &amp; Learning Areas</div>
+              <ul class="coverage-list">
+                <li>ServiceNow integration &amp; customer issue understanding</li>
+                <li>ServiceNow API, RAG-based knowledge retrieval</li>
+                <li>AI Skill, Task Bot, tool selection, resolution recommendation &amp; human escalation</li>
+              </ul>
+            </div>
+          </div>
+          <div class="hands-on-box project-box">
+            <div class="hands-on-title"><i class="fas fa-project-diagram"></i> Hands-on / Demonstration</div>
+            <div class="hands-on-desc">Build an AI-powered Customer Issue Resolver using ServiceNow + RAG + Automation Anywhere</div>
+          </div>
+        </div>
+
+        <!-- Topic 8 (Project 2) -->
+        <div class="topic-card project-card">
+          <div>
+            <div class="topic-header">
+              <span class="topic-step project-step">Topic 08</span>
+              <span class="topic-cat" style="color:#2563eb;"><i class="fas fa-chart-line"></i> Project 2</span>
+            </div>
+            <h3 class="topic-h3">Use Case 2 — Lead Generation &amp; Qualification Agent</h3>
+            <div style="margin-top:12px;">
+              <div class="topic-label"><i class="fas fa-book-open"></i> Coverage &amp; Learning Areas</div>
+              <ul class="coverage-list">
+                <li>Salesforce integration, lead retrieval &amp; lead enrichment</li>
+                <li>AI Agent, Salesforce API &amp; qualification criteria</li>
+                <li>RAG, AI Skill, lead scoring, autonomous decisions &amp; human review</li>
+              </ul>
+            </div>
+          </div>
+          <div class="hands-on-box project-box" style="background:linear-gradient(135deg,#eff6ff,#dbeafe); border-color:#bfdbfe;">
+            <div class="hands-on-title" style="color:#1e40af;"><i class="fas fa-project-diagram"></i> Hands-on / Demonstration</div>
+            <div class="hands-on-desc" style="color:#1d4ed8;">Build an AI Lead Generation/Qualification Agent using Salesforce + Automation Anywhere</div>
+          </div>
+        </div>
+
+        <!-- Topic 9 (Project 3) -->
+        <div class="topic-card project-card">
+          <div>
+            <div class="topic-header">
+              <span class="topic-step project-step">Topic 09</span>
+              <span class="topic-cat" style="color:#7c3aed;"><i class="fas fa-microphone"></i> Project 3</span>
+            </div>
+            <h3 class="topic-h3">Use Case 3 — Voice Agent</h3>
+            <div style="margin-top:12px;">
+              <div class="topic-label"><i class="fas fa-book-open"></i> Coverage &amp; Learning Areas</div>
+              <ul class="coverage-list">
+                <li>Voice AI concepts, Speech-to-Text &amp; Text-to-Speech</li>
+                <li>Twilio / ElevenLabs integration &amp; AI Agent intent identification</li>
+                <li>Tool selection, AA process execution, RAG &amp; voice response</li>
+              </ul>
+            </div>
+          </div>
+          <div class="hands-on-box project-box" style="background:linear-gradient(135deg,#f5f3ff,#ede9fe); border-color:#ddd6fe;">
+            <div class="hands-on-title" style="color:#5b21b6;"><i class="fas fa-project-diagram"></i> Hands-on / Demonstration</div>
+            <div class="hands-on-desc" style="color:#6d28d9;">Build a Voice Agent that invokes Automation Anywhere processes based on customer requests</div>
+          </div>
+        </div>
+
+        <!-- Topic 10 -->
+        <div class="topic-card">
+          <div>
+            <div class="topic-header">
+              <span class="topic-step">Topic 10</span>
+              <span class="topic-cat"><i class="fas fa-shield-alt"></i> Resilience</span>
+            </div>
+            <h3 class="topic-h3">Enterprise Agentic Automation — Error Handling &amp; HITL</h3>
+            <div style="margin-top:12px;">
+              <div class="topic-label"><i class="fas fa-book-open"></i> Coverage &amp; Learning Areas</div>
+              <ul class="coverage-list">
+                <li>API failures, AI failures, tool failures &amp; RAG failures</li>
+                <li>Low-confidence responses, retries, exception handling &amp; logging</li>
+                <li>Process Composer Forms, human approval &amp; fallback mechanisms</li>
+              </ul>
+            </div>
+          </div>
+          <div class="hands-on-box">
+            <div class="hands-on-title"><i class="fas fa-laptop-code"></i> Hands-on / Demonstration</div>
+            <div class="hands-on-desc">Implement failure scenarios &amp; human escalation mechanisms</div>
+          </div>
+        </div>
+
+        <!-- Topic 11 -->
+        <div class="topic-card">
+          <div>
+            <div class="topic-header">
+              <span class="topic-step">Topic 11</span>
+              <span class="topic-cat"><i class="fas fa-drafting-compass"></i> Engineering</span>
+            </div>
+            <h3 class="topic-h3">Architecture &amp; Best Practices</h3>
+            <div style="margin-top:12px;">
+              <div class="topic-label"><i class="fas fa-book-open"></i> Coverage &amp; Learning Areas</div>
+              <ul class="coverage-list">
+                <li>When to use AI Agent vs AI Skill, API Task vs Task Bot</li>
+                <li>RAG vs direct LLM, deterministic vs AI-driven automation</li>
+                <li>Tool design, security, guardrails, scalability &amp; maintainability</li>
+              </ul>
+            </div>
+          </div>
+          <div class="hands-on-box">
+            <div class="hands-on-title"><i class="fas fa-laptop-code"></i> Hands-on / Demonstration</div>
+            <div class="hands-on-desc">Review &amp; improve the architecture of the three use cases</div>
+          </div>
+        </div>
+
+        <!-- Topic 12 -->
+        <div class="topic-card">
+          <div>
+            <div class="topic-header">
+              <span class="topic-step">Topic 12</span>
+              <span class="topic-cat"><i class="fas fa-trophy"></i> Capstone</span>
+            </div>
+            <h3 class="topic-h3">Final Solution &amp; Assessment</h3>
+            <div style="margin-top:12px;">
+              <div class="topic-label"><i class="fas fa-book-open"></i> Coverage &amp; Learning Areas</div>
+              <ul class="coverage-list">
+                <li>End-to-end Agentic Automation architecture</li>
+                <li>Business problem analysis, component &amp; tool selection</li>
+                <li>Agent design, RAG, human-in-the-loop &amp; exception handling</li>
+              </ul>
+            </div>
+          </div>
+          <div class="hands-on-box">
+            <div class="hands-on-title"><i class="fas fa-laptop-code"></i> Hands-on / Demonstration</div>
+            <div class="hands-on-desc">Participants design an Agentic Automation solution for a new business scenario</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 ENTERPRISE CAPSTONES SPOTLIGHT -->
+  <section class="section" style="background: rgba(245,238,255,0.4);">
+    <div class="sec-inner">
+      <div class="sec-tag">🚀 Production Ready</div>
+      <h2 class="sec-title">3 Enterprise <span>Capstone Agents</span></h2>
+      <p class="sec-desc">You won't just learn theory — you will build 3 production-grade agents combining Automation Anywhere Mozart, AI Skills, API Tasks, Task Bots, and enterprise SaaS APIs.</p>
+
+      <div class="usecase-grid">
+        <!-- Project 1 -->
+        <div class="usecase-card">
+          <div>
+            <span class="usecase-badge"><i class="fas fa-headset"></i> Project 1</span>
+            <h3 class="usecase-h3">Customer Issue Resolver Agent</h3>
+            <p class="usecase-p">Autonomous support ticket triage agent integrating ServiceNow API, RAG-based KB retrieval, Automation Anywhere AI Skills, and Task Bots with human escalation.</p>
+          </div>
+          <div class="usecase-pills">
+            <span class="u-pill">ServiceNow API</span>
+            <span class="u-pill">RAG KB Retrieval</span>
+            <span class="u-pill">AA AI Skill</span>
+            <span class="u-pill">Task Bot</span>
+            <span class="u-pill">HITL Escalation</span>
+          </div>
+        </div>
+
+        <!-- Project 2 -->
+        <div class="usecase-card">
+          <div>
+            <span class="usecase-badge"><i class="fas fa-chart-line"></i> Project 2</span>
+            <h3 class="usecase-h3">Lead Generation &amp; Qualification Agent</h3>
+            <p class="usecase-p">Sales intelligence bot fetching incoming leads via Salesforce API, enriching company profiles, scoring intent using RAG, and making autonomous qualification decisions.</p>
+          </div>
+          <div class="usecase-pills">
+            <span class="u-pill">Salesforce API</span>
+            <span class="u-pill">Lead Enrichment</span>
+            <span class="u-pill">Lead Scoring</span>
+            <span class="u-pill">AI Agent</span>
+            <span class="u-pill">Human Review</span>
+          </div>
+        </div>
+
+        <!-- Project 3 -->
+        <div class="usecase-card">
+          <div>
+            <span class="usecase-badge"><i class="fas fa-microphone"></i> Project 3</span>
+            <h3 class="usecase-h3">Voice Agent with AA Execution</h3>
+            <p class="usecase-p">Voice-driven AI assistant powered by Speech-to-Text &amp; Text-to-Speech (Twilio/ElevenLabs), executing backend Automation Anywhere workflows and providing real-time voice response.</p>
+          </div>
+          <div class="usecase-pills">
+            <span class="u-pill">Twilio Voice</span>
+            <span class="u-pill">ElevenLabs TTS</span>
+            <span class="u-pill">Intent Engine</span>
+            <span class="u-pill">AA Workflows</span>
+            <span class="u-pill">RAG Response</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INQUIRY FORM -->
+  <div class="contact-wrap" id="inquire-form">
+    <div class="contact-box">
+      <div class="contact-inner">
+        <div class="contact-left">
+          <h2>Enroll / Reserve <span>Your Seat</span></h2>
+          <p>Have questions about prerequisites, certification preparation, or team discounts? Submit your inquiry and our architect team will get back to you within 24 hours.</p>
+        </div>
+        <form class="contact-form" id="enrollForm" onsubmit="alert('Thank you! We will contact you shortly.'); return false;">
+          <div class="cf-row">
+            <input type="text" class="c-input" placeholder="Your Full Name" required>
+            <input type="email" class="c-input" placeholder="Your Email Address" required>
+          </div>
+          <input type="text" class="c-input" value="Automation Anywhere AI + Agentic AI Program" readonly>
+          <textarea class="c-input" placeholder="Share your experience background or questions..."></textarea>
+          <button type="submit" class="c-btn">Submit Inquiry →</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <div class="f-brand">
+        <h3>
+          <svg width="32" height="32" viewBox="0 0 100 100"><defs><linearGradient id="fl1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#BA8BBF"/><stop offset="100%" stop-color="#6F53A3"/></linearGradient><linearGradient id="fl2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#4F3A8A"/><stop offset="100%" stop-color="#2D1B69"/></linearGradient></defs><rect x="0" y="35" width="100" height="30" rx="15" fill="url(#fl1)" transform="rotate(45 50 50)"/><circle cx="22" cy="78" r="20" fill="url(#fl2)"/><circle cx="78" cy="22" r="20" fill="url(#fl2)"/></svg>
+          Ai <span>Anveshana</span>
+        </h3>
+        <p>Empowering global enterprise teams with cutting-edge AI and Agentic Process Automation solutions.</p>
+      </div>
+      <div>
+        <h4 style="font-size:13px; font-weight:700; color:var(--purple-dark); margin-bottom:8px;">Quick Links</h4>
+        <ul style="list-style:none; display:flex; flex-direction:column; gap:6px; font-size:13px;">
+          <li><a href="courses.html" style="color:var(--text-muted); text-decoration:none;">All Courses &amp; Bootcamps</a></li>
+          <li><a href="apa-bootcamp.html" style="color:var(--text-muted); text-decoration:none;">APA Master Bootcamp</a></li>
+          <li><a href="about-mentor.html" style="color:var(--text-muted); text-decoration:none;">About Mentor Ganesh Bhat</a></li>
+        </ul>
+      </div>
+    </div>
+    <p class="footer-copy">© 2026 Ai Anveshana. All Rights Reserved.</p>
+  </footer>
+
+</body>
+</html>
