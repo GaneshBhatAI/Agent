@@ -282,8 +282,15 @@
     .chat-send { background:linear-gradient(135deg,var(--purple-light),var(--purple-dark)); border:none; width:36px; height:36px; border-radius:50%; color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:13px; }
 
     /* ─── RESPONSIVE ─── */
+    .spotlight-section { padding: 70px 20px; }
+    .spotlight-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 40px; align-items: center; }
+    .spotlight-title { font-family: var(--heading); font-size: 38px; font-weight: 800; color: #fff; line-height: 1.15; margin-bottom: 16px; }
+    .spotlight-card { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.18); backdrop-filter: blur(16px); border-radius: 24px; padding: 30px; display: flex; flex-direction: column; gap: 16px; }
+
     @media(max-width:1024px){
       .hero{grid-template-columns:1fr;gap:40px;}
+      .spotlight-grid{grid-template-columns:1fr;gap:30px;}
+      .spotlight-title{font-size:30px;}
       .hv{height:320px;}
       .ai{width:54px;height:54px;border-radius:14px;}
       .ai img{width:32px;height:32px;}
@@ -296,6 +303,9 @@
       .stats-3{grid-template-columns:repeat(3,1fr);}
     }
     @media(max-width:768px){
+      .spotlight-section{padding:45px 16px;}
+      .spotlight-title{font-size:24px;}
+      .spotlight-card{padding:22px 18px;}
       nav ul{display:none!important;}
       .btn-nav{display:none!important;}
       .hamburger{display:flex!important;}
@@ -427,14 +437,14 @@
     </div>
   </div>
 <!-- AUTOMATION ANYWHERE AI + AGENTIC AI ACADEMY SPOTLIGHT -->
-<section id="academy-program" class="section" style="background: linear-gradient(135deg, #1e143c 0%, #2D1B69 60%, #4F3A8A 100%); color: #fff; padding: 70px 20px;">
+<section id="academy-program" class="section spotlight-section" style="background: linear-gradient(135deg, #1e143c 0%, #2D1B69 60%, #4F3A8A 100%); color: #fff;">
   <div class="section-inner" style="max-width: 1250px; margin: 0 auto;">
-    <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 40px; align-items: center;">
+    <div class="spotlight-grid">
       <div>
         <div style="display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.25); color: #e9d5ff; padding: 5px 14px; border-radius: 99px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 16px;">
           <i class="fas fa-bolt" style="color: #fbbf24;"></i> Certification Prep Crash Course
         </div>
-        <h2 style="font-family: var(--heading); font-size: 38px; font-weight: 800; color: #fff; line-height: 1.15; margin-bottom: 16px;">
+        <h2 class="spotlight-title">
           Automation Anywhere <span style="background: linear-gradient(135deg,#BA8BBF,#fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">AI &amp; Automation Engineer</span> Crash Course
         </h2>
         <p style="font-size: 15.5px; color: rgba(255,255,255,0.85); line-height: 1.7; margin-bottom: 24px;">
@@ -450,7 +460,7 @@
         </div>
       </div>
 
-      <div style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.18); backdrop-filter: blur(16px); border-radius: 24px; padding: 30px; display: flex; flex-direction: column; gap: 16px;">
+      <div class="spotlight-card">
         <div style="font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: #ba8bbf;">Program Highlights</div>
         <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px; font-size: 14px; color: rgba(255,255,255,0.9);">
           <li style="display: flex; align-items: center; gap: 10px;"><i class="fas fa-check-circle" style="color: #4ade80;"></i> Prepared for AA AI &amp; Automation Engineer Certificate</li>
@@ -465,14 +475,14 @@
 </section>
 
 <!-- AI & AUTOMATION ENGINEER PHASE-WISE ROADMAP SPOTLIGHT -->
-<section id="ai-engineer-roadmap" class="section" style="background: linear-gradient(135deg, #111827 0%, #1e143c 60%, #2D1B69 100%); color: #fff; padding: 70px 20px; border-top: 1px solid rgba(255,255,255,0.1);">
+<section id="ai-engineer-roadmap" class="section spotlight-section" style="background: linear-gradient(135deg, #111827 0%, #1e143c 60%, #2D1B69 100%); color: #fff; border-top: 1px solid rgba(255,255,255,0.1);">
   <div class="section-inner" style="max-width: 1250px; margin: 0 auto;">
-    <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 40px; align-items: center;">
+    <div class="spotlight-grid">
       <div>
         <div style="display: inline-flex; align-items: center; gap: 6px; background: rgba(186,139,191,0.18); border: 1px solid rgba(186,139,191,0.35); color: #e9d5ff; padding: 5px 14px; border-radius: 99px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 16px;">
           <i class="fas fa-layer-group" style="color: #ba8bbf;"></i> Phase-Wise Masterclass Roadmap
         </div>
-        <h2 style="font-family: var(--heading); font-size: 38px; font-weight: 800; color: #fff; line-height: 1.15; margin-bottom: 16px;">
+        <h2 class="spotlight-title">
           AI &amp; Automation Engineer <span style="background: linear-gradient(135deg,#BA8BBF,#fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Phase-Wise Roadmap</span>
         </h2>
         <p style="font-size: 15.5px; color: rgba(255,255,255,0.85); line-height: 1.7; margin-bottom: 24px;">
@@ -488,7 +498,7 @@
         </div>
       </div>
 
-      <div style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.18); backdrop-filter: blur(16px); border-radius: 24px; padding: 30px; display: flex; flex-direction: column; gap: 16px;">
+      <div class="spotlight-card">
         <div style="font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: #ba8bbf;">Roadmap Highlights</div>
         <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px; font-size: 14px; color: rgba(255,255,255,0.9);">
           <li style="display: flex; align-items: center; gap: 10px;"><i class="fas fa-check-circle" style="color: #4ade80;"></i> 13 Progressive Build-First Phases</li>
