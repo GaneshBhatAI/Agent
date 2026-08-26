@@ -1019,55 +1019,18 @@
       box-shadow: 0 10px 30px rgba(0, 0, 0, .32);
     }
 
-    /* ── FOOTER ── */
-    footer {
-      padding: 40px 20px 20px;
-      border-top: 1px solid rgba(186, 139, 191, .15);
-    }
-
-    .footer-inner {
-      max-width: 1250px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      flex-wrap: wrap;
-      gap: 28px;
-    }
-
-    .f-brand h3 {
-      font-family: var(--heading);
-      font-size: 20px;
-      font-weight: 700;
-      color: var(--text-dark);
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .f-brand h3 span {
-      background: linear-gradient(135deg, var(--purple-light), var(--purple-dark));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .f-brand p {
-      font-size: 13.5px;
-      color: var(--text-muted);
-      max-width: 280px;
-      line-height: 1.6;
-    }
-
-    .footer-copy {
-      max-width: 1250px;
-      margin: 24px auto 0;
-      padding-top: 20px;
-      border-top: 1px solid rgba(186, 139, 191, .12);
-      font-size: 13px;
-      color: var(--text-muted);
-      text-align: center;
-    }
+    /* ─── FOOTER (Premium Dark Theme) ─── */
+    footer { background: linear-gradient(180deg, #160d33 0%, #0a0518 100%); color: #fff; padding: 50px 20px 24px; border-top: 1px solid rgba(186,139,191,0.25); }
+    .footer-inner { max-width:1250px; margin:0 auto; display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:28px; }
+    .f-brand h3 { font-family:var(--heading); font-size:20px; font-weight:700; color:#fff; margin-bottom:8px; display:flex; align-items:center; gap:10px; }
+    .f-brand h3 span { background:linear-gradient(135deg,var(--purple-light),#fff); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+    .f-brand p { font-size:13.5px; color:rgba(255,255,255,0.75); max-width:280px; line-height:1.6; font-weight: 500; }
+    .f-address h4 { font-size:13px; font-weight:700; color:var(--purple-light); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom:8px; }
+    .f-address p { font-size:13px; color:rgba(255,255,255,0.85); line-height:1.6; max-width:260px; font-weight: 500; }
+    .f-social { display:flex; gap:10px; margin-top:14px; }
+    .f-social a { width:36px; height:36px; border-radius:50%; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); display:flex; align-items:center; justify-content:center; color:#fff; text-decoration:none; font-size:14px; transition:all .3s; }
+    .f-social a:hover { background:var(--purple-dark); border-color:var(--purple-light); transform:translateY(-2px); }
+    .footer-copy { max-width:1250px; margin:28px auto 0; padding-top:20px; border-top:1px solid rgba(255,255,255,0.12); font-size:13px; color:rgba(255,255,255,0.65); text-align:center; }
 
     @media(max-width:768px) {
       .hero-container {
