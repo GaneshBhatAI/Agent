@@ -281,16 +281,45 @@
     .chat-input-row input:focus { outline:none; border-color:var(--purple-light); }
     .chat-send { background:linear-gradient(135deg,var(--purple-light),var(--purple-dark)); border:none; width:36px; height:36px; border-radius:50%; color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:13px; }
 
-    /* ─── RESPONSIVE ─── */
+    /* ─── RESPONSIVE & SPOTLIGHT ─── */
     .spotlight-section { padding: 70px 20px; }
     .spotlight-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 40px; align-items: center; }
     .spotlight-title { font-family: var(--heading); font-size: 38px; font-weight: 800; color: #fff; line-height: 1.15; margin-bottom: 16px; }
     .spotlight-card { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.18); backdrop-filter: blur(16px); border-radius: 24px; padding: 30px; display: flex; flex-direction: column; gap: 16px; }
 
+    /* AI & Automation Solutions Spotlight */
+    .solutions-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+    .solution-card {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.14);
+      backdrop-filter: blur(16px);
+      border-radius: 24px;
+      padding: 28px;
+      transition: all 0.35s ease;
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .solution-card:hover {
+      background: rgba(255,255,255,0.1);
+      border-color: rgba(186,139,191,0.5);
+      transform: translateY(-4px);
+    }
+    .sol-icon {
+      width: 46px; height: 46px; border-radius: 14px;
+      background: linear-gradient(135deg, rgba(186,139,191,0.25), rgba(111,83,163,0.2));
+      border: 1px solid rgba(186,139,191,0.3);
+      color: #ba8bbf; font-size: 20px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .sol-title { font-family: var(--heading); font-size: 19px; font-weight: 700; color: #fff; }
+    .sol-desc { font-size: 14px; color: rgba(255,255,255,0.8); line-height: 1.6; }
+    .sol-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+    .sol-tag { background: rgba(186,139,191,0.15); border: 1px solid rgba(186,139,191,0.28); color: #e9d5ff; font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 50px; }
+
     @media(max-width:1024px){
       .hero{grid-template-columns:1fr;gap:40px;}
       .spotlight-grid{grid-template-columns:1fr;gap:30px;}
-      .spotlight-title{font-size:30px;}
+      .spotlight-title{font-size:30px!important;}
+      .solutions-grid{grid-template-columns:1fr;}
       .hv{height:320px;}
       .ai{width:54px;height:54px;border-radius:14px;}
       .ai img{width:32px;height:32px;}
@@ -436,77 +465,86 @@
       </div>
     </div>
   </div>
-<!-- AUTOMATION ANYWHERE AI + AGENTIC AI ACADEMY SPOTLIGHT -->
-<section id="academy-program" class="section spotlight-section" style="background: linear-gradient(135deg, #1e143c 0%, #2D1B69 60%, #4F3A8A 100%); color: #fff;">
+<!-- END-TO-END AI & AUTOMATION SOLUTIONS SPOTLIGHT -->
+<section id="ai-solutions" class="section spotlight-section" style="background: linear-gradient(135deg, #111827 0%, #1e143c 50%, #2D1B69 100%); color: #fff; border-top: 1px solid rgba(255,255,255,0.1);">
   <div class="section-inner" style="max-width: 1250px; margin: 0 auto;">
-    <div class="spotlight-grid">
-      <div>
-        <div style="display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.25); color: #e9d5ff; padding: 5px 14px; border-radius: 99px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 16px;">
-          <i class="fas fa-bolt" style="color: #fbbf24;"></i> Certification Prep Crash Course
-        </div>
-        <h2 class="spotlight-title">
-          Automation Anywhere <span style="background: linear-gradient(135deg,#BA8BBF,#fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">AI &amp; Automation Engineer</span> Crash Course
-        </h2>
-        <p style="font-size: 15.5px; color: rgba(255,255,255,0.85); line-height: 1.7; margin-bottom: 24px;">
-          Master the complete 12-topic curriculum progression—from AI Fundamentals, Prompt Engineering, LLMs, RAG, AI Agents, Mozart Orchestrator, AI Skills, API Tasks, Task Bots, Forms, and Error Handling—with 3 enterprise capstones and exam preparation for the <strong>Automation Anywhere AI and Automation Engineer Certificate</strong> (Q&amp;A &amp; Unique Agent Submission track).
-        </p>
-        <div style="display: flex; gap: 14px; flex-wrap: wrap;">
-          <a href="aa-ai-agentic-course.html" class="btn-primary" style="background: linear-gradient(135deg, #8B5CF6, #6D4FD6); border: none; color: #fff; padding: 14px 28px; border-radius: 100px; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 8px;">
-            <i class="fas fa-rocket"></i> Explore 12-Topic Curriculum →
-          </a>
-          <a href="courses.html" class="btn-outline" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: #fff; padding: 14px 28px; border-radius: 100px; text-decoration: none; font-weight: 600;">
-            View All Academy Programs
-          </a>
+    <!-- Section Header -->
+    <div style="text-align: center; max-width: 820px; margin: 0 auto 50px;">
+      <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(186,139,191,0.16); border: 1px solid rgba(186,139,191,0.35); color: #e9d5ff; padding: 6px 16px; border-radius: 99px; font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; margin-bottom: 18px;">
+        <i class="fas fa-magic" style="color: #fbbf24;"></i> End-to-End Enterprise AI Solutions
+      </div>
+      <h2 class="spotlight-title" style="font-size: 42px; text-align: center; margin-bottom: 14px;">
+        We Help Businesses Build <span style="background: linear-gradient(135deg,#BA8BBF,#fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">AI-Enabled Apps, Products &amp; Websites</span>
+      </h2>
+      <p style="font-size: 16.5px; color: rgba(255,255,255,0.85); line-height: 1.75;">
+        From custom AI web platforms and SaaS products to intelligent workflow automation, voice-calling agents, and multi-agent orchestration—we deliver complete, bespoke end-to-end solutions engineered for measurable growth.
+      </p>
+    </div>
+
+    <!-- 4 Creative Solution Pillars Grid -->
+    <div class="solutions-grid">
+      <!-- Card 1 -->
+      <div class="solution-card">
+        <div class="sol-icon"><i class="fas fa-laptop-code"></i></div>
+        <div class="sol-title">AI-Enabled Apps, Websites &amp; SaaS Products</div>
+        <p class="sol-desc">Custom full-stack web applications, interactive sites, and SaaS products embedded with real-time AI capabilities, LLM intelligence, and responsive modern design systems.</p>
+        <div class="sol-tags">
+          <span class="sol-tag">Custom Web Apps</span>
+          <span class="sol-tag">SaaS Platforms</span>
+          <span class="sol-tag">LLM Integration</span>
         </div>
       </div>
 
-      <div class="spotlight-card">
-        <div style="font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: #ba8bbf;">Program Highlights</div>
-        <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px; font-size: 14px; color: rgba(255,255,255,0.9);">
-          <li style="display: flex; align-items: center; gap: 10px;"><i class="fas fa-check-circle" style="color: #4ade80;"></i> Prepared for AA AI &amp; Automation Engineer Certificate</li>
-          <li style="display: flex; align-items: center; gap: 10px;"><i class="fas fa-check-circle" style="color: #4ade80;"></i> Exam Q&amp;A Prep &amp; Unique Agent Submission Track</li>
-          <li style="display: flex; align-items: center; gap: 10px;"><i class="fas fa-check-circle" style="color: #4ade80;"></i> 12 Structured Topics (AI, RAG, Agents, Mozart, Forms)</li>
-          <li style="display: flex; align-items: center; gap: 10px;"><i class="fas fa-check-circle" style="color: #4ade80;"></i> ServiceNow Customer Issue Resolver Project</li>
-          <li style="display: flex; align-items: center; gap: 10px;"><i class="fas fa-check-circle" style="color: #4ade80;"></i> Salesforce Lead Gen &amp; Voice Agent Projects</li>
-        </ul>
+      <!-- Card 2 -->
+      <div class="solution-card">
+        <div class="sol-icon"><i class="fas fa-phone-alt"></i></div>
+        <div class="sol-title">Autonomous Voice &amp; Calling AI Agents</div>
+        <p class="sol-desc">Human-sounding conversational AI voice agents built to handle inbound customer service calls, outbound lead qualification, appointment booking, and smart CRM triggers 24/7.</p>
+        <div class="sol-tags">
+          <span class="sol-tag">AI Voice Agents</span>
+          <span class="sol-tag">Inbound / Outbound</span>
+          <span class="sol-tag">Smart Lead Gen</span>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="solution-card">
+        <div class="sol-icon"><i class="fas fa-cogs"></i></div>
+        <div class="sol-title">End-to-End Workflow &amp; Process Automation</div>
+        <p class="sol-desc">Streamline multi-step enterprise business processes across your tech stack—connecting CRMs, ERPs, web forms, spreadsheets, and databases with reliable Python &amp; n8n workflows.</p>
+        <div class="sol-tags">
+          <span class="sol-tag">Cross-Platform Sync</span>
+          <span class="sol-tag">API Integrations</span>
+          <span class="sol-tag">Python &amp; n8n</span>
+        </div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="solution-card">
+        <div class="sol-icon"><i class="fas fa-brain"></i></div>
+        <div class="sol-title">Multi-Agent Systems &amp; RAG Document Intelligence</div>
+        <p class="sol-desc">Deploy collaborative autonomous agent teams (CrewAI, LangGraph) with Retrieval-Augmented Generation (RAG) to instantly search private knowledge bases and execute complex tasks.</p>
+        <div class="sol-tags">
+          <span class="sol-tag">Agentic AI Orchestration</span>
+          <span class="sol-tag">RAG Knowledge Base</span>
+          <span class="sol-tag">LangChain &amp; CrewAI</span>
+        </div>
       </div>
     </div>
-  </div>
-</section>
 
-<!-- AI & AUTOMATION ENGINEER PHASE-WISE ROADMAP SPOTLIGHT -->
-<section id="ai-engineer-roadmap" class="section spotlight-section" style="background: linear-gradient(135deg, #111827 0%, #1e143c 60%, #2D1B69 100%); color: #fff; border-top: 1px solid rgba(255,255,255,0.1);">
-  <div class="section-inner" style="max-width: 1250px; margin: 0 auto;">
-    <div class="spotlight-grid">
+    <!-- Action Banner Callout -->
+    <div style="margin-top: 45px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); backdrop-filter: blur(20px); border-radius: 24px; padding: 28px 32px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px;">
       <div>
-        <div style="display: inline-flex; align-items: center; gap: 6px; background: rgba(186,139,191,0.18); border: 1px solid rgba(186,139,191,0.35); color: #e9d5ff; padding: 5px 14px; border-radius: 99px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 16px;">
-          <i class="fas fa-layer-group" style="color: #ba8bbf;"></i> Phase-Wise Masterclass Roadmap
-        </div>
-        <h2 class="spotlight-title">
-          AI &amp; Automation Engineer <span style="background: linear-gradient(135deg,#BA8BBF,#fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Phase-Wise Roadmap</span>
-        </h2>
-        <p style="font-size: 15.5px; color: rgba(255,255,255,0.85); line-height: 1.7; margin-bottom: 24px;">
-          Transform traditional RPA Developers into AI-enabled, Python-based Automation Engineers by progressively building skills across <strong>13 structured phases</strong>: Python, AI Coding, Terminal, Git, LLMs, CrewAI Multi-Agent Systems, Playwright, LangChain, LangGraph, and Enterprise Solution Architecture.
-        </p>
-        <div style="display: flex; gap: 14px; flex-wrap: wrap;">
-          <a href="ai-automation-engineer-roadmap.html" class="btn-primary" style="background: linear-gradient(135deg, #8B5CF6, #6D4FD6); border: none; color: #fff; padding: 14px 28px; border-radius: 100px; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 8px;">
-            <i class="fas fa-rocket"></i> Explore 13-Phase Roadmap →
-          </a>
-          <a href="courses.html" class="btn-outline" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: #fff; padding: 14px 28px; border-radius: 100px; text-decoration: none; font-weight: 600;">
-            View All Academy Programs
-          </a>
-        </div>
+        <h3 style="font-family: var(--heading); font-size: 22px; font-weight: 800; color: #fff; margin-bottom: 6px;">Ready to build your custom AI solution?</h3>
+        <p style="font-size: 14.5px; color: rgba(255,255,255,0.8); margin: 0;">Partner with us to engineer your tailored AI web app, voice agent, or automation workflow.</p>
       </div>
-
-      <div class="spotlight-card">
-        <div style="font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: #ba8bbf;">Roadmap Highlights</div>
-        <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px; font-size: 14px; color: rgba(255,255,255,0.9);">
-          <li style="display: flex; align-items: center; gap: 10px;"><i class="fas fa-check-circle" style="color: #4ade80;"></i> 13 Progressive Build-First Phases</li>
-          <li style="display: flex; align-items: center; gap: 10px;"><i class="fas fa-check-circle" style="color: #4ade80;"></i> Python, Terminal &amp; Git Version Control</li>
-          <li style="display: flex; align-items: center; gap: 10px;"><i class="fas fa-check-circle" style="color: #4ade80;"></i> LLMs, Prompting &amp; CrewAI Autonomous Agents</li>
-          <li style="display: flex; align-items: center; gap: 10px;"><i class="fas fa-check-circle" style="color: #4ade80;"></i> Intelligent Playwright Web Automation</li>
-          <li style="display: flex; align-items: center; gap: 10px;"><i class="fas fa-check-circle" style="color: #4ade80;"></i> LangGraph State Machines &amp; Enterprise Capstone</li>
-        </ul>
+      <div style="display: flex; gap: 14px; flex-wrap: wrap; align-items: center;">
+        <a href="#contact" class="btn-primary" style="background: linear-gradient(135deg, #8B5CF6, #6D4FD6); border: none; color: #fff; padding: 14px 28px; border-radius: 100px; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 8px;">
+          <i class="fas fa-paper-plane"></i> Request Custom Solution →
+        </a>
+        <a href="#products" class="btn-outline" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: #fff; padding: 14px 28px; border-radius: 100px; text-decoration: none; font-weight: 600;">
+          Explore Live Products
+        </a>
       </div>
     </div>
   </div>
