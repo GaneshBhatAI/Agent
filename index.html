@@ -115,18 +115,17 @@
         linear-gradient(90deg, rgba(111,83,163,0.055) 1px, transparent 1px);
       background-size: 52px 52px;
     }
-    /* Soft fade vignette so grid fades toward edges */
+    /* Soft fade vignette and dark bottom transition overlay */
     .hero-outer::after {
       content: '';
       position: absolute; inset: 0; z-index: 1; pointer-events: none;
-      background: radial-gradient(ellipse 80% 70% at 50% 50%,
-        transparent 40%,
-        var(--bg) 100%);
+      background: linear-gradient(to bottom, transparent 65%, #111827 100%),
+                  radial-gradient(ellipse 80% 70% at 50% 50%, transparent 40%, var(--bg) 100%);
     }
     .hero {
       position: relative; z-index: 5; max-width: 1250px; margin: 0 auto;
-      min-height: 540px; display: grid; grid-template-columns: 1.15fr 1fr;
-      align-items: center; gap: 60px; padding: 30px 20px 60px;
+      min-height: 500px; display: grid; grid-template-columns: 1.15fr 1fr;
+      align-items: center; gap: 60px; padding: 30px 20px 20px;
     }
     .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.65); border: 1px solid rgba(255,255,255,0.9); padding: 6px 14px; border-radius: 100px; font-size: 11px; font-weight: 600; color: #7E57C2; letter-spacing: 0.1em; margin-bottom: 20px; }
     .hero-dot { width: 7px; height: 7px; background: var(--purple-light); border-radius: 50%; position: relative; }
@@ -466,7 +465,7 @@
     </div>
   </div>
 <!-- END-TO-END AI & AUTOMATION SOLUTIONS SPOTLIGHT -->
-<section id="ai-solutions" class="section spotlight-section" style="background: linear-gradient(135deg, #111827 0%, #1e143c 50%, #2D1B69 100%); color: #fff; border-top: 1px solid rgba(255,255,255,0.1);">
+<section id="ai-solutions" class="section spotlight-section" style="background: linear-gradient(135deg, #111827 0%, #1e143c 50%, #2D1B69 100%); color: #fff;">
   <div class="section-inner" style="max-width: 1250px; margin: 0 auto;">
     <!-- Section Header -->
     <div style="text-align: center; max-width: 820px; margin: 0 auto 50px;">
