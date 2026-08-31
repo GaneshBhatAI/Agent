@@ -1001,16 +1001,7 @@
       line-height: 1.5;
     }
 
-    .code-chip {
-      background: rgba(0, 0, 0, 0.4);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      padding: 2px 7px;
-      border-radius: 6px;
-      font-family: monospace;
-      font-size: 12px;
-      color: #a7f3d0;
-      word-break: break-all;
-    }
+    
 
     .session-badge {
       display: inline-flex;
@@ -1424,31 +1415,10 @@
     }
 
     /* Code Chips - FIXED: No vertical word breaking, crisp contrast, rounded pill styling */
-    .code-chip {
-      display: inline-block !important;
-      white-space: nowrap !important;
-      word-break: normal !important;
-      word-wrap: normal !important;
-      background: #F3E8FF !important;
-      border: 1px solid #D8B4FE !important;
-      color: #5B21B6 !important;
-      padding: 3px 8px !important;
-      margin: 2px 2px !important;
-      border-radius: 6px !important;
-      font-family: 'Fira Code', Consolas, Monaco, monospace !important;
-      font-size: 12px !important;
-      font-weight: 700 !important;
-      vertical-align: middle !important;
-      line-height: 1.2 !important;
-      box-shadow: 0 1px 3px rgba(111, 83, 163, 0.08);
-    }
+    
 
     /* Dark card variant for code-chips */
-    .setup-guide-card .code-chip {
-      background: rgba(0, 0, 0, 0.5) !important;
-      border: 1px solid rgba(255, 255, 255, 0.25) !important;
-      color: #6EE7B7 !important;
-    }
+    .setup-guide-card 
 
     /* Coverage list items readability */
     .coverage-list li {
@@ -1622,16 +1592,7 @@
 
     @media (max-width: 768px) {
       /* Force all text and code chips to wrap naturally at screen edge on mobile */
-      .code-chip {
-        white-space: normal !important;
-        word-break: break-word !important;
-        overflow-wrap: break-word !important;
-        display: inline-block !important;
-        max-width: 100% !important;
-        padding: 3px 8px !important;
-        margin: 2px 2px !important;
-        line-height: 1.4 !important;
-      }
+      
 
       /* Hero Section Mobile Edge Wrapping */
       .hero-outer {
@@ -1908,28 +1869,9 @@
     }
 
     /* Clean Code Chip - Natural Inline Code Tag (Doc Style) */
-    .code-chip {
-      display: inline !important;
-      background: #F3E8FF !important;
-      border: 1px solid #D8B4FE !important;
-      color: #5B21B6 !important;
-      padding: 2px 6px !important;
-      margin: 0 2px !important;
-      border-radius: 4px !important;
-      font-family: 'Fira Code', Consolas, Monaco, monospace !important;
-      font-size: 12px !important;
-      font-weight: 600 !important;
-      line-height: 1.4 !important;
-      word-break: break-word !important;
-      overflow-wrap: break-word !important;
-      white-space: normal !important;
-    }
+    
 
-    .setup-guide-card .code-chip {
-      background: rgba(0, 0, 0, 0.45) !important;
-      border: 1px solid rgba(255, 255, 255, 0.25) !important;
-      color: #6EE7B7 !important;
-    }
+    .setup-guide-card 
 
     /* Mobile Sticky Bottom CTA Bar */
     .mobile-sticky-bar {
@@ -2603,13 +2545,13 @@
               <span class="setup-step-title">Install Python</span>
             </div>
             <p class="setup-step-desc">
-              Visit <span class="code-chip">python.org/downloads</span> and download Python 3.x for Windows.
+              Visit python.org/downloads and download Python 3.x for Windows.
             </p>
             <div style="background: rgba(251, 191, 36, 0.18); border: 1px solid rgba(251, 191, 36, 0.45); border-radius: 10px; padding: 8px 10px; font-size: 11.5px; color: #fef08a; font-weight: 600;">
               ⚠️ Must Check: <strong>"Add python.exe to PATH"</strong> before clicking Install Now!
             </div>
             <div style="font-size: 11.5px; color: rgba(255,255,255,0.7); margin-top: 2px;">
-              Verify in CMD: <span class="code-chip">python --version</span>
+              Verify in CMD: python --version
             </div>
           </div>
 
@@ -2620,10 +2562,10 @@
               <span class="setup-step-title">Install VS Code</span>
             </div>
             <p class="setup-step-desc">
-              Download Visual Studio Code from <span class="code-chip">code.visualstudio.com</span>. Install the official <strong>Microsoft Python extension</strong> (<span class="code-chip">Ctrl+Shift+X</span>).
+              Download Visual Studio Code from code.visualstudio.com. Install the official <strong>Microsoft Python extension</strong> (Ctrl+Shift+X).
             </p>
             <div style="font-size: 11.5px; color: rgba(255,255,255,0.7); margin-top: auto;">
-              Select Interpreter: <span class="code-chip">Ctrl+Shift+P → Python</span>
+              Select Interpreter: Ctrl+Shift+P → Python
             </div>
           </div>
 
@@ -2634,7 +2576,7 @@
               <span class="setup-step-title">First 1 Line of Code</span>
             </div>
             <p class="setup-step-desc">
-              Create folder <span class="code-chip">my_automation</span> and file <span class="code-chip">app.py</span> in VS Code.
+              Create folder my_automation and file app.py in VS Code.
             </p>
             <div style="background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; padding: 8px 10px; font-family: monospace; font-size: 12px; color: #6ee7b7;">
               print("Hello Automation!")
@@ -2696,14 +2638,14 @@
             <div class="two-col-grid" style="margin-top:14px;">
               <div>
                 <div class="topic-label"><i class="fas fa-terminal"></i> Part A: Setup &amp; First Syntax </div>
-                <ul class="session-card-list">
+                                <ul class="session-card-list">
                   <li class="session-card-item">
                     <div class="session-head-badge">Session 4: Developer Setup</div>
-                    <div class="session-body-desc">Windows Command Prompt navigation (<span class="code-chip">cd</span>, <span class="code-chip">mkdir</span>, <span class="code-chip">dir</span>), environment variables &amp; folders.</div>
+                    <div class="session-body-desc">Windows Command Prompt navigation, folder creation, environment variables &amp; file paths.</div>
                   </li>
                   <li class="session-card-item">
                     <div class="session-head-badge">Session 5: Python Installation</div>
-                    <div class="session-body-desc">Download Python 3.x, configure PATH, test <span class="code-chip">python</span> &amp; <span class="code-chip">pip</span> commands.</div>
+                    <div class="session-body-desc">Download Python 3.x, configure PATH environment variable, and test terminal commands.</div>
                   </li>
                   <li class="session-card-item">
                     <div class="session-head-badge">Session 6: VS Code Mastery</div>
@@ -2711,45 +2653,45 @@
                   </li>
                   <li class="session-card-item">
                     <div class="session-head-badge">Session 7: First Python Code</div>
-                    <div class="session-body-desc"><span class="code-chip">print()</span>, comments, variables, strings &amp; numbers (Customer/Invoice examples).</div>
+                    <div class="session-body-desc">Syntax basics, comments, variables, strings &amp; numbers with customer invoice examples.</div>
                   </li>
                   <li class="session-card-item">
                     <div class="session-head-badge">Session 8: Data Types (Excel Analogy)</div>
-                    <div class="session-body-desc">String, Integer, Float, Boolean, Lists <span class="code-chip">[item1, item2]</span> &amp; Dictionaries <span class="code-chip">{"key": "value"}</span>.</div>
+                    <div class="session-body-desc">String, Integer, Float, Boolean, Lists &amp; Dictionaries data structures.</div>
                   </li>
                   <li class="session-card-item">
                     <div class="session-head-badge">Session 9: Conditions</div>
-                    <div class="session-body-desc"><span class="code-chip">if</span>, <span class="code-chip">elif</span>, <span class="code-chip">else</span> business decision logic (Invoice payment threshold approval).</div>
+                    <div class="session-body-desc">If/Else business decision logic for automated invoice payment approvals.</div>
                   </li>
                 </ul>
               </div>
 
               <div>
                 <div class="topic-label"><i class="fas fa-code-branch"></i> Part B: Automation Logic &amp; Integrations </div>
-                <ul class="session-card-list">
+                                <ul class="session-card-list">
                   <li class="session-card-item">
                     <div class="session-head-badge">Session 10: Loops</div>
-                    <div class="session-body-desc"><span class="code-chip">for</span> &amp; <span class="code-chip">while</span> loops to automate batch data processing (Loop through 100 customer records).</div>
+                    <div class="session-body-desc">Loops to automate batch data processing across customer transaction records.</div>
                   </li>
                   <li class="session-card-item">
                     <div class="session-head-badge">Session 11: Reusable Functions</div>
-                    <div class="session-body-desc"><span class="code-chip">def process_order()</span> (Comparing UiPath "Invoke Sub-workflow" to Python functions).</div>
+                    <div class="session-body-desc">Reusable modular functions (Comparing UiPath Invoke Sub-workflow to Python functions).</div>
                   </li>
                   <li class="session-card-item">
                     <div class="session-head-badge">Session 12: File Processing</div>
-                    <div class="session-body-desc">Read &amp; write TXT, CSV, and JSON business data files automatically.</div>
+                    <div class="session-body-desc">Read and write TXT, CSV, and JSON business data files automatically.</div>
                   </li>
                   <li class="session-card-item">
                     <div class="session-head-badge">Session 13: Error Handling</div>
-                    <div class="session-body-desc"><span class="code-chip">try...except</span> blocks to make automations 100% crash-proof in production.</div>
+                    <div class="session-body-desc">Exception handling workflows to make automations 100% crash-proof in production.</div>
                   </li>
                   <li class="session-card-item">
                     <div class="session-head-badge">Session 14–15: Packages &amp; Project Structure</div>
-                    <div class="session-body-desc"><span class="code-chip">pip install</span> external libraries &amp; structure clean project files (<span class="code-chip">main.py</span>).</div>
+                    <div class="session-body-desc">Installing external libraries via pip &amp; structuring clean multi-file automation projects.</div>
                   </li>
                   <li class="session-card-item">
                     <div class="session-head-badge">Session 16: REST APIs</div>
-                    <div class="session-body-desc">HTTP GET/POST calls using <span class="code-chip">requests</span> (Fetch live currency rates &amp; weather data without UI clicks).</div>
+                    <div class="session-body-desc">HTTP GET and POST REST API calls to fetch live business data without UI clicks.</div>
                   </li>
                 </ul>
               </div>
@@ -2775,8 +2717,8 @@
               <div class="topic-label"><i class="fas fa-book-open"></i> Step-by-Step Learning Topics</div>
               <ul class="coverage-list">
                 <li><strong>Session 17: Git Basics</strong> — What is Git vs GitHub? Why developers save code versions instead of copying folders.</li>
-                <li><strong>Core Commands</strong> — Learn <span class="code-chip">git init</span>, <span class="code-chip">git status</span>, <span class="code-chip">git add</span>, <span class="code-chip">git commit</span>, and <span class="code-chip">git push</span>.</li>
-                <li><strong>Professional Setup</strong> — Creating clean <span class="code-chip">.gitignore</span> files &amp; writing clear <span class="code-chip">README.md</span> documentation.</li>
+                <li><strong>Core Commands</strong> — Learn git init, git status, git add, git commit, and git push.</li>
+                <li><strong>Professional Setup</strong> — Creating clean .gitignore files &amp; writing clear README.md documentation.</li>
               </ul>
             </div>
           </div>
@@ -2822,8 +2764,8 @@
               <div>
                 <div class="topic-label"><i class="fas fa-terminal"></i> Command Line Fundamentals (Sessions 22–24)</div>
                 <ul class="coverage-list">
-                  <li><strong>Session 22: Terminal Basics</strong> — Command Prompt shortcuts: <span class="code-chip">cd</span>, <span class="code-chip">dir</span>, <span class="code-chip">mkdir</span>, <span class="code-chip">copy</span>, <span class="code-chip">del</span>, and absolute/relative file paths.</li>
-                  <li><strong>Session 23: Executing Python</strong> — Running <span class="code-chip">python app.py</span> directly from terminal without clicking VS Code play button.</li>
+                  <li><strong>Session 22: Terminal Basics</strong> — Command Prompt shortcuts: cd, dir, mkdir, copy, del, and absolute/relative file paths.</li>
+                  <li><strong>Session 23: Executing Python</strong> — Running python app.py directly from terminal without clicking VS Code play button.</li>
                   <li><strong>Session 24: AI + Terminal</strong> — Asking AI to write terminal commands to setup project folders &amp; environments automatically.</li>
                 </ul>
               </div>
@@ -2832,7 +2774,7 @@
                 <div class="topic-label"><i class="fas fa-trophy"></i> Session 25: Initial Phase Mini-Project</div>
                 <ul class="coverage-list">
                   <li><strong>Business Problem</strong> — Build an automated CSV Invoice Processor from scratch.</li>
-                  <li><strong>Core Requirements</strong> — Read customer invoice CSV → Validate payment rules with <span class="code-chip">if/else</span> → Process using loops → Handle errors with <span class="code-chip">try-except</span> → Output JSON summary report.</li>
+                  <li><strong>Core Requirements</strong> — Read customer invoice CSV → Validate payment rules with if/else → Process using loops → Handle errors with try-except → Output JSON summary report.</li>
                   <li><strong>AI Assistance</strong> — Use Vibe Coding workflow to generate and refine project components.</li>
                 </ul>
               </div>
