@@ -934,6 +934,97 @@
       border-radius: 50px;
     }
 
+    /* ── BEGINNER SETUP GUIDE CARD ── */
+    .setup-guide-card {
+      background: linear-gradient(135deg, #1e143c 0%, #2D1B69 60%, #4F3A8A 100%);
+      border-radius: 28px;
+      padding: 36px 30px;
+      color: #fff;
+      margin-bottom: 36px;
+      box-shadow: 0 16px 40px rgba(45, 27, 105, 0.22);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .setup-steps-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    @media (max-width: 992px) {
+      .setup-steps-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 576px) {
+      .setup-steps-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .setup-step-box {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 20px;
+      padding: 20px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .step-num-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: #fbbf24;
+      color: #1e143c;
+      font-weight: 800;
+      font-size: 13.5px;
+      flex-shrink: 0;
+    }
+
+    .setup-step-title {
+      font-family: var(--heading);
+      font-size: 15.5px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .setup-step-desc {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.82);
+      line-height: 1.5;
+    }
+
+    .code-chip {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 2px 7px;
+      border-radius: 6px;
+      font-family: monospace;
+      font-size: 12px;
+      color: #a7f3d0;
+      word-break: break-all;
+    }
+
+    .session-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: 6px;
+      background: rgba(111, 83, 163, 0.15);
+      border: 1px solid rgba(111, 83, 163, 0.3);
+      color: #6F53A3;
+      font-size: 11px;
+      font-weight: 700;
+      margin-left: 6px;
+    }
+
     /* ── INQUIRY FORM ── */
     .contact-wrap {
       max-width: 1250px;
@@ -1280,123 +1371,233 @@
         </a>
       </div>
 
+      <!-- ZERO-CODING BEGINNER SETUP CARD -->
+      <div class="setup-guide-card">
+        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 8px;">
+          <div style="font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: #ba8bbf; display: flex; align-items: center; gap: 8px;">
+            <i class="fas fa-play-circle" style="color: #25D366; font-size: 16px;"></i> Step 0: Absolute Zero Setup (Before Session 1)
+          </div>
+          <span style="background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.25); color: #fff; font-size: 12px; font-weight: 700; padding: 4px 14px; border-radius: 99px;">
+            <i class="fas fa-heart" style="color: #f43f5e; margin-right: 4px;"></i> Tailored for Indian IT Non-Coders
+          </span>
+        </div>
+        <h3 style="font-family: var(--heading); font-size: 26px; font-weight: 800; color: #fff; margin-bottom: 10px;">
+          Zero-Coding Starter Pack: Python &amp; VS Code Installation Guide
+        </h3>
+        <p style="font-size: 15px; color: rgba(255, 255, 255, 0.85); line-height: 1.6; max-width: 880px;">
+          Never written a single line of code in your career? Don't worry! We start from absolute ground zero by downloading Python and VS Code step-by-step from official websites, setting up your environment, and running your very first program.
+        </p>
+
+        <div class="setup-steps-grid">
+          <!-- Step 1 -->
+          <div class="setup-step-box">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span class="step-num-badge">1</span>
+              <span class="setup-step-title">Install Python</span>
+            </div>
+            <p class="setup-step-desc">
+              Visit <span class="code-chip">python.org/downloads</span> and download Python 3.x for Windows.
+            </p>
+            <div style="background: rgba(251, 191, 36, 0.18); border: 1px solid rgba(251, 191, 36, 0.45); border-radius: 10px; padding: 8px 10px; font-size: 11.5px; color: #fef08a; font-weight: 600;">
+              ⚠️ Must Check: <strong>"Add python.exe to PATH"</strong> before clicking Install Now!
+            </div>
+            <div style="font-size: 11.5px; color: rgba(255,255,255,0.7); margin-top: 2px;">
+              Verify in CMD: <span class="code-chip">python --version</span>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="setup-step-box">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span class="step-num-badge">2</span>
+              <span class="setup-step-title">Install VS Code</span>
+            </div>
+            <p class="setup-step-desc">
+              Download Visual Studio Code from <span class="code-chip">code.visualstudio.com</span>. Install the official <strong>Microsoft Python extension</strong> (<span class="code-chip">Ctrl+Shift+X</span>).
+            </p>
+            <div style="font-size: 11.5px; color: rgba(255,255,255,0.7); margin-top: auto;">
+              Select Interpreter: <span class="code-chip">Ctrl+Shift+P → Python</span>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="setup-step-box">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span class="step-num-badge">3</span>
+              <span class="setup-step-title">First 1 Line of Code</span>
+            </div>
+            <p class="setup-step-desc">
+              Create folder <span class="code-chip">my_automation</span> and file <span class="code-chip">app.py</span> in VS Code.
+            </p>
+            <div style="background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; padding: 8px 10px; font-family: monospace; font-size: 12px; color: #6ee7b7;">
+              print("Hello Automation!")
+            </div>
+            <div style="font-size: 11.5px; color: rgba(255,255,255,0.7); margin-top: 2px;">
+              Click <strong>▶ Run</strong> to see live output!
+            </div>
+          </div>
+
+          <!-- Step 4 -->
+          <div class="setup-step-box">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span class="step-num-badge">4</span>
+              <span class="setup-step-title">Non-Coder Analogy</span>
+            </div>
+            <p class="setup-step-desc">
+              Think of Python <strong>Variables</strong> as Excel cells, <strong>Lists</strong> as Excel rows, and <strong>Functions</strong> as reusable UiPath Sub-workflows!
+            </p>
+            <div style="font-size: 11.5px; color: #ba8bbf; font-weight: 700; margin-top: auto;">
+              💡 Simple English • 100% Practical
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="curr-progression-grid">
 
-        <!-- Phase 1 -->
+        <!-- Phase 1 (Sessions 1-3) -->
         <div class="topic-card">
           <div>
             <div class="topic-header">
-              <span class="topic-step">Phase 01</span>
+              <span class="topic-step">Phase 01 <span class="session-badge">Sessions 1–3</span></span>
               <span class="topic-cat"><i class="fas fa-compass"></i> Mindset</span>
             </div>
-            <h3 class="topic-h3">Transformation Mindset</h3>
+            <h3 class="topic-h3">Transformation Mindset (Why Move to AI &amp; Python?)</h3>
             <div style="margin-top:12px;">
-              <div class="topic-label"><i class="fas fa-book-open"></i> Objective &amp; Topics</div>
+              <div class="topic-label"><i class="fas fa-book-open"></i> Step-by-Step Learning Topics</div>
               <ul class="coverage-list">
-                <li>RPA evolution &amp; limitations of rule-based RPA</li>
-                <li>AI + Automation synergy &amp; RPA vs AI Automation Engineer</li>
-                <li>GenAI vs AI Agent vs Agentic AI &amp; new skill map</li>
+                <li><strong>Session 1: Why Transform?</strong> — Evolution of RPA industry, why traditional drag-and-drop bots (UiPath/AA) reach limitations, and the AI + Python shift.</li>
+                <li><strong>Session 2: Skill Map</strong> — Comparing Old RPA Developer vs New AI Automation Engineer architecture &amp; career roadmap.</li>
+                <li><strong>Session 3: Real Business Use Cases</strong> — How AI agents, intelligent document processing, and decision workflows work in top enterprises.</li>
               </ul>
             </div>
           </div>
           <div class="hands-on-box">
             <div class="hands-on-title"><i class="fas fa-laptop-code"></i> Practical Activity</div>
-            <div class="hands-on-desc">Analyze an RPA process and identify where Python, APIs, LLMs or Agents improve
-              it.</div>
+            <div class="hands-on-desc">Take a traditional RPA process (e.g. PDF data extraction) and redesign it using Python + AI to see 10x speed &amp; accuracy gains.</div>
           </div>
         </div>
 
-        <!-- Phase 2 -->
-        <div class="topic-card">
+        <!-- Phase 2 (Sessions 4-16) -->
+        <div class="topic-card" style="grid-column: 1 / -1; border: 1.5px solid rgba(111, 83, 163, 0.4); background: linear-gradient(135deg, #ffffff 0%, #fcf7ff 100%);">
           <div>
             <div class="topic-header">
-              <span class="topic-step">Phase 02</span>
-              <span class="topic-cat"><i class="fab fa-python"></i> Foundation</span>
+              <span class="topic-step" style="background: #6F53A3; color: #fff;">Phase 02 <span class="session-badge" style="background: #fff; color: #6F53A3;">Sessions 4–16</span></span>
+              <span class="topic-cat" style="font-size: 13px;"><i class="fab fa-python" style="color: #3776ab;"></i> Core Foundation</span>
             </div>
-            <h3 class="topic-h3">Python Foundation</h3>
-            <div style="margin-top:12px;">
-              <div class="topic-label"><i class="fas fa-book-open"></i> Objective &amp; Topics</div>
-              <ul class="coverage-list">
-                <li>Python setup, PATH, pip, venvs, VS Code &amp; syntax</li>
-                <li>Conditions, loops, functions, modules &amp; exceptions</li>
-                <li>TXT/CSV/JSON processing, packages &amp; REST APIs</li>
-              </ul>
+            <h3 class="topic-h3" style="font-size: 22px;">Python Fundamentals for Non-Coders (Step-by-Step Scratch to Builder)</h3>
+            <div style="margin-top:14px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
+              <div>
+                <div class="topic-label"><i class="fas fa-terminal"></i> Part A: Setup &amp; First Syntax (Sessions 4–9)</div>
+                <ul class="coverage-list">
+                  <li><strong>Session 4: Developer Setup</strong> — Windows Command Prompt navigation (<span class="code-chip">cd</span>, <span class="code-chip">mkdir</span>, <span class="code-chip">dir</span>), environment variables &amp; folders.</li>
+                  <li><strong>Session 5: Python Installation</strong> — Download Python 3.x, configure PATH, test <span class="code-chip">python</span> &amp; <span class="code-chip">pip</span> commands.</li>
+                  <li><strong>Session 6: VS Code Mastery</strong> — Install VS Code, select Python interpreter, setup project folders &amp; extensions.</li>
+                  <li><strong>Session 7: First Python Code</strong> — <span class="code-chip">print()</span>, comments, variables, strings &amp; numbers (Customer/Invoice examples).</li>
+                  <li><strong>Session 8: Data Types (Excel Analogy)</strong> — String, Integer, Float, Boolean, Lists <span class="code-chip">[item1, item2]</span> &amp; Dictionaries <span class="code-chip">{"key": "value"}</span>.</li>
+                  <li><strong>Session 9: Conditions</strong> — <span class="code-chip">if</span>, <span class="code-chip">elif</span>, <span class="code-chip">else</span> business decision logic (Invoice payment threshold approval).</li>
+                </ul>
+              </div>
+
+              <div>
+                <div class="topic-label"><i class="fas fa-code-branch"></i> Part B: Automation Logic &amp; Integrations (Sessions 10–16)</div>
+                <ul class="coverage-list">
+                  <li><strong>Session 10: Loops</strong> — <span class="code-chip">for</span> &amp; <span class="code-chip">while</span> loops to automate batch data processing (Loop through 100 customer records).</li>
+                  <li><strong>Session 11: Reusable Functions</strong> — <span class="code-chip">def process_order()</span> (Comparing UiPath "Invoke Sub-workflow" to Python functions).</li>
+                  <li><strong>Session 12: File Processing</strong> — Read &amp; write TXT, CSV, and JSON business data files automatically.</li>
+                  <li><strong>Session 13: Error Handling</strong> — <span class="code-chip">try...except</span> blocks to make automations 100% crash-proof in production.</li>
+                  <li><strong>Session 14–15: Packages &amp; Structure</strong> — <span class="code-chip">pip install</span> external libraries &amp; structure clean project files (<span class="code-chip">main.py</span>).</li>
+                  <li><strong>Session 16: REST APIs</strong> — HTTP GET/POST calls using <span class="code-chip">requests</span> (Fetch live currency rates &amp; weather data without UI clicks).</li>
+                </ul>
+              </div>
             </div>
           </div>
-          <div class="hands-on-box">
-            <div class="hands-on-title"><i class="fas fa-laptop-code"></i> Practical Activity</div>
-            <div class="hands-on-desc">Build employee, customer, transaction, CSV/JSON and REST API automations.</div>
+          <div class="hands-on-box" style="margin-top: 18px; background: linear-gradient(135deg, #f3e8ff, #ede9fe); border-color: #c084fc;">
+            <div class="hands-on-title" style="color: #4c1d95;"><i class="fas fa-laptop-code"></i> Practical Hands-On Exercises</div>
+            <div class="hands-on-desc" style="color: #3b0764; font-weight: 500;">
+              Build 5 mini automation scripts: 1) Employee Payroll Formatter, 2) Transaction Rule Approver, 3) Invoice Loop Processor, 4) Automated CSV/JSON File Manager, and 5) REST API Currency Converter.
+            </div>
           </div>
         </div>
 
-        <!-- Phase 3 -->
+        <!-- Phase 3 (Session 17) -->
         <div class="topic-card">
           <div>
             <div class="topic-header">
-              <span class="topic-step">Phase 03</span>
-              <span class="topic-cat"><i class="fas fa-magic"></i> AI Coding</span>
-            </div>
-            <h3 class="topic-h3">AI-Assisted Development</h3>
-            <div style="margin-top:12px;">
-              <div class="topic-label"><i class="fas fa-book-open"></i> Objective &amp; Topics</div>
-              <ul class="coverage-list">
-                <li>AI coding, generation, explanation &amp; refactoring</li>
-                <li>Google AI coding, VS Code AI &amp; open-source extensions</li>
-                <li>Coding agents &amp; Vibe Coding workflows</li>
-              </ul>
-            </div>
-          </div>
-          <div class="hands-on-box">
-            <div class="hands-on-title"><i class="fas fa-laptop-code"></i> Practical Activity</div>
-            <div class="hands-on-desc">Prompt → Generate → Run → Error → Explain → Fix → Test → Improve workflow
-              application.</div>
-          </div>
-        </div>
-
-        <!-- Phase 4 -->
-        <div class="topic-card">
-          <div>
-            <div class="topic-header">
-              <span class="topic-step">Phase 04</span>
-              <span class="topic-cat"><i class="fas fa-terminal"></i> Productivity</span>
-            </div>
-            <h3 class="topic-h3">Command Line &amp; Productivity</h3>
-            <div style="margin-top:12px;">
-              <div class="topic-label"><i class="fas fa-book-open"></i> Objective &amp; Topics</div>
-              <ul class="coverage-list">
-                <li>Terminal navigation (cd, dir, mkdir, copy, move, del)</li>
-                <li>Paths, environment variables, python -m &amp; pip</li>
-                <li>AI-generated CLI commands &amp; troubleshooting</li>
-              </ul>
-            </div>
-          </div>
-          <div class="hands-on-box">
-            <div class="hands-on-title"><i class="fas fa-laptop-code"></i> Practical Activity</div>
-            <div class="hands-on-desc">Create projects/files/environments from CLI, install dependencies &amp; execute
-              Python.</div>
-          </div>
-        </div>
-
-        <!-- Phase 5 -->
-        <div class="topic-card">
-          <div>
-            <div class="topic-header">
-              <span class="topic-step">Phase 05</span>
+              <span class="topic-step">Phase 03 <span class="session-badge">Session 17</span></span>
               <span class="topic-cat"><i class="fab fa-git-alt"></i> Source Control</span>
             </div>
-            <h3 class="topic-h3">Git &amp; Software Development</h3>
+            <h3 class="topic-h3">Git &amp; GitHub Fundamentals</h3>
             <div style="margin-top:12px;">
-              <div class="topic-label"><i class="fas fa-book-open"></i> Objective &amp; Topics</div>
+              <div class="topic-label"><i class="fas fa-book-open"></i> Step-by-Step Learning Topics</div>
               <ul class="coverage-list">
-                <li>Git vs GitHub, repository, staging, commit &amp; branch</li>
-                <li>Merge, clone, pull, push, status, log &amp; .gitignore</li>
-                <li>README documentation &amp; conflict resolution</li>
+                <li><strong>Session 17: Git Basics</strong> — What is Git vs GitHub? Why developers save code versions instead of copying folders.</li>
+                <li><strong>Core Commands</strong> — Learn <span class="code-chip">git init</span>, <span class="code-chip">git status</span>, <span class="code-chip">git add</span>, <span class="code-chip">git commit</span>, and <span class="code-chip">git push</span>.</li>
+                <li><strong>Professional Setup</strong> — Creating clean <span class="code-chip">.gitignore</span> files &amp; writing clear <span class="code-chip">README.md</span> documentation.</li>
               </ul>
             </div>
           </div>
           <div class="hands-on-box">
             <div class="hands-on-title"><i class="fas fa-laptop-code"></i> Practical Activity</div>
-            <div class="hands-on-desc">Initialize a Python project, commit, branch, merge and push to GitHub.</div>
+            <div class="hands-on-desc">Initialize a local Git repository for your Python project, commit your code, and push your repository live to GitHub.</div>
+          </div>
+        </div>
+
+        <!-- Phase 4 (Sessions 18-21) -->
+        <div class="topic-card">
+          <div>
+            <div class="topic-header">
+              <span class="topic-step">Phase 04 <span class="session-badge">Sessions 18–21</span></span>
+              <span class="topic-cat"><i class="fas fa-magic"></i> AI Coding</span>
+            </div>
+            <h3 class="topic-h3">AI-Assisted Development &amp; "Vibe Coding"</h3>
+            <div style="margin-top:12px;">
+              <div class="topic-label"><i class="fas fa-book-open"></i> Step-by-Step Learning Topics</div>
+              <ul class="coverage-list">
+                <li><strong>Session 18: AI Coding Concept</strong> — Prompting AI tools to generate, explain, and refactor Python code without memorizing syntax.</li>
+                <li><strong>Session 19: Google AI Tools</strong> — Using Google AI coding assistance to generate utilities and fix bugs fast.</li>
+                <li><strong>Session 20: Vibe Coding Workflow</strong> — 4-Step Cycle: Prompt AI → Run Code → See Error → Ask AI to Fix.</li>
+                <li><strong>Session 21: VS Code AI Extensions</strong> — Installing AI extensions for smart code completion and automated inline debugging.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="hands-on-box">
+            <div class="hands-on-title"><i class="fas fa-laptop-code"></i> Practical Activity</div>
+            <div class="hands-on-desc">Build a complete Python automation script primarily using AI prompts, testing the code, and using AI to fix any runtime errors.</div>
+          </div>
+        </div>
+
+        <!-- Phase 5 (Sessions 22-25) -->
+        <div class="topic-card project-card" style="grid-column: 1 / -1;">
+          <div>
+            <div class="topic-header">
+              <span class="topic-step project-step">Phase 05 <span class="session-badge" style="background: #fff; color: #4c1d95;">Sessions 22–25</span></span>
+              <span class="topic-cat"><i class="fas fa-terminal"></i> Initial Phase Capstone</span>
+            </div>
+            <h3 class="topic-h3">Terminal Mastery &amp; Initial Phase Mini-Project</h3>
+            <div style="margin-top:12px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
+              <div>
+                <div class="topic-label"><i class="fas fa-terminal"></i> Command Line Fundamentals (Sessions 22–24)</div>
+                <ul class="coverage-list">
+                  <li><strong>Session 22: Terminal Basics</strong> — Command Prompt shortcuts: <span class="code-chip">cd</span>, <span class="code-chip">dir</span>, <span class="code-chip">mkdir</span>, <span class="code-chip">copy</span>, <span class="code-chip">del</span>, and absolute/relative file paths.</li>
+                  <li><strong>Session 23: Executing Python</strong> — Running <span class="code-chip">python app.py</span> directly from terminal without clicking VS Code play button.</li>
+                  <li><strong>Session 24: AI + Terminal</strong> — Asking AI to write terminal commands to setup project folders &amp; environments automatically.</li>
+                </ul>
+              </div>
+
+              <div>
+                <div class="topic-label"><i class="fas fa-trophy"></i> Session 25: Initial Phase Mini-Project</div>
+                <ul class="coverage-list">
+                  <li><strong>Business Problem</strong> — Build an automated CSV Invoice Processor from scratch.</li>
+                  <li><strong>Core Requirements</strong> — Read customer invoice CSV → Validate payment rules with <span class="code-chip">if/else</span> → Process using loops → Handle errors with <span class="code-chip">try-except</span> → Output JSON summary report.</li>
+                  <li><strong>AI Assistance</strong> — Use Vibe Coding workflow to generate and refine project components.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="hands-on-box project-box" style="margin-top: 16px;">
+            <div class="hands-on-title"><i class="fas fa-award"></i> Initial Phase Outcome</div>
+            <div class="hands-on-desc">Complete your very first end-to-end Python + AI automation project, run it from the command line, and push it to GitHub with total confidence!</div>
           </div>
         </div>
 
