@@ -1173,6 +1173,440 @@
         grid-template-columns: repeat(2, 1fr);
       }
     }
+  
+    /* ─── 60-MODULE PHASE ROADMAP TABLE SECTION STYLES ─── */
+    .roadmap-table-sec {
+      padding: 80px 20px;
+      background: linear-gradient(180deg, #EAF4FC 0%, #F4EAFF 50%, #EAF4FC 100%);
+      position: relative;
+    }
+
+    .table-controls-card {
+      background: #ffffff;
+      border: 1.5px solid rgba(186, 139, 191, 0.35);
+      border-radius: 20px;
+      padding: 20px 24px;
+      margin: 28px 0 24px;
+      box-shadow: 0 8px 30px rgba(111, 83, 163, 0.06);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .table-controls-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .table-search-box {
+      position: relative;
+      flex: 1;
+      min-width: 280px;
+      max-width: 520px;
+    }
+
+    .table-search-box input {
+      width: 100%;
+      padding: 12px 18px 12px 42px;
+      border-radius: 99px;
+      border: 1.5px solid rgba(111, 83, 163, 0.3);
+      background: #F9FAFB;
+      font-family: var(--body);
+      font-size: 14px;
+      color: var(--text-dark);
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    .table-search-box input:focus {
+      border-color: var(--purple-dark);
+      background: #ffffff;
+      box-shadow: 0 4px 18px rgba(111, 83, 163, 0.15);
+    }
+
+    .table-search-box i {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--purple-dark);
+      font-size: 15px;
+    }
+
+    .module-count-badge {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--purple-deep);
+      background: rgba(111, 83, 163, 0.1);
+      border: 1px solid rgba(111, 83, 163, 0.25);
+      padding: 6px 16px;
+      border-radius: 99px;
+      white-space: nowrap;
+    }
+
+    .phase-tabs-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .phase-tab-btn {
+      background: #F3F4F6;
+      border: 1px solid rgba(156, 163, 175, 0.3);
+      color: var(--text-mid);
+      padding: 7px 15px;
+      border-radius: 99px;
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      user-select: none;
+    }
+
+    .phase-tab-btn:hover {
+      background: #E5E7EB;
+      color: var(--text-dark);
+    }
+
+    .phase-tab-btn.active {
+      background: linear-gradient(135deg, var(--purple-dark), var(--purple-deep));
+      color: #ffffff;
+      border-color: var(--purple-dark);
+      box-shadow: 0 4px 12px rgba(111, 83, 163, 0.3);
+    }
+
+    .table-container-glass {
+      background: #ffffff;
+      border: 1.5px solid rgba(186, 139, 191, 0.35);
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 12px 40px rgba(111, 83, 163, 0.08);
+    }
+
+    .roadmap-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    .roadmap-table th {
+      background: linear-gradient(135deg, #2D1B69 0%, #4F3A8A 50%, #6F53A3 100%);
+      color: #ffffff;
+      font-family: var(--heading);
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 18px 20px;
+      border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+      white-space: nowrap;
+    }
+
+    .roadmap-table td {
+      padding: 16px 20px;
+      border-bottom: 1px solid rgba(186, 139, 191, 0.18);
+      font-size: 13.5px;
+      color: var(--text-mid);
+      vertical-align: middle;
+    }
+
+    .roadmap-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .roadmap-table tr:hover td {
+      background: rgba(245, 238, 255, 0.5);
+    }
+
+    .sr-num-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(111, 83, 163, 0.12), rgba(186, 139, 191, 0.2));
+      border: 1px solid rgba(111, 83, 163, 0.25);
+      color: var(--purple-deep);
+      font-weight: 800;
+      font-size: 12.5px;
+    }
+
+    .phase-pill-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 50px;
+      font-size: 11.5px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+
+    .phase-foundation { background: #E0E7FF; color: #3730A3; border: 1px solid #C7D2FE; }
+    .phase-environment { background: #FEF3C7; color: #92400E; border: 1px solid #FDE68A; }
+    .phase-python { background: #E0F2FE; color: #075985; border: 1px solid #BAE6FD; }
+    .phase-tools { background: #FFEDD5; color: #9A3412; border: 1px solid #FED7AA; }
+    .phase-aicoding { background: #D1FAE5; color: #065F46; border: 1px solid #A7F3D0; }
+    .phase-cli { background: #F1F5F9; color: #334155; border: 1px solid #CBD5E1; }
+    .phase-aifund { background: #F3E8FF; color: #6B21A8; border: 1px solid #E9D5FF; }
+    .phase-aipython { background: #FAE8FF; color: #86198F; border: 1px solid #F5D0FE; }
+    .phase-aiframework { background: #FCE7F3; color: #9D174D; border: 1px solid #FBCFE8; }
+    .phase-browser { background: #CCFBF1; color: #115E59; border: 1px solid #99F6E4; }
+    .phase-browserai { background: #D1F4FF; color: #026AA7; border: 1px solid #B3ECFF; }
+    .phase-langchain { background: #EDE9FE; color: #5B21B6; border: 1px solid #DDD6FE; }
+    .phase-langgraph { background: #DDD6FE; color: #4C1D95; border: 1px solid #C4B5FD; }
+    .phase-integration { background: #FEF9C3; color: #854D0E; border: 1px solid #FEF08A; }
+    .phase-architecture { background: #E0E7FF; color: #3730A3; border: 1px solid #C7D2FE; }
+    .phase-production { background: #FFEDD5; color: #9A3412; border: 1px solid #FED7AA; }
+    .phase-capstone { background: linear-gradient(135deg, #FEF08A, #FDE047); color: #713F12; font-weight: 800; border: 1px solid #FACC15; }
+
+    .module-title-txt {
+      font-weight: 700;
+      color: var(--text-dark);
+      font-size: 14.5px;
+    }
+
+    .exercise-box-sm {
+      background: rgba(111, 83, 163, 0.05);
+      border-left: 3px solid var(--purple-dark);
+      padding: 8px 12px;
+      border-radius: 4px 8px 8px 4px;
+      font-size: 13px;
+      color: #374151;
+      font-weight: 500;
+    }
+
+    .outcome-box-sm {
+      display: flex;
+      align-items: flex-start;
+      gap: 7px;
+      font-size: 13px;
+      color: #065F46;
+      font-weight: 600;
+      background: rgba(16, 185, 129, 0.06);
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(16, 185, 129, 0.18);
+    }
+
+    .outcome-box-sm i {
+      color: #10B981;
+      margin-top: 3px;
+      font-size: 13px;
+    }
+
+    @media (max-width: 992px) {
+      .table-container-glass {
+        overflow-x: auto;
+      }
+      .roadmap-table {
+        min-width: 960px;
+      }
+    }
+
+  
+    /* ─── MOBILE FRIENDLY & CODE-CHIP VISUAL FIXES ─── */
+    .two-col-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+    @media (max-width: 992px) {
+      .two-col-grid {
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
+      }
+    }
+
+    /* Code Chips - FIXED: No vertical word breaking, crisp contrast, rounded pill styling */
+    .code-chip {
+      display: inline-block !important;
+      white-space: nowrap !important;
+      word-break: normal !important;
+      word-wrap: normal !important;
+      background: #F3E8FF !important;
+      border: 1px solid #D8B4FE !important;
+      color: #5B21B6 !important;
+      padding: 3px 8px !important;
+      margin: 2px 2px !important;
+      border-radius: 6px !important;
+      font-family: 'Fira Code', Consolas, Monaco, monospace !important;
+      font-size: 12px !important;
+      font-weight: 700 !important;
+      vertical-align: middle !important;
+      line-height: 1.2 !important;
+      box-shadow: 0 1px 3px rgba(111, 83, 163, 0.08);
+    }
+
+    /* Dark card variant for code-chips */
+    .setup-guide-card .code-chip {
+      background: rgba(0, 0, 0, 0.5) !important;
+      border: 1px solid rgba(255, 255, 255, 0.25) !important;
+      color: #6EE7B7 !important;
+    }
+
+    /* Coverage list items readability */
+    .coverage-list li {
+      margin-bottom: 8px;
+      line-height: 1.6;
+    }
+
+    /* ─── MOBILE CARD VIEW FOR THE 60-MODULE ROADMAP TABLE ─── */
+    @media (max-width: 768px) {
+      .roadmap-table-sec {
+        padding: 50px 14px !important;
+      }
+
+      .table-controls-card {
+        padding: 16px 14px !important;
+        border-radius: 16px !important;
+        margin: 20px 0 16px !important;
+      }
+
+      .table-search-box {
+        max-width: 100% !important;
+      }
+
+      .phase-tabs-row {
+        overflow-x: auto !important;
+        white-space: nowrap !important;
+        flex-wrap: nowrap !important;
+        padding-bottom: 8px;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .phase-tab-btn {
+        flex-shrink: 0 !important;
+        font-size: 12px !important;
+        padding: 6px 14px !important;
+      }
+
+      .table-container-glass {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        overflow: visible !important;
+      }
+
+      .roadmap-table, 
+      .roadmap-table tbody {
+        display: block !important;
+        width: 100% !important;
+      }
+
+      .roadmap-table thead {
+        display: none !important;
+      }
+
+      .roadmap-table tr {
+        display: flex !important;
+        flex-direction: column !important;
+        background: #ffffff !important;
+        border: 1.5px solid rgba(186, 139, 191, 0.35) !important;
+        border-radius: 20px !important;
+        padding: 18px 16px !important;
+        margin-bottom: 16px !important;
+        box-shadow: 0 8px 24px rgba(111, 83, 163, 0.08) !important;
+        gap: 10px !important;
+      }
+
+      .roadmap-table td {
+        display: block !important;
+        padding: 0 !important;
+        border-bottom: none !important;
+        max-width: 100% !important;
+        width: 100% !important;
+      }
+
+      /* Mobile Header Row combining Sr.No + Phase Badge */
+      .roadmap-table td:nth-child(1),
+      .roadmap-table td:nth-child(2) {
+        display: inline-flex !important;
+        width: auto !important;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .roadmap-table td:nth-child(2) {
+        margin-left: 8px;
+      }
+
+      .module-title-txt {
+        font-size: 16px !important;
+        font-weight: 800 !important;
+        color: #111827 !important;
+        margin-top: 4px;
+        margin-bottom: 4px;
+      }
+
+      .exercise-box-sm {
+        margin-top: 4px;
+        padding: 10px 12px !important;
+        border-radius: 10px !important;
+        background: rgba(111, 83, 163, 0.08) !important;
+      }
+
+      .outcome-box-sm {
+        margin-top: 4px;
+        padding: 10px 12px !important;
+      }
+    }
+
+  
+    /* ─── CLEAN SESSION CARD LIST DESIGN ─── */
+    .session-card-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .session-card-item {
+      background: #ffffff;
+      border: 1.5px solid rgba(186, 139, 191, 0.3);
+      border-radius: 12px;
+      padding: 12px 14px;
+      box-shadow: 0 2px 8px rgba(111, 83, 163, 0.04);
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      transition: all 0.25s ease;
+    }
+
+    .session-card-item:hover {
+      border-color: var(--purple-dark);
+      box-shadow: 0 6px 18px rgba(111, 83, 163, 0.12);
+      transform: translateY(-1.5px);
+    }
+
+    .session-head-badge {
+      font-family: var(--heading);
+      font-size: 14px;
+      font-weight: 800;
+      color: #4F3A8A;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .session-head-badge::before {
+      content: '📌';
+      font-size: 12px;
+    }
+
+    .session-body-desc {
+      font-size: 13px;
+      color: #374151;
+      line-height: 1.6;
+    }
+
   </style>
 </head>
 
@@ -1277,6 +1711,9 @@
           <a href="#curriculum" class="btn-hero-outline">
             <i class="fas fa-list-ol"></i> View 13 Phases
           </a>
+          <a href="#phase-table-section" class="btn-hero-outline" style="background: rgba(111, 83, 163, 0.12); border: 1.5px solid var(--purple-dark); color: var(--purple-deep); font-weight: 700;">
+            <i class="fas fa-table"></i> 60-Module Breakdown Table
+          </a>
           <a href="https://wa.me/919113548342?text=Hi%20Ganesh%2C%20I%E2%80%99m%20interested%20in%20joining%20the%20AI%20%26%20Automation%20session.%20Please%20send%20me%20the%20payment%20link%20and%20the%20next%20steps%20to%20complete%20the%20registration."
             target="_blank" class="btn-whatsapp-icon" title="Chat on WhatsApp">
             <i class="fab fa-whatsapp"></i>
@@ -1294,7 +1731,7 @@
           </div>
           <div class="mini-stat">
             <div class="mini-num">100+</div>
-            <div class="mini-lbl">Key Topics</div>
+            <div class="mini-lbl">Modules (60 Sessions)</div>
           </div>
           <div class="mini-stat">
             <div class="mini-num">100%</div>
@@ -1486,28 +1923,64 @@
               <span class="topic-cat" style="font-size: 13px;"><i class="fab fa-python" style="color: #3776ab;"></i> Core Foundation</span>
             </div>
             <h3 class="topic-h3" style="font-size: 22px;">Python Fundamentals for Non-Coders (Step-by-Step Scratch to Builder)</h3>
-            <div style="margin-top:14px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
+            <div class="two-col-grid" style="margin-top:14px;">
               <div>
                 <div class="topic-label"><i class="fas fa-terminal"></i> Part A: Setup &amp; First Syntax (Sessions 4–9)</div>
-                <ul class="coverage-list">
-                  <li><strong>Session 4: Developer Setup</strong> — Windows Command Prompt navigation (<span class="code-chip">cd</span>, <span class="code-chip">mkdir</span>, <span class="code-chip">dir</span>), environment variables &amp; folders.</li>
-                  <li><strong>Session 5: Python Installation</strong> — Download Python 3.x, configure PATH, test <span class="code-chip">python</span> &amp; <span class="code-chip">pip</span> commands.</li>
-                  <li><strong>Session 6: VS Code Mastery</strong> — Install VS Code, select Python interpreter, setup project folders &amp; extensions.</li>
-                  <li><strong>Session 7: First Python Code</strong> — <span class="code-chip">print()</span>, comments, variables, strings &amp; numbers (Customer/Invoice examples).</li>
-                  <li><strong>Session 8: Data Types (Excel Analogy)</strong> — String, Integer, Float, Boolean, Lists <span class="code-chip">[item1, item2]</span> &amp; Dictionaries <span class="code-chip">{"key": "value"}</span>.</li>
-                  <li><strong>Session 9: Conditions</strong> — <span class="code-chip">if</span>, <span class="code-chip">elif</span>, <span class="code-chip">else</span> business decision logic (Invoice payment threshold approval).</li>
+                <ul class="session-card-list">
+                  <li class="session-card-item">
+                    <div class="session-head-badge">Session 4: Developer Setup</div>
+                    <div class="session-body-desc">Windows Command Prompt navigation (<span class="code-chip">cd</span>, <span class="code-chip">mkdir</span>, <span class="code-chip">dir</span>), environment variables &amp; folders.</div>
+                  </li>
+                  <li class="session-card-item">
+                    <div class="session-head-badge">Session 5: Python Installation</div>
+                    <div class="session-body-desc">Download Python 3.x, configure PATH, test <span class="code-chip">python</span> &amp; <span class="code-chip">pip</span> commands.</div>
+                  </li>
+                  <li class="session-card-item">
+                    <div class="session-head-badge">Session 6: VS Code Mastery</div>
+                    <div class="session-body-desc">Install VS Code, select Python interpreter, setup project folders &amp; extensions.</div>
+                  </li>
+                  <li class="session-card-item">
+                    <div class="session-head-badge">Session 7: First Python Code</div>
+                    <div class="session-body-desc"><span class="code-chip">print()</span>, comments, variables, strings &amp; numbers (Customer/Invoice examples).</div>
+                  </li>
+                  <li class="session-card-item">
+                    <div class="session-head-badge">Session 8: Data Types (Excel Analogy)</div>
+                    <div class="session-body-desc">String, Integer, Float, Boolean, Lists <span class="code-chip">[item1, item2]</span> &amp; Dictionaries <span class="code-chip">{"key": "value"}</span>.</div>
+                  </li>
+                  <li class="session-card-item">
+                    <div class="session-head-badge">Session 9: Conditions</div>
+                    <div class="session-body-desc"><span class="code-chip">if</span>, <span class="code-chip">elif</span>, <span class="code-chip">else</span> business decision logic (Invoice payment threshold approval).</div>
+                  </li>
                 </ul>
               </div>
 
               <div>
                 <div class="topic-label"><i class="fas fa-code-branch"></i> Part B: Automation Logic &amp; Integrations (Sessions 10–16)</div>
-                <ul class="coverage-list">
-                  <li><strong>Session 10: Loops</strong> — <span class="code-chip">for</span> &amp; <span class="code-chip">while</span> loops to automate batch data processing (Loop through 100 customer records).</li>
-                  <li><strong>Session 11: Reusable Functions</strong> — <span class="code-chip">def process_order()</span> (Comparing UiPath "Invoke Sub-workflow" to Python functions).</li>
-                  <li><strong>Session 12: File Processing</strong> — Read &amp; write TXT, CSV, and JSON business data files automatically.</li>
-                  <li><strong>Session 13: Error Handling</strong> — <span class="code-chip">try...except</span> blocks to make automations 100% crash-proof in production.</li>
-                  <li><strong>Session 14–15: Packages &amp; Structure</strong> — <span class="code-chip">pip install</span> external libraries &amp; structure clean project files (<span class="code-chip">main.py</span>).</li>
-                  <li><strong>Session 16: REST APIs</strong> — HTTP GET/POST calls using <span class="code-chip">requests</span> (Fetch live currency rates &amp; weather data without UI clicks).</li>
+                <ul class="session-card-list">
+                  <li class="session-card-item">
+                    <div class="session-head-badge">Session 10: Loops</div>
+                    <div class="session-body-desc"><span class="code-chip">for</span> &amp; <span class="code-chip">while</span> loops to automate batch data processing (Loop through 100 customer records).</div>
+                  </li>
+                  <li class="session-card-item">
+                    <div class="session-head-badge">Session 11: Reusable Functions</div>
+                    <div class="session-body-desc"><span class="code-chip">def process_order()</span> (Comparing UiPath "Invoke Sub-workflow" to Python functions).</div>
+                  </li>
+                  <li class="session-card-item">
+                    <div class="session-head-badge">Session 12: File Processing</div>
+                    <div class="session-body-desc">Read &amp; write TXT, CSV, and JSON business data files automatically.</div>
+                  </li>
+                  <li class="session-card-item">
+                    <div class="session-head-badge">Session 13: Error Handling</div>
+                    <div class="session-body-desc"><span class="code-chip">try...except</span> blocks to make automations 100% crash-proof in production.</div>
+                  </li>
+                  <li class="session-card-item">
+                    <div class="session-head-badge">Session 14–15: Packages &amp; Project Structure</div>
+                    <div class="session-body-desc"><span class="code-chip">pip install</span> external libraries &amp; structure clean project files (<span class="code-chip">main.py</span>).</div>
+                  </li>
+                  <li class="session-card-item">
+                    <div class="session-head-badge">Session 16: REST APIs</div>
+                    <div class="session-body-desc">HTTP GET/POST calls using <span class="code-chip">requests</span> (Fetch live currency rates &amp; weather data without UI clicks).</div>
+                  </li>
                 </ul>
               </div>
             </div>
@@ -1575,7 +2048,7 @@
               <span class="topic-cat"><i class="fas fa-terminal"></i> Initial Phase Capstone</span>
             </div>
             <h3 class="topic-h3">Terminal Mastery &amp; Initial Phase Mini-Project</h3>
-            <div style="margin-top:12px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
+            <div class="two-col-grid" style="margin-top:12px;">
               <div>
                 <div class="topic-label"><i class="fas fa-terminal"></i> Command Line Fundamentals (Sessions 22–24)</div>
                 <ul class="coverage-list">
@@ -1791,6 +2264,585 @@
       </div>
     </div>
   </section>
+
+  
+  <!-- 60-MODULE PHASE-WISE BREAKDOWN TABLE SECTION -->
+  <section id="phase-table-section" class="roadmap-table-sec">
+    <div class="sec-inner" style="max-width: 1300px; margin: 0 auto;">
+      <div class="sec-tag"><i class="fas fa-table" style="color:var(--purple-dark);"></i> Complete 60-Module Roadmap</div>
+      <h2 class="sec-title">Phase-Wise <span>Detailed Breakdown Table</span></h2>
+      <p class="sec-desc">Comprehensive step-by-step module breakdown mapping topics, hands-on exercises, and target outcomes for all 60 sessions.</p>
+
+      <!-- Table Search & Phase Filter Controls -->
+      <div class="table-controls-card">
+        <div class="table-controls-top">
+          <div class="table-search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="table-search-input" placeholder="Search modules, topics, exercise keywords (e.g. Python, Playwright, CrewAI, Git)..." onkeyup="filterRoadmapTable()">
+          </div>
+          <div class="module-count-badge">
+            Showing <span id="visible-module-count">60</span> of 60 Modules
+          </div>
+        </div>
+
+        <div class="phase-tabs-row">
+          <button class="phase-tab-btn active" data-phase="all" onclick="setPhaseFilter('all', this)">All (60 Modules)</button>
+          <button class="phase-tab-btn" data-phase="foundation" onclick="setPhaseFilter('foundation', this)">Foundation</button>
+          <button class="phase-tab-btn" data-phase="environment" onclick="setPhaseFilter('environment', this)">Environment</button>
+          <button class="phase-tab-btn" data-phase="python" onclick="setPhaseFilter('python', this)">Python (12)</button>
+          <button class="phase-tab-btn" data-phase="tools" onclick="setPhaseFilter('tools', this)">Git / Tools</button>
+          <button class="phase-tab-btn" data-phase="aicoding" onclick="setPhaseFilter('aicoding', this)">AI Coding</button>
+          <button class="phase-tab-btn" data-phase="cli" onclick="setPhaseFilter('cli', this)">Command Line</button>
+          <button class="phase-tab-btn" data-phase="aifund" onclick="setPhaseFilter('aifund', this)">AI Basics</button>
+          <button class="phase-tab-btn" data-phase="aipython" onclick="setPhaseFilter('aipython', this)">AI + Python</button>
+          <button class="phase-tab-btn" data-phase="aiframework" onclick="setPhaseFilter('aiframework', this)">CrewAI Agents</button>
+          <button class="phase-tab-btn" data-phase="browser" onclick="setPhaseFilter('browser', this)">Playwright</button>
+          <button class="phase-tab-btn" data-phase="langchain" onclick="setPhaseFilter('langchain', this)">LangChain</button>
+          <button class="phase-tab-btn" data-phase="langgraph" onclick="setPhaseFilter('langgraph', this)">LangGraph</button>
+          <button class="phase-tab-btn" data-phase="production" onclick="setPhaseFilter('production', this)">Production &amp; Capstone</button>
+        </div>
+      </div>
+
+      <!-- Glassmorphic Table Container -->
+      <div class="table-container-glass">
+        <table class="roadmap-table">
+          <thead>
+            <tr>
+              <th style="text-align: center; width: 65px;">Sr.No</th>
+              <th style="width: 140px;">Phase</th>
+              <th style="width: 200px;">Module</th>
+              <th>Topics / Concepts</th>
+              <th>Hands-on / Exercise</th>
+              <th>Expected Outcome</th>
+            </tr>
+          </thead>
+          <tbody id="roadmap-table-body">
+          <tr data-phase="foundation">
+            <td style="text-align: center;"><span class="sr-num-pill">1</span></td>
+            <td><span class="phase-pill-badge phase-foundation">Foundation</span></td>
+            <td><div class="module-title-txt">Why Transform?</div></td>
+            <td style="max-width: 280px; line-height: 1.5; color: var(--text-mid);">RPA industry evolution, limitations of traditional RPA, AI + Automation convergence, AI Engineer vs RPA Developer</td>
+            <td style="max-width: 260px;"><div class="exercise-box-sm"><i class="fas fa-laptop-code" style="color:var(--purple-dark); margin-right:5px;"></i>Analyze a traditional RPA process and identify what AI/Python can improve</div></td>
+            <td style="max-width: 220px;"><div class="outcome-box-sm"><i class="fas fa-check-circle"></i><span>Understand why transformation is necessary</span></div></td>
+          </tr>
+          <tr data-phase="foundation">
+            <td style="text-align: center;"><span class="sr-num-pill">2</span></td>
+            <td><span class="phase-pill-badge phase-foundation">Foundation</span></td>
+            <td><div class="module-title-txt">RPA → AI Engineer</div></td>
+            <td style="max-width: 280px; line-height: 1.5; color: var(--text-mid);">New developer skill map, Python, APIs, LLMs, Agents, Git, VS Code, Cloud, AI frameworks</td>
+            <td style="max-width: 260px;"><div class="exercise-box-sm"><i class="fas fa-laptop-code" style="color:var(--purple-dark); margin-right:5px;"></i>Compare Old RPA Developer vs AI Automation Engineer architecture</div></td>
+            <td style="max-width: 220px;"><div class="outcome-box-sm"><i class="fas fa-check-circle"></i><span>Understand target career/skill path</span></div></td>
+          </tr>
+          <tr data-phase="foundation">
+            <td style="text-align: center;"><span class="sr-num-pill">3</span></td>
+            <td><span class="phase-pill-badge phase-foundation">Foundation</span></td>
+            <td><div class="module-title-txt">Real-World AI Automation</div></td>
+            <td style="max-width: 280px; line-height: 1.5; color: var(--text-mid);">Real business use cases, AI agents, document processing, web research, decision automation, orchestration</td>
+            <td style="max-width: 260px;"><div class="exercise-box-sm"><i class="fas fa-laptop-code" style="color:var(--purple-dark); margin-right:5px;"></i>Design one AI automation use case</div></td>
+            <td style="max-width: 220px;"><div class="outcome-box-sm"><i class="fas fa-check-circle"></i><span>Think beyond bots</span></div></td>
+          </tr>
+          <tr data-phase="environment">
+            <td style="text-align: center;"><span class="sr-num-pill">4</span></td>
+            <td><span class="phase-pill-badge phase-environment">Environment</span></td>
+            <td><div class="module-title-txt">Developer Setup</div></td>
+            <td style="max-width: 280px; line-height: 1.5; color: var(--text-mid);">Windows basics, terminal, folders, files, environment variables</td>
+            <td style="max-width: 260px;"><div class="exercise-box-sm"><i class="fas fa-laptop-code" style="color:var(--purple-dark); margin-right:5px;"></i>Navigate folders and execute commands</div></td>
+            <td style="max-width: 220px;"><div class="outcome-box-sm"><i class="fas fa-check-circle"></i><span>Become comfortable with developer environment</span></div></td>
+          </tr>
+          <tr data-phase="python">
+            <td style="text-align: center;"><span class="sr-num-pill">5</span></td>
+            <td><span class="phase-pill-badge phase-python">Python</span></td>
+            <td><div class="module-title-txt">Python Installation</div></td>
+            <td style="max-width: 280px; line-height: 1.5; color: var(--text-mid);">Python installation, PATH, pip, Python version, virtual environment</td>
+            <td style="max-width: 260px;"><div class="exercise-box-sm"><i class="fas fa-laptop-code" style="color:var(--purple-dark); margin-right:5px;"></i>Install Python and execute first program</div></td>
+            <td style="max-width: 220px;"><div class="outcome-box-sm"><i class="fas fa-check-circle"></i><span>Python environment ready</span></div></td>
+          </tr>
+          <tr data-phase="python">
+            <td style="text-align: center;"><span class="sr-num-pill">6</span></td>
+            <td><span class="phase-pill-badge phase-python">Python</span></td>
+            <td><div class="module-title-txt">VS Code</div></td>
+            <td style="max-width: 280px; line-height: 1.5; color: var(--text-mid);">VS Code installation, extensions, terminal, Explorer, Python extension, interpreter selection</td>
+            <td style="max-width: 260px;"><div class="exercise-box-sm"><i class="fas fa-laptop-code" style="color:var(--purple-dark); margin-right:5px;"></i>Create first Python project</div></td>
+            <td style="max-width: 220px;"><div class="outcome-box-sm"><i class="fas fa-check-circle"></i><span>Understand VS Code</span></div></td>
+          </tr>
+          <tr data-phase="python">
+            <td style="text-align: center;"><span class="sr-num-pill">7</span></td>
+            <td><span class="phase-pill-badge phase-python">Python</span></td>
+            <td><div class="module-title-txt">First Python Program</div></td>
+            <td style="max-width: 280px; line-height: 1.5; color: var(--text-mid);">print(), comments, variables, strings, numbers, Boolean</td>
+            <td style="max-width: 260px;"><div class="exercise-box-sm"><i class="fas fa-laptop-code" style="color:var(--purple-dark); margin-right:5px;"></i>Create simple employee/invoice/customer program</div></td>
+            <td style="max-width: 220px;"><div class="outcome-box-sm"><i class="fas fa-check-circle"></i><span>Understand Python syntax</span></div></td>
+          </tr>
+          <tr data-phase="python">
+            <td style="text-align: center;"><span class="sr-num-pill">8</span></td>
+            <td><span class="phase-pill-badge phase-python">Python</span></td>
+            <td><div class="module-title-txt">Data Types</div></td>
+            <td style="max-width: 280px; line-height: 1.5; color: var(--text-mid);">String, integer, float, Boolean, list, tuple, dictionary, set</td>
+            <td style="max-width: 260px;"><div class="exercise-box-sm"><i class="fas fa-laptop-code" style="color:var(--purple-dark); margin-right:5px;"></i>Build customer/order data structure</div></td>
+            <td style="max-width: 220px;"><div class="outcome-box-sm"><i class="fas fa-check-circle"></i><span>Understand Python data</span></div></td>
+          </tr>
+          <tr data-phase="python">
+            <td style="text-align: center;"><span class="sr-num-pill">9</span></td>
+            <td><span class="phase-pill-badge phase-python">Python</span></td>
+            <td><div class="module-title-txt">Conditions</div></td>
+            <td style="max-width: 280px; line-height: 1.5; color: var(--text-mid);">if, elif, else, comparison, logical operators</td>
+            <td style="max-width: 260px;"><div class="exercise-box-sm"><i class="fas fa-laptop-code" style="color:var(--purple-dark); margin-right:5px;"></i>Create transaction validation program</div></td>
+            <td style="max-width: 220px;"><div class="outcome-box-sm"><i class="fas fa-check-circle"></i><span>Build decision logic</span></div></td>
+          </tr>
+          <tr data-phase="python">
+            <td style="text-align: center;"><span class="sr-num-pill">10</span></td>
+            <td><span class="phase-pill-badge phase-python">Python</span></td>
+            <td><div class="module-title-txt">Loops</div></td>
+            <td style="max-width: 280px; line-height: 1.5; color: var(--text-mid);">for, while, range(), break, continue</td>
+            <td style="max-width: 260px;"><div class="exercise-box-sm"><i class="fas fa-laptop-code" style="color:var(--purple-dark); margin-right:5px;"></i>Process multiple transactions</div></td>
+            <td style="max-width: 220px;"><div class="outcome-box-sm"><i class="fas fa-check-circle"></i><span>Automate repetitive logic</span></div></td>
+          </tr>
+          <tr data-phase="python">
+            <td style="text-align: center;"><span class="sr-num-pill">11</span></td>
+            <td><span class="phase-pill-badge phase-python">Python</span></td>
+            <td><div class="module-title-txt">Functions</div></td>
+            <td style="max-width: 280px; line-height: 1.5; color: var(--text-mid);">Functions, parameters, return values, reusable code</td>
+            <td style="max-width: 260px;"><div class="exercise-box-sm"><i class="fas fa-laptop-code" style="color:var(--purple-dark); margin-right:5px;"></i>Convert previous programs into functions</div></td>
+            <td style="max-width: 220px;"><div class="outcome-box-sm"><i class="fas fa-check-circle"></i><span>Understand modular development</span></div></td>
+          </tr>
+          <tr data-phase="python">
+            <td style="text-align: center;"><span class="sr-num-pill">12</span></td>
+            <td><span class="phase-pill-badge phase-python">Python</span></td>
+            <td><div class="module-title-txt">Files</div></td>
+            <td style="max-width: 280px; line-height: 1.5; color: var(--text-mid);">Read/write TXT, CSV, JSON files</td>
+            <td style="max-width: 260px;"><div class="exercise-box-sm"><i class="fas fa-laptop-code" style="color:var(--purple-dark); margin-right:5px;"></i>Build simple file-processing automation</div></td>
+            <td style="max-width: 220px;"><div class="outcome-box-sm"><i class="fas fa-check-circle"></i><span>Work with business data</span></div></td>
+          </tr>
+          <tr data-phase="python">
+            <td style="text-align: center;"><span class="sr-num-pill">13</span></td>
+            <td><span class="phase-pill-badge phase-python">Python</span></td>
+            <td><div class="module-title-txt">Exceptions</div></td>
+            <td style="max-width: 280px; line-height: 1.5; color: var(--text-mid);">try, except, finally, custom errors</td>
+            <td style="max-width: 260px;"><div class="exercise-box-sm"><i class="fas fa-laptop-code" style="color:var(--purple-dark); margin-right:5px;"></i>Build error-handling workflow</div></td>
+            <td style="max-width: 220px;"><div class="outcome-box-sm"><i class="fas fa-check-circle"></i><span>Build reliable automation</span></div></td>
+          </tr>
+          <tr data-phase="python">
+            <td style="text-align: center;"><span class="sr-num-pill">14</span></td>
+            <td><span class="phase-pill-badge phase-python">Python</span></td>
+            <td><div class="module-title-txt">Packages</div></td>
+            <td style="max-width: 280px; line-height: 1.5; color: var(--text-mid);">pip, libraries, imports, requirements.txt</td>
+            <td style="max-width: 260px;"><div class="exercise-box-sm"><i class="fas fa-laptop-code" style="color:var(--purple-dark); margin-right:5px;"></i>Install and use external Python package</div></td>
+            <td style="max-width: 220px;"><div class="outcome-box-sm"><i class="fas fa-check-circle"></i><span>Understand Python ecosystem</span></div></td>
+          </tr>
+          <tr data-phase="python">
+            <td style="text-align: center;"><span class="sr-num-pill">15</span></td>
+            <td><span class="phase-pill-badge phase-python">Python</span></td>
+            <td><div class="module-title-txt">Modules & Project Structure</div></td>
+            <td style="max-width: 280px; line-height: 1.5; color: var(--text-mid);">.py, modules, packages, main.py, reusable utilities</td>
+            <td style="max-width: 260px;"><div class="exercise-box-sm"><i class="fas fa-laptop-code" style="color:var(--purple-dark); margin-right:5px;"></i>Create mini automation project</div></td>
+            <td style="max-width: 220px;"><div class="outcome-box-sm"><i class="fas fa-check-circle"></i><span>Move from scripts to projects</span></div></td>
+          </tr>
+          <tr data-phase="python">
+            <td style="text-align: center;"><span class="sr-num-pill">16</span></td>
+            <td><span class="phase-pill-badge phase-python">Python</span></td>
+            <td><div class="module-title-txt">APIs</div></td>
+            <td style="max-width: 280px; line-height: 1.5; color: var(--text-mid);">HTTP basics, GET/POST, JSON, headers, API keys</td>
+            <td style="max-width: 260px;"><div class="exercise-box-sm"><i class="fas fa-laptop-code" style="color:var(--purple-dark); margin-right:5px;"></i>Call a public REST API using Python</div></td>
+            <td style="max-width: 220px;"><div class="outcome-box-sm"><i class="fas fa-check-circle"></i><span>Understand API-based automation</span></div></td>
+          </tr>
+          <tr data-phase="tools">
+            <td style="text-align: center;"><span class="sr-num-pill">17</span></td>
+            <td><span class="phase-pill-badge phase-tools">Developer Tools</span></td>
+            <td><div class="module-title-txt">Git Basics</div></td>
+            <td style="max-width: 280px; line-height: 1.5; color: var(--text-mid);">Git, repository, clone, commit, push, branches</td>
+            <td style="max-width: 260px;"><div class="exercise-box-sm"><i class="fas fa-laptop-code" style="color:var(--purple-dark); margin-right:5px;"></i>Create Git repository and commit Python project</div></td>
+            <td style="max-width: 220px;"><div class="outcome-box-sm"><i class="fas fa-check-circle"></i><span>Basic source control</span></div></td>
+          </tr>
+          <tr data-phase="aicoding">
+            <td style="text-align: center;"><span class="sr-num-pill">18</span></td>
+            <td><span class="phase-pill-badge phase-aicoding">AI Coding</span></td>
+            <td><div class="module-title-txt">AI-Assisted Development</div></td>
+            <td style="max-width: 280px; line-height: 1.5; color: var(--text-mid);">What is AI coding, Copilot-style development, prompting coding assistants</td>
+            <td style="max-width: 260px;"><div class="exercise-box-sm"><i class="fas fa-laptop-code" style="color:var(--purple-dark); margin-right:5px;"></i>Ask AI to create/modify Python code</div></td>
+            <td style="max-width: 220px;"><div class="outcome-box-sm"><i class="fas fa-check-circle"></i><span>Start AI-assisted development</span></div></td>
+          </tr>
+          <tr data-phase="aicoding">
+            <td style="text-align: center;"><span class="sr-num-pill">19</span></td>
+            <td><span class="phase-pill-badge phase-aicoding">AI Coding</span></td>
+            <td><div class="module-title-txt">Google AI Coding</div></td>
+            <td style="max-width: 280px; line-height: 1.5; color: var(--text-mid);">Google AI coding tools, AI-assisted code generation, debugging</td>
+            <td style="max-width: 260px;"><div class="exercise-box-sm"><i class="fas fa-laptop-code" style="color:var(--purple-dark); margin-right:5px;"></i>Build Python utility using AI assistance</div></td>
+            <td style="max-width: 220px;"><div class="outcome-box-sm"><i class="fas fa-check-circle"></i><span>Develop faster with AI</span></div></td>
+          </tr>
+          <tr data-phase="aicoding">
+            <td style="text-align: center;"><span class="sr-num-pill">20</span></td>
+            <td><span class="phase-pill-badge phase-aicoding">AI Coding</span></td>
+            <td><div class="module-title-txt">Vibe Coding</div></td>
+            <td style="max-width: 280px; line-height: 1.5; color: var(--text-mid);">Vibe coding concept, prompt → code → run → error → fix cycle</td>
+            <td style="max-width: 260px;"><div class="exercise-box-sm"><i class="fas fa-laptop-code" style="color:var(--purple-dark); margin-right:5px;"></i>Build small Python application primarily through AI</div></td>
+            <td style="max-width: 220px;"><div class="outcome-box-sm"><i class="fas fa-check-circle"></i><span>Remove fear of coding</span></div></td>
+          </tr>
+          <tr data-phase="aicoding">
+            <td style="text-align: center;"><span class="sr-num-pill">21</span></td>
+            <td><span class="phase-pill-badge phase-aicoding">AI Coding</span></td>
+            <td><div class="module-title-txt">VS Code AI Extensions</div></td>
+            <td style="max-width: 280px; line-height: 1.5; color: var(--text-mid);">Open-source AI coding extensions, local/remote models, coding agents</td>
+            <td style="max-width: 260px;"><div class="exercise-box-sm"><i class="fas fa-laptop-code" style="color:var(--purple-dark); margin-right:5px;"></i>Install and test an AI coding extension</div></td>
+            <td style="max-width: 220px;"><div class="outcome-box-sm"><i class="fas fa-check-circle"></i><span>Understand AI-enabled IDE</span></div></td>
+          </tr>
+          <tr data-phase="cli">
+            <td style="text-align: center;"><span class="sr-num-pill">22</span></td>
+            <td><span class="phase-pill-badge phase-cli">Command Line</span></td>
+            <td><div class="module-title-txt">Terminal Fundamentals</div></td>
+            <td style="max-width: 280px; line-height: 1.5; color: var(--text-mid);">cd, dir/ls, mkdir, copy, move, del/rm, paths</td>
+            <td style="max-width: 260px;"><div class="exercise-box-sm"><i class="fas fa-laptop-code" style="color:var(--purple-dark); margin-right:5px;"></i>Manage Python project entirely from terminal</div></td>
+            <td style="max-width: 220px;"><div class="outcome-box-sm"><i class="fas fa-check-circle"></i><span>Become comfortable with CLI</span></div></td>
+          </tr>
+          <tr data-phase="cli">
+            <td style="text-align: center;"><span class="sr-num-pill">23</span></td>
+            <td><span class="phase-pill-badge phase-cli">Command Line</span></td>
+            <td><div class="module-title-txt">Execute Python</div></td>
+            <td style="max-width: 280px; line-height: 1.5; color: var(--text-mid);">python, python file.py, python -m, pip commands</td>
+            <td style="max-width: 260px;"><div class="exercise-box-sm"><i class="fas fa-laptop-code" style="color:var(--purple-dark); margin-right:5px;"></i>Create and execute files from terminal</div></td>
+            <td style="max-width: 220px;"><div class="outcome-box-sm"><i class="fas fa-check-circle"></i><span>Run Python without IDE</span></div></td>
+          </tr>
+          <tr data-phase="cli">
+            <td style="text-align: center;"><span class="sr-num-pill">24</span></td>
+            <td><span class="phase-pill-badge phase-cli">Command Line</span></td>
+            <td><div class="module-title-txt">AI + Terminal</div></td>
+            <td style="max-width: 280px; line-height: 1.5; color: var(--text-mid);">Give AI instructions to create files, folders, Python programs</td>
+            <td style="max-width: 260px;"><div class="exercise-box-sm"><i class="fas fa-laptop-code" style="color:var(--purple-dark); margin-right:5px;"></i>Create project → create files → execute → fix errors</div></td>
+            <td style="max-width: 220px;"><div class="outcome-box-sm"><i class="fas fa-check-circle"></i><span>Understand AI-driven development workflow</span></div></td>
+          </tr>
+          <tr data-phase="cli">
+            <td style="text-align: center;"><span class="sr-num-pill">25</span></td>
+            <td><span class="phase-pill-badge phase-cli">Command Line</span></td>
+            <td><div class="module-title-txt">Mini Project</div></td>
+            <td style="max-width: 280px; line-height: 1.5; color: var(--text-mid);">Build CLI-based Python automation</td>
+            <td style="max-width: 260px;"><div class="exercise-box-sm"><i class="fas fa-laptop-code" style="color:var(--purple-dark); margin-right:5px;"></i>Create CSV processor from terminal</div></td>
+            <td style="max-width: 220px;"><div class="outcome-box-sm"><i class="fas fa-check-circle"></i><span>Complete first end-to-end Python automation</span></div></td>
+          </tr>
+          <tr data-phase="aifund">
+            <td style="text-align: center;"><span class="sr-num-pill">26</span></td>
+            <td><span class="phase-pill-badge phase-aifund">AI Fundamentals</span></td>
+            <td><div class="module-title-txt">AI Basics</div></td>
+            <td style="max-width: 280px; line-height: 1.5; color: var(--text-mid);">AI, ML, GenAI, LLM, Agent, Agentic AI</td>
+            <td style="max-width: 260px;"><div class="exercise-box-sm"><i class="fas fa-laptop-code" style="color:var(--purple-dark); margin-right:5px;"></i>Map technologies to business problems</div></td>
+            <td style="max-width: 220px;"><div class="outcome-box-sm"><i class="fas fa-check-circle"></i><span>Build AI mental model</span></div></td>
+          </tr>
+          <tr data-phase="aifund">
+            <td style="text-align: center;"><span class="sr-num-pill">27</span></td>
+            <td><span class="phase-pill-badge phase-aifund">AI Fundamentals</span></td>
+            <td><div class="module-title-txt">LLM Basics</div></td>
+            <td style="max-width: 280px; line-height: 1.5; color: var(--text-mid);">Tokens, context window, temperature, hallucination, model selection</td>
+            <td style="max-width: 260px;"><div class="exercise-box-sm"><i class="fas fa-laptop-code" style="color:var(--purple-dark); margin-right:5px;"></i>Experiment with prompts</div></td>
+            <td style="max-width: 220px;"><div class="outcome-box-sm"><i class="fas fa-check-circle"></i><span>Understand LLM behavior</span></div></td>
+          </tr>
+          <tr data-phase="aifund">
+            <td style="text-align: center;"><span class="sr-num-pill">28</span></td>
+            <td><span class="phase-pill-badge phase-aifund">AI Fundamentals</span></td>
+            <td><div class="module-title-txt">Prompt Engineering</div></td>
+            <td style="max-width: 280px; line-height: 1.5; color: var(--text-mid);">System prompt, user prompt, instructions, context, constraints, output format</td>
+            <td style="max-width: 260px;"><div class="exercise-box-sm"><i class="fas fa-laptop-code" style="color:var(--purple-dark); margin-right:5px;"></i>Build structured prompts</div></td>
+            <td style="max-width: 220px;"><div class="outcome-box-sm"><i class="fas fa-check-circle"></i><span>Create reliable AI instructions</span></div></td>
+          </tr>
+          <tr data-phase="aifund">
+            <td style="text-align: center;"><span class="sr-num-pill">29</span></td>
+            <td><span class="phase-pill-badge phase-aifund">AI Fundamentals</span></td>
+            <td><div class="module-title-txt">Advanced Prompting</div></td>
+            <td style="max-width: 280px; line-height: 1.5; color: var(--text-mid);">Few-shot, role prompting, decomposition, structured output, validation</td>
+            <td style="max-width: 260px;"><div class="exercise-box-sm"><i class="fas fa-laptop-code" style="color:var(--purple-dark); margin-right:5px;"></i>Create production-style prompts</div></td>
+            <td style="max-width: 220px;"><div class="outcome-box-sm"><i class="fas fa-check-circle"></i><span>Improve AI reliability</span></div></td>
+          </tr>
+          <tr data-phase="aipython">
+            <td style="text-align: center;"><span class="sr-num-pill">30</span></td>
+            <td><span class="phase-pill-badge phase-aipython">AI + Python</span></td>
+            <td><div class="module-title-txt">First AI API</div></td>
+            <td style="max-width: 280px; line-height: 1.5; color: var(--text-mid);">API authentication, request/response, JSON</td>
+            <td style="max-width: 260px;"><div class="exercise-box-sm"><i class="fas fa-laptop-code" style="color:var(--purple-dark); margin-right:5px;"></i>Call LLM from Python</div></td>
+            <td style="max-width: 220px;"><div class="outcome-box-sm"><i class="fas fa-check-circle"></i><span>Connect Python to AI</span></div></td>
+          </tr>
+          <tr data-phase="aipython">
+            <td style="text-align: center;"><span class="sr-num-pill">31</span></td>
+            <td><span class="phase-pill-badge phase-aipython">AI + Python</span></td>
+            <td><div class="module-title-txt">AI Application</div></td>
+            <td style="max-width: 280px; line-height: 1.5; color: var(--text-mid);">Send text to LLM and process response</td>
+            <td style="max-width: 260px;"><div class="exercise-box-sm"><i class="fas fa-laptop-code" style="color:var(--purple-dark); margin-right:5px;"></i>Build Python AI summarizer</div></td>
+            <td style="max-width: 220px;"><div class="outcome-box-sm"><i class="fas fa-check-circle"></i><span>Build first AI application</span></div></td>
+          </tr>
+          <tr data-phase="aipython">
+            <td style="text-align: center;"><span class="sr-num-pill">32</span></td>
+            <td><span class="phase-pill-badge phase-aipython">AI + Python</span></td>
+            <td><div class="module-title-txt">Structured AI Output</div></td>
+            <td style="max-width: 280px; line-height: 1.5; color: var(--text-mid);">JSON output, schema, parsing, validation</td>
+            <td style="max-width: 260px;"><div class="exercise-box-sm"><i class="fas fa-laptop-code" style="color:var(--purple-dark); margin-right:5px;"></i>Extract customer/invoice information</div></td>
+            <td style="max-width: 220px;"><div class="outcome-box-sm"><i class="fas fa-check-circle"></i><span>Build deterministic AI workflows</span></div></td>
+          </tr>
+          <tr data-phase="aipython">
+            <td style="text-align: center;"><span class="sr-num-pill">33</span></td>
+            <td><span class="phase-pill-badge phase-aipython">AI + Python</span></td>
+            <td><div class="module-title-txt">AI Automation Pattern</div></td>
+            <td style="max-width: 280px; line-height: 1.5; color: var(--text-mid);">Input → Prompt → LLM → Validation → Action</td>
+            <td style="max-width: 260px;"><div class="exercise-box-sm"><i class="fas fa-laptop-code" style="color:var(--purple-dark); margin-right:5px;"></i>Build AI decision workflow</div></td>
+            <td style="max-width: 220px;"><div class="outcome-box-sm"><i class="fas fa-check-circle"></i><span>Understand AI automation architecture</span></div></td>
+          </tr>
+          <tr data-phase="aiframework">
+            <td style="text-align: center;"><span class="sr-num-pill">34</span></td>
+            <td><span class="phase-pill-badge phase-aiframework">AI Framework</span></td>
+            <td><div class="module-title-txt">CrewAI Introduction</div></td>
+            <td style="max-width: 280px; line-height: 1.5; color: var(--text-mid);">Why agent frameworks, agents, tasks, crews</td>
+            <td style="max-width: 260px;"><div class="exercise-box-sm"><i class="fas fa-laptop-code" style="color:var(--purple-dark); margin-right:5px;"></i>Create first CrewAI agent</div></td>
+            <td style="max-width: 220px;"><div class="outcome-box-sm"><i class="fas fa-check-circle"></i><span>Understand multi-agent concept</span></div></td>
+          </tr>
+          <tr data-phase="aiframework">
+            <td style="text-align: center;"><span class="sr-num-pill">35</span></td>
+            <td><span class="phase-pill-badge phase-aiframework">AI Framework</span></td>
+            <td><div class="module-title-txt">CrewAI Agents</div></td>
+            <td style="max-width: 280px; line-height: 1.5; color: var(--text-mid);">Role, goal, backstory, tools, expected output</td>
+            <td style="max-width: 260px;"><div class="exercise-box-sm"><i class="fas fa-laptop-code" style="color:var(--purple-dark); margin-right:5px;"></i>Create research agent</div></td>
+            <td style="max-width: 220px;"><div class="outcome-box-sm"><i class="fas fa-check-circle"></i><span>Build first practical agent</span></div></td>
+          </tr>
+          <tr data-phase="aiframework">
+            <td style="text-align: center;"><span class="sr-num-pill">36</span></td>
+            <td><span class="phase-pill-badge phase-aiframework">AI Framework</span></td>
+            <td><div class="module-title-txt">CrewAI Tasks</div></td>
+            <td style="max-width: 280px; line-height: 1.5; color: var(--text-mid);">Tasks, descriptions, expected outputs, dependencies</td>
+            <td style="max-width: 260px;"><div class="exercise-box-sm"><i class="fas fa-laptop-code" style="color:var(--purple-dark); margin-right:5px;"></i>Create multi-step workflow</div></td>
+            <td style="max-width: 220px;"><div class="outcome-box-sm"><i class="fas fa-check-circle"></i><span>Understand agent task orchestration</span></div></td>
+          </tr>
+          <tr data-phase="aiframework">
+            <td style="text-align: center;"><span class="sr-num-pill">37</span></td>
+            <td><span class="phase-pill-badge phase-aiframework">AI Framework</span></td>
+            <td><div class="module-title-txt">CrewAI Tools</div></td>
+            <td style="max-width: 280px; line-height: 1.5; color: var(--text-mid);">Search, Python, custom tools, API tools</td>
+            <td style="max-width: 260px;"><div class="exercise-box-sm"><i class="fas fa-laptop-code" style="color:var(--purple-dark); margin-right:5px;"></i>Connect tools to agents</div></td>
+            <td style="max-width: 220px;"><div class="outcome-box-sm"><i class="fas fa-check-circle"></i><span>Build tool-enabled agents</span></div></td>
+          </tr>
+          <tr data-phase="aiframework">
+            <td style="text-align: center;"><span class="sr-num-pill">38</span></td>
+            <td><span class="phase-pill-badge phase-aiframework">AI Framework</span></td>
+            <td><div class="module-title-txt">CrewAI Multi-Agent</div></td>
+            <td style="max-width: 280px; line-height: 1.5; color: var(--text-mid);">Manager/worker pattern, sequential/parallel workflows</td>
+            <td style="max-width: 260px;"><div class="exercise-box-sm"><i class="fas fa-laptop-code" style="color:var(--purple-dark); margin-right:5px;"></i>Build 2–3 agent solution</div></td>
+            <td style="max-width: 220px;"><div class="outcome-box-sm"><i class="fas fa-check-circle"></i><span>Build multi-agent automation</span></div></td>
+          </tr>
+          <tr data-phase="browser">
+            <td style="text-align: center;"><span class="sr-num-pill">39</span></td>
+            <td><span class="phase-pill-badge phase-browser">Browser Automation</span></td>
+            <td><div class="module-title-txt">Playwright Introduction</div></td>
+            <td style="max-width: 280px; line-height: 1.5; color: var(--text-mid);">Browser automation vs RPA, installation, browsers, locators</td>
+            <td style="max-width: 260px;"><div class="exercise-box-sm"><i class="fas fa-laptop-code" style="color:var(--purple-dark); margin-right:5px;"></i>Automate simple website</div></td>
+            <td style="max-width: 220px;"><div class="outcome-box-sm"><i class="fas fa-check-circle"></i><span>Understand Playwright</span></div></td>
+          </tr>
+          <tr data-phase="browser">
+            <td style="text-align: center;"><span class="sr-num-pill">40</span></td>
+            <td><span class="phase-pill-badge phase-browser">Browser Automation</span></td>
+            <td><div class="module-title-txt">Playwright Actions</div></td>
+            <td style="max-width: 280px; line-height: 1.5; color: var(--text-mid);">Click, type, select, upload, download, navigation</td>
+            <td style="max-width: 260px;"><div class="exercise-box-sm"><i class="fas fa-laptop-code" style="color:var(--purple-dark); margin-right:5px;"></i>Automate web transaction</div></td>
+            <td style="max-width: 220px;"><div class="outcome-box-sm"><i class="fas fa-check-circle"></i><span>Build browser automation</span></div></td>
+          </tr>
+          <tr data-phase="browser">
+            <td style="text-align: center;"><span class="sr-num-pill">41</span></td>
+            <td><span class="phase-pill-badge phase-browser">Browser Automation</span></td>
+            <td><div class="module-title-txt">Playwright Advanced</div></td>
+            <td style="max-width: 280px; line-height: 1.5; color: var(--text-mid);">Waits, selectors, assertions, screenshots, browser contexts</td>
+            <td style="max-width: 260px;"><div class="exercise-box-sm"><i class="fas fa-laptop-code" style="color:var(--purple-dark); margin-right:5px;"></i>Build robust web automation</div></td>
+            <td style="max-width: 220px;"><div class="outcome-box-sm"><i class="fas fa-check-circle"></i><span>Production-style automation</span></div></td>
+          </tr>
+          <tr data-phase="browserai">
+            <td style="text-align: center;"><span class="sr-num-pill">42</span></td>
+            <td><span class="phase-pill-badge phase-browserai">Browser + AI</span></td>
+            <td><div class="module-title-txt">AI + Playwright</div></td>
+            <td style="max-width: 280px; line-height: 1.5; color: var(--text-mid);">AI decides → Playwright executes</td>
+            <td style="max-width: 260px;"><div class="exercise-box-sm"><i class="fas fa-laptop-code" style="color:var(--purple-dark); margin-right:5px;"></i>Build AI-controlled browser task</div></td>
+            <td style="max-width: 220px;"><div class="outcome-box-sm"><i class="fas fa-check-circle"></i><span>Combine AI and automation</span></div></td>
+          </tr>
+          <tr data-phase="langchain">
+            <td style="text-align: center;"><span class="sr-num-pill">43</span></td>
+            <td><span class="phase-pill-badge phase-langchain">LangChain</span></td>
+            <td><div class="module-title-txt">Introduction</div></td>
+            <td style="max-width: 280px; line-height: 1.5; color: var(--text-mid);">Why LangChain, models, prompts, chains, tools</td>
+            <td style="max-width: 260px;"><div class="exercise-box-sm"><i class="fas fa-laptop-code" style="color:var(--purple-dark); margin-right:5px;"></i>Create first LangChain application</div></td>
+            <td style="max-width: 220px;"><div class="outcome-box-sm"><i class="fas fa-check-circle"></i><span>Understand LangChain architecture</span></div></td>
+          </tr>
+          <tr data-phase="langchain">
+            <td style="text-align: center;"><span class="sr-num-pill">44</span></td>
+            <td><span class="phase-pill-badge phase-langchain">LangChain</span></td>
+            <td><div class="module-title-txt">Models & Prompts</div></td>
+            <td style="max-width: 280px; line-height: 1.5; color: var(--text-mid);">Chat models, prompt templates, structured output</td>
+            <td style="max-width: 260px;"><div class="exercise-box-sm"><i class="fas fa-laptop-code" style="color:var(--purple-dark); margin-right:5px;"></i>Build reusable AI pipeline</div></td>
+            <td style="max-width: 220px;"><div class="outcome-box-sm"><i class="fas fa-check-circle"></i><span>Create reusable AI components</span></div></td>
+          </tr>
+          <tr data-phase="langchain">
+            <td style="text-align: center;"><span class="sr-num-pill">45</span></td>
+            <td><span class="phase-pill-badge phase-langchain">LangChain</span></td>
+            <td><div class="module-title-txt">Chains</div></td>
+            <td style="max-width: 280px; line-height: 1.5; color: var(--text-mid);">Sequential processing, transformations</td>
+            <td style="max-width: 260px;"><div class="exercise-box-sm"><i class="fas fa-laptop-code" style="color:var(--purple-dark); margin-right:5px;"></i>Build document-processing chain</div></td>
+            <td style="max-width: 220px;"><div class="outcome-box-sm"><i class="fas fa-check-circle"></i><span>Understand chaining</span></div></td>
+          </tr>
+          <tr data-phase="langchain">
+            <td style="text-align: center;"><span class="sr-num-pill">46</span></td>
+            <td><span class="phase-pill-badge phase-langchain">LangChain</span></td>
+            <td><div class="module-title-txt">Tools</div></td>
+            <td style="max-width: 280px; line-height: 1.5; color: var(--text-mid);">Tool calling, custom Python tools</td>
+            <td style="max-width: 260px;"><div class="exercise-box-sm"><i class="fas fa-laptop-code" style="color:var(--purple-dark); margin-right:5px;"></i>Give LLM access to Python functions</div></td>
+            <td style="max-width: 220px;"><div class="outcome-box-sm"><i class="fas fa-check-circle"></i><span>Build tool-enabled AI</span></div></td>
+          </tr>
+          <tr data-phase="langchain">
+            <td style="text-align: center;"><span class="sr-num-pill">47</span></td>
+            <td><span class="phase-pill-badge phase-langchain">LangChain</span></td>
+            <td><div class="module-title-txt">Agents</div></td>
+            <td style="max-width: 280px; line-height: 1.5; color: var(--text-mid);">Agent reasoning, tools, action/observation</td>
+            <td style="max-width: 260px;"><div class="exercise-box-sm"><i class="fas fa-laptop-code" style="color:var(--purple-dark); margin-right:5px;"></i>Build research/automation agent</div></td>
+            <td style="max-width: 220px;"><div class="outcome-box-sm"><i class="fas fa-check-circle"></i><span>Understand AI agents</span></div></td>
+          </tr>
+          <tr data-phase="langgraph">
+            <td style="text-align: center;"><span class="sr-num-pill">48</span></td>
+            <td><span class="phase-pill-badge phase-langgraph">LangGraph</span></td>
+            <td><div class="module-title-txt">Why Graph Architecture</div></td>
+            <td style="max-width: 280px; line-height: 1.5; color: var(--text-mid);">State, nodes, edges, workflows vs agents</td>
+            <td style="max-width: 260px;"><div class="exercise-box-sm"><i class="fas fa-laptop-code" style="color:var(--purple-dark); margin-right:5px;"></i>Convert linear workflow to graph</div></td>
+            <td style="max-width: 220px;"><div class="outcome-box-sm"><i class="fas fa-check-circle"></i><span>Understand agent orchestration</span></div></td>
+          </tr>
+          <tr data-phase="langgraph">
+            <td style="text-align: center;"><span class="sr-num-pill">49</span></td>
+            <td><span class="phase-pill-badge phase-langgraph">LangGraph</span></td>
+            <td><div class="module-title-txt">First Graph</div></td>
+            <td style="max-width: 280px; line-height: 1.5; color: var(--text-mid);">State, nodes, edges, START/END</td>
+            <td style="max-width: 260px;"><div class="exercise-box-sm"><i class="fas fa-laptop-code" style="color:var(--purple-dark); margin-right:5px;"></i>Build basic LangGraph</div></td>
+            <td style="max-width: 220px;"><div class="outcome-box-sm"><i class="fas fa-check-circle"></i><span>Create first graph</span></div></td>
+          </tr>
+          <tr data-phase="langgraph">
+            <td style="text-align: center;"><span class="sr-num-pill">50</span></td>
+            <td><span class="phase-pill-badge phase-langgraph">LangGraph</span></td>
+            <td><div class="module-title-txt">Conditional Routing</div></td>
+            <td style="max-width: 280px; line-height: 1.5; color: var(--text-mid);">Conditions, routing, validation</td>
+            <td style="max-width: 260px;"><div class="exercise-box-sm"><i class="fas fa-laptop-code" style="color:var(--purple-dark); margin-right:5px;"></i>Build decision-making workflow</div></td>
+            <td style="max-width: 220px;"><div class="outcome-box-sm"><i class="fas fa-check-circle"></i><span>Build controlled agents</span></div></td>
+          </tr>
+          <tr data-phase="langgraph">
+            <td style="text-align: center;"><span class="sr-num-pill">51</span></td>
+            <td><span class="phase-pill-badge phase-langgraph">LangGraph</span></td>
+            <td><div class="module-title-txt">Human-in-the-Loop</div></td>
+            <td style="max-width: 280px; line-height: 1.5; color: var(--text-mid);">Approval, interruption, human decision</td>
+            <td style="max-width: 260px;"><div class="exercise-box-sm"><i class="fas fa-laptop-code" style="color:var(--purple-dark); margin-right:5px;"></i>Add human approval step</div></td>
+            <td style="max-width: 220px;"><div class="outcome-box-sm"><i class="fas fa-check-circle"></i><span>Build enterprise-safe agent</span></div></td>
+          </tr>
+          <tr data-phase="langgraph">
+            <td style="text-align: center;"><span class="sr-num-pill">52</span></td>
+            <td><span class="phase-pill-badge phase-langgraph">LangGraph</span></td>
+            <td><div class="module-title-txt">Memory & State</div></td>
+            <td style="max-width: 280px; line-height: 1.5; color: var(--text-mid);">State management, persistence, conversation context</td>
+            <td style="max-width: 260px;"><div class="exercise-box-sm"><i class="fas fa-laptop-code" style="color:var(--purple-dark); margin-right:5px;"></i>Build stateful agent</div></td>
+            <td style="max-width: 220px;"><div class="outcome-box-sm"><i class="fas fa-check-circle"></i><span>Understand agent memory</span></div></td>
+          </tr>
+          <tr data-phase="integration">
+            <td style="text-align: center;"><span class="sr-num-pill">53</span></td>
+            <td><span class="phase-pill-badge phase-integration">Integration</span></td>
+            <td><div class="module-title-txt">AI + Browser + Tools</div></td>
+            <td style="max-width: 280px; line-height: 1.5; color: var(--text-mid);">LLM + LangChain/LangGraph + Playwright</td>
+            <td style="max-width: 260px;"><div class="exercise-box-sm"><i class="fas fa-laptop-code" style="color:var(--purple-dark); margin-right:5px;"></i>Build intelligent web automation</div></td>
+            <td style="max-width: 220px;"><div class="outcome-box-sm"><i class="fas fa-check-circle"></i><span>Integrate core technologies</span></div></td>
+          </tr>
+          <tr data-phase="integration">
+            <td style="text-align: center;"><span class="sr-num-pill">54</span></td>
+            <td><span class="phase-pill-badge phase-integration">Integration</span></td>
+            <td><div class="module-title-txt">RPA + AI</div></td>
+            <td style="max-width: 280px; line-height: 1.5; color: var(--text-mid);">When to use RPA, Python, API, AI Agent, browser automation</td>
+            <td style="max-width: 260px;"><div class="exercise-box-sm"><i class="fas fa-laptop-code" style="color:var(--purple-dark); margin-right:5px;"></i>Convert an RPA process into hybrid architecture</div></td>
+            <td style="max-width: 220px;"><div class="outcome-box-sm"><i class="fas fa-check-circle"></i><span>Learn technology selection</span></div></td>
+          </tr>
+          <tr data-phase="architecture">
+            <td style="text-align: center;"><span class="sr-num-pill">55</span></td>
+            <td><span class="phase-pill-badge phase-architecture">Architecture</span></td>
+            <td><div class="module-title-txt">AI Automation Architecture</div></td>
+            <td style="max-width: 280px; line-height: 1.5; color: var(--text-mid);">Agent, tools, APIs, databases, LLM, orchestration</td>
+            <td style="max-width: 260px;"><div class="exercise-box-sm"><i class="fas fa-laptop-code" style="color:var(--purple-dark); margin-right:5px;"></i>Design enterprise AI automation architecture</div></td>
+            <td style="max-width: 220px;"><div class="outcome-box-sm"><i class="fas fa-check-circle"></i><span>Think like AI Automation Engineer</span></div></td>
+          </tr>
+          <tr data-phase="production">
+            <td style="text-align: center;"><span class="sr-num-pill">56</span></td>
+            <td><span class="phase-pill-badge phase-production">Production</span></td>
+            <td><div class="module-title-txt">Logging & Error Handling</div></td>
+            <td style="max-width: 280px; line-height: 1.5; color: var(--text-mid);">Logging, retries, exception handling, validation</td>
+            <td style="max-width: 260px;"><div class="exercise-box-sm"><i class="fas fa-laptop-code" style="color:var(--purple-dark); margin-right:5px;"></i>Add production controls</div></td>
+            <td style="max-width: 220px;"><div class="outcome-box-sm"><i class="fas fa-check-circle"></i><span>Build reliable solution</span></div></td>
+          </tr>
+          <tr data-phase="production">
+            <td style="text-align: center;"><span class="sr-num-pill">57</span></td>
+            <td><span class="phase-pill-badge phase-production">Production</span></td>
+            <td><div class="module-title-txt">Configuration & Secrets</div></td>
+            <td style="max-width: 280px; line-height: 1.5; color: var(--text-mid);">.env, environment variables, API keys, configuration</td>
+            <td style="max-width: 260px;"><div class="exercise-box-sm"><i class="fas fa-laptop-code" style="color:var(--purple-dark); margin-right:5px;"></i>Secure API credentials</div></td>
+            <td style="max-width: 220px;"><div class="outcome-box-sm"><i class="fas fa-check-circle"></i><span>Understand basic security</span></div></td>
+          </tr>
+          <tr data-phase="production">
+            <td style="text-align: center;"><span class="sr-num-pill">58</span></td>
+            <td><span class="phase-pill-badge phase-production">Production</span></td>
+            <td><div class="module-title-txt">Testing AI Applications</div></td>
+            <td style="max-width: 280px; line-height: 1.5; color: var(--text-mid);">Unit testing, prompt testing, agent testing</td>
+            <td style="max-width: 260px;"><div class="exercise-box-sm"><i class="fas fa-laptop-code" style="color:var(--purple-dark); margin-right:5px;"></i>Create test cases</div></td>
+            <td style="max-width: 220px;"><div class="outcome-box-sm"><i class="fas fa-check-circle"></i><span>Build testable AI automation</span></div></td>
+          </tr>
+          <tr data-phase="production">
+            <td style="text-align: center;"><span class="sr-num-pill">59</span></td>
+            <td><span class="phase-pill-badge phase-production">Production</span></td>
+            <td><div class="module-title-txt">Git & Deployment Basics</div></td>
+            <td style="max-width: 280px; line-height: 1.5; color: var(--text-mid);">Branching, requirements, environment setup, deployment concepts</td>
+            <td style="max-width: 260px;"><div class="exercise-box-sm"><i class="fas fa-laptop-code" style="color:var(--purple-dark); margin-right:5px;"></i>Package project for deployment</div></td>
+            <td style="max-width: 220px;"><div class="outcome-box-sm"><i class="fas fa-check-circle"></i><span>Understand delivery lifecycle</span></div></td>
+          </tr>
+          <tr data-phase="capstone">
+            <td style="text-align: center;"><span class="sr-num-pill">60</span></td>
+            <td><span class="phase-pill-badge phase-capstone">Capstone</span></td>
+            <td><div class="module-title-txt">AI Automation Engineer Project</div></td>
+            <td style="max-width: 280px; line-height: 1.5; color: var(--text-mid);">Business problem → Python → AI → Agent → Tools → Automation</td>
+            <td style="max-width: 260px;"><div class="exercise-box-sm"><i class="fas fa-laptop-code" style="color:var(--purple-dark); margin-right:5px;"></i>Build complete AI automation solution</div></td>
+            <td style="max-width: 220px;"><div class="outcome-box-sm"><i class="fas fa-check-circle"></i><span>Demonstrate AI Engineer capability</span></div></td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    function filterRoadmapTable() {
+      const searchInput = document.getElementById('table-search-input').value.toLowerCase();
+      const activeBtn = document.querySelector('.phase-tab-btn.active');
+      const activePhase = activeBtn ? activeBtn.getAttribute('data-phase') : 'all';
+      const rows = document.querySelectorAll('#roadmap-table-body tr');
+      let count = 0;
+
+      rows.forEach(row => {
+        const phase = row.getAttribute('data-phase');
+        const text = row.innerText.toLowerCase();
+        const matchesSearch = text.includes(searchInput);
+        
+        let matchesPhase = false;
+        if (activePhase === 'all') {
+          matchesPhase = true;
+        } else if (activePhase === 'production') {
+          matchesPhase = ['production', 'integration', 'architecture', 'capstone'].includes(phase);
+        } else {
+          matchesPhase = (phase === activePhase);
+        }
+
+        if (matchesSearch && matchesPhase) {
+          row.style.display = '';
+          count++;
+        } else {
+          row.style.display = 'none';
+        }
+      });
+
+      document.getElementById('visible-module-count').innerText = count;
+    }
+
+    function setPhaseFilter(phaseKey, btn) {
+      document.querySelectorAll('.phase-tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      filterRoadmapTable();
+    }
+  </script>
+
 
   <!-- 3 CAPSTONE SPOTLIGHTS -->
   <section class="section" style="background: rgba(245,238,255,0.4);">
