@@ -1891,6 +1891,492 @@
       }
     }
 
+  
+    /* ─────────────────────────────────────────────────────────────
+       PREMIUM MOBILE RESPONSIVE DESIGN SYSTEM (320px - 768px)
+       ───────────────────────────────────────────────────────────── */
+
+    /* Global viewport boundary safety */
+    html, body {
+      max-width: 100vw !important;
+      overflow-x: hidden !important;
+      width: 100% !important;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box !important;
+    }
+
+    /* Clean Code Chip - Natural Inline Code Tag (Doc Style) */
+    .code-chip {
+      display: inline !important;
+      background: #F3E8FF !important;
+      border: 1px solid #D8B4FE !important;
+      color: #5B21B6 !important;
+      padding: 2px 6px !important;
+      margin: 0 2px !important;
+      border-radius: 4px !important;
+      font-family: 'Fira Code', Consolas, Monaco, monospace !important;
+      font-size: 12px !important;
+      font-weight: 600 !important;
+      line-height: 1.4 !important;
+      word-break: break-word !important;
+      overflow-wrap: break-word !important;
+      white-space: normal !important;
+    }
+
+    .setup-guide-card .code-chip {
+      background: rgba(0, 0, 0, 0.45) !important;
+      border: 1px solid rgba(255, 255, 255, 0.25) !important;
+      color: #6EE7B7 !important;
+    }
+
+    /* Mobile Sticky Bottom CTA Bar */
+    .mobile-sticky-bar {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 9990;
+      background: rgba(15, 10, 33, 0.94);
+      backdrop-filter: blur(16px);
+      border-top: 1px solid rgba(186, 139, 191, 0.3);
+      padding: 10px 16px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      box-shadow: 0 -6px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    .mobile-sticky-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .mobile-sticky-title {
+      font-family: var(--heading);
+      font-size: 13px;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    .mobile-sticky-sub {
+      font-size: 11px;
+      color: #ba8bbf;
+      font-weight: 600;
+    }
+
+    .mobile-sticky-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 800;
+      padding: 8px 16px;
+      border-radius: 99px;
+      text-decoration: none;
+      white-space: nowrap;
+      box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+    }
+
+    /* MOBILE BREAKPOINT STYLES */
+    @media (max-width: 768px) {
+      .mobile-sticky-bar {
+        display: flex !important;
+      }
+
+      body {
+        padding-bottom: 60px !important; /* Space for sticky bar */
+      }
+
+      /* Announcement Banner */
+      #top-banner {
+        height: auto !important;
+        padding: 6px 12px !important;
+        white-space: normal !important;
+        text-align: center !important;
+        font-size: 11.5px !important;
+      }
+
+      .b-text {
+        animation: none !important;
+        padding-left: 0 !important;
+        white-space: normal !important;
+        display: inline !important;
+      }
+
+      /* Navbar */
+      .nav-wrap {
+        padding: 10px 12px !important;
+      }
+
+      .header-bar {
+        padding: 6px 12px !important;
+        border-radius: 50px !important;
+      }
+
+      .logo-name {
+        font-size: 19px !important;
+      }
+
+      /* Hero Section */
+      .hero-outer {
+        padding: 16px 12px 30px !important;
+      }
+
+      .hero-container {
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+        width: 100% !important;
+        padding: 0 !important;
+      }
+
+      .crumb-bar {
+        font-size: 11.5px !important;
+        margin-bottom: 12px !important;
+        flex-wrap: wrap !important;
+      }
+
+      .tag-hero-pill {
+        font-size: 11px !important;
+        padding: 4px 12px !important;
+        margin-bottom: 10px !important;
+      }
+
+      .hero-h1 {
+        font-size: 26px !important;
+        line-height: 1.25 !important;
+        margin-bottom: 12px !important;
+        word-break: break-word !important;
+      }
+
+      .hero-p {
+        font-size: 13.5px !important;
+        line-height: 1.6 !important;
+        margin-bottom: 18px !important;
+        color: var(--text-mid) !important;
+      }
+
+      .hero-action-row {
+        display: flex !important;
+        flex-direction: column !important;
+        width: 100% !important;
+        gap: 8px !important;
+      }
+
+      .hero-action-row a {
+        width: 100% !important;
+        justify-content: center !important;
+        text-align: center !important;
+        padding: 11px 14px !important;
+        font-size: 13px !important;
+        border-radius: 12px !important;
+        margin: 0 !important;
+      }
+
+      .hero-mini-stats {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 8px !important;
+        margin-top: 16px !important;
+      }
+
+      .mini-stat {
+        padding: 8px 6px !important;
+        border-radius: 12px !important;
+      }
+
+      .mini-num {
+        font-size: 17px !important;
+      }
+
+      .mini-lbl {
+        font-size: 10.5px !important;
+        line-height: 1.3 !important;
+      }
+
+      /* Target Capability Card */
+      .cert-hero-card {
+        padding: 18px 14px !important;
+        border-radius: 20px !important;
+        width: 100% !important;
+      }
+
+      .cert-card-title {
+        font-size: 20px !important;
+        margin-bottom: 8px !important;
+      }
+
+      /* Tech Strip */
+      .tech-strip-sec {
+        padding: 16px 12px !important;
+      }
+
+      .tech-strip-title {
+        font-size: 12px !important;
+        margin-bottom: 10px !important;
+      }
+
+      .tech-pills-row {
+        gap: 6px !important;
+        justify-content: center !important;
+      }
+
+      .t-pill {
+        font-size: 11.5px !important;
+        padding: 4px 10px !important;
+      }
+
+      /* Step 0 Zero Setup Guide Card */
+      .setup-guide-card {
+        padding: 16px 12px !important;
+        border-radius: 18px !important;
+        margin-bottom: 24px !important;
+      }
+
+      .setup-guide-card h3 {
+        font-size: 20px !important;
+        line-height: 1.3 !important;
+      }
+
+      .setup-steps-grid {
+        grid-template-columns: 1fr !important;
+        gap: 10px !important;
+        margin-top: 16px !important;
+      }
+
+      .setup-step-box {
+        padding: 14px 12px !important;
+        border-radius: 14px !important;
+      }
+
+      /* Progression Grid & Phase Cards */
+      .sec-title {
+        font-size: 25px !important;
+        line-height: 1.25 !important;
+      }
+
+      .sec-desc {
+        font-size: 13.5px !important;
+        margin-bottom: 20px !important;
+      }
+
+      .curr-progression-grid {
+        grid-template-columns: 1fr !important;
+        gap: 14px !important;
+      }
+
+      .topic-card {
+        padding: 16px 12px !important;
+        border-radius: 18px !important;
+        width: 100% !important;
+      }
+
+      .topic-header {
+        flex-wrap: wrap !important;
+        gap: 6px !important;
+        margin-bottom: 8px !important;
+      }
+
+      .topic-h3 {
+        font-size: 17px !important;
+        line-height: 1.35 !important;
+        margin-bottom: 10px !important;
+      }
+
+      .two-col-grid {
+        grid-template-columns: 1fr !important;
+        gap: 10px !important;
+        margin-top: 10px !important;
+      }
+
+      .session-card-list {
+        gap: 8px !important;
+      }
+
+      .session-card-item {
+        padding: 10px 12px !important;
+        border-radius: 10px !important;
+      }
+
+      .session-head-badge {
+        font-size: 13px !important;
+        line-height: 1.35 !important;
+      }
+
+      .session-body-desc {
+        font-size: 12.5px !important;
+        line-height: 1.55 !important;
+      }
+
+      .coverage-list li {
+        font-size: 12.5px !important;
+        padding: 6px 8px !important;
+        line-height: 1.5 !important;
+      }
+
+      .hands-on-box {
+        padding: 10px 12px !important;
+        border-radius: 12px !important;
+        margin-top: 12px !important;
+      }
+
+      .hands-on-title {
+        font-size: 11.5px !important;
+      }
+
+      .hands-on-desc {
+        font-size: 12.5px !important;
+        line-height: 1.45 !important;
+      }
+
+      /* 60-Module Table Mobile Card Section */
+      .roadmap-table-sec {
+        padding: 30px 10px !important;
+      }
+
+      .table-controls-card {
+        padding: 12px 10px !important;
+        border-radius: 16px !important;
+        margin: 16px 0 12px !important;
+        gap: 10px !important;
+      }
+
+      .table-search-box input {
+        padding: 10px 14px 10px 36px !important;
+        font-size: 13px !important;
+      }
+
+      .table-search-box i {
+        left: 12px !important;
+        font-size: 13px !important;
+      }
+
+      .module-count-badge {
+        font-size: 12px !important;
+        padding: 4px 12px !important;
+      }
+
+      .phase-tabs-row {
+        gap: 4px !important;
+      }
+
+      .phase-tab-btn {
+        font-size: 11px !important;
+        padding: 5px 9px !important;
+        border-radius: 20px !important;
+      }
+
+      .table-container-glass {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        overflow: visible !important;
+      }
+
+      .roadmap-table, 
+      .roadmap-table tbody {
+        display: block !important;
+        width: 100% !important;
+      }
+
+      .roadmap-table thead {
+        display: none !important;
+      }
+
+      .roadmap-table tr {
+        display: flex !important;
+        flex-direction: column !important;
+        background: #ffffff !important;
+        border: 1.5px solid rgba(186, 139, 191, 0.35) !important;
+        border-radius: 16px !important;
+        padding: 14px 12px !important;
+        margin-bottom: 12px !important;
+        box-shadow: 0 4px 16px rgba(111, 83, 163, 0.06) !important;
+        gap: 6px !important;
+      }
+
+      .roadmap-table td {
+        display: block !important;
+        width: 100% !important;
+        padding: 0 !important;
+        border-bottom: none !important;
+      }
+
+      .module-title-txt {
+        font-size: 15px !important;
+        line-height: 1.35 !important;
+        color: #111827 !important;
+      }
+
+      .exercise-box-sm {
+        font-size: 12px !important;
+        padding: 6px 10px !important;
+        margin-top: 2px !important;
+      }
+
+      .outcome-box-sm {
+        font-size: 12px !important;
+        padding: 6px 10px !important;
+        margin-top: 2px !important;
+      }
+
+      /* Enterprise Capstone Portfolio & Contact */
+      .usecase-grid {
+        grid-template-columns: 1fr !important;
+        gap: 12px !important;
+      }
+
+      .usecase-card {
+        padding: 18px 14px !important;
+        border-radius: 18px !important;
+      }
+
+      .usecase-h3 {
+        font-size: 18px !important;
+      }
+
+      .usecase-p {
+        font-size: 13px !important;
+      }
+
+      .contact-wrap {
+        padding: 0 10px !important;
+        margin-bottom: 40px !important;
+      }
+
+      .contact-box {
+        padding: 24px 14px !important;
+        border-radius: 20px !important;
+      }
+
+      .contact-left h2 {
+        font-size: 22px !important;
+      }
+
+      .contact-left p {
+        font-size: 14px !important;
+        margin-bottom: 20px !important;
+      }
+
+      .c-btn {
+        padding: 14px 18px !important;
+        font-size: 14px !important;
+        border-radius: 50px !important;
+      }
+
+      footer {
+        padding: 36px 14px 20px !important;
+      }
+
+      .footer-inner {
+        flex-direction: column !alignment;
+        gap: 20px !important;
+      }
+    }
+
   </style>
 </head>
 
@@ -3226,6 +3712,20 @@
       © 2026 Ai Anveshana. All rights reserved.
     </div>
   </footer>
+
+
+  <!-- MOBILE STICKY BOTTOM ENROLL BAR -->
+  <div class="mobile-sticky-bar">
+    <div class="mobile-sticky-info">
+      <span class="mobile-sticky-title">AI Automation Masterclass</span>
+      <span class="mobile-sticky-sub">🏅 RPA → AI Engineer</span>
+    </div>
+    <a href="https://wa.me/919113548342?text=Hi%20Ganesh%2C%20I%E2%80%99m%20interested%20in%20joining%20the%20AI%20%26%20Automation%20session.%20Please%20send%20me%20the%20payment%20link%20and%20the%20next%20steps%20to%20complete%20the%20registration." 
+       target="_blank" 
+       class="mobile-sticky-btn">
+      <i class="fab fa-whatsapp" style="font-size:16px;"></i> Enroll Now
+    </a>
+  </div>
 
 </body>
 
